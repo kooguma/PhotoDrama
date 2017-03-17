@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="movie_height">200dip</dimen>
+    <dimen name="image_segment_width">100dip</dimen>
+
+</resources>

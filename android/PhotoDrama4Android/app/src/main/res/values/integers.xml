@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="gl_screen_x">16</integer>
+    <integer name="gl_screen_y">9</integer>
+</resources>

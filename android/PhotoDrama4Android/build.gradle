@@ -6,9 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     }
 }
 
@@ -20,4 +18,46 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    configs = [
+            compileSdkVersion: 24,
+            buildToolsVersion: '25.0.2',
+            minSdkVersion    : 16,
+            targetSdkVersion : 24,
+            versionCode      : 1,
+            versionName      : '1.0.0',
+            apiUrlDebug      : 'http://maidou.17chuang.cc/api/v1/',
+            apiUrlRelease    : 'https://www.baidu.com/api/v1/',
+            wechatAppId      : 'wxf18e5caaf4b28c2b',
+            wechatAppSecret  : '86e0ddbaa09d16e5de96bbac6b6dc18f',
+            qqAppId          : '1105954399',
+    ]
+
+    supportLibraryVersion = '25.2.0'
+    laputappVersion = '1.4.5-beta39'
+    leakcanaryVersion = '1.5'
+    andebugVersion = '1.0.3'
+    developModuleVersion = '0.0.3'
+    frescoVersion = '0.14.1'
+    flexboxVersion = '0.2.5'
+    imageGroupViewVersion = '1.0.27'
+
+    libs = [
+            appcompatV7     : "com.android.support:appcompat-v7:$supportLibraryVersion",
+            recyclerView    : "com.android.support:recyclerview-v7:$supportLibraryVersion",
+            design          : "com.android.support:design:$supportLibraryVersion",
+            cardview        : "com.android.support:cardview-v7:$supportLibraryVersion",
+            laputapp        : "com.loopeer:laputapp:$laputappVersion",
+            leakcanary      : "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion",
+            leakcanary_no_op: "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion",
+            andebug         : "com.loopeer:andebug:$andebugVersion",
+            compatinset     : "com.loopeer.library:compatinset:$developModuleVersion",
+            imagegroupview  : "com.loopeer.library:imagegroupview:$imageGroupViewVersion",
+            developutils    : "com.loopeer.library:developutils:$developModuleVersion",
+            databindpack    : "com.loopeer.library:databindpack:$developModuleVersion",
+            flexbox         : "com.google.android:flexbox:$flexboxVersion",
+            cardview        : "com.android.support:cardview-v7:$supportLibraryVersion"
+    ]
 }

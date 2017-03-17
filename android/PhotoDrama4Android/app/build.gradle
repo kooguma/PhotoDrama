@@ -1,24 +1,110 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion configs.compileSdkVersion
+    buildToolsVersion configs.buildToolsVersion
+
     defaultConfig {
         applicationId "com.loopeer.android.photodrama4android"
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion configs.minSdkVersion
+        targetSdkVersion configs.targetSdkVersion
+        versionCode configs.versionCode
+        versionName configs.versionName
+
+//        multiDexEnabled true
     }
+
+    signingConfigs {
+        /*    release {
+            Properties properties = new Properties()
+            FileInputStream fis = new FileInputStream("$project.rootDir/keystore.properties")
+            properties.load(fis)
+            fis.close()
+
+            keyAlias = properties.key_alias
+            storeFile = file(properties.store_file)
+
+            storePassword = properties.store_password
+            keyPassword = properties.key_password
+        }
+
+        debug {
+            Properties properties = new Properties()
+            FileInputStream fis = new FileInputStream("$project.rootDir/keystore.properties")
+            properties.load(fis)
+            fis.close()
+
+            keyAlias = properties.key_alias
+            storeFile = file(properties.store_file)
+
+            storePassword = properties.store_password
+            keyPassword = properties.key_password
+        }*/
+    }
+
+
     buildTypes {
-        release {
+        debug {
+//            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+//            buildConfigField 'String', 'API_URL', "\"$configs.apiUrlDebug\""
+            buildConfigField 'boolean', 'LOG_ON', "true"
+
         }
+
+        release {
+//            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'boolean', 'LOG_ON', "false"
+
+//            buildConfigField 'String', 'API_URL', "\"$configs.apiUrlRelease\""
+        }
+    }
+
+    productFlavors {
+        develop {}
+        developNoTools {}
+        developV21 {
+            minSdkVersion 21
+        }
+        loopeer {}
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile libs.appcompatV7
+    compile libs.design
+    compile libs.laputapp
+    compile libs.compatinset
+    compile libs.imagegroupview
+    compile libs.developutils
+    compile libs.databindpack
+    compile libs.flexbox
+    compile libs.cardview
+
+    /*compile project(':library:cge')*/
+
+    //    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.qiniu:qiniu-android-sdk:7.3.2'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.2@aar'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }
