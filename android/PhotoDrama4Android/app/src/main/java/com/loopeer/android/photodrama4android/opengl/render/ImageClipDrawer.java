@@ -8,6 +8,7 @@ import android.util.Log;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.opengl.HandlerWrapper;
 import com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView;
+import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.data.VertexArray;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
 import com.loopeer.android.photodrama4android.opengl.model.ImageInfo;
@@ -62,6 +63,7 @@ public class ImageClipDrawer {
             @Override
             public void onResult(ImageInfo t) {
                 updateTexture(t);
+                VideoPlayManagerContainer.getDefault().notifyRender(mContext);
             }
         });
         glView.getTextureLoader().loadImageTexture(handler);

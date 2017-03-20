@@ -44,6 +44,10 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         mIsStop = true;
     }
 
+    public boolean isStop() {
+        return mIsStop;
+    }
+
     public void startUp() {
         setManual(false);
         synchronized (this) {
@@ -163,7 +167,12 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         this.mUsedTime = usedTime;
     }
 
+    public long getUsedTime() {
+        return mUsedTime;
+    }
+
     public void seekToTime(long usedTime) {
+        stopUp();
         setManual(true);
         this.mUsedTime = usedTime;
         mGLSurfaceView.requestRender();

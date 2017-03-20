@@ -57,4 +57,9 @@ public class GLRenderWorker implements IRendererWorker {
         glClear(GL_COLOR_BUFFER_BIT);
         mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
     }
+
+    public void updateDrama(Drama drama) {
+        mDrama = drama;
+//        mImageClipProcessor.updateData(mDrama.videoGroup);
+    }
 }

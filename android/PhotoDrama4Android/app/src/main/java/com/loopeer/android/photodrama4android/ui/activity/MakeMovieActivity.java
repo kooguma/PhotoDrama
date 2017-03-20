@@ -9,6 +9,7 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
+import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
 
@@ -30,8 +31,11 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
 
         mVideoPlayerManager = new VideoPlayerManager(mBinding.seekBar, mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
+        VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
+
+        mVideoPlayerManager.onRestart();
     }
 
     @Override
@@ -57,13 +61,6 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        mVideoPlayerManager.onRestart();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         mVideoPlayerManager.onStop();
@@ -72,6 +69,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
     }
 
@@ -114,6 +112,17 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Navigator.REQUEST_CODE_DRAMA_IMAGE_EDIT:
+                    Drama drama = (Drama) data.getSerializableExtra(Navigator.EXTRA_DRAMA);
+                    if (drama != null)
+                        mDrama = drama;
+                    mVideoPlayerManager.updateDrama(mDrama);
+                    break;
+                default:
+            }
+            mVideoPlayerManager.seekToVideo(0);
+        }
     }
 }

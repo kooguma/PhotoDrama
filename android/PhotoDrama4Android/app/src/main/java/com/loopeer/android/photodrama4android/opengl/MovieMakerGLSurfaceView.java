@@ -58,7 +58,6 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
     }
 
     private void init() {
-        mTextureLoader = new TextureLoader();
         setEGLContextFactory(new EGLContextFactory() {
 
             @Override
@@ -75,6 +74,7 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
                 EGLContext renderContext = egl.eglCreateContext(display, eglConfig,
                         EGL11.EGL_NO_CONTEXT, contextAttributes);
+                mTextureLoader = new TextureLoader();
                 mTextureLoader.update(egl, renderContext, display, eglConfig, getContext());
                 if (!mTextureLoader.isAlive()) mTextureLoader.start();
                 return renderContext;
@@ -85,7 +85,7 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mTextureLoader.finish();
+        if (mTextureLoader != null) mTextureLoader.finish();
     }
 
     public TextureLoader getTextureLoader() {

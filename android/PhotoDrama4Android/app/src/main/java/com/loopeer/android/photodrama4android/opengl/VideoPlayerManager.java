@@ -129,6 +129,8 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     }
 
     public void updateVideoTime(int startTime, int endTime) {
+        mGLThread.stopUp();
+        mGLThread.setManual(true);
         mStartTime = startTime;
         mEndTime = endTime;
         mGLThread.updateTime(mStartTime, mEndTime);
@@ -136,10 +138,17 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
 
     public void seekToVideo(int time) {
         mGLThread.seekToTime(time);
+        if (mSeekBar != null) mSeekBar.setProgress(time);
+    }
+
+    public void refreshIfWait() {
+        if (mGLThread.isStop())
+            mGLThread.seekToTime(mGLThread.getUsedTime());
     }
 
     private void onProgressInit(int progress, int maxValue) {
-        if (mProgressChangeListener != null) mProgressChangeListener.onProgressInit(progress, maxValue);
+        if (mProgressChangeListener != null)
+            mProgressChangeListener.onProgressInit(progress, maxValue);
     }
 
     private void onProgressStop() {
@@ -159,6 +168,10 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
 
     public Drama getDrama() {
         return mGLRenderWorker.getDrama();
+    }
+
+    public void updateDrama(Drama drama) {
+        mGLRenderWorker.updateDrama(drama);
     }
 
     public GLThreadRender getGLThread() {

@@ -75,18 +75,27 @@ public class TextureLoader extends Thread {
         HandlerWrapper<String, ImageInfo> handlerWrapper = mHandlerWrappers.get(0);
         if (handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE) {
             ImageInfo imageInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
-
-            Message msg = new Message();
-            Bundle b = new Bundle();
-            b.putSerializable(handlerWrapper.getKey(), imageInfo);
-            msg.setData(b);
-            handlerWrapper.sendMessage(msg);
+            returnImageInfo(handlerWrapper, imageInfo);
+            ImageTextureCache.getDefault().putImageInfo(handlerWrapper.getKey(), imageInfo);
             mHandlerWrappers.remove(handlerWrapper);
         }
 
     }
 
+    private void returnImageInfo(HandlerWrapper<String, ImageInfo> handlerWrapper, ImageInfo imageInfo) {
+        Message msg = new Message();
+        Bundle b = new Bundle();
+        b.putSerializable(handlerWrapper.getKey(), imageInfo);
+        msg.setData(b);
+        handlerWrapper.sendMessage(msg);
+    }
+
     public synchronized void loadImageTexture(HandlerWrapper<String, ImageInfo> imageInfoHandlerWrapper) {
+        ImageInfo imageInfo;
+        if ((imageInfo = ImageTextureCache.getDefault().getImageInfo(imageInfoHandlerWrapper.getKey())) != null) {
+            returnImageInfo(imageInfoHandlerWrapper, imageInfo);
+            return;
+        }
         mHandlerWrappers.add(imageInfoHandlerWrapper);
         if (isAlive())
             notify();

@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,6 +13,7 @@ import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
 public class Navigator {
 
     public static final String EXTRA_DRAMA = "extra_drama";
+    public static final int REQUEST_CODE_DRAMA_IMAGE_EDIT = 1001;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -32,6 +34,6 @@ public class Navigator {
     public static void startImageClipEditActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, ImageSegmentEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        context.startActivity(intent);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_IMAGE_EDIT);
     }
 }
