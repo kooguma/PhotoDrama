@@ -1,34 +1,37 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageClipEditBinding;
+import com.loopeer.android.photodrama4android.opengl.GLTouchListener;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
+import com.loopeer.android.photodrama4android.opengl.model.ScaleTranslateRatio;
 import com.loopeer.android.photodrama4android.opengl.render.SegmentPreviewRender;
 import com.loopeer.android.photodrama4android.ui.adapter.ImageSegmentAdapter;
 
-public class ImageSegmentEditActivity extends AppCompatActivity implements ImageSegmentAdapter.OnSelectedListener {
+public class ImageSegmentEditActivity extends AppCompatActivity implements ImageSegmentAdapter.OnSelectedListener, GLTouchListener.ScaleMoveListener {
 
-    private static final String TAG = "ImageSegmentEditActivit";
     private Drama mDrama;
     private ImageSegmentAdapter mSegmentAdapter;
     private ActivityImageClipEditBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
-    private float mScaleFactor = 1.f;
+    private GLTouchListener mGLTouchListener;
+    private ImageClip mSelectedImageClip;
 
-    private ScaleGestureDetector mScaleDetector;
+    private static final int POSITION_START = 0;
+    private static final int POSITION_END = 1;
+    private int mSelectedPosition = POSITION_START;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,32 +41,39 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
 
-        mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
-        mBinding.glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mScaleDetector.onTouchEvent(event);
-                Log.e(TAG, "ontouch");
-                return true;
-            }
-        });
+        mGLTouchListener = new GLTouchListener(mBinding.glSurfaceView);
+        mGLTouchListener.setScaleMoveListener(this);
+        mBinding.glSurfaceView.setOnTouchListener(mGLTouchListener);
 
         mBinding.glSegmentStart.setRenderer(new SegmentPreviewRender());
         mBinding.glSegmentLeft.setRenderer(new SegmentPreviewRender());
         updateImageSegmentList();
+
+        mBinding.textEnd.setOnClickListener(v -> {
+            setToImageClipEnd();
+        });
+
+        mBinding.textStart.setOnClickListener(v -> {
+            setToImageClipStart();
+        });
     }
 
-    private class ScaleListener
-            extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            mScaleFactor *= detector.getScaleFactor();
+    private void updateScaleListenerValue(ScaleTranslateRatio scaleTranslateRatio) {
+        mGLTouchListener.updateFactorXY(scaleTranslateRatio.scaleFactor
+                , scaleTranslateRatio.x
+                , scaleTranslateRatio.y);
+    }
 
-            // Don't let the object get too small or too large.
-            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
-            Log.e(TAG, mScaleFactor + " ");
-            return true;
-        }
+    private void setToImageClipStart() {
+        mSelectedPosition = POSITION_START;
+        updateVideoToStartTime(mSelectedImageClip);
+        updateScaleListenerValue(mSelectedImageClip.startScaleTransRatio);
+    }
+
+    private void setToImageClipEnd() {
+        mSelectedPosition = POSITION_END;
+        updateVideoToEndTime(mSelectedImageClip);
+        updateScaleListenerValue(mSelectedImageClip.endScaleTransRatio);
     }
 
     private void updateImageSegmentList() {
@@ -76,8 +86,19 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
 
     @Override
     public void onImageSelected(ImageClip imageClip) {
+        mSelectedImageClip = imageClip;
+        mSelectedPosition = POSITION_START;
+        setToImageClipStart();
+    }
+
+    private void updateVideoToStartTime(ImageClip imageClip) {
         mVideoPlayerManager.updateVideoTime(imageClip.startTime, imageClip.getEndTime());
         mVideoPlayerManager.seekToVideo(imageClip.startTime);
+    }
+
+    private void updateVideoToEndTime(ImageClip imageClip) {
+        mVideoPlayerManager.updateVideoTime(imageClip.startTime, imageClip.getEndTime());
+        mVideoPlayerManager.seekToVideo(imageClip.getEndTime());
     }
 
     @Override
@@ -111,6 +132,41 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
+        if (item.getItemId() == R.id.menu_done) {
+            Intent intent = new Intent();
+            intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
+            setResult(RESULT_OK, intent);
+            this.finish();
+        }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void gLViewScale(float scaleFactor) {
+        if (mSelectedPosition == POSITION_START) {
+            mSelectedImageClip.startScaleTransRatio.scaleFactor = scaleFactor;
+        } else {
+            mSelectedImageClip.endScaleTransRatio.scaleFactor = scaleFactor;
+        }
+        mVideoPlayerManager.getGLThread().requestRender();
+    }
+
+    @Override
+    public void gLViewMove(float x, float y) {
+        if (mSelectedPosition == POSITION_START) {
+            mSelectedImageClip.startScaleTransRatio.x = x;
+            mSelectedImageClip.startScaleTransRatio.y = y;
+        } else {
+            mSelectedImageClip.endScaleTransRatio.x = x;
+            mSelectedImageClip.endScaleTransRatio.y = y;
+        }
+        mVideoPlayerManager.getGLThread().requestRender();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 }

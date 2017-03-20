@@ -163,7 +163,13 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     }
 
     public void seekToTime(long usedTime) {
+        setManual(true);
         this.mUsedTime = usedTime;
+        mGLSurfaceView.requestRender();
+    }
+
+    public void requestRender() {
+        setManual(true);
         mGLSurfaceView.requestRender();
     }
 

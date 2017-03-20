@@ -157,6 +157,14 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
             mProgressChangeListener.onProgressStart(progress, maxValue);
     }
 
+    public Drama getDrama() {
+        return mGLRenderWorker.getDrama();
+    }
+
+    public GLThreadRender getGLThread() {
+        return mGLThread;
+    }
+
     public interface ProgressChangeListener {
         void onProgressInit(int progress, int maxValue);
 
