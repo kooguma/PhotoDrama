@@ -16,7 +16,10 @@ import com.loopeer.android.photodrama4android.opengl.utils.TextureHelper;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
+import static android.opengl.Matrix.multiplyMM;
+import static android.opengl.Matrix.scaleM;
 import static android.opengl.Matrix.setIdentityM;
+import static android.opengl.Matrix.translateM;
 import static com.loopeer.android.photodrama4android.opengl.Constants.BYTES_PER_FLOAT;
 
 public class ImageClipDrawer {
@@ -155,16 +158,27 @@ public class ImageClipDrawer {
     }
 
 
-    private void updateViewMatrices() {
+    private void updateViewMatrices(long usedTime) {
         setIdentityM(modelMatrix, 0);
         setIdentityM(viewMatrix, 0);
+
         setIdentityM(moveMatrix, 0);
+        scaleM(moveMatrix
+                , 0
+                , mImageClip.getScaleFactor(usedTime)
+                , mImageClip.getScaleFactor(usedTime)
+                , 0f);
+        multiplyMM(viewMatrix, 0, moveMatrix, 0, viewMatrix, 0);
+
+        setIdentityM(moveMatrix, 0);
+        translateM(moveMatrix, 0, mImageClip.getTransX(usedTime), mImageClip.getTransY(usedTime), 0f);
+        multiplyMM(viewMatrix, 0, moveMatrix, 0, viewMatrix, 0);
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mImageInfo == null || vertexArray == null) return;
         if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
-        updateViewMatrices();
+        updateViewMatrices(usedTime);
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mImageInfo.textureObjectId);
         bindData();

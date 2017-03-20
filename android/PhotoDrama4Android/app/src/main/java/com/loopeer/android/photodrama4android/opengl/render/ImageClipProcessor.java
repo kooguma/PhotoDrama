@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
+import com.loopeer.android.photodrama4android.opengl.model.ScaleTranslateRatio;
 import com.loopeer.android.photodrama4android.opengl.model.VideoGroup;
 
 import java.util.ArrayList;
@@ -32,13 +33,18 @@ public class ImageClipProcessor {
     }
 
     private void updateImageClipRenders() {
+        ScaleTranslateRatio large = new ScaleTranslateRatio(3f, 0f, 0f);
+        ScaleTranslateRatio deft = new ScaleTranslateRatio(2.5f, 0f, 0f);
         for (int i = 0; i < mImageClips.size(); i++) {
-            ImageClipDrawer imageClipRender = new ImageClipDrawer(mContext, mImageClips.get(i));
-            /*if (i == 0) {
-                imageClipRender.updateTexture();
+            ImageClip imageClip = mImageClips.get(i);
+            if (i % 2 == 0) {
+                imageClip.startScaleTransRatio = large;
+                imageClip.endScaleTransRatio = deft;
             } else {
-                imageClipRender.preLoadTexture(mMovieMakerGLSurfaceView);
-            }*/
+                imageClip.startScaleTransRatio = deft;
+                imageClip.endScaleTransRatio = large;
+            }
+            ImageClipDrawer imageClipRender = new ImageClipDrawer(mContext, imageClip);
             imageClipRender.preLoadTexture(mMovieMakerGLSurfaceView);
 
             mImageClipRenders.add(imageClipRender);
