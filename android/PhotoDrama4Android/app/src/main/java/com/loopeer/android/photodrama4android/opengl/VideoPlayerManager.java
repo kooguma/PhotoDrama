@@ -19,6 +19,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     private Context mContext;
     private int mStartTime;
     private int mEndTime;
+    private int mFinishAtTime;
 
     public VideoPlayerManager(SeekBar seekBar, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
@@ -29,6 +30,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
         mStartTime = 0;
+        mFinishAtTime = mStartTime;
         mEndTime = totalTime;
         mGLThread.updateTime(mStartTime, mEndTime);
         mIMusic = new MusicManager();
@@ -79,14 +81,18 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
 
     @Override
     public void actionFinish() {
+        finishToTime(mFinishAtTime);
+    }
+
+    private void finishToTime(int finishToTime) {
         mGLThread.stopUp();
         mGLThread.setManual(true);
-        mGLThread.setManualUpSeekBar(mStartTime);
-        if (mSeekBar != null) mSeekBar.setProgress(mStartTime);
+        mGLThread.setManualUpSeekBar(finishToTime);
+        if (mSeekBar != null) mSeekBar.setProgress(finishToTime);
         mGLThread.setManual(false);
-        mIMusic.seekToMusic(mStartTime, mSeekbarMaxValue);
+        mIMusic.seekToMusic(finishToTime, mSeekbarMaxValue);
         mIMusic.pauseMusic();
-        onProgressChange(mStartTime);
+        onProgressChange(finishToTime);
         onProgressStop();
     }
 
@@ -126,6 +132,11 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     public void startVideo() {
         mGLThread.startUp();
         mIMusic.startMusic();
+    }
+
+    public void startVideoWithFinishTime(int finishAtTime) {
+        startVideo();
+        mFinishAtTime = finishAtTime;
     }
 
     public void updateVideoTime(int startTime, int endTime) {

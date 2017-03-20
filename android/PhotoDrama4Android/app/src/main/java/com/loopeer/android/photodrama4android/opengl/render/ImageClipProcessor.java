@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
-import com.loopeer.android.photodrama4android.opengl.model.ScaleTranslateRatio;
 import com.loopeer.android.photodrama4android.opengl.model.VideoGroup;
 
 import java.util.ArrayList;
