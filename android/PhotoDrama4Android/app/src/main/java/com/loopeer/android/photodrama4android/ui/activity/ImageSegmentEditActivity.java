@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -50,12 +51,18 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         updateImageSegmentList();
 
         mBinding.textEnd.setOnClickListener(v -> {
-            setToImageClipEnd();
+            selectedImageClipEnd();
         });
 
         mBinding.textStart.setOnClickListener(v -> {
-            setToImageClipStart();
+            selectedImageClipStart();
         });
+
+    }
+
+    public void onPlayClick(View view) {
+        mVideoPlayerManager.seekToVideo(mSelectedImageClip.startTime);
+        mVideoPlayerManager.startVideo();
     }
 
     private void updateScaleListenerValue(ScaleTranslateRatio scaleTranslateRatio) {
@@ -64,13 +71,17 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
                 , scaleTranslateRatio.y);
     }
 
-    private void setToImageClipStart() {
+    private void selectedImageClipStart() {
+        mBinding.textStart.setSelected(true);
+        mBinding.textEnd.setSelected(false);
         mSelectedPosition = POSITION_START;
         updateVideoToStartTime(mSelectedImageClip);
         updateScaleListenerValue(mSelectedImageClip.startScaleTransRatio);
     }
 
-    private void setToImageClipEnd() {
+    private void selectedImageClipEnd() {
+        mBinding.textStart.setSelected(false);
+        mBinding.textEnd.setSelected(true);
         mSelectedPosition = POSITION_END;
         updateVideoToEndTime(mSelectedImageClip);
         updateScaleListenerValue(mSelectedImageClip.endScaleTransRatio);
@@ -88,7 +99,7 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
     public void onImageSelected(ImageClip imageClip) {
         mSelectedImageClip = imageClip;
         mSelectedPosition = POSITION_START;
-        setToImageClipStart();
+        selectedImageClipStart();
     }
 
     private void updateVideoToStartTime(ImageClip imageClip) {

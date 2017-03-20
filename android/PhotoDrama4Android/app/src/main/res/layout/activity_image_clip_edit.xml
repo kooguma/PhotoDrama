@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.loopeer.android.moviemaker.ui.activity.ImageSegmentEditActivity">
@@ -28,6 +27,17 @@
 
         </android.support.v7.widget.RecyclerView>
 
+        <ImageButton
+            style="?actionButtonStyle"
+            android:onClick="onPlayClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
+
         <android.support.constraint.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
@@ -45,12 +55,14 @@
             app:layout_constraintRight_toLeftOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
 
+
         <Button
             android:id="@+id/text_start"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginRight="24dp"
             android:layout_marginTop="24dp"
+            android:background="@drawable/selector_foreground_image_segment"
             android:gravity="center"
             android:text="起始"
             android:textColor="?android:attr/textColorSecondary"
@@ -64,6 +76,7 @@
             android:layout_height="100dp"
             android:layout_marginRight="24dp"
             android:layout_marginTop="24dp"
+            android:background="@drawable/selector_foreground_image_segment"
             android:gravity="center"
             android:text="结束"
             android:textColor="?android:attr/textColorSecondary"

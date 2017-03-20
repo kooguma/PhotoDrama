@@ -45,6 +45,7 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     }
 
     public void startUp() {
+        setManual(false);
         synchronized (this) {
             mIsStop = false;
             this.notify();

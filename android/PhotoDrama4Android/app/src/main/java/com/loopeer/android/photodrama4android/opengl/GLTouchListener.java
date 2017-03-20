@@ -33,8 +33,8 @@ public class GLTouchListener implements View.OnTouchListener{
 
     public void updateFactorXY(float scaleFactor, float x, float y) {
         mScaleFactor = scaleFactor;
-        mPosX = x;
-        mPosY = y;
+        mPosX = getOpRelatX(x);
+        mPosY = getOpRelatY(-y);
     }
 
     @Override
@@ -103,6 +103,14 @@ public class GLTouchListener implements View.OnTouchListener{
 
     private float getRelatY(float posY) {
         return posY * 2f / mGLSurfaceView.getHeight();
+    }
+
+    private float getOpRelatX(float ratioX) {
+        return ratioX * mGLSurfaceView.getWidth() / 2f;
+    }
+
+    private float getOpRelatY(float ratioY) {
+        return ratioY * mGLSurfaceView.getHeight() / 2f;
     }
 
     private void gLViewScale(float scaleFactor) {
