@@ -38,17 +38,17 @@ public class TextureLoader extends Thread {
 
     public TextureLoader(EGL10 egl, EGLContext renderContext, EGLDisplay display,
                          EGLConfig eglConfig, Context androidContext) {
-        update(egl, renderContext, display, eglConfig, androidContext);
+        //update(egl, renderContext, display, eglConfig, androidContext,);
     }
 
     public void update(EGL10 egl, EGLContext renderContext, EGLDisplay display,
-                       EGLConfig eglConfig, Context androidContext) {
+                       EGLConfig eglConfig, Context androidContext,int[] contextAttributes) {
         this.egl = egl;
         this.display = display;
         this.eglConfig = eglConfig;
         this.mContext = androidContext;
 
-        textureContext = egl.eglCreateContext(display, eglConfig, renderContext, null);
+        textureContext = egl.eglCreateContext(display, eglConfig, renderContext, contextAttributes);
     }
 
     public void run() {

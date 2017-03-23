@@ -69,13 +69,10 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
             public EGLContext createContext(final EGL10 egl, final EGLDisplay display,
                                             final EGLConfig eglConfig) {
                 final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
-                int[] contextAttributes =
-                        { EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE};
-
-                EGLContext renderContext = egl.eglCreateContext(display, eglConfig,
-                        EGL11.EGL_NO_CONTEXT, contextAttributes);
+                int[] contextAttributes = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE};
+                EGLContext renderContext = egl.eglCreateContext(display, eglConfig, EGL11.EGL_NO_CONTEXT, contextAttributes);
                 mTextureLoader = new TextureLoader();
-                mTextureLoader.update(egl, renderContext, display, eglConfig, getContext());
+                mTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
                 if (!mTextureLoader.isAlive()) mTextureLoader.start();
                 return renderContext;
             }
