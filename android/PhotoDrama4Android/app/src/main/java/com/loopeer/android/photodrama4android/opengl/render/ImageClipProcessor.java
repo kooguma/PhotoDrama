@@ -34,9 +34,9 @@ public class ImageClipProcessor {
     private void updateImageClipRenders() {
         for (int i = 0; i < mImageClips.size(); i++) {
             ImageClip imageClip = mImageClips.get(i);
-            ImageClipDrawer imageClipRender = new ImageClipDrawer(mContext, imageClip);
+            ImageClipDrawer imageClipRender = new ImageClipDrawer(mMovieMakerGLSurfaceView, imageClip);
+//            imageClipRender.checkBitmapReady();
             imageClipRender.preLoadTexture(mMovieMakerGLSurfaceView);
-
             mImageClipRenders.add(imageClipRender);
         }
     }

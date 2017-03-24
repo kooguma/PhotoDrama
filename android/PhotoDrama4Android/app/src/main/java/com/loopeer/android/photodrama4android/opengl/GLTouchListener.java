@@ -64,7 +64,7 @@ public class GLTouchListener implements View.OnTouchListener{
                 final float dy = y - mLastTouchY;
                 mPosX += dx;
                 mPosY += dy;
-                gLViewMove(getRelatX(mPosX), -getRelatY(mPosY));
+                gLViewMove(getRelatX(mPosX), getRelatY(mPosY));
                 mLastTouchX = x;
                 mLastTouchY = y;
                 break;
@@ -98,19 +98,23 @@ public class GLTouchListener implements View.OnTouchListener{
     }
 
     private float getRelatX(float posX) {
-        return posX * 2f / mGLSurfaceView.getWidth();
+        return posX;
+//        return posX * 2f / mGLSurfaceView.getWidth();
     }
 
     private float getRelatY(float posY) {
-        return posY * 2f / mGLSurfaceView.getHeight();
+        return posY;
+//        return posY * 2f / mGLSurfaceView.getHeight();
     }
 
     private float getOpRelatX(float ratioX) {
-        return ratioX * mGLSurfaceView.getWidth() / 2f;
+        return ratioX;
+//        return ratioX * mGLSurfaceView.getWidth() / 2f;
     }
 
     private float getOpRelatY(float ratioY) {
-        return ratioY * mGLSurfaceView.getHeight() / 2f;
+        return ratioY;
+//        return ratioY * mGLSurfaceView.getHeight() / 2f;
     }
 
     private void gLViewScale(float scaleFactor) {

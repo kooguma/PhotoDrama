@@ -1,12 +1,14 @@
 package com.loopeer.android.photodrama4android.opengl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.EGL14;
 import android.os.Bundle;
 import android.os.Message;
 
+import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
+import com.loopeer.android.photodrama4android.opengl.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.opengl.model.ImageInfo;
-import com.loopeer.android.photodrama4android.opengl.utils.TextureHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +76,17 @@ public class TextureLoader extends Thread {
         if (mHandlerWrappers.isEmpty()) return;
         HandlerWrapper<String, ImageInfo> handlerWrapper = mHandlerWrappers.get(0);
         if (handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE) {
-            ImageInfo imageInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
+//            ImageInfo imageInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
+            ImageInfo imageInfo = null;
+            if (BitmapFactory.getInstance().getBitmapFromMemCache(handlerWrapper.getData()) != null) {
+                returnImageInfo(handlerWrapper, imageInfo);
+                mHandlerWrappers.remove(handlerWrapper);
+                return;
+            }
+            final Bitmap bitmap = ImageUtils.imageZoomByScreen(mContext, handlerWrapper.getData());
+            BitmapFactory.getInstance().addBitmapToCache(handlerWrapper.getData(), bitmap);
             returnImageInfo(handlerWrapper, imageInfo);
-            ImageTextureCache.getDefault().putImageInfo(handlerWrapper.getKey(), imageInfo);
+//            ImageTextureCache.getDefault().putImageInfo(handlerWrapper.getKey(), imageInfo);
             mHandlerWrappers.remove(handlerWrapper);
         }
 
@@ -91,11 +101,11 @@ public class TextureLoader extends Thread {
     }
 
     public synchronized void loadImageTexture(HandlerWrapper<String, ImageInfo> imageInfoHandlerWrapper) {
-        ImageInfo imageInfo;
+        /*ImageInfo imageInfo;
         if ((imageInfo = ImageTextureCache.getDefault().getImageInfo(imageInfoHandlerWrapper.getKey())) != null) {
             returnImageInfo(imageInfoHandlerWrapper, imageInfo);
             return;
-        }
+        }*/
         mHandlerWrappers.add(imageInfoHandlerWrapper);
         if (isAlive())
             notify();

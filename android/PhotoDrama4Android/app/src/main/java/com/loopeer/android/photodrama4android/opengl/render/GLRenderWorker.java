@@ -13,7 +13,7 @@ import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glViewport;
-import static android.opengl.Matrix.orthoM;
+import static android.opengl.Matrix.setIdentityM;
 
 public class GLRenderWorker implements IRendererWorker {
 
@@ -44,17 +44,12 @@ public class GLRenderWorker implements IRendererWorker {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         glViewport(0, 0, width, height);
-        final float aspectRatio = width > height ? (float) width / (float) height : (float) height / (float) width;
-        if (width > height) {
-            orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
-        } else {
-            orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
-        }
     }
 
     @Override
     public void drawFrame(Context context, GL10 gl, long usedTime) {
         glClear(GL_COLOR_BUFFER_BIT);
+        setIdentityM(projectionMatrix, 0);
         mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
     }
 

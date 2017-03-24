@@ -2,42 +2,28 @@ package com.loopeer.android.photodrama4android.opengl.render;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.opengl.GLES20;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.opengl.HandlerWrapper;
 import com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
-import com.loopeer.android.photodrama4android.opengl.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.opengl.data.VertexArray;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
 import com.loopeer.android.photodrama4android.opengl.model.ImageInfo;
 import com.loopeer.android.photodrama4android.opengl.programs.ImageClipShaderProgram;
 import com.loopeer.android.photodrama4android.opengl.utils.TextureHelper;
 
-import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
-import static android.opengl.GLES20.GL_LINEAR;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.GL_TEXTURE_MAG_FILTER;
-import static android.opengl.GLES20.GL_TEXTURE_MIN_FILTER;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
 import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glGenTextures;
-import static android.opengl.GLES20.glTexParameteri;
-import static android.opengl.GLUtils.texImage2D;
+import static android.opengl.Matrix.multiplyMM;
+import static android.opengl.Matrix.scaleM;
 import static android.opengl.Matrix.setIdentityM;
+import static android.opengl.Matrix.translateM;
 import static com.loopeer.android.photodrama4android.opengl.Constants.BYTES_PER_FLOAT;
 
-public class ImageClipDrawer extends ClipDrawer{
+public class ImageClipDrawer2 {
 
     private static final String TAG = "ImageClipDrawer";
 
@@ -49,24 +35,22 @@ public class ImageClipDrawer extends ClipDrawer{
     private Context mContext;
     private VertexArray vertexArray;
 
-    private Bitmap mBitmap;
     public ImageInfo mImageInfo;
     public ImageClip mImageClip;
 
     private ImageClipShaderProgram textureProgram;
     private final float[] modelMatrix = new float[16];
+    private final float[] moveMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
 
-    private int[] mCanvasTextureId = {-1};
 
     private int mHorizontalBlockNum = 1;
     private int mVerticalBlockNum = 1;
 
-    public ImageClipDrawer(View view, ImageClip imageClip) {
-        super(view);
-        mContext = view.getContext();
+    public ImageClipDrawer2(Context context, ImageClip imageClip) {
+        mContext = context;
         mImageClip = imageClip;
-        textureProgram = new ImageClipShaderProgram(mContext);
+        textureProgram = new ImageClipShaderProgram(context);
     }
 
     public void preLoadTexture(MovieMakerGLSurfaceView glView) {
@@ -77,8 +61,7 @@ public class ImageClipDrawer extends ClipDrawer{
                 , new HandlerWrapper.Callback<ImageInfo>() {
             @Override
             public void onResult(ImageInfo t) {
-                /*updateTexture(t);*/
-                checkBitmapReady();
+                updateTexture(t);
                 VideoPlayManagerContainer.getDefault().notifyRender(mContext);
             }
         });
@@ -87,9 +70,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
 
     public void checkBitmapReady() {
-        mBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mImageClip.path);
-        mImageInfo = new ImageInfo(-1, mBitmap.getWidth(), mBitmap.getHeight());
-        vertexArray = new VertexArray(createData());
+
     }
 
     private void updateTexture(ImageInfo t) {
@@ -106,14 +87,61 @@ public class ImageClipDrawer extends ClipDrawer{
     }
 
     private float[] createData() {
-        float[] result = new float[]{
-                -1f, 1f, 0f, 0f,
-                -1f, -1f, 0f, 1f,
-                1f, -1f, 1f, 1f,
-                1f, -1f, 1f, 1f,
-                1f, 1f, 1f, 0f,
-                -1f, 1f, 0f, 0f
-        };
+        float halfWidth = 1f * mImageInfo.width / mImageInfo.height;
+        float hMax = 1f;
+        float wMin = -halfWidth;
+        float wCMin = 0f;
+        float hCMin = 0f;
+        float itemWidth = halfWidth * 2 / mHorizontalBlockNum;
+        float itemHeight = 1f * 2 / mVerticalBlockNum;
+        float itemCWidth = 1f / mHorizontalBlockNum;
+        float itemCHeight = 1f / mVerticalBlockNum;
+        float[] result = new float[mHorizontalBlockNum * mVerticalBlockNum * 6 * 4];
+        for (int i = 0; i < mHorizontalBlockNum; i++) {
+            for (int j = 0; j < mVerticalBlockNum; j++) {
+                float topLeftPX = wMin + itemWidth * i;
+                float topLeftPY = hMax - itemHeight * j;
+                float topLeftCS = wCMin + itemCWidth * i;
+                float topLeftCT = hCMin + itemCHeight * j;
+
+                int index = (i * mVerticalBlockNum + j) * 6 * 4;
+                result[index + 0] = topLeftPX;
+                result[index + 1] = topLeftPY;
+                result[index + 2] = topLeftCS;
+                result[index + 3] = topLeftCT;
+
+                //bottomleft
+                result[index + 4] = topLeftPX;
+                result[index + 5] = topLeftPY - itemHeight;
+                result[index + 6] = topLeftCS;
+                result[index + 7] = topLeftCT + itemCHeight;
+
+                //bottomright
+                result[index + 8] = topLeftPX + itemWidth;
+                result[index + 9] = topLeftPY - itemHeight;
+                result[index + 10] = topLeftCS + itemCWidth;
+                result[index + 11] = topLeftCT + itemCHeight;
+
+                //bottomright
+                result[index + 12] = topLeftPX + itemWidth;
+                result[index + 13] = topLeftPY - itemHeight;
+                result[index + 14] = topLeftCS + itemCWidth;
+                result[index + 15] = topLeftCT + itemCHeight;
+
+                //topright
+                result[index + 16] = topLeftPX + itemWidth;
+                result[index + 17] = topLeftPY;
+                result[index + 18] = topLeftCS + itemCWidth;
+                result[index + 19] = topLeftCT;
+
+                //topleft
+                result[index + 20] = topLeftPX;
+                result[index + 21] = topLeftPY;
+                result[index + 22] = topLeftCS;
+                result[index + 23] = topLeftCT;
+            }
+        }
+        int i = 20;
         return result;
     }
 
@@ -135,37 +163,22 @@ public class ImageClipDrawer extends ClipDrawer{
         glDrawArrays(GL_TRIANGLES, 0, mHorizontalBlockNum * mVerticalBlockNum * 6);
     }
 
-    private void getTexture(long usedTime) {
-        Matrix matrix = new Matrix();
-        matrix.postScale(1f * mViewHeight / mBitmap.getHeight(), 1f * mViewHeight / mBitmap.getHeight());
-        matrix.postTranslate(-1f * mBitmap.getWidth() * mViewHeight / mBitmap.getHeight() / 2, -1f * mViewHeight / 2);
-        matrix.postScale(mImageClip.getScaleFactor(usedTime)
-                , mImageClip.getScaleFactor(usedTime));
-        matrix.postTranslate(mImageClip.getTransX(usedTime), mImageClip.getTransY(usedTime));
-        matrix.postTranslate(mViewWidth / 2, mViewHeight / 2);
-
-        Bitmap localBitmap = Bitmap.createBitmap(mViewWidth, mViewHeight, Bitmap.Config.ARGB_8888);
-        Canvas localCanvas = new Canvas(localBitmap);
-        Paint localPaint = new Paint();
-        localPaint.setFilterBitmap(true);
-        localCanvas.drawBitmap(mBitmap, matrix, localPaint);
-        if (mCanvasTextureId[0] != -1) {
-            GLES20.glDeleteTextures(1, mCanvasTextureId, 0);
-        }
-        glGenTextures(1, mCanvasTextureId, 0);
-        glBindTexture(GL_TEXTURE_2D, mCanvasTextureId[0]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        texImage2D(GL_TEXTURE_2D, 0, 6408, localBitmap, 0);
-        localBitmap.recycle();
-    }
 
     private void updateViewMatrices(long usedTime) {
-        getTexture(usedTime);
         setIdentityM(modelMatrix, 0);
         setIdentityM(viewMatrix, 0);
+
+        setIdentityM(moveMatrix, 0);
+        scaleM(moveMatrix
+                , 0
+                , mImageClip.getScaleFactor(usedTime)
+                , mImageClip.getScaleFactor(usedTime)
+                , 0f);
+        multiplyMM(viewMatrix, 0, moveMatrix, 0, viewMatrix, 0);
+
+        setIdentityM(moveMatrix, 0);
+        translateM(moveMatrix, 0, mImageClip.getTransX(usedTime), mImageClip.getTransY(usedTime), 0f);
+        multiplyMM(viewMatrix, 0, moveMatrix, 0, viewMatrix, 0);
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {
@@ -173,7 +186,7 @@ public class ImageClipDrawer extends ClipDrawer{
         if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
         updateViewMatrices(usedTime);
         textureProgram.useProgram();
-        textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);
+        textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mImageInfo.textureObjectId);
         bindData();
         draw();
 
