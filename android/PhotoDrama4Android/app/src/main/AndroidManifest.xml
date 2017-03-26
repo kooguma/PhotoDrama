@@ -25,8 +25,13 @@
         <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.TransitionEditActivity"
+            android:label="@string/label_transition_edit"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

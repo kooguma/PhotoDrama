@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">PhotoDrama</string>
     <string name="label_segment_edit">Segment Edit</string>
-
+    <string name="label_transition_edit">Transition Edit</string>
+    
+    <!-- transition edit -->
+    <string name="transition_selected_effect">选择转场</string>
+    <string name="transition_selected_segment">选择片段</string>
+    <string name="transition_name_no">无</string>
+    <string name="transition_name_slide">幻灯片</string>
+    <string name="transition_name_wipe">擦出</string>
+    <string name="transition_name_dissolve">叠化</string>
+    <string name="transition_name_fade">渐变</string>
     <string name="common_done">Done</string>
 
 

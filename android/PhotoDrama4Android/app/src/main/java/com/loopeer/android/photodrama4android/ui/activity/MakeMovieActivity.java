@@ -108,6 +108,10 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         Navigator.startImageClipEditActivity(this, mDrama);
     }
 
+    public void onTransitionEdit(View view) {
+        Navigator.startTransitionEditActivity(this, mDrama);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

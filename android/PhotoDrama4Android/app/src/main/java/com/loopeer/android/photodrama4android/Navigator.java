@@ -9,6 +9,7 @@ import com.loopeer.android.photodrama4android.opengl.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
+import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity;
 
 public class Navigator {
 
@@ -33,6 +34,12 @@ public class Navigator {
 
     public static void startImageClipEditActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, ImageSegmentEditActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_IMAGE_EDIT);
+    }
+
+    public static void startTransitionEditActivity(Context context, Drama drama) {
+        Intent intent = new Intent(context, TransitionEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
         ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_IMAGE_EDIT);
     }

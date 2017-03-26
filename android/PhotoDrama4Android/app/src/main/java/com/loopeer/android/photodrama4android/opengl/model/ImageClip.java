@@ -1,12 +1,11 @@
 package com.loopeer.android.photodrama4android.opengl.model;
 
 
-import com.laputapp.model.BaseModel;
-
-public class ImageClip extends BaseModel{
+public class ImageClip extends Clip{
     public String path;
-    public int startTime = 0;
+    public int startWithPreTransitionTime = -1;
     public int showTime = 2000;
+    public int endWithNextTransitionTime = -1;
     public ScaleTranslateRatio startScaleTransRatio;
     public ScaleTranslateRatio endScaleTransRatio;
 

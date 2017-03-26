@@ -2,7 +2,7 @@ package com.loopeer.android.photodrama4android.opengl.model;
 
 
 import com.laputapp.model.BaseModel;
-import com.loopeer.android.photodrama4android.opengl.utils.ImageClipsCreater;
+import com.loopeer.android.photodrama4android.opengl.utils.ClipsCreator;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,8 @@ public class Drama extends BaseModel{
     public static Drama createFromPath(ArrayList<String> urls) {
         Drama drama = new Drama();
         VideoGroup videoGroup = new VideoGroup();
-        videoGroup.imageClips = ImageClipsCreater.createImageClips(urls);
+        videoGroup.imageClips = ClipsCreator.createImageClips(urls);
+        videoGroup.transitionClips = ClipsCreator.createTransitionClips(videoGroup.imageClips);
         drama.videoGroup = videoGroup;
         return drama;
     }

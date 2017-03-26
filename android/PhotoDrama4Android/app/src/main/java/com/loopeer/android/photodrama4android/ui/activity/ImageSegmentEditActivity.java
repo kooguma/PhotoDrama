@@ -18,7 +18,6 @@ import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
 import com.loopeer.android.photodrama4android.opengl.model.ScaleTranslateRatio;
-import com.loopeer.android.photodrama4android.opengl.render.SegmentPreviewRender;
 import com.loopeer.android.photodrama4android.ui.adapter.ImageSegmentAdapter;
 
 public class ImageSegmentEditActivity extends AppCompatActivity implements ImageSegmentAdapter.OnSelectedListener, GLTouchListener.ScaleMoveListener {
@@ -48,8 +47,6 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         mGLTouchListener.setScaleMoveListener(this);
         mBinding.glSurfaceView.setOnTouchListener(mGLTouchListener);
 
-        mBinding.glSegmentStart.setRenderer(new SegmentPreviewRender());
-        mBinding.glSegmentLeft.setRenderer(new SegmentPreviewRender());
         updateImageSegmentList();
 
         mBinding.textEnd.setOnClickListener(v -> {
