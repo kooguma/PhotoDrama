@@ -3,9 +3,8 @@ package com.loopeer.android.photodrama4android.opengl.model;
 
 public class ImageClip extends Clip{
     public String path;
-    public int startWithPreTransitionTime = -1;
-    public int showTime = 2000;
-    public int endWithNextTransitionTime = -1;
+    public int startWithPreTransitionTime = 0;
+    public int endWithNextTransitionTime = 0;
     public ScaleTranslateRatio startScaleTransRatio;
     public ScaleTranslateRatio endScaleTransRatio;
 
@@ -16,10 +15,8 @@ public class ImageClip extends Clip{
     public ImageClip(String path, int startTime) {
         this.path = path;
         this.startTime = startTime;
-    }
-
-    public int getEndTime() {
-        return showTime + startTime - 1;
+        this.startWithPreTransitionTime = startTime;
+        this.endWithNextTransitionTime = getEndTime();
     }
 
     @Override
@@ -45,5 +42,14 @@ public class ImageClip extends Clip{
 
     private float getRatio(long usedTime) {
         return 1f * (usedTime - startTime) / (showTime - 1);
+    }
+
+    @Override
+    public String toString() {
+        return "ImageClip{" +
+                super.toString() +
+                "startWithPreTransitionTime=" + startWithPreTransitionTime +
+                ", endWithNextTransitionTime=" + endWithNextTransitionTime +
+                '}';
     }
 }

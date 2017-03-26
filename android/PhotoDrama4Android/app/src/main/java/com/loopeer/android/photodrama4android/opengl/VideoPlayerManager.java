@@ -24,17 +24,24 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     public VideoPlayerManager(SeekBar seekBar, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
         mSeekBar = seekBar;
+        mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
+        mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
+        mIMusic = new MusicManager();
+
+        updateTime(drama);
+        init();
+    }
+
+    private void updateTime(Drama drama) {
         int totalTime = drama.getShowTimeTotal();
         setSeekBarMaxValue(totalTime);
         if (mSeekBar != null) mSeekBar.setMax(totalTime);
-        mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
-        mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
         mStartTime = 0;
         mFinishAtTime = mStartTime;
         mEndTime = totalTime;
         mGLThread.updateTime(mStartTime, mEndTime);
-        mIMusic = new MusicManager();
-        init();
+
+        onProgressInit(mStartTime, mSeekbarMaxValue);
     }
 
     private void init() {
@@ -182,6 +189,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     }
 
     public void updateDrama(Drama drama) {
+        updateTime(drama);
         mGLRenderWorker.updateDrama(drama);
     }
 

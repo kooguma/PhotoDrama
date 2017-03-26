@@ -9,7 +9,6 @@ import com.loopeer.android.photodrama4android.opengl.model.VideoGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ClipsCreator {
@@ -53,20 +52,33 @@ public class ClipsCreator {
         return transitionClips;
     }
 
+    public static void updateImageTransitionClips(VideoGroup videoGroup) {
+        List<ImageClip> imageClips = videoGroup.imageClips;
+        List<TransitionClip> transitionClips = videoGroup.transitionClips;
+
+        for (int i = 0; i < imageClips.size() - 1; i++) {
+            ImageClip imageClip = imageClips.get(i);
+            ImageClip nextImageClip = imageClips.get(i + 1);
+            TransitionClip transitionClip = transitionClips.get(i);
+            imageClip.endWithNextTransitionTime = imageClip.getEndTime() + transitionClip.showTime;
+            transitionClip.startTime = imageClip.getEndTime() + 1;
+            nextImageClip.startWithPreTransitionTime = imageClip.getEndTime() + 1;
+            nextImageClip.startTime = imageClip.endWithNextTransitionTime + 1;
+            nextImageClip.endWithNextTransitionTime = nextImageClip.getEndTime();
+        }
+    }
+
     public static List<TransitionImageWrapper> createTransiImageWrappers(VideoGroup videoGroup) {
         List<Clip> clips = new ArrayList<>();
         clips.addAll(videoGroup.imageClips);
         clips.addAll(videoGroup.transitionClips);
-        Collections.sort(clips, new Comparator<Clip>() {
-            @Override
-            public int compare(Clip o1, Clip o2) {
-                int x1 = o1.startTime;
-                int y1 = o2.startTime;
-                if (x1 < y1) return -1;
-                if (x1 > y1) return 1;
-                if (x1 == y1 && o1 instanceof TransitionClip) return -1;
-                return 1;
-            }
+        Collections.sort(clips, (o1, o2) -> {
+            int x1 = o1.startTime;
+            int y1 = o2.startTime;
+            if (x1 < y1) return -1;
+            if (x1 > y1) return 1;
+            if (x1 == y1 && o1 instanceof TransitionClip) return -1;
+            return 1;
         });
         List<TransitionImageWrapper> transitionImageWrappers = new ArrayList<>();
         for (Clip clip : clips) {

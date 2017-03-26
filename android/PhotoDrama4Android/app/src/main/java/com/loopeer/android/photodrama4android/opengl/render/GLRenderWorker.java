@@ -37,7 +37,7 @@ public class GLRenderWorker implements IRendererWorker {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        mImageClipProcessor = new ImageClipProcessor(mContext, mMovieMakerGLSurfaceView);
+        mImageClipProcessor = new ImageClipProcessor(mMovieMakerGLSurfaceView);
         mImageClipProcessor.updateData(mDrama.videoGroup);
     }
 

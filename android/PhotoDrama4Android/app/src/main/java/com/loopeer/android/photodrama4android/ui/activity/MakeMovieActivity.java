@@ -117,11 +117,12 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
+            Drama drama = (Drama) data.getSerializableExtra(Navigator.EXTRA_DRAMA);
+            if (drama != null)
+                mDrama = drama;
             switch (requestCode) {
                 case Navigator.REQUEST_CODE_DRAMA_IMAGE_EDIT:
-                    Drama drama = (Drama) data.getSerializableExtra(Navigator.EXTRA_DRAMA);
-                    if (drama != null)
-                        mDrama = drama;
+                case Navigator.REQUEST_CODE_DRAMA_TRANSITION_EDIT:
                     mVideoPlayerManager.updateDrama(mDrama);
                     break;
                 default:

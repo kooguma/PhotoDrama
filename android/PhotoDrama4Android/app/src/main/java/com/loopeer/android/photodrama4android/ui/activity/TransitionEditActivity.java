@@ -1,9 +1,12 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -62,7 +65,10 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
         List<TransitionClip> transitionClips = new ArrayList<>();
         TransitionType[] types = TransitionType.values();
         for (int i = 0; i < types.length; i++) {
-            transitionClips.add(new TransitionClip(types[i]));
+            TransitionClip clip = new TransitionClip(types[i]);
+            if (types[i] == TransitionType.NO)
+                clip.showTime = 0;
+            transitionClips.add(clip);
         }
         return transitionClips;
     }
@@ -80,5 +86,30 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
     @Override
     public void onEffectSelected(TransitionClip transitionClip) {
         mImageTransitionSegmentAdapter.notifyTransition(transitionClip);
+        updateDramaImageAndTransitionTime();
+    }
+
+    private void updateDramaImageAndTransitionTime() {
+        ClipsCreator.updateImageTransitionClips(mDrama.videoGroup);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        if (item.getItemId() == R.id.menu_done) {
+            Intent intent = new Intent();
+            intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
+            setResult(RESULT_OK, intent);
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

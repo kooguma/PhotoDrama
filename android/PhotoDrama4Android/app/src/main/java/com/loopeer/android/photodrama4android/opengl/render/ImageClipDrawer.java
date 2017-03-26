@@ -16,6 +16,7 @@ import com.loopeer.android.photodrama4android.opengl.HandlerWrapper;
 import com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.cache.BitmapFactory;
+import com.loopeer.android.photodrama4android.opengl.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.opengl.data.VertexArray;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
 import com.loopeer.android.photodrama4android.opengl.model.ImageInfo;
@@ -102,19 +103,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void updateTexture() {
         mImageInfo = TextureHelper.loadTexture(mContext, mImageClip.path);
-        vertexArray = new VertexArray(createData());
-    }
-
-    private float[] createData() {
-        float[] result = new float[]{
-                -1f, 1f, 0f, 0f,
-                -1f, -1f, 0f, 1f,
-                1f, -1f, 1f, 1f,
-                1f, -1f, 1f, 1f,
-                1f, 1f, 1f, 0f,
-                -1f, 1f, 0f, 0f
-        };
-        return result;
+        createVertex();
     }
 
     private void bindData() {
@@ -160,6 +149,12 @@ public class ImageClipDrawer extends ClipDrawer{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         texImage2D(GL_TEXTURE_2D, 0, 6408, localBitmap, 0);
         localBitmap.recycle();
+        if (usedTime > mImageClip.getEndTime()) {
+            TextureIdCache.getInstance().addIdToCache(mImageClip.getEndTime() + 1, mCanvasTextureId[0]);
+        }
+        if (usedTime < mImageClip.startTime) {
+            TextureIdCache.getInstance().addIdToCache(mImageClip.startTime - 1, mCanvasTextureId[0]);
+        }
     }
 
     private void updateViewMatrices(long usedTime) {
@@ -170,12 +165,12 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mImageInfo == null || vertexArray == null) return;
-        if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
+        if (usedTime < mImageClip.startWithPreTransitionTime || usedTime > mImageClip.endWithNextTransitionTime) return;
         updateViewMatrices(usedTime);
+        if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);
         bindData();
         draw();
-
     }
 }

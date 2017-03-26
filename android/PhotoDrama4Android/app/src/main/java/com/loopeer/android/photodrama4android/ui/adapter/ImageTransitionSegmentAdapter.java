@@ -81,7 +81,8 @@ public class ImageTransitionSegmentAdapter extends BaseFooterAdapter<TransitionI
     }
 
     public void notifyTransition(TransitionClip transitionClip) {
-        mSelectedTransitionImageWrapper.transitionClip = transitionClip;
+        mSelectedTransitionImageWrapper.transitionClip.showTime = transitionClip.showTime;
+        mSelectedTransitionImageWrapper.transitionClip.transitionType = transitionClip.transitionType;
         notifyDataSetChanged();
     }
 

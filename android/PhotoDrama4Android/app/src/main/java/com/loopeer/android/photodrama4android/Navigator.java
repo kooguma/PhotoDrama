@@ -15,6 +15,7 @@ public class Navigator {
 
     public static final String EXTRA_DRAMA = "extra_drama";
     public static final int REQUEST_CODE_DRAMA_IMAGE_EDIT = 1001;
+    public static final int REQUEST_CODE_DRAMA_TRANSITION_EDIT = 1002;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -41,6 +42,6 @@ public class Navigator {
     public static void startTransitionEditActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, TransitionEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_IMAGE_EDIT);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_TRANSITION_EDIT);
     }
 }
