@@ -18,13 +18,13 @@ public enum TransitionType {
     @SerializedName("1")
     SLIDE(1, R.string.transition_name_slide, R.drawable.ic_transition_slide, SlideDrawer.class),
 
-    @SerializedName("1")
+    @SerializedName("2")
     WIPE(2, R.string.transition_name_wipe, R.drawable.ic_transition_wipe, WipeDrawer.class),
 
-    @SerializedName("1")
+    @SerializedName("3")
     DISSOLVE(3, R.string.transition_name_dissolve, R.drawable.ic_transition_dissolve, DissolveDrawer.class),
 
-    @SerializedName("2")
+    @SerializedName("4")
     FADE(4, R.string.transition_name_fade, R.drawable.ic_transition_fade, FadeDrawer.class);
 
     private final int mValue;

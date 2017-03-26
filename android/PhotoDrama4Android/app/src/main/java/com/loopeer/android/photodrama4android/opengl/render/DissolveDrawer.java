@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
-import com.loopeer.android.photodrama4android.opengl.programs.WipeShaderProgram;
+import com.loopeer.android.photodrama4android.opengl.programs.DissolveShaderProgram;
 
 import static com.loopeer.android.photodrama4android.opengl.Constants.BYTES_PER_FLOAT;
 
@@ -18,19 +18,20 @@ public class DissolveDrawer extends TransitionDrawer{
 
     private Context mContext;
 
-    private WipeShaderProgram textureProgram;
+    private DissolveShaderProgram textureProgram;
 
     public DissolveDrawer(View view, TransitionClip transitionClip) {
         super(view, transitionClip);
         mContext = view.getContext();
-        textureProgram = new WipeShaderProgram(mContext);
+        textureProgram = new DissolveShaderProgram(mContext);
+        createVertex();
     }
 
     @Override
     public void updateProgramBindData(long usedTime, float[] pMatrix) {
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre, mTextureIdNext
-                , getProgress(usedTime), 2);
+                , getProgress(usedTime));
         bindData();
     }
 
