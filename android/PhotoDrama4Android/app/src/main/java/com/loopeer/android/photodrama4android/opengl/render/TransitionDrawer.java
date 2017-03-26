@@ -24,7 +24,7 @@ public abstract class TransitionDrawer extends ClipDrawer {
         mTransitionClip = transitionClip;
     }
 
-    private void draw() {
+    protected void draw() {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 

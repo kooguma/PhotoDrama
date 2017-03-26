@@ -4,9 +4,12 @@ package com.loopeer.android.photodrama4android.opengl.render;
 import android.content.Context;
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.opengl.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
-import com.loopeer.android.photodrama4android.opengl.programs.WipeShaderProgram;
+import com.loopeer.android.photodrama4android.opengl.programs.ImageClipShaderProgram;
 
+import static android.opengl.Matrix.setIdentityM;
+import static android.opengl.Matrix.translateM;
 import static com.loopeer.android.photodrama4android.opengl.Constants.BYTES_PER_FLOAT;
 
 public class SlideDrawer extends TransitionDrawer{
@@ -18,33 +21,82 @@ public class SlideDrawer extends TransitionDrawer{
 
     private Context mContext;
 
-    private WipeShaderProgram textureProgram;
+    private ImageClipShaderProgram textureProgram0;
+    private ImageClipShaderProgram textureProgram1;
+
+    protected final float[] modelMatrix1 = new float[16];
+    protected final float[] viewMatrix1 = new float[16];
+    protected final float[] moveMatrix = new float[16];
 
     public SlideDrawer(View view, TransitionClip transitionClip) {
         super(view, transitionClip);
         mContext = view.getContext();
-        textureProgram = new WipeShaderProgram(mContext);
+        textureProgram0 = new ImageClipShaderProgram(mContext);
+        textureProgram1 = new ImageClipShaderProgram(mContext);
+        createVertex();
     }
 
-    @Override
+    public void updateProgramBindData0(long usedTime, float[] pMatrix) {
+        textureProgram0.useProgram();
+        textureProgram0.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre);
+        bindData0();
+    }
+
     public void updateProgramBindData(long usedTime, float[] pMatrix) {
-        textureProgram.useProgram();
-        textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre, mTextureIdNext
-                , getProgress(usedTime), 2);
-        bindData();
+        textureProgram1.useProgram();
+        textureProgram1.setUniforms(pMatrix, viewMatrix1, modelMatrix1, mTextureIdNext);
+        bindData1();
     }
 
-    private void bindData() {
+    private void bindData0() {
         vertexArray.setVertexAttribPointer(
                 0,
-                textureProgram.getPositionAttributeLocation(),
+                textureProgram0.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
         vertexArray.setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
-                textureProgram.getTextureCoordinatesAttributeLocation(),
+                textureProgram0.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
                 STRIDE);
     }
+
+    private void bindData1() {
+        vertexArray.setVertexAttribPointer(
+                0,
+                textureProgram1.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT,
+                textureProgram1.getTextureCoordinatesAttributeLocation(),
+                TEXTURE_COORDINATES_COMPONENT_COUNT,
+                STRIDE);
+    }
+
+    private void updateViewMatrices(long usedTime) {
+        mTextureIdPre = TextureIdCache.getInstance().getTextureId(mTransitionClip.startTime);
+        mTextureIdNext = TextureIdCache.getInstance().getTextureId(mTransitionClip.getEndTime());
+        setIdentityM(modelMatrix, 0);
+        setIdentityM(viewMatrix, 0);
+
+        setIdentityM(modelMatrix1, 0);
+        setIdentityM(viewMatrix1, 0);
+        setIdentityM(moveMatrix, 0);
+        translateM(viewMatrix1, 0, 0f, -2f * (1f - getProgress(usedTime)), 0f);
+        /*multiplyMM(viewMatrix1, 0, moveMatrix, 0,
+                viewMatrix1, 0);*/
+    }
+
+    public void drawFrame(long usedTime, float[] pMatrix) {
+        if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
+        updateViewMatrices(usedTime);
+        updateProgramBindData0(usedTime, pMatrix);
+        draw();
+        updateProgramBindData(usedTime, pMatrix);
+        draw();
+    }
+
 }
