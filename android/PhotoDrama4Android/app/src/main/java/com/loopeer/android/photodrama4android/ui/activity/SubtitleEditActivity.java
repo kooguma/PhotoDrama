@@ -39,6 +39,7 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
                 , mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
+        mVideoPlayerManager.seekToVideo(0);
 
         updateScrollImageView();
     }
@@ -113,8 +114,8 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
     }
 
     public void onPlayClick(View view) {
-        /*mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
-        mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime);*/
+        mVideoPlayerManager.seekToVideo(0);
+        mVideoPlayerManager.startVideoWithFinishTime(0);
     }
 
     public void onTextInputClick(View view) {

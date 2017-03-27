@@ -32,6 +32,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
 
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
+        mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());

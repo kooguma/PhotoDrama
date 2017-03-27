@@ -19,6 +19,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
     private int mStartTime;
     private int mEndTime;
     private int mFinishAtTime;
+    private boolean mIsStopTouchToRestart;
 
     public VideoPlayerManager(SeekWrapper seekWrapper, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
@@ -74,6 +75,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
     public void onStopTrackingTouch(SeekWrapper.SeekImpl seek) {
         mGLThread.setManual(false);
         mGLThread.setUsedTime(seek.getProgress());
+        if (mIsStopTouchToRestart) stopTouchToRestart(seek);
+    }
+
+    private void stopTouchToRestart(SeekWrapper.SeekImpl seek) {
         mGLThread.startUp();
         mIMusic.seekToMusic(seek.getProgress(), mSeekbarMaxValue);
         mIMusic.startMusic();
@@ -198,6 +203,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
 
     public GLThreadRender getGLThread() {
         return mGLThread;
+    }
+
+    public void setStopTouchToRestart(boolean stopTouchToRestart) {
+        mIsStopTouchToRestart = stopTouchToRestart;
     }
 
     public interface ProgressChangeListener {
