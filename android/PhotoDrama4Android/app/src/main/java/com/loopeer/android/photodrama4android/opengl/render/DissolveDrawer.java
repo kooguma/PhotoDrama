@@ -4,6 +4,7 @@ package com.loopeer.android.photodrama4android.opengl.render;
 import android.content.Context;
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.opengl.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
 import com.loopeer.android.photodrama4android.opengl.programs.DissolveShaderProgram;
 
@@ -23,7 +24,9 @@ public class DissolveDrawer extends TransitionDrawer{
     public DissolveDrawer(View view, TransitionClip transitionClip) {
         super(view, transitionClip);
         mContext = view.getContext();
-        textureProgram = new DissolveShaderProgram(mContext);
+        textureProgram = (DissolveShaderProgram) ShaderProgramCache
+                .getInstance()
+                .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()));
         createVertex();
     }
 

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -31,18 +32,20 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
     private TransitionEffectAdapter mTransitionEffectAdapter;
     private Drama mDrama;
     private VideoPlayerManager mVideoPlayerManager;
+    private TransitionClip mSelectedTransitionClip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_transition_edit);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
-        updateRecyclerView();
 
         mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
+        updateRecyclerView();
     }
 
     private void updateRecyclerView() {
@@ -87,6 +90,12 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
     public void onEffectSelected(TransitionClip transitionClip) {
         mImageTransitionSegmentAdapter.notifyTransition(transitionClip);
         updateDramaImageAndTransitionTime();
+        mSelectedTransitionClip = mImageTransitionSegmentAdapter.getSelectedTransition();
+        mVideoPlayerManager.refreshTransitionRender();
+
+        mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime
+                , mSelectedTransitionClip.getEndTime());
+        mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
     }
 
     private void updateDramaImageAndTransitionTime() {
@@ -112,4 +121,37 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mVideoPlayerManager.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mVideoPlayerManager.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mVideoPlayerManager.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoPlayManagerContainer.getDefault().onFinish(this);
+        mVideoPlayerManager.onDestroy();
+    }
+
+    public void onPlayClick(View view) {
+        mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
+        mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime);
+    }
+
 }

@@ -4,6 +4,7 @@ package com.loopeer.android.photodrama4android.opengl.render;
 import android.content.Context;
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.opengl.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.opengl.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
 import com.loopeer.android.photodrama4android.opengl.programs.ImageClipShaderProgram;
@@ -26,13 +27,17 @@ public class SlideDrawer extends TransitionDrawer{
 
     protected final float[] modelMatrix1 = new float[16];
     protected final float[] viewMatrix1 = new float[16];
-    protected final float[] moveMatrix = new float[16];
 
     public SlideDrawer(View view, TransitionClip transitionClip) {
         super(view, transitionClip);
         mContext = view.getContext();
-        textureProgram0 = new ImageClipShaderProgram(mContext);
-        textureProgram1 = new ImageClipShaderProgram(mContext);
+        textureProgram0 = (ImageClipShaderProgram) ShaderProgramCache
+                .getInstance()
+                .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()) + "_0");
+
+        textureProgram1 = (ImageClipShaderProgram) ShaderProgramCache
+                .getInstance()
+                .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()) + "_1");
         createVertex();
     }
 
@@ -76,7 +81,7 @@ public class SlideDrawer extends TransitionDrawer{
                 STRIDE);
     }
 
-    private void updateViewMatrices(long usedTime) {
+    protected void updateViewMatrices(long usedTime) {
         mTextureIdPre = TextureIdCache.getInstance().getTextureId(mTransitionClip.startTime);
         mTextureIdNext = TextureIdCache.getInstance().getTextureId(mTransitionClip.getEndTime());
         setIdentityM(modelMatrix, 0);
@@ -84,10 +89,7 @@ public class SlideDrawer extends TransitionDrawer{
 
         setIdentityM(modelMatrix1, 0);
         setIdentityM(viewMatrix1, 0);
-        setIdentityM(moveMatrix, 0);
         translateM(viewMatrix1, 0, 0f, -2f * (1f - getProgress(usedTime)), 0f);
-        /*multiplyMM(viewMatrix1, 0, moveMatrix, 0,
-                viewMatrix1, 0);*/
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {

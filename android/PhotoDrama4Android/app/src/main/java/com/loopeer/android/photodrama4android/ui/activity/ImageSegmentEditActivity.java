@@ -61,7 +61,7 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
 
     public void onPlayClick(View view) {
         mVideoPlayerManager.seekToVideo(mSelectedImageClip.startTime);
-        mVideoPlayerManager.startVideoWithFinishTime(mSelectedPosition == POSITION_START ? 0
+        mVideoPlayerManager.startVideoWithFinishTime(mSelectedPosition == POSITION_START ? mSelectedImageClip.startTime
                 : mSelectedImageClip.getEndTime());
     }
 

@@ -28,7 +28,7 @@ public abstract class TransitionDrawer extends ClipDrawer {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    private void updateViewMatrices(long usedTime) {
+    protected void updateViewMatrices(long usedTime) {
         mTextureIdPre = TextureIdCache.getInstance().getTextureId(mTransitionClip.startTime);
         mTextureIdNext = TextureIdCache.getInstance().getTextureId(mTransitionClip.getEndTime());
         setIdentityM(modelMatrix, 0);

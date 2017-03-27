@@ -42,7 +42,7 @@ public class BitmapFactory {
     public static BitmapFactory getInstance() {
         if (sDefaultInstance == null) {
             try {
-                throw new Exception("Instance have not init");
+                throw new Exception("Instance have not getInstance");
             } catch (Exception e) {
                 e.printStackTrace();
             }

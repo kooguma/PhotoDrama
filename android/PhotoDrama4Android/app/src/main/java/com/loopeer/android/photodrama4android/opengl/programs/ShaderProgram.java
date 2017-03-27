@@ -15,7 +15,7 @@ import com.loopeer.android.photodrama4android.opengl.utils.TextResourceReader;
 
 import static android.opengl.GLES20.glUseProgram;
 
-abstract class ShaderProgram {
+public abstract class ShaderProgram {
 
     protected static final String U_MMATRIX = "u_MMatrix";
     protected static final String U_VMATRIX = "u_VMatrix";

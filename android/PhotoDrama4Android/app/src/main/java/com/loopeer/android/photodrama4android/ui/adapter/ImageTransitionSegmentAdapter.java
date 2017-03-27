@@ -86,6 +86,10 @@ public class ImageTransitionSegmentAdapter extends BaseFooterAdapter<TransitionI
         notifyDataSetChanged();
     }
 
+    public TransitionClip getSelectedTransition() {
+        return mSelectedTransitionImageWrapper.transitionClip;
+    }
+
     public interface OnSelectedListener {
         void onImageTransitionSelected(TransitionImageWrapper TransitionImageWrapper);
     }

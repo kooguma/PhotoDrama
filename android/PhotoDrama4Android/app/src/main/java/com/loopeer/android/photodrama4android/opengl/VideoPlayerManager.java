@@ -193,6 +193,10 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
         mGLRenderWorker.updateDrama(drama);
     }
 
+    public void refreshTransitionRender() {
+        mGLRenderWorker.refreshTransitionRender();
+    }
+
     public GLThreadRender getGLThread() {
         return mGLThread;
     }

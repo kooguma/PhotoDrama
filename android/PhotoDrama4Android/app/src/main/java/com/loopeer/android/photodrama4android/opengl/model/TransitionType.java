@@ -2,6 +2,10 @@ package com.loopeer.android.photodrama4android.opengl.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.opengl.programs.DissolveShaderProgram;
+import com.loopeer.android.photodrama4android.opengl.programs.FadeShaderProgram;
+import com.loopeer.android.photodrama4android.opengl.programs.ImageClipShaderProgram;
+import com.loopeer.android.photodrama4android.opengl.programs.WipeShaderProgram;
 import com.loopeer.android.photodrama4android.opengl.render.DissolveDrawer;
 import com.loopeer.android.photodrama4android.opengl.render.FadeDrawer;
 import com.loopeer.android.photodrama4android.opengl.render.SlideDrawer;
@@ -13,30 +17,32 @@ import java.util.Map;
 public enum TransitionType {
 
     @SerializedName("0")
-    NO(0, R.string.transition_name_no, 0, null),
+    NO(0, R.string.transition_name_no, 0, null, null),
 
     @SerializedName("1")
-    SLIDE(1, R.string.transition_name_slide, R.drawable.ic_transition_slide, SlideDrawer.class),
+    SLIDE(1, R.string.transition_name_slide, R.drawable.ic_transition_slide, SlideDrawer.class, ImageClipShaderProgram.class),
 
     @SerializedName("2")
-    WIPE(2, R.string.transition_name_wipe, R.drawable.ic_transition_wipe, WipeDrawer.class),
+    WIPE(2, R.string.transition_name_wipe, R.drawable.ic_transition_wipe, WipeDrawer.class, WipeShaderProgram.class),
 
     @SerializedName("3")
-    DISSOLVE(3, R.string.transition_name_dissolve, R.drawable.ic_transition_dissolve, DissolveDrawer.class),
+    DISSOLVE(3, R.string.transition_name_dissolve, R.drawable.ic_transition_dissolve, DissolveDrawer.class, DissolveShaderProgram.class),
 
     @SerializedName("4")
-    FADE(4, R.string.transition_name_fade, R.drawable.ic_transition_fade, FadeDrawer.class);
+    FADE(4, R.string.transition_name_fade, R.drawable.ic_transition_fade, FadeDrawer.class, FadeShaderProgram.class);
 
     private final int mValue;
     private final int mIcon;
     private final int mName;
     private final Class mClass;
+    private final Class mShaderClass;
 
-    TransitionType(int value, int name, int icon, Class zClass) {
+    TransitionType(int value, int name, int icon, Class zClass, Class shaderProgram) {
         mValue = value;
         mName = name;
         mIcon = icon;
         mClass = zClass;
+        mShaderClass = shaderProgram;
     }
 
     public int getName() {
@@ -53,6 +59,10 @@ public enum TransitionType {
 
     public Class getDrawerClass() {
         return mClass;
+    }
+
+    public Class getShaderClass() {
+        return mShaderClass;
     }
 
     private static final Map<Integer, TransitionType>
