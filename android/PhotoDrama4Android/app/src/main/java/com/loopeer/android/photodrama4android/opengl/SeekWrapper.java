@@ -3,14 +3,18 @@ package com.loopeer.android.photodrama4android.opengl;
 
 import android.widget.SeekBar;
 
+import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
+
 public class SeekWrapper {
 
-    interface SeekImpl {
+    public interface SeekImpl {
         void setMax(int max);
 
-        void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener listener);
+        void setOnSeekChangeListener(OnSeekProgressChangeListener listener);
 
         void setProgress(int progress);
+
+        int getProgress();
     }
 
     private SeekImpl mSeekImpl;
@@ -19,12 +23,16 @@ public class SeekWrapper {
         mSeekImpl = new SeekBarImpl(seekBar);
     }
 
+    public SeekWrapper(ScrollSelectView seekBar) {
+        mSeekImpl = new ScrollSelectViewSeekImpl(seekBar);
+    }
+
     public void setMax(int max) {
         mSeekImpl.setMax(max);
     }
 
-    public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener listener) {
-        mSeekImpl.setOnSeekBarChangeListener(listener);
+    public void setOnSeekChangeListener(OnSeekProgressChangeListener listener) {
+        mSeekImpl.setOnSeekChangeListener(listener);
     }
 
     public void setProgress(int progress) {

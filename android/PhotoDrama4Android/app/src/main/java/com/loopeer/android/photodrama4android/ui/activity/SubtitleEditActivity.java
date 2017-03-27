@@ -13,6 +13,7 @@ import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivitySubtitleEditBinding;
 import com.loopeer.android.photodrama4android.opengl.Constants;
+import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
@@ -35,7 +36,8 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
+        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
+                , mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         updateScrollImageView();

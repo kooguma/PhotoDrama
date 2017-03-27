@@ -2,13 +2,12 @@ package com.loopeer.android.photodrama4android.opengl;
 
 
 import android.content.Context;
-import android.widget.SeekBar;
 
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
 import com.loopeer.android.photodrama4android.opengl.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.opengl.render.GLThreadRender;
 
-public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpSeekBar, IPlayerLife {
+public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeekBar, IPlayerLife {
 
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
@@ -45,7 +44,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     }
 
     private void init() {
-        if (mSeekWrapper != null) mSeekWrapper.setOnSeekBarChangeListener(this);
+        if (mSeekWrapper != null) mSeekWrapper.setOnSeekChangeListener(this);
         mGLThread.setUpSeekBarListener(this);
     }
 
@@ -59,26 +58,26 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressChanged(SeekWrapper.SeekImpl seek, int progress, boolean fromUser) {
         mGLThread.setManualUpSeekBar(progress);
-        mProgressChangeListener.onProgressChange(progress);
+        onProgressChange(progress);
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onStartTrackingTouch(SeekWrapper.SeekImpl seek) {
         mGLThread.stopUp();
         mGLThread.setManual(true);
         mIMusic.pauseMusic();
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStopTrackingTouch(SeekWrapper.SeekImpl seek) {
         mGLThread.setManual(false);
-        mGLThread.setUsedTime(seekBar.getProgress());
+        mGLThread.setUsedTime(seek.getProgress());
         mGLThread.startUp();
-        mIMusic.seekToMusic(seekBar.getProgress(), mSeekbarMaxValue);
+        mIMusic.seekToMusic(seek.getProgress(), mSeekbarMaxValue);
         mIMusic.startMusic();
-        onProgressStart(seekBar.getProgress(), mSeekbarMaxValue);
+        onProgressStart(seek.getProgress(), mSeekbarMaxValue);
     }
 
     @Override

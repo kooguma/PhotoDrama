@@ -3,9 +3,9 @@ package com.loopeer.android.photodrama4android.opengl;
 
 import android.widget.SeekBar;
 
-public class SeekBarImpl implements SeekWrapper.SeekImpl {
+public class SeekBarImpl implements SeekWrapper.SeekImpl, SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
-
+    private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
     public SeekBarImpl(SeekBar seekBar) {
         mSeekBar = seekBar;
     }
@@ -16,12 +16,33 @@ public class SeekBarImpl implements SeekWrapper.SeekImpl {
     }
 
     @Override
-    public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener listener) {
-        mSeekBar.setOnSeekBarChangeListener(listener);
+    public void setOnSeekChangeListener(OnSeekProgressChangeListener listener) {
+        mOnSeekProgressChangeListener = listener;
+        mSeekBar.setOnSeekBarChangeListener(this);
     }
 
     @Override
     public void setProgress(int progress) {
         mSeekBar.setProgress(progress);
+    }
+
+    @Override
+    public int getProgress() {
+        return mSeekBar.getProgress();
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mOnSeekProgressChangeListener.onProgressChanged(this, progress, fromUser);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        mOnSeekProgressChangeListener.onStartTrackingTouch(this);
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        mOnSeekProgressChangeListener.onStopTrackingTouch(this);
     }
 }

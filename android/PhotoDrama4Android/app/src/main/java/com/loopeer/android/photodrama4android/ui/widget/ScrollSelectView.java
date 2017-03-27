@@ -15,6 +15,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.opengl.OnSeekProgressChangeListener;
+import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +33,16 @@ public class ScrollSelectView extends ViewGroup {
     private int mActivePointerId = INVALID_POINTER_ID;
 
     private Paint mPaint;
+    private int mMiddleLineColor;
     private int mMiddlePos;
 
-    private float mMiddleLineWidth = 2f;
+    private float mMiddleLineWidth = 4f;
     private int mTotalContentWidth;
     private Adapter mAdapter;
     private final ChildViewDataObserver mObserver = new ChildViewDataObserver();
+    private int mMaxValue;
+    private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
+    private SeekWrapper.SeekImpl mSeek;
 
     public ScrollSelectView(Context context) {
         this(context, null);
@@ -59,7 +67,8 @@ public class ScrollSelectView extends ViewGroup {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         setWillNotDraw(false);
         mPaint = new Paint();
-        mPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        mMiddleLineColor = ContextCompat.getColor(context, R.color.colorAccent);
+        mPaint.setColor(mMiddleLineColor);
     }
 
     @Override
@@ -110,6 +119,7 @@ public class ScrollSelectView extends ViewGroup {
                 mLastTouchX = x;
                 mLastTouchY = y;
                 mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                mOnSeekProgressChangeListener.onStartTrackingTouch(mSeek);
                 break;
             }
 
@@ -124,6 +134,7 @@ public class ScrollSelectView extends ViewGroup {
                 mPosX += dx;
                 mPosY += dy;
                 scrollContent();
+                mOnSeekProgressChangeListener.onProgressChanged(mSeek, getProgress(), true);
                 mLastTouchX = x;
                 mLastTouchY = y;
                 break;
@@ -131,16 +142,17 @@ public class ScrollSelectView extends ViewGroup {
 
             case MotionEvent.ACTION_UP: {
                 mActivePointerId = INVALID_POINTER_ID;
+                onStopTouch();
                 break;
             }
 
             case MotionEvent.ACTION_CANCEL: {
                 mActivePointerId = INVALID_POINTER_ID;
+                onStopTouch();
                 break;
             }
 
             case MotionEvent.ACTION_POINTER_UP: {
-
                 final int pointerIndex = MotionEventCompat.getActionIndex(ev);
                 final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
 
@@ -150,25 +162,31 @@ public class ScrollSelectView extends ViewGroup {
                     mLastTouchY = MotionEventCompat.getY(ev, newPointerIndex);
                     mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
                 }
+                onStopTouch();
                 break;
             }
         }
         return true;
     }
 
+    private void onStopTouch() {
+        mOnSeekProgressChangeListener.onStopTrackingTouch(mSeek);
+    }
+
     private void scrollContent() {
+        clampTrans();
         for (int i = 0; i < getChildCount(); i++) {
-            getChildAt(i).setTranslationX(clampTrans(mPosX));
+            getChildAt(i).setTranslationX(mPosX);
         }
     }
 
-    private float clampTrans(float transX) {
-        if (transX >= 0) {
-            return 0;
+    private float clampTrans() {
+        if (mPosX >= 0) {
+            mPosX = 0;
         }
-        if (transX <= -getTotalLength())
-            return -getTotalLength();
-        return transX;
+        if (mPosX <= -getTotalLength())
+            mPosX = -getTotalLength();
+        return mPosX;
     }
 
     private float getTotalLength() {
@@ -199,6 +217,19 @@ public class ScrollSelectView extends ViewGroup {
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams;
+    }
+
+    public void setMax(int max) {
+        mMaxValue = max;
+    }
+
+    public void setProgress(int progress) {
+        mPosX = -1f * progress / mMaxValue * getTotalLength();
+        scrollContent();
+    }
+
+    public int getProgress() {
+        return (int) (1f * mMaxValue * -mPosX / getTotalLength());
     }
 
     public static class LayoutParams extends MarginLayoutParams {
@@ -307,5 +338,10 @@ public class ScrollSelectView extends ViewGroup {
             mAdapter.onBindView(view, mAdapter.getItem(i));
             addView(view);
         }
+    }
+
+    public void setOnSeekProgressChangeListener(SeekWrapper.SeekImpl seek, OnSeekProgressChangeListener listener) {
+        mSeek = seek;
+        mOnSeekProgressChangeListener = listener;
     }
 }
