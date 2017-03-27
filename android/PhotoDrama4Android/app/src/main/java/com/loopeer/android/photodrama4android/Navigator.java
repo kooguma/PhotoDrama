@@ -9,13 +9,18 @@ import com.loopeer.android.photodrama4android.opengl.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
+import com.loopeer.android.photodrama4android.ui.activity.SubtitleEditActivity;
+import com.loopeer.android.photodrama4android.ui.activity.TextInputActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity;
 
 public class Navigator {
 
     public static final String EXTRA_DRAMA = "extra_drama";
+    public static final String EXTRA_TEXT = "extra_text";
     public static final int REQUEST_CODE_DRAMA_IMAGE_EDIT = 1001;
     public static final int REQUEST_CODE_DRAMA_TRANSITION_EDIT = 1002;
+    public static final int REQUEST_CODE_DRAMA_SUBTITLE_EDIT = 1003;
+    public static final int REQUEST_CODE_TEXT_INPUT = 1004;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -43,5 +48,16 @@ public class Navigator {
         Intent intent = new Intent(context, TransitionEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
         ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_TRANSITION_EDIT);
+    }
+
+    public static void startSubtitleEditActivity(Context context, Drama drama) {
+        Intent intent = new Intent(context, SubtitleEditActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SUBTITLE_EDIT);
+    }
+
+    public static void startTextInputActivity(Context context) {
+        Intent intent = new Intent(context, TextInputActivity.class);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_TEXT_INPUT);
     }
 }

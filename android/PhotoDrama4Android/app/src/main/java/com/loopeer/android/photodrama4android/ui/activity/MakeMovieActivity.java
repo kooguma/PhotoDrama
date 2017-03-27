@@ -112,6 +112,10 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         Navigator.startTransitionEditActivity(this, mDrama);
     }
 
+    public void onSubtitleEdit(View view) {
+        Navigator.startSubtitleEditActivity(this, mDrama);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -123,6 +127,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
             switch (requestCode) {
                 case Navigator.REQUEST_CODE_DRAMA_IMAGE_EDIT:
                 case Navigator.REQUEST_CODE_DRAMA_TRANSITION_EDIT:
+                case Navigator.REQUEST_CODE_DRAMA_SUBTITLE_EDIT:
                     mVideoPlayerManager.updateDrama(mDrama);
                     break;
                 default:

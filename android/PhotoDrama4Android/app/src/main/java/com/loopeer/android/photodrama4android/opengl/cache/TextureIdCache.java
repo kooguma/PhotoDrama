@@ -1,8 +1,6 @@
 package com.loopeer.android.photodrama4android.opengl.cache;
 
 
-import android.util.Log;
-
 import java.util.HashMap;
 
 public class TextureIdCache {
@@ -28,7 +26,6 @@ public class TextureIdCache {
     public int getTextureId(int key) {
         if (mIdsMap == null) return 0;
         Integer i = mIdsMap.get(key);
-        Log.e("11111", i + " : ");
         return i;
     }
 
