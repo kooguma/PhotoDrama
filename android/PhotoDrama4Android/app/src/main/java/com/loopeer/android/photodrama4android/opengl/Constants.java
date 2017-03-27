@@ -10,4 +10,5 @@ package com.loopeer.android.photodrama4android.opengl;
 
 public class Constants {
     public static final int BYTES_PER_FLOAT = 4;
+    public static final int DEFAULT_IMAGE_CLIP_SHOW_TIME = 2000;
 }

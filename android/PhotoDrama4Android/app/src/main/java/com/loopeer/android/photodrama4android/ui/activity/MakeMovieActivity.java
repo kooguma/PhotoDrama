@@ -9,6 +9,7 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
+import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
@@ -29,7 +30,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.seekBar, mBinding.glSurfaceView, mDrama);
+        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 

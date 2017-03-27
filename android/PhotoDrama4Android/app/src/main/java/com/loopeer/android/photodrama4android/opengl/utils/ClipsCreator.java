@@ -92,4 +92,31 @@ public class ClipsCreator {
         }
         return transitionImageWrappers;
     }
+
+    public static List<TransitionImageWrapper> getTransiImageClipsNoEmpty(VideoGroup videoGroup) {
+        List<Clip> clips = new ArrayList<>();
+        clips.addAll(videoGroup.imageClips);
+        clips.addAll(videoGroup.transitionClips);
+        Collections.sort(clips, (o1, o2) -> {
+            int x1 = o1.startTime;
+            int y1 = o2.startTime;
+            if (x1 < y1) return -1;
+            if (x1 > y1) return 1;
+            if (x1 == y1 && o1 instanceof TransitionClip) return -1;
+            return 1;
+        });
+        List<TransitionImageWrapper> transitionImageWrappers = new ArrayList<>();
+        for (Clip clip : clips) {
+            if (clip.showTime == 0) continue;
+            TransitionImageWrapper t;
+            if (clip instanceof ImageClip) {
+                t = new TransitionImageWrapper((ImageClip) clip);
+            } else {
+                t = new TransitionImageWrapper((TransitionClip) clip);
+                t.transitionPreImagePath = transitionImageWrappers.get(transitionImageWrappers.size() - 1).imageClip.path;
+            }
+            transitionImageWrappers.add(t);
+        }
+        return transitionImageWrappers;
+    }
 }

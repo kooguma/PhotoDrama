@@ -3,15 +3,20 @@ package com.loopeer.android.photodrama4android.ui.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.database.Observable;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
@@ -28,6 +33,8 @@ public class ScrollSelectView extends ViewGroup {
 
     private float mMiddleLineWidth = 2f;
     private int mTotalContentWidth;
+    private Adapter mAdapter;
+    private final ChildViewDataObserver mObserver = new ChildViewDataObserver();
 
     public ScrollSelectView(Context context) {
         this(context, null);
@@ -206,6 +213,99 @@ public class ScrollSelectView extends ViewGroup {
 
         public LayoutParams(ViewGroup.LayoutParams source) {
             super(source);
+        }
+    }
+
+    public interface IAdapter<T> {
+        View onCreateView(LayoutInflater inflater, ViewGroup parent);
+
+        void onBindView(View view, T t);
+
+        int getItemCount();
+
+        T getItem(int position);
+    }
+
+    public abstract static class Adapter<TH> implements IAdapter<TH> {
+        private final AdapterDataObservable mObservable = new AdapterDataObservable();
+
+        public Adapter() {
+            mDatas = new ArrayList<>();
+        }
+
+        protected List<TH> mDatas;
+
+        public void registerAdapterDataObserver(AdapterDataObserver observer) {
+            mObservable.registerObserver(observer);
+        }
+
+        public void updateDatas(List<TH> datas) {
+            setDatas(datas);
+            notifyDataChange();
+        }
+
+        public void setDatas(List<TH> datas) {
+            mDatas.clear();
+            mDatas.addAll(datas);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDatas.size();
+        }
+
+        public void notifyDataChange() {
+            mObservable.notifyChanged();
+        }
+
+        @Override
+        public TH getItem(int position) {
+            return mDatas.get(position);
+        }
+    }
+
+    static class AdapterDataObservable extends Observable<AdapterDataObserver> {
+        public boolean hasObservers() {
+            return !mObservers.isEmpty();
+        }
+
+        public void notifyChanged() {
+            for (int i = mObservers.size() - 1; i >= 0; i--) {
+                mObservers.get(i).onChanged();
+            }
+        }
+    }
+
+    public static abstract class AdapterDataObserver {
+        public void onChanged() {
+
+        }
+    }
+
+    private class ChildViewDataObserver extends AdapterDataObserver {
+        ChildViewDataObserver() {
+        }
+
+        @Override
+        public void onChanged() {
+            reBindView();
+            requestLayout();
+        }
+    }
+
+    public void setAdapter(Adapter adapter) {
+        adapter.registerAdapterDataObserver(mObserver);
+        mAdapter = adapter;
+        reBindView();
+        requestLayout();
+    }
+
+    private void reBindView() {
+        removeAllViews();
+        for (int i = 0; i < mAdapter.getItemCount(); i++) {
+            View view = mAdapter.onCreateView(LayoutInflater.from(getContext()), this);
+            mAdapter.onBindView(view, mAdapter.getItem(i));
+            addView(view);
         }
     }
 }

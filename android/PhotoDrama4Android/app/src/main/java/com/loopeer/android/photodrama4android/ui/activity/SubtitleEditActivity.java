@@ -3,16 +3,23 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivitySubtitleEditBinding;
+import com.loopeer.android.photodrama4android.opengl.Constants;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
+import com.loopeer.android.photodrama4android.opengl.model.TransitionImageWrapper;
+import com.loopeer.android.photodrama4android.opengl.utils.ClipsCreator;
+import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectInnderImageView;
+import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
 public class SubtitleEditActivity extends MovieMakerBaseActivity {
 
@@ -31,6 +38,29 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
         mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
+        updateScrollImageView();
+    }
+
+    private void updateScrollImageView() {
+        ScrollSelectView.Adapter<TransitionImageWrapper> adapter = new ScrollSelectView.Adapter<TransitionImageWrapper>() {
+
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup parent) {
+                return inflater.inflate(R.layout.list_item_scroll_inner_item, parent, false);
+            }
+
+            @Override
+            public void onBindView(View view, TransitionImageWrapper clip) {
+                ScrollSelectInnderImageView innderImageView = (ScrollSelectInnderImageView) view;
+                if (clip.isImageClip()) {
+                    innderImageView.updateImage(Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME, clip.imageClip.showTime, clip.imageClip.path);
+                } else {
+                    innderImageView.updateImage(Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME, clip.transitionClip.showTime, clip.transitionPreImagePath);
+                }
+            }
+        };
+        mBinding.scrollSelectView.setAdapter(adapter);
+        adapter.updateDatas(ClipsCreator.getTransiImageClipsNoEmpty(mDrama.videoGroup));
     }
 
     @Override

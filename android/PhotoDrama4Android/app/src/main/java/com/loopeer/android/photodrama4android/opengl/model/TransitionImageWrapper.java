@@ -8,6 +8,8 @@ public class TransitionImageWrapper extends BaseModel {
     public ImageClip imageClip;
     public TransitionClip transitionClip;
 
+    public String transitionPreImagePath;
+
     public TransitionImageWrapper(ImageClip imageClip) {
         this.imageClip = imageClip;
     }

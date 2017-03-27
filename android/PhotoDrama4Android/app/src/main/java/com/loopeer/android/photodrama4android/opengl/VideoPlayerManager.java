@@ -10,7 +10,7 @@ import com.loopeer.android.photodrama4android.opengl.render.GLThreadRender;
 
 public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpSeekBar, IPlayerLife {
 
-    private SeekBar mSeekBar;
+    private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
     private ProgressChangeListener mProgressChangeListener;
     private GLRenderWorker mGLRenderWorker;
@@ -21,9 +21,9 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     private int mEndTime;
     private int mFinishAtTime;
 
-    public VideoPlayerManager(SeekBar seekBar, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
+    public VideoPlayerManager(SeekWrapper seekWrapper, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
-        mSeekBar = seekBar;
+        mSeekWrapper = seekWrapper;
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
         mIMusic = new MusicManager();
@@ -35,7 +35,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     private void updateTime(Drama drama) {
         int totalTime = drama.getShowTimeTotal();
         setSeekBarMaxValue(totalTime);
-        if (mSeekBar != null) mSeekBar.setMax(totalTime);
+        if (mSeekWrapper != null) mSeekWrapper.setMax(totalTime);
         mStartTime = 0;
         mFinishAtTime = mStartTime;
         mEndTime = totalTime;
@@ -45,7 +45,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
     }
 
     private void init() {
-        if (mSeekBar != null) mSeekBar.setOnSeekBarChangeListener(this);
+        if (mSeekWrapper != null) mSeekWrapper.setOnSeekBarChangeListener(this);
         mGLThread.setUpSeekBarListener(this);
     }
 
@@ -83,7 +83,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
 
     @Override
     public void upSeekBar(long usedTime) {
-        if (mSeekBar != null) mSeekBar.setProgress((int) usedTime);
+        if (mSeekWrapper != null) mSeekWrapper.setProgress((int) usedTime);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
         mGLThread.stopUp();
         mGLThread.setManual(true);
         mGLThread.setManualUpSeekBar(finishToTime);
-        if (mSeekBar != null) mSeekBar.setProgress(finishToTime);
+        if (mSeekWrapper != null) mSeekWrapper.setProgress(finishToTime);
         mGLThread.setManual(false);
         mIMusic.seekToMusic(finishToTime, mSeekbarMaxValue);
         mIMusic.pauseMusic();
@@ -156,7 +156,7 @@ public class VideoPlayerManager implements SeekBar.OnSeekBarChangeListener, IUpS
 
     public void seekToVideo(int time) {
         mGLThread.seekToTime(time);
-        if (mSeekBar != null) mSeekBar.setProgress(time);
+        if (mSeekWrapper != null) mSeekWrapper.setProgress(time);
     }
 
     public void refreshIfWait() {
