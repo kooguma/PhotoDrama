@@ -18,6 +18,7 @@ import java.util.List;
 public class PickerFragment extends Fragment {
 
     private static final String IMAGE_LIST = "image_list";
+    private static final String IMAGE_LISTENER = "image_listener";
 
     public static final int IMAGE_SIZE_UNIT = 10;
     public static final int DECORATION_SIZE_UNIT = 1;
@@ -29,9 +30,10 @@ public class PickerFragment extends Fragment {
     private List<Image> mImages;
     private int mUnit;
 
-    public static PickerFragment newInstance(List<Image> images) {
+    public static PickerFragment newInstance(List<Image> images, ImageAdapter.OnImagePickListener listener) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(IMAGE_LIST, (ArrayList<? extends Parcelable>) images);
+        bundle.putSerializable(IMAGE_LISTENER, listener);
         PickerFragment fragment = new PickerFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -43,6 +45,9 @@ public class PickerFragment extends Fragment {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         mUnit = getUnitSize(wm);
         mImageAdapter = new ImageAdapter(mImages, mUnit * IMAGE_SIZE_UNIT);
+        ImageAdapter.OnImagePickListener listener
+            = (ImageAdapter.OnImagePickListener) getArguments().getSerializable(IMAGE_LISTENER);
+        mImageAdapter.setOnImagePickListener(listener);
     }
 
     @Nullable @Override
@@ -73,4 +78,5 @@ public class PickerFragment extends Fragment {
         mImages = images;
         mImageAdapter.setImages(images);
     }
+
 }

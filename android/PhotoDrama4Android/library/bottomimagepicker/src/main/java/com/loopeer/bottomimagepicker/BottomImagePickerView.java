@@ -3,6 +3,7 @@ package com.loopeer.bottomimagepicker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,12 @@ public class BottomImagePickerView extends LinearLayout {
     private PickerFragmentAdapter mFragmentAdapter;
 
     private LoaderManagerImpl mLoaderManager;
+
+    private ImageAdapter.OnImagePickListener mOnImagePickListener;
+
+    public void setOnImagePickListener(ImageAdapter.OnImagePickListener listener) {
+        this.mOnImagePickListener = listener;
+    }
 
     public BottomImagePickerView(Context context) {
         super(context);
@@ -83,7 +90,7 @@ public class BottomImagePickerView extends LinearLayout {
         for (int i = 0; i < folders.size(); i++) {
             ImageFolder folder = folders.get(i);
             mTitles.add(folder.name);
-            mFragments.add(PickerFragment.newInstance(folder.images));
+            mFragments.add(PickerFragment.newInstance(folder.images,mOnImagePickListener));
         }
         mFragmentAdapter.notifyDataSetChanged();
     }

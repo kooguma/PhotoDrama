@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/darker_gray"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:viewAspectRatio="0.75"/>
+        android:id="@+id/image_display"
+        android:layout_width="500dp"
+        android:layout_height="500dp"/>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <HorizontalScrollView
+            android:scrollbars="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/image_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:showDividers="middle"
+                android:divider="@drawable/divider_transparent_4"
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
 
     <com.loopeer.bottomimagepicker.BottomImagePickerView
         android:id="@+id/pick_view"

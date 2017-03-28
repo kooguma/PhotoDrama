@@ -1,6 +1,7 @@
 package com.loopeer.bottomimagepicker;
 
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,22 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder> {
 
     private List<Image> mImages;
     private int mImageSize;
+    private OnImagePickListener mOnImagePickListener;
+
+    public interface OnImagePickListener extends Serializable{
+        void onImagePick(Uri uri);
+    }
+
+    public void setOnImagePickListener(OnImagePickListener listener) {
+        this.mOnImagePickListener = listener;
+    }
 
     public void setImages(List<Image> images) {
         mImages = images;
@@ -51,16 +62,24 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     class ImageHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView mImageView;
+        Uri mUri;
 
         public ImageHolder(View itemView) {
             super(itemView);
             mImageView = (SimpleDraweeView) itemView.findViewById(R.id.picker_image);
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if(mOnImagePickListener != null){
+                        mOnImagePickListener.onImagePick(mUri);
+                    }
+                }
+            });
         }
 
         public void bind(Image image){
-            Uri uri = Uri.fromFile(new File(image.url));
+            mUri = Uri.fromFile(new File(image.url));
 
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(mUri)
                 .setResizeOptions(new ResizeOptions(mImageSize, mImageSize))
                 .setLocalThumbnailPreviewsEnabled(true)
                 .build();
