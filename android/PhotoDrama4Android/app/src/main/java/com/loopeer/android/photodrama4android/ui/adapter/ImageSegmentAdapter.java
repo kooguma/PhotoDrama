@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemImageSegmentBinding;
-import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
+import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 
 import java.util.List;

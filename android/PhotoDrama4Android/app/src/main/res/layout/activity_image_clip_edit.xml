@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context="com.loopeer.android.moviemaker.ui.activity.ImageSegmentEditActivity">
 
-        <com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView
+        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
             android:id="@+id/gl_surface_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5"/>
 
-        <com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView
+        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
             android:id="@+id/gl_segment_start"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -84,7 +84,7 @@
             app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
 
 
-        <com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView
+        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
             android:id="@+id/gl_segment_left"
             android:layout_width="100dp"
             android:layout_height="100dp"

@@ -17,9 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.opengl.OnSeekProgressChangeListener;
-import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
-import com.loopeer.android.photodrama4android.opengl.model.SubtitleClip;
+import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
+import com.loopeer.android.photodrama4android.media.SeekWrapper;
+import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 
 import java.util.ArrayList;
 import java.util.List;

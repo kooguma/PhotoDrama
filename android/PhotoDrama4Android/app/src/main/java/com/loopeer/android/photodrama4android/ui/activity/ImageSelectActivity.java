@@ -8,8 +8,8 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageSelectBinding;
-import com.loopeer.android.photodrama4android.opengl.cache.BitmapFactory;
-import com.loopeer.android.photodrama4android.opengl.model.Drama;
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

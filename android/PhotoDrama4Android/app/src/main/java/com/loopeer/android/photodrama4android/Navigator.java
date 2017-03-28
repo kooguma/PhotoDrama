@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.loopeer.android.photodrama4android.opengl.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;

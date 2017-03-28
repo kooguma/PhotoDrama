@@ -9,10 +9,10 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
-import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
-import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
-import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
-import com.loopeer.android.photodrama4android.opengl.model.Drama;
+import com.loopeer.android.photodrama4android.media.SeekWrapper;
+import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
+import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import java.text.SimpleDateFormat;
 

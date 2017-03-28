@@ -8,8 +8,8 @@ import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemImageSegmentBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemTransitionEffectNoNameBinding;
-import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
-import com.loopeer.android.photodrama4android.opengl.model.TransitionImageWrapper;
+import com.loopeer.android.photodrama4android.media.model.TransitionClip;
+import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 
 import java.util.List;

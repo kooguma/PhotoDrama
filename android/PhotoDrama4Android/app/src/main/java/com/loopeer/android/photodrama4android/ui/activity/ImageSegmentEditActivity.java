@@ -12,12 +12,12 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageClipEditBinding;
-import com.loopeer.android.photodrama4android.opengl.GLTouchListener;
-import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
-import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
-import com.loopeer.android.photodrama4android.opengl.model.Drama;
-import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
-import com.loopeer.android.photodrama4android.opengl.model.ScaleTranslateRatio;
+import com.loopeer.android.photodrama4android.media.GLTouchListener;
+import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
+import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
+import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.ImageClip;
+import com.loopeer.android.photodrama4android.media.model.ScaleTranslateRatio;
 import com.loopeer.android.photodrama4android.ui.adapter.ImageSegmentAdapter;
 
 public class ImageSegmentEditActivity extends AppCompatActivity implements ImageSegmentAdapter.OnSelectedListener, GLTouchListener.ScaleMoveListener {

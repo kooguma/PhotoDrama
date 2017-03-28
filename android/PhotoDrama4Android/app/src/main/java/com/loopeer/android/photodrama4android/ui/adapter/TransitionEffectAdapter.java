@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemTransitionEffectBinding;
-import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
+import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 
 public class TransitionEffectAdapter extends BaseFooterAdapter<TransitionClip> {
