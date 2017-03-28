@@ -119,14 +119,20 @@ public class TextureHelper {
     }
 
     public static SubtitleInfo loadTexture(Context context, SubtitleInfo subtitleInfo) {
+        float textMarginBottom = 20;//TODO test value
         Bitmap bitmap = Bitmap.createBitmap(subtitleInfo.width, subtitleInfo.height, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
         Paint textPaint = new Paint();
-        textPaint.setTextSize(32);
+        float textSize = 1f * subtitleInfo.width / 20;
+        textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
-        canvas.drawText(subtitleInfo.content, 16,112, textPaint);
+        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+        float y = subtitleInfo.height - fontMetrics.descent - textMarginBottom;
+        float textWidth = textPaint.measureText(subtitleInfo.content);
+        float x = subtitleInfo.width / 2 - textWidth / 2;
+        canvas.drawText(subtitleInfo.content, x, y, textPaint);
 
         int textureObjectIds[] = {0};
         glGenTextures(1, textureObjectIds, 0);

@@ -25,8 +25,6 @@ import static com.loopeer.android.photodrama4android.opengl.Constants.BYTES_PER_
 
 public class SubtitleClipDrawer extends ClipDrawer{
 
-    private static final String TAG = "SubtitleClipDrawer";
-
     private static final int POSITION_COMPONENT_COUNT = 2;
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
     private static final int STRIDE = (POSITION_COMPONENT_COUNT
