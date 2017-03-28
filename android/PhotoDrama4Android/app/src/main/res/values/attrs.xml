@@ -4,4 +4,13 @@
         <attr name="screenRatioX" format="integer"/>
         <attr name="screenRatioY" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="ScrollSelectView">
+        <attr name="imageShowHeight" format="dimension"/>
+        <attr name="indicatorRectangleHeight" format="dimension"/>
+        <attr name="indicatorTriangleHeight" format="dimension"/>
+        <attr name="indicatorBottomMargin" format="dimension"/>
+        <attr name="indicatorWidth" format="dimension"/>
+    </declare-styleable>
+
 </resources>

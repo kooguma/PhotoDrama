@@ -17,8 +17,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:screenRatioX="@integer/gl_screen_x"
-            app:screenRatioY="@integer/gl_screen_y"
-            tools:layout_editor_absoluteY="81dp"/>
+            app:screenRatioY="@integer/gl_screen_y"/>
 
         <ImageButton
             style="?actionButtonStyle"
@@ -36,7 +35,6 @@
             android:id="@+id/scrollSelectView"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@android:color/black"
             android:layout_marginTop="100dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

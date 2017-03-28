@@ -41,8 +41,8 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
                 , mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
-
         updateScrollImageView();
+        mBinding.scrollSelectView.updateSubtitles(mDrama.videoGroup.subtitleClips);
     }
 
     private void updateScrollImageView() {
