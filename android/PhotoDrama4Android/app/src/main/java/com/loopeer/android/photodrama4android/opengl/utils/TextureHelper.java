@@ -11,18 +11,25 @@ package com.loopeer.android.photodrama4android.opengl.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.opengl.model.ImageInfo;
+import com.loopeer.android.photodrama4android.opengl.model.SubtitleInfo;
 
+import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
 import static android.opengl.GLES20.GL_LINEAR;
 import static android.opengl.GLES20.GL_LINEAR_MIPMAP_LINEAR;
 import static android.opengl.GLES20.GL_NEAREST;
+import static android.opengl.GLES20.GL_RGBA;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TEXTURE_MAG_FILTER;
 import static android.opengl.GLES20.GL_TEXTURE_MIN_FILTER;
+import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
 import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDeleteTextures;
 import static android.opengl.GLES20.glGenTextures;
@@ -109,5 +116,28 @@ public class TextureHelper {
             Log.w(TAG, "Paht " + path + "  bindtime :  " + (bindtime - bittime));
         }
         return new ImageInfo(textureObjectIds[0], width, height);
+    }
+
+    public static SubtitleInfo loadTexture(Context context, SubtitleInfo subtitleInfo) {
+        Bitmap bitmap = Bitmap.createBitmap(subtitleInfo.width, subtitleInfo.height, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+        bitmap.eraseColor(0);
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(32);
+        textPaint.setAntiAlias(true);
+        textPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
+        canvas.drawText(subtitleInfo.content, 16,112, textPaint);
+
+        int textureObjectIds[] = {0};
+        glGenTextures(1, textureObjectIds, 0);
+        glBindTexture(GL_TEXTURE_2D, textureObjectIds[0]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap, 0);
+        bitmap.recycle();
+        subtitleInfo.textureObjectId = textureObjectIds[0];
+        return subtitleInfo;
     }
 }

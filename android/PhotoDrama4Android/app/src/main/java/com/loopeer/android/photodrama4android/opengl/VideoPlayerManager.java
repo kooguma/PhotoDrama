@@ -201,6 +201,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
         mGLRenderWorker.refreshTransitionRender();
     }
 
+    public void refreshSubtitleRender() {
+        mGLRenderWorker.refreshSubtitleRender();
+    }
+
     public GLThreadRender getGLThread() {
         return mGLThread;
     }

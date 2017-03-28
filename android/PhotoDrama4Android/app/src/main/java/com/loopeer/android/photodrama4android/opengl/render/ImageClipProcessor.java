@@ -6,6 +6,7 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.opengl.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.opengl.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.opengl.model.ImageClip;
+import com.loopeer.android.photodrama4android.opengl.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.opengl.model.TransitionClip;
 import com.loopeer.android.photodrama4android.opengl.model.VideoGroup;
 
@@ -16,12 +17,14 @@ public class ImageClipProcessor {
 
     private ArrayList<ImageClipDrawer> mImageClipDrawers;
     private ArrayList<TransitionDrawer> mTransitionDrawers;
+    private ArrayList<SubtitleClipDrawer> mSubtitleClipDrawers;
     private VideoGroup mVideoGroup;
     private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
 
     public ImageClipProcessor(MovieMakerGLSurfaceView glSurfaceView) {
         mImageClipDrawers = new ArrayList<>();
         mTransitionDrawers = new ArrayList<>();
+        mSubtitleClipDrawers = new ArrayList<>();
         mMovieMakerGLSurfaceView = glSurfaceView;
     }
 
@@ -30,6 +33,7 @@ public class ImageClipProcessor {
         setData(videoGroup);
         updateImageClipRenders();
         updateTransitionClipRenders();
+        updateSubtitleClipRenders();
     }
 
     private void setData(VideoGroup videoGroup) {
@@ -44,7 +48,16 @@ public class ImageClipProcessor {
             imageClipRender.preLoadTexture(mMovieMakerGLSurfaceView);
             mImageClipDrawers.add(imageClipRender);
         }
+    }
 
+    public void updateSubtitleClipRenders() {
+        mSubtitleClipDrawers.clear();
+        for (int i = 0; i < mVideoGroup.subtitleClips.size(); i++) {
+            SubtitleClip subtitleClip = mVideoGroup.subtitleClips.get(i);
+            SubtitleClipDrawer subtitleClipDrawer = new SubtitleClipDrawer(mMovieMakerGLSurfaceView, subtitleClip);
+            subtitleClipDrawer.preLoadTexture(mMovieMakerGLSurfaceView);
+            mSubtitleClipDrawers.add(subtitleClipDrawer);
+        }
     }
 
     public void updateTransitionClipRenders() {
@@ -69,6 +82,10 @@ public class ImageClipProcessor {
         }
 
         for (ClipDrawer render : mTransitionDrawers) {
+            render.drawFrame(usedTime, pMatrix);
+        }
+
+        for (ClipDrawer render : mSubtitleClipDrawers) {
             render.drawFrame(usedTime, pMatrix);
         }
     }

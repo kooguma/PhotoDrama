@@ -18,4 +18,10 @@ public class Clip extends BaseModel {
                 ", showTime=" + showTime +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != this.getClass()) return false;
+        return startTime == ((ImageClip)obj).startTime;
+    }
 }

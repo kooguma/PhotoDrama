@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,6 +35,7 @@ public class TextInputActivity extends MovieMakerBaseActivity {
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            if (TextUtils.isEmpty(mBinding.textInput.getText().toString())) return true;
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_TEXT, mBinding.textInput.getText().toString());
             setResult(RESULT_OK, intent);

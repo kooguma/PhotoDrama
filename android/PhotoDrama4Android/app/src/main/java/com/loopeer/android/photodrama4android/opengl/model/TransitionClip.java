@@ -19,8 +19,4 @@ public class TransitionClip extends Clip{
         if (obj.getClass() != this.getClass()) return false;
         return transitionType.getValue() == (((TransitionClip)obj).transitionType.getValue());
     }
-
-    private float getRatio(long usedTime) {
-        return 1f * (usedTime - startTime) / (showTime - 1);
-    }
 }

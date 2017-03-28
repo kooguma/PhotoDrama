@@ -9,6 +9,7 @@ import android.os.Message;
 public class HandlerWrapper<W, T> extends Handler {
 
     public static final int TYPE_LOAD_IMAGE = 0;
+    public static final int TYPE_LOAD_SUBTITLE = 1;
 
     private String key;
     private Callback<T> callback;

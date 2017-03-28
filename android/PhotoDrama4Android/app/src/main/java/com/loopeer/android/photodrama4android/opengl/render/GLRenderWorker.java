@@ -60,4 +60,8 @@ public class GLRenderWorker implements IRendererWorker {
     public void refreshTransitionRender() {
         if (mImageClipProcessor != null) mImageClipProcessor.updateTransitionClipRenders();
     }
+
+    public void refreshSubtitleRender() {
+        if (mImageClipProcessor != null) mImageClipProcessor.updateSubtitleClipRenders();
+    }
 }

@@ -9,6 +9,8 @@ import android.os.Message;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 import com.loopeer.android.photodrama4android.opengl.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.opengl.model.ImageInfo;
+import com.loopeer.android.photodrama4android.opengl.model.SubtitleInfo;
+import com.loopeer.android.photodrama4android.opengl.utils.TextureHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,17 @@ public class TextureLoader extends Thread {
             }
 
             handleImageTexture();
+            handleSubtitleTexture();
+        }
+    }
+
+    private void handleSubtitleTexture() {
+        if (mHandlerWrappers.isEmpty()) return;
+        HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper = mHandlerWrappers.get(0);
+        if (handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_SUBTITLE) {
+            SubtitleInfo subtitleInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
+            returnSubtitleInfo(handlerWrapper, subtitleInfo);
+            mHandlerWrappers.remove(handlerWrapper);
         }
     }
 
@@ -100,13 +113,27 @@ public class TextureLoader extends Thread {
         handlerWrapper.sendMessage(msg);
     }
 
+    private void returnSubtitleInfo(HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper, SubtitleInfo subtitleInfo) {
+        Message msg = new Message();
+        Bundle b = new Bundle();
+        b.putSerializable(handlerWrapper.getKey(), subtitleInfo);
+        msg.setData(b);
+        handlerWrapper.sendMessage(msg);
+    }
+
     public synchronized void loadImageTexture(HandlerWrapper<String, ImageInfo> imageInfoHandlerWrapper) {
-        /*ImageInfo imageInfo;
+       /* ImageInfo imageInfo;
         if ((imageInfo = ImageTextureCache.getDefault().getImageInfo(imageInfoHandlerWrapper.getKey())) != null) {
             returnImageInfo(imageInfoHandlerWrapper, imageInfo);
             return;
         }*/
         mHandlerWrappers.add(imageInfoHandlerWrapper);
+        if (isAlive())
+            notify();
+    }
+
+    public synchronized void loadSubtitleTexture(HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper) {
+        mHandlerWrappers.add(handlerWrapper);
         if (isAlive())
             notify();
     }

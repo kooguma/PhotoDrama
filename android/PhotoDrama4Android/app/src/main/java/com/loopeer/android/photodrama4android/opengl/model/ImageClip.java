@@ -22,7 +22,7 @@ public class ImageClip extends Clip{
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() != this.getClass()) return false;
-        return path.equals(((ImageClip)obj).path);
+        return startTime == ((ImageClip)obj).startTime;
     }
 
     public float getScaleFactor(long usedTime) {

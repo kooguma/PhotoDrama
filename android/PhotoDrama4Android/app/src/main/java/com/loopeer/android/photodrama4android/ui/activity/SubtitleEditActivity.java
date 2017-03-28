@@ -17,6 +17,7 @@ import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.opengl.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.opengl.model.Drama;
+import com.loopeer.android.photodrama4android.opengl.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.opengl.model.TransitionImageWrapper;
 import com.loopeer.android.photodrama4android.opengl.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectInnderImageView;
@@ -114,8 +115,7 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
     }
 
     public void onPlayClick(View view) {
-        mVideoPlayerManager.seekToVideo(0);
-        mVideoPlayerManager.startVideoWithFinishTime(0);
+        mVideoPlayerManager.startVideo();
     }
 
     public void onTextInputClick(View view) {
@@ -126,9 +126,13 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            String content = data.getStringExtra(Navigator.EXTRA_TEXT);
             switch (requestCode) {
                 case Navigator.REQUEST_CODE_TEXT_INPUT:
-
+                    SubtitleClip subtitleClip = new SubtitleClip(
+                            content
+                            , (int) mVideoPlayerManager.getGLThread().getUsedTime());
+                    mDrama.videoGroup.subtitleClips.add(subtitleClip);
                 default:
             }
         }
