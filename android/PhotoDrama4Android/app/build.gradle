@@ -101,6 +101,8 @@ dependencies {
     compile libs.flexbox
     compile libs.cardview
 
+    compile project(':library:bottomimagepicker')
+
     /*compile project(':library:cge')*/
 
     //    compile 'com.android.support:multidex:1.0.1'

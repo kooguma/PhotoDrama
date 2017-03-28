@@ -58,6 +58,8 @@ ext {
             developutils    : "com.loopeer.library:developutils:$developModuleVersion",
             databindpack    : "com.loopeer.library:databindpack:$developModuleVersion",
             flexbox         : "com.google.android:flexbox:$flexboxVersion",
-            cardview        : "com.android.support:cardview-v7:$supportLibraryVersion"
+            cardview        : "com.android.support:cardview-v7:$supportLibraryVersion",
+            fresco         : "com.facebook.fresco:fresco:$frescoVersion",
+            frescoOkhttp   : "com.facebook.fresco:imagepipeline-okhttp:$frescoVersion"
     ]
 }
