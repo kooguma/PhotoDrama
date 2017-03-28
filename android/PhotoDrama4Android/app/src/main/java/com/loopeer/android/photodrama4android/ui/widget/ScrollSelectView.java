@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.opengl.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.opengl.SeekWrapper;
+import com.loopeer.android.photodrama4android.opengl.model.SubtitleClip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,14 @@ public class ScrollSelectView extends ViewGroup {
     private int mActivePointerId = INVALID_POINTER_ID;
 
     private Paint mPaint;
+    private Paint mStrokePaint;
     private int mMiddleLineColor;
+    private int mStrokeLineColor;
+    private int mTextRectColor;
+    private int mTextRectSelectedColor;
     private int mMiddlePos;
+
+    private boolean isOnTouch = true;
 
     private float mMiddleLineWidth = 4f;
     private int mTotalContentWidth;
@@ -43,6 +50,8 @@ public class ScrollSelectView extends ViewGroup {
     private int mMaxValue;
     private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
     private SeekWrapper.SeekImpl mSeek;
+
+    private List<SubtitleClip> mSubtitleClips;
 
     public ScrollSelectView(Context context) {
         this(context, null);
@@ -65,10 +74,20 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-        setWillNotDraw(false);
-        mPaint = new Paint();
         mMiddleLineColor = ContextCompat.getColor(context, R.color.colorAccent);
+        mTextRectColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color);
+        mTextRectSelectedColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color_selected);
+        mStrokeLineColor = ContextCompat.getColor(context, android.R.color.white);
+        setWillNotDraw(false);
+        mSubtitleClips = new ArrayList<>();
+        mPaint = new Paint();
         mPaint.setColor(mMiddleLineColor);
+
+        mStrokePaint = new Paint();
+        mStrokePaint.setStyle(Paint.Style.STROKE);
+        mStrokePaint.setColor(mStrokeLineColor);
+        mStrokePaint.setStrokeWidth(mMiddleLineWidth);
+        mStrokePaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     @Override
@@ -119,7 +138,7 @@ public class ScrollSelectView extends ViewGroup {
                 mLastTouchX = x;
                 mLastTouchY = y;
                 mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-                mOnSeekProgressChangeListener.onStartTrackingTouch(mSeek);
+                onStartTouch();
                 break;
             }
 
@@ -134,7 +153,7 @@ public class ScrollSelectView extends ViewGroup {
                 mPosX += dx;
                 mPosY += dy;
                 scrollContent();
-                mOnSeekProgressChangeListener.onProgressChanged(mSeek, getProgress(), true);
+                onProgressChange();
                 mLastTouchX = x;
                 mLastTouchY = y;
                 break;
@@ -169,6 +188,21 @@ public class ScrollSelectView extends ViewGroup {
         return true;
     }
 
+    private void onStartTouch() {
+        mOnSeekProgressChangeListener.onStartTrackingTouch(mSeek);
+        isOnTouch = true;
+    }
+
+    private void onProgressChange() {
+        mOnSeekProgressChangeListener.onProgressChanged(mSeek, getProgress(), true);
+
+        notifyProgressChange();
+    }
+
+    private void notifyProgressChange() {
+        invalidate();
+    }
+
     private void onStopTouch() {
         mOnSeekProgressChangeListener.onStopTrackingTouch(mSeek);
     }
@@ -196,7 +230,24 @@ public class ScrollSelectView extends ViewGroup {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
+        drawTextRect(canvas);
+        mPaint.setColor(mMiddleLineColor);
         canvas.drawRect(mMiddlePos - mMiddleLineWidth / 2, 0, mMiddlePos + mMiddleLineWidth / 2, getHeight(), mPaint);
+    }
+
+    private void drawTextRect(Canvas canvas) {
+        for (SubtitleClip clip : mSubtitleClips) {
+            float left = mMiddlePos + mPosX + getTotalLength() * clip.startTime / mMaxValue;
+            float right = mMiddlePos + mPosX + getTotalLength() * clip.getEndTime() / mMaxValue;
+            if (isOnTouch && getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
+                mPaint.setColor(mTextRectSelectedColor);
+                canvas.drawRect(left, 0, right, getHeight(), mPaint);
+                canvas.drawRect(left, 0, right, getHeight(), mStrokePaint);
+            } else {
+                mPaint.setColor(mTextRectColor);
+                canvas.drawRect(left, 0, right, getHeight(), mPaint);
+            }
+        }
     }
 
     @Override
@@ -225,7 +276,9 @@ public class ScrollSelectView extends ViewGroup {
 
     public void setProgress(int progress) {
         mPosX = -1f * progress / mMaxValue * getTotalLength();
+        isOnTouch = false;
         scrollContent();
+        notifyProgressChange();
     }
 
     public int getProgress() {
@@ -329,6 +382,11 @@ public class ScrollSelectView extends ViewGroup {
         mAdapter = adapter;
         reBindView();
         requestLayout();
+    }
+
+    public void updateSubtitles(List<SubtitleClip> subtitleClips) {
+        mSubtitleClips.clear();
+        mSubtitleClips.addAll(subtitleClips);
     }
 
     private void reBindView() {

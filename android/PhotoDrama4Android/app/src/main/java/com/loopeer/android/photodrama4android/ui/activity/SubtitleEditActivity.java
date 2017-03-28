@@ -133,6 +133,7 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
                             content
                             , (int) mVideoPlayerManager.getGLThread().getUsedTime());
                     mDrama.videoGroup.subtitleClips.add(subtitleClip);
+                    mBinding.scrollSelectView.updateSubtitles(mDrama.videoGroup.subtitleClips);
                 default:
             }
         }

@@ -73,7 +73,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
 
     @Override
     public void onStopTrackingTouch(SeekWrapper.SeekImpl seek) {
-        mGLThread.setManual(false);
         mGLThread.setUsedTime(seek.getProgress());
         if (mIsStopTouchToRestart) stopTouchToRestart(seek);
     }
