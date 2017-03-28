@@ -15,5 +15,6 @@
     <string name="transition_name_fade">渐变</string>
     <string name="common_done">Done</string>
 
+    <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
 
 </resources>

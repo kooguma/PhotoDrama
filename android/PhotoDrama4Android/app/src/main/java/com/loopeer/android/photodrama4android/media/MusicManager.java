@@ -60,6 +60,7 @@ public class MusicManager implements IMusic, MediaPlayer.OnErrorListener,
         } else {
             Log.e(TAG, "seekToMusic : " + "MediaPlayer hasn't been prepared");
         }
+
     }
 
     @Override

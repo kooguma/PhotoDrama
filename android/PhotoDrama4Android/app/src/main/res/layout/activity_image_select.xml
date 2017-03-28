@@ -1,35 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/darker_gray"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context="com.loopeer.android.moviemaker.ui.activity.ImageSelectActivity">
+        android:layout_height="wrap_content"
+        app:viewAspectRatio="0.75"/>
 
-        <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
-            android:id="@+id/image_grid_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="3"
-            android:scrollbarStyle="insideOverlay"
-            android:scrollbars="vertical"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp"
-            app:maxImageNum="6"
-            app:showAddButton="true"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onBtnClick"
-            android:text="Start Make movie"/>
-    </LinearLayout>
+    <com.loopeer.bottomimagepicker.BottomImagePickerView
+        android:id="@+id/pick_view"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@android:color/black"
+        android:layout_alignParentBottom="true"
+        app:behavior_hideable="false"
+        app:layout_behavior="@string/picker_bottom_sheet_behavior"
+        android:orientation="vertical"/>
 
-</layout>
+</android.support.design.widget.CoordinatorLayout>

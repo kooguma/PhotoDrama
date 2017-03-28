@@ -8,12 +8,11 @@
     android:foreground="?attr/selectableItemBackground">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image"
+        android:id="@+id/picker_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/ic_image_default"
-        fresco:placeholderImageScaleType="centerCrop"
-        />
+        fresco:placeholderImageScaleType="centerCrop"/>
 
 </FrameLayout>

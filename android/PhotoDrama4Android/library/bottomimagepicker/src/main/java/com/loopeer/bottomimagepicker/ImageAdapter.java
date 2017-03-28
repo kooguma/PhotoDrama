@@ -1,14 +1,10 @@
 package com.loopeer.bottomimagepicker;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -37,7 +33,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     @Override public ImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
             .from(parent.getContext())
-            .inflate(R.layout.list_item_image, parent, false);
+            .inflate(R.layout.list_item_picker_image, parent, false);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageSize,mImageSize);
         itemView.setLayoutParams(params);
         return new ImageHolder(itemView);
@@ -58,7 +54,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
 
         public ImageHolder(View itemView) {
             super(itemView);
-            mImageView = (SimpleDraweeView) itemView.findViewById(R.id.image);
+            mImageView = (SimpleDraweeView) itemView.findViewById(R.id.picker_image);
         }
 
         public void bind(Image image){
