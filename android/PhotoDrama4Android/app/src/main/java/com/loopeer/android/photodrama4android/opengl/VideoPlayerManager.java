@@ -26,7 +26,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
         mSeekWrapper = seekWrapper;
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
-        mIMusic = new MusicManager();
+        mIMusic = new MusicManager(mContext);
 
         updateTime(drama);
         init();
@@ -131,6 +131,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
 
     public void onDestroy() {
         mGLThread.onDestroy();
+        mIMusic.onDestroy();
         mGLThread = null;
     }
 
