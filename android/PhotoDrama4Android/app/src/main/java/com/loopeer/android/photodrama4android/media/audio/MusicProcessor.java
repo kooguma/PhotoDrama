@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media.audio;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
@@ -27,6 +28,7 @@ public class MusicProcessor implements MusicClipPlayer.MusicClipPlayerLister {
 
     public void updateMusicClipPlayer(Context context, List<MusicClip> clips) {
         for (MusicClip clip: clips) {
+            if (clip.isCreateIng() || TextUtils.isEmpty(clip.path)) continue;
             if (!mClipPlayerHashMap.containsKey(clip.getKey())) {
                 MusicClipPlayer clipPlayer = new MusicClipPlayer(context, clip, this);
                 mHasNotPrepareClipKeys.add(clip.getKey());

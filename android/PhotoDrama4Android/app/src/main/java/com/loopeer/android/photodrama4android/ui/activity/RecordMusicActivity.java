@@ -1,0 +1,255 @@
+package com.loopeer.android.photodrama4android.ui.activity;
+
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+
+import com.loopeer.android.photodrama4android.Navigator;
+import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.databinding.ActivityRecordMusicBinding;
+import com.loopeer.android.photodrama4android.media.SeekWrapper;
+import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
+import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
+import com.loopeer.android.photodrama4android.media.audio.AudioRecorder;
+import com.loopeer.android.photodrama4android.media.model.Clip;
+import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
+import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
+import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
+import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
+
+import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
+
+public class RecordMusicActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener
+        , ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
+
+    private ActivityRecordMusicBinding mBinding;
+    private Drama mDrama;
+    private VideoPlayerManager mVideoPlayerManager;
+    private AudioRecorder mAudioRecorder;
+    private MusicClip mMusicClipRecording;
+    private MusicClip mSelectedClip;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_record_music);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
+        mAudioRecorder = new AudioRecorder();
+        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
+                , mBinding.glSurfaceView, mDrama);
+        mVideoPlayerManager.setProgressChangeListener(this);
+        VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
+        mVideoPlayerManager.seekToVideo(0);
+        updateScrollImageView();
+        updateBtn();
+    }
+
+    private void updateBtn() {
+        mBinding.btnRecord.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    stopRecord(true);
+                    break;
+                case MotionEvent.ACTION_DOWN:
+                    startRecord();
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
+        mBinding.btnDelete.setOnClickListener(v -> {
+            if (mSelectedClip != null) {
+                mDrama.audioGroup.musicClips.remove(mSelectedClip);
+                updateScrollSelectViewClips();
+            }
+        });
+    }
+
+    private void stopRecord(boolean validate) {
+//        mAudioRecorder.stopRecording();
+        mMusicClipRecording.setCreateIng(false);
+        mVideoPlayerManager.pauseVideo();
+        if (mMusicClipRecording.showTime < MIN_RECORD_AUDIO_LENGTH
+                || !validate) {
+            mDrama.audioGroup.musicClips.remove(mMusicClipRecording);
+            /*FileUtils.deleteFile(new File(mMusicClipRecording.path));*/
+        }
+        mMusicClipRecording = null;
+    }
+
+    private void startRecord() {
+        mMusicClipRecording = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
+                , MusicClip.MusicType.RECORD_AUDIO);
+        mMusicClipRecording.setCreateIng(true);
+        if (!checkClipValidate(mMusicClipRecording)) {
+            return;
+        }
+        mDrama.audioGroup.musicClips.add(mMusicClipRecording);
+        updateScrollSelectViewClips();
+        mVideoPlayerManager.startVideoOnly();
+        /*if (mAudioRecorder.startRecording(mMusicClipRecording)) {
+            mVideoPlayerManager.startVideoOnly();
+        }*/
+    }
+
+    private void updateScrollSelectViewClips() {
+        mBinding.scrollSelectView.updateClips(mDrama.audioGroup.getRecordMusicClips());
+    }
+
+    private void updateScrollImageView() {
+        ScrollSelectView.Adapter<TransitionImageWrapper> adapter = new ScrollSelectAdapter();
+        mBinding.scrollSelectView.setAdapter(adapter);
+        adapter.updateDatas(ClipsCreator.getTransiImageClipsNoEmpty(mDrama.videoGroup));
+        updateScrollSelectViewClips();
+        mBinding.scrollSelectView.setClipIndicatorPosChangeListener(this);
+        mBinding.scrollSelectView.setClipSelectedListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        if (item.getItemId() == R.id.menu_done) {
+            Intent intent = new Intent();
+            intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
+            setResult(RESULT_OK, intent);
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mVideoPlayerManager.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mVideoPlayerManager.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mVideoPlayerManager.onStop();
+        mAudioRecorder.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoPlayManagerContainer.getDefault().onFinish(this);
+        mVideoPlayerManager.onDestroy();
+    }
+
+    public void onPlayClick(View view) {
+        mVideoPlayerManager.startVideo();
+    }
+
+    @Override
+    public void onProgressInit(int progress, int maxValue) {
+
+    }
+
+    @Override
+    public void onProgressStop() {
+
+    }
+
+    @Override
+    public void onProgressChange(int progress) {
+        if (mMusicClipRecording != null) {
+            mMusicClipRecording.showTime = progress - mMusicClipRecording.startTime;
+            if (!checkClipValidate(mMusicClipRecording)) {
+                stopRecord(false);
+            }
+        }
+    }
+
+    @Override
+    public void onProgressStart(int progress, int maxValue) {
+
+    }
+
+    @Override
+    public boolean changeTimeByStartIndicator(Clip clip, int offset, int minValue, int maxValue) {
+        changeClipTimeByIndicator(clip, offset, maxValue);
+        return true;
+    }
+
+    @Override
+    public boolean changeTimeByEndIndicator(Clip clip, int offset, int minValue, int maxValue) {
+        changeClipTimeByIndicator(clip, offset, maxValue);
+        return true;
+    }
+
+    private void changeClipTimeByIndicator(Clip clip, int offset, int maxValue) {
+        int preStartTime = clip.startTime;
+        clip.startTime += offset;
+        if (clip.getEndTime() >= maxValue + 1)
+            clip.startTime = maxValue + 1 - clip.showTime;
+        if (clip.startTime <= 0) {
+            clip.startTime = 0;
+        }
+        for (MusicClip c : mDrama.audioGroup.getRecordMusicClips()) {
+            if (clip != c) {
+                if (preStartTime < c.startTime && clip.getEndTime() >= c.startTime) {
+                    clip.startTime = c.startTime - 1 - clip.showTime;
+                    break;
+                }
+                if (preStartTime > c.startTime && clip.startTime <= c.getEndTime()) {
+                    clip.startTime = c.getEndTime() + 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean checkClipValidate(Clip recordingClip) {
+        if (recordingClip.startTime + MusicClip.MIN_RECORD_AUDIO_LENGTH > mVideoPlayerManager.getMaxTime())
+            return false;
+        if (recordingClip.getEndTime() > mVideoPlayerManager.getMaxTime())
+            return false;
+        for (MusicClip clip : mDrama.audioGroup.getRecordMusicClips()) {
+            if (recordingClip != clip) {
+                if (recordingClip.startTime < clip.startTime
+                        && recordingClip.startTime + MusicClip.MIN_RECORD_AUDIO_LENGTH >= clip.startTime)
+                    return false;
+                if (recordingClip.startTime < clip.startTime
+                    && recordingClip.getEndTime() >= clip.startTime)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onClipSelected(Clip clip) {
+        if (clip != null) {
+            mSelectedClip = (MusicClip) clip;
+            mBinding.switcherBtn.setDisplayedChild(1);
+        } else {
+            mBinding.switcherBtn.setDisplayedChild(0);
+        }
+    }
+}

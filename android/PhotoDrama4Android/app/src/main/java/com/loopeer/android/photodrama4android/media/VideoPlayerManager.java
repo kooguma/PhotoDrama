@@ -19,6 +19,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     private IMusic mIMusic;
     private Context mContext;
     private int mStartTime;
+    private int mMaxTime;
     private int mEndTime;
     private int mFinishAtTime;
     private boolean mIsStopTouchToRestart;
@@ -38,12 +39,12 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     private void updateTime(Drama drama) {
-        int totalTime = drama.getShowTimeTotal();
-        setSeekBarMaxValue(totalTime);
-        if (mSeekWrapper != null) mSeekWrapper.setMax(totalTime);
+        mMaxTime = drama.getShowTimeTotal();
+        setSeekBarMaxValue(mMaxTime);
+        if (mSeekWrapper != null) mSeekWrapper.setMax(mMaxTime);
         mStartTime = 0;
         mFinishAtTime = mStartTime;
-        mEndTime = totalTime;
+        mEndTime = mMaxTime;
         mGLThread.updateTime(mStartTime, mEndTime);
 
         onProgressInit(mStartTime, mSeekbarMaxValue);
@@ -92,6 +93,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     @Override
     public void seekChange(long usedTime) {
         if (mSeekWrapper != null) mSeekWrapper.setProgress((int) usedTime);
+        onProgressChange((int) usedTime);
         mIMusic.onProgressChange((int) usedTime);
     }
 
@@ -149,6 +151,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void startVideo() {
         mGLThread.startUp();
         mIMusic.startMusic();
+    }
+
+    public void startVideoOnly() {
+        mGLThread.startUp();
     }
 
     public void startVideoWithFinishTime(int finishAtTime) {
@@ -236,6 +242,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
                 && isImagePrepared
                 && isSubtitlePrepared)
             mGLThread.seekToTime(mGLThread.getUsedTime());
+    }
+
+    public int getMaxTime() {
+        return mMaxTime;
     }
 
     public interface ProgressChangeListener {

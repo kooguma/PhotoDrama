@@ -13,4 +13,14 @@ public class AudioGroup extends BaseModel {
     public AudioGroup() {
         this.musicClips = new ArrayList<>();
     }
+
+    public List<MusicClip> getRecordMusicClips() {
+        List<MusicClip> results = new ArrayList<>();
+        for (MusicClip musicClip : musicClips) {
+            if (musicClip.musicType == MusicClip.MusicType.RECORD_AUDIO) {
+                results.add(musicClip);
+            }
+        }
+        return results;
+    }
 }

@@ -9,6 +9,7 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
+import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SubtitleEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TextInputActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity;
@@ -21,6 +22,7 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_TRANSITION_EDIT = 1002;
     public static final int REQUEST_CODE_DRAMA_SUBTITLE_EDIT = 1003;
     public static final int REQUEST_CODE_TEXT_INPUT = 1004;
+    public static final int REQUEST_CODE_DRAMA_AUDIO_RECORD = 1005;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -59,5 +61,11 @@ public class Navigator {
     public static void startTextInputActivity(Context context) {
         Intent intent = new Intent(context, TextInputActivity.class);
         ((Activity)context).startActivityForResult(intent, REQUEST_CODE_TEXT_INPUT);
+    }
+
+    public static void startRecordMusicActivity(Context context, Drama drama) {
+        Intent intent = new Intent(context, RecordMusicActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_AUDIO_RECORD);
     }
 }

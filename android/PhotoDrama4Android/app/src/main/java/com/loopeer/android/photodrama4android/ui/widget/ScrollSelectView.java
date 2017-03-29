@@ -60,10 +60,13 @@ public class ScrollSelectView extends ViewGroup {
     private int mMaxValue;
     private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
     private SeekWrapper.SeekImpl mSeek;
+    private ClipIndicatorPosChangeListener mClipIndicatorPosChangeListener;
+    private ClipSelectedListener mClipSelectedListener;
 
     private List<Clip> mClips;
     private Clip mSelectedClip;
-    private int MIN_SUBTITLE_SHOWTIME = 500;
+    private Clip mPreSelectedClip;
+    private int mMinClipShowTime = 500;
 
     public ScrollSelectView(Context context) {
         this(context, null);
@@ -241,6 +244,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void updateSelectedClip() {
+        mPreSelectedClip = mSelectedClip;
         mSelectedClip = null;
         for (Clip clip : mClips) {
             if (isManual && getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
@@ -248,9 +252,16 @@ public class ScrollSelectView extends ViewGroup {
                 break;
             }
         }
+        if (mPreSelectedClip != mSelectedClip && mClipSelectedListener != null) {
+            mClipSelectedListener.onClipSelected(mSelectedClip);
+        }
     }
 
     public void changeTimeByStartIndicator(int offset) {
+        if (mClipIndicatorPosChangeListener != null
+                && mClipIndicatorPosChangeListener.changeTimeByStartIndicator(mSelectedClip
+                , offset, mMinClipShowTime, mMaxValue))
+            return;
         int endValue = mSelectedClip.startTime + mSelectedClip.showTime;
         if (offset < 0){
             mSelectedClip.startTime += offset;
@@ -260,8 +271,8 @@ public class ScrollSelectView extends ViewGroup {
             mSelectedClip.startTime += offset;
             mSelectedClip.showTime = endValue - mSelectedClip.startTime;
         }
-        if (mSelectedClip.showTime <= MIN_SUBTITLE_SHOWTIME) {
-            mSelectedClip.showTime = MIN_SUBTITLE_SHOWTIME;
+        if (mSelectedClip.showTime <= mMinClipShowTime) {
+            mSelectedClip.showTime = mMinClipShowTime;
             mSelectedClip.startTime = endValue - mSelectedClip.showTime;
         }
         if (mSelectedClip.startTime <= 0) {
@@ -277,11 +288,16 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void changeTimeByEndIndicator(int offset) {
+        if (mClipIndicatorPosChangeListener != null
+                && mClipIndicatorPosChangeListener.changeTimeByEndIndicator(mSelectedClip
+                , offset, mMinClipShowTime, mMaxValue))
+            return;
         mSelectedClip.showTime += offset;
         if (mSelectedClip.getEndTime() >= mMaxValue + 1)
             mSelectedClip.showTime = mMaxValue + 1 - mSelectedClip.startTime;
-        if (mSelectedClip.showTime <= MIN_SUBTITLE_SHOWTIME)
-            mSelectedClip.showTime = MIN_SUBTITLE_SHOWTIME;
+        if (mSelectedClip.showTime <= mMinClipShowTime)
+            mSelectedClip.showTime = mMinClipShowTime;
+
         mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.getEndTime(), true);
     }
 
@@ -400,6 +416,10 @@ public class ScrollSelectView extends ViewGroup {
         mMaxValue = max;
     }
 
+    public void setMinClipShowTime(int minClipShowTime) {
+        mMinClipShowTime = minClipShowTime;
+    }
+
     public void setProgress(int progress) {
         mPosX = -1f * progress / mMaxValue * getTotalLength();
         isManual = false;
@@ -514,7 +534,7 @@ public class ScrollSelectView extends ViewGroup {
         requestLayout();
     }
 
-    public void updateSubtitles(List<? extends Clip> clips) {
+    public void updateClips(List<? extends Clip> clips) {
         mClips.clear();
         mClips.addAll(clips);
         invalidate();
@@ -592,5 +612,22 @@ public class ScrollSelectView extends ViewGroup {
                 return true;
             return false;
         }
+    }
+
+    public void setClipIndicatorPosChangeListener(ClipIndicatorPosChangeListener clipIndicatorPosChangeListener) {
+        mClipIndicatorPosChangeListener = clipIndicatorPosChangeListener;
+    }
+
+    public void setClipSelectedListener(ClipSelectedListener clipSelectedListener) {
+        mClipSelectedListener = clipSelectedListener;
+    }
+
+    public interface ClipIndicatorPosChangeListener{
+        boolean changeTimeByStartIndicator(Clip clip, int offset, int minValue, int maxValue);
+        boolean changeTimeByEndIndicator(Clip clip, int offset, int minValue, int maxValue);
+    }
+
+    public interface ClipSelectedListener{
+        void onClipSelected(Clip clip);
     }
 }

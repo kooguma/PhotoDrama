@@ -118,6 +118,10 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         Navigator.startSubtitleEditActivity(this, mDrama);
     }
 
+    public void onAudioRecord(View view) {
+        Navigator.startRecordMusicActivity(this, mDrama);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -130,6 +134,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
                 case Navigator.REQUEST_CODE_DRAMA_IMAGE_EDIT:
                 case Navigator.REQUEST_CODE_DRAMA_TRANSITION_EDIT:
                 case Navigator.REQUEST_CODE_DRAMA_SUBTITLE_EDIT:
+                case Navigator.REQUEST_CODE_DRAMA_AUDIO_RECORD:
                     mVideoPlayerManager.updateDrama(mDrama);
                     break;
                 default:

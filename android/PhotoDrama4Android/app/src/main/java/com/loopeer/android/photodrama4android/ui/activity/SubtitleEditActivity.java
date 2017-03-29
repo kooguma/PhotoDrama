@@ -3,16 +3,13 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivitySubtitleEditBinding;
-import com.loopeer.android.photodrama4android.media.Constants;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
@@ -20,7 +17,7 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
-import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectInnderImageView;
+import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
 public class SubtitleEditActivity extends MovieMakerBaseActivity {
@@ -42,27 +39,11 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         updateScrollImageView();
-        mBinding.scrollSelectView.updateSubtitles(mDrama.videoGroup.subtitleClips);
+        mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
     }
 
     private void updateScrollImageView() {
-        ScrollSelectView.Adapter<TransitionImageWrapper> adapter = new ScrollSelectView.Adapter<TransitionImageWrapper>() {
-
-            @Override
-            public View onCreateView(LayoutInflater inflater, ViewGroup parent) {
-                return inflater.inflate(R.layout.list_item_scroll_inner_item, parent, false);
-            }
-
-            @Override
-            public void onBindView(View view, TransitionImageWrapper clip) {
-                ScrollSelectInnderImageView innderImageView = (ScrollSelectInnderImageView) view;
-                if (clip.isImageClip()) {
-                    innderImageView.updateImage(Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME, clip.imageClip.showTime, clip.imageClip.path);
-                } else {
-                    innderImageView.updateImage(Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME, clip.transitionClip.showTime, clip.transitionPreImagePath);
-                }
-            }
-        };
+        ScrollSelectView.Adapter<TransitionImageWrapper> adapter = new ScrollSelectAdapter();
         mBinding.scrollSelectView.setAdapter(adapter);
         adapter.updateDatas(ClipsCreator.getTransiImageClipsNoEmpty(mDrama.videoGroup));
     }
@@ -133,7 +114,7 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity {
                             content
                             , (int) mVideoPlayerManager.getGLThread().getUsedTime());
                     mDrama.videoGroup.subtitleClips.add(subtitleClip);
-                    mBinding.scrollSelectView.updateSubtitles(mDrama.videoGroup.subtitleClips);
+                    mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
                 default:
             }
         }
