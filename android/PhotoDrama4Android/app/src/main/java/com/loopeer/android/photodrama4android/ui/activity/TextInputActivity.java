@@ -14,12 +14,14 @@ import com.loopeer.android.photodrama4android.databinding.ActivityTextInputBindi
 public class TextInputActivity extends MovieMakerBaseActivity {
 
     private ActivityTextInputBinding mBinding;
+    private String mContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_text_input);
-
+        mContent = getIntent().getStringExtra(Navigator.EXTRA_TEXT);
+        mBinding.textInput.setText(mContent);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -37,7 +39,8 @@ public class TextInputActivity extends MovieMakerBaseActivity {
         if (item.getItemId() == R.id.menu_done) {
             if (TextUtils.isEmpty(mBinding.textInput.getText().toString())) return true;
             Intent intent = new Intent();
-            intent.putExtra(Navigator.EXTRA_TEXT, mBinding.textInput.getText().toString());
+            mContent = mBinding.textInput.getText().toString();
+            intent.putExtra(Navigator.EXTRA_TEXT, mContent);
             setResult(RESULT_OK, intent);
             this.finish();
         }

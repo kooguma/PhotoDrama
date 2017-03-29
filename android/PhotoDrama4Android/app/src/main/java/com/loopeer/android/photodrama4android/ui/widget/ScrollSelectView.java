@@ -537,7 +537,23 @@ public class ScrollSelectView extends ViewGroup {
     public void updateClips(List<? extends Clip> clips) {
         mClips.clear();
         mClips.addAll(clips);
+        notifySelectedClip();
         invalidate();
+    }
+
+    private void notifySelectedClip() {
+        mSelectedClip = null;
+        for (Clip clip : mClips) {
+            if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()
+                    && mClipSelectedListener != null) {
+                mSelectedClip = clip;
+                break;
+            }
+        }
+        if (mPreSelectedClip != mSelectedClip) {
+            mClipSelectedListener.onClipSelected(mSelectedClip);
+        }
+        mPreSelectedClip = mSelectedClip;
     }
 
     private void reBindView() {

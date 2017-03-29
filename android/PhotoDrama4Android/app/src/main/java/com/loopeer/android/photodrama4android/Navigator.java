@@ -18,6 +18,7 @@ public class Navigator {
 
     public static final String EXTRA_DRAMA = "extra_drama";
     public static final String EXTRA_TEXT = "extra_text";
+    public static final String EXTRA_SUBTITLE_CLIP = "extra_subtitle_clip";
     public static final int REQUEST_CODE_DRAMA_IMAGE_EDIT = 1001;
     public static final int REQUEST_CODE_DRAMA_TRANSITION_EDIT = 1002;
     public static final int REQUEST_CODE_DRAMA_SUBTITLE_EDIT = 1003;
@@ -58,8 +59,9 @@ public class Navigator {
         ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SUBTITLE_EDIT);
     }
 
-    public static void startTextInputActivity(Context context) {
+    public static void startTextInputActivity(Context context, String content) {
         Intent intent = new Intent(context, TextInputActivity.class);
+        intent.putExtra(EXTRA_TEXT, content);
         ((Activity)context).startActivityForResult(intent, REQUEST_CODE_TEXT_INPUT);
     }
 

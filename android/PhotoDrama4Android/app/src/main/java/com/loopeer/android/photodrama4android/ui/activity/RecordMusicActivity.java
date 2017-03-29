@@ -48,8 +48,8 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
         mVideoPlayerManager.setProgressChangeListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
-        updateScrollImageView();
         updateBtn();
+        updateScrollImageView();
     }
 
     private void updateBtn() {
@@ -66,18 +66,20 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
             }
             return false;
         });
-        mBinding.btnDelete.setOnClickListener(v -> {
-            if (mSelectedClip != null) {
-                mDrama.audioGroup.musicClips.remove(mSelectedClip);
-                updateScrollSelectViewClips();
-            }
-        });
+    }
+
+    public void onDeleteClick(View view) {
+        if (mSelectedClip != null) {
+            mDrama.audioGroup.musicClips.remove(mSelectedClip);
+            updateScrollSelectViewClips();
+        }
     }
 
     private void stopRecord(boolean validate) {
 //        mAudioRecorder.stopRecording();
         mMusicClipRecording.setCreateIng(false);
         mVideoPlayerManager.pauseVideo();
+        mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
         if (mMusicClipRecording.showTime < MIN_RECORD_AUDIO_LENGTH
                 || !validate) {
             mDrama.audioGroup.musicClips.remove(mMusicClipRecording);
@@ -106,12 +108,13 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     }
 
     private void updateScrollImageView() {
+        mBinding.scrollSelectView.setClipIndicatorPosChangeListener(this);
+        mBinding.scrollSelectView.setClipSelectedListener(this);
+        mBinding.scrollSelectView.setMinClipShowTime(MIN_RECORD_AUDIO_LENGTH);
         ScrollSelectView.Adapter<TransitionImageWrapper> adapter = new ScrollSelectAdapter();
         mBinding.scrollSelectView.setAdapter(adapter);
         adapter.updateDatas(ClipsCreator.getTransiImageClipsNoEmpty(mDrama.videoGroup));
         updateScrollSelectViewClips();
-        mBinding.scrollSelectView.setClipIndicatorPosChangeListener(this);
-        mBinding.scrollSelectView.setClipSelectedListener(this);
     }
 
     @Override
@@ -179,7 +182,7 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     @Override
     public void onProgressChange(int progress) {
         if (mMusicClipRecording != null) {
-            mMusicClipRecording.showTime = progress - mMusicClipRecording.startTime;
+            mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
             if (!checkClipValidate(mMusicClipRecording)) {
                 stopRecord(false);
             }
@@ -236,7 +239,7 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
                         && recordingClip.startTime + MusicClip.MIN_RECORD_AUDIO_LENGTH >= clip.startTime)
                     return false;
                 if (recordingClip.startTime < clip.startTime
-                    && recordingClip.getEndTime() >= clip.startTime)
+                        && recordingClip.getEndTime() >= clip.startTime)
                     return false;
             }
         }
@@ -249,6 +252,7 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
             mSelectedClip = (MusicClip) clip;
             mBinding.switcherBtn.setDisplayedChild(1);
         } else {
+            mSelectedClip = null;
             mBinding.switcherBtn.setDisplayedChild(0);
         }
     }
