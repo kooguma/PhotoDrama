@@ -58,7 +58,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
             @Override
             public void onResult(SubtitleInfo t) {
                 mSubtitleInfo = t;
-                VideoPlayManagerContainer.getDefault().notifyRender(mContext);
+                VideoPlayManagerContainer.getDefault().subtitleLoadReady(mContext);
             }
         });
         glView.getTextureLoader().loadImageTexture(handler);

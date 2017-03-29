@@ -3,9 +3,15 @@ package com.loopeer.android.photodrama4android.media.model;
 
 import com.laputapp.model.BaseModel;
 
+import java.util.UUID;
+
 public class Clip extends BaseModel {
     public int startTime = 0;
     public int showTime = 2000;
+
+    public Clip() {
+        id = UUID.randomUUID().toString();
+    }
 
     public int getEndTime() {
         return showTime + startTime - 1;
@@ -22,6 +28,10 @@ public class Clip extends BaseModel {
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() != this.getClass()) return false;
-        return startTime == ((ImageClip)obj).startTime;
+        return id.equals(((Clip)obj).id);
+    }
+
+    public String getKey() {
+        return id;
     }
 }

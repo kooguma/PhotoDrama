@@ -3,11 +3,9 @@ package com.loopeer.android.photodrama4android.media.model;
 
 public class MusicClip extends Clip {
     public String path;
-    public int startTime = 0;
-    public int showTime = 2000;
 
     public int musicStartOffset;
-    public int musicEndOffset;
+    public int musicSelectedLength;
 
     public MusicType musicType;
 
@@ -17,6 +15,10 @@ public class MusicClip extends Clip {
         return showTime + startTime - 1;
     }
 
+    public int getSeekTime(int usedTime) {
+        return (usedTime - startTime) % musicSelectedLength + musicStartOffset;
+    }
+
     @Override
     public String toString() {
         return "MusicClip{" +
@@ -24,7 +26,7 @@ public class MusicClip extends Clip {
                 ", startTime=" + startTime +
                 ", showTime=" + showTime +
                 ", musicStartOffset=" + musicStartOffset +
-                ", musicEndOffset=" + musicEndOffset +
+                ", musicSelectedLength=" + musicSelectedLength +
                 ", musicType=" + musicType +
                 '}';
     }

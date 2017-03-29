@@ -1,6 +1,6 @@
 package com.loopeer.android.photodrama4android.media;
 
-public interface IUpSeekBar {
-   void upSeekBar(long usedTime);
+public interface SeekChangeListener {
+   void seekChange(long usedTime);
    void actionFinish();
 }

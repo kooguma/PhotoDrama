@@ -3,11 +3,13 @@ package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
 
+import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
+import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
 
-public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeekBar, IPlayerLife {
+public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife, MusicProcessor.ProcessorPrepareListener {
 
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
@@ -20,13 +22,16 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
     private int mEndTime;
     private int mFinishAtTime;
     private boolean mIsStopTouchToRestart;
+    private boolean isMusicPrepared = false;
+    private boolean isImagePrepared = false;
+    private boolean isSubtitlePrepared = false;
 
     public VideoPlayerManager(SeekWrapper seekWrapper, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
         mSeekWrapper = seekWrapper;
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
-        mIMusic = new MusicManager(mContext);
+        mIMusic = new MusicDelegate(mContext, drama, this);
 
         updateTime(drama);
         init();
@@ -46,7 +51,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
 
     private void init() {
         if (mSeekWrapper != null) mSeekWrapper.setOnSeekChangeListener(this);
-        mGLThread.setUpSeekBarListener(this);
+        mGLThread.setSeekChangeListener(this);
     }
 
     public void setProgressChangeListener(ProgressChangeListener progressChangeListener) {
@@ -79,14 +84,15 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
 
     private void stopTouchToRestart(SeekWrapper.SeekImpl seek) {
         mGLThread.startUp();
-        mIMusic.seekToMusic(seek.getProgress(), mSeekbarMaxValue);
+        mIMusic.seekToMusic(seek.getProgress());
         mIMusic.startMusic();
         onProgressStart(seek.getProgress(), mSeekbarMaxValue);
     }
 
     @Override
-    public void upSeekBar(long usedTime) {
+    public void seekChange(long usedTime) {
         if (mSeekWrapper != null) mSeekWrapper.setProgress((int) usedTime);
+        mIMusic.onProgressChange((int) usedTime);
     }
 
     @Override
@@ -100,7 +106,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
         mGLThread.setManualUpSeekBar(finishToTime);
         if (mSeekWrapper != null) mSeekWrapper.setProgress(finishToTime);
         mGLThread.setManual(false);
-        mIMusic.seekToMusic(finishToTime, mSeekbarMaxValue);
+        mIMusic.seekToMusic(finishToTime);
         mIMusic.pauseMusic();
         onProgressChange(finishToTime);
         onProgressStop();
@@ -163,11 +169,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
         if (mSeekWrapper != null) mSeekWrapper.setProgress(time);
     }
 
-    public void refreshIfWait() {
-        if (mGLThread.isStop())
-            mGLThread.seekToTime(mGLThread.getUsedTime());
-    }
-
     private void onProgressInit(int progress, int maxValue) {
         if (mProgressChangeListener != null)
             mProgressChangeListener.onProgressInit(progress, maxValue);
@@ -211,6 +212,30 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, IUpSeek
 
     public void setStopTouchToRestart(boolean stopTouchToRestart) {
         mIsStopTouchToRestart = stopTouchToRestart;
+    }
+
+    @Override
+    public void musicPrepareFinished() {
+        isMusicPrepared = true;
+        checkSourceReadyToStart();
+    }
+
+    public void bitmapLoadReady() {
+        isImagePrepared = true;
+        checkSourceReadyToStart();
+    }
+
+    public void subtitleLoadReady() {
+        isSubtitlePrepared = true;
+        checkSourceReadyToStart();
+    }
+
+    private void checkSourceReadyToStart() {
+        if (mGLThread.isStop()
+                && isMusicPrepared
+                && isImagePrepared
+                && isSubtitlePrepared)
+            mGLThread.seekToTime(mGLThread.getUsedTime());
     }
 
     public interface ProgressChangeListener {

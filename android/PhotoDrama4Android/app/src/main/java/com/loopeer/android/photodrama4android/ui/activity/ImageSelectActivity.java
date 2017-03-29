@@ -12,9 +12,6 @@ import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import rx.Observable;
 
 public class ImageSelectActivity extends MovieMakerBaseActivity {
 
@@ -29,11 +26,9 @@ public class ImageSelectActivity extends MovieMakerBaseActivity {
     public void onBtnClick(View view) {
         //TODO test placeholder
         ArrayList<String> urls = mBinding.imageGridView.getLocalUrls();
-        showProgressLoading("");
         BitmapFactory.getInstance().loadImages(urls.toArray(new String[]{}));
-        Observable.timer(300, TimeUnit.MILLISECONDS)
-                .doOnNext(t -> Navigator.startMakeMovieActivity(this, Drama.createFromPath(urls)))
-                .subscribe();
+
+        Navigator.startMakeMovieActivity(this, Drama.createFromPath(urls));
     }
 
     @Override

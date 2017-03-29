@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView;
 
 import com.loopeer.android.photodrama4android.media.IPlayerLife;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
-import com.loopeer.android.photodrama4android.media.IUpSeekBar;
+import com.loopeer.android.photodrama4android.media.SeekChangeListener;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -23,7 +23,7 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     private boolean mIsManual;
     private boolean mIsFinish;
     private boolean mIsBackGround;
-    private IUpSeekBar mIUpSeekBar;
+    private SeekChangeListener mSeekChangeListener;
 
     public GLThreadRender(Context context, GLSurfaceView gLSurfaceView, IRendererWorker iRendererWorker) {
         mGLSurfaceView = gLSurfaceView;
@@ -36,8 +36,8 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         mIsFinish = false;
     }
 
-    public void setUpSeekBarListener(IUpSeekBar iUpSeekBar) {
-        this.mIUpSeekBar = iUpSeekBar;
+    public void setSeekChangeListener(SeekChangeListener seekChangeListener) {
+        this.mSeekChangeListener = seekChangeListener;
     }
 
     public void stopUp() {
@@ -62,11 +62,11 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
             while (!mIsFinish) {
                 try {
                     if (mUsedTime >= mSumTime) {
-                        if (mIUpSeekBar != null) {
+                        if (mSeekChangeListener != null) {
                             mGLSurfaceView.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mIUpSeekBar.actionFinish();
+                                    mSeekChangeListener.actionFinish();
                                 }
                             });
                         }
@@ -82,11 +82,11 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
                         mUsedTime = mUsedTime + System.currentTimeMillis() - startTime;
                     else
                         mIsBackGround = false;
-                    if (mIUpSeekBar != null) {
+                    if (mSeekChangeListener != null) {
                         mGLSurfaceView.post((new Runnable() {
                             @Override
                             public void run() {
-                                mIUpSeekBar.upSeekBar(mUsedTime);
+                                mSeekChangeListener.seekChange(mUsedTime);
                             }
                         }));
                     }

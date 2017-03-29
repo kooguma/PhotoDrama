@@ -78,9 +78,8 @@ public class ImageClipDrawer extends ClipDrawer{
                 , new HandlerWrapper.Callback<ImageInfo>() {
             @Override
             public void onResult(ImageInfo t) {
-                /*updateTexture(t);*/
                 checkBitmapReady();
-                VideoPlayManagerContainer.getDefault().notifyRender(mContext);
+                VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext);
             }
         });
         glView.getTextureLoader().loadImageTexture(handler);

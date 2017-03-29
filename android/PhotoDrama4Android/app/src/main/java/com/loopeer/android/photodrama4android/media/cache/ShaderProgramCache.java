@@ -38,7 +38,7 @@ public class ShaderProgramCache {
                     sDefaultInstance.mShaderProgramHashMap.put(String.valueOf(type.getValue()) + "_0", drawer);
                     ShaderProgram drawer1 = constructor.newInstance(context);
                     sDefaultInstance.mShaderProgramHashMap.put(String.valueOf(type.getValue()) + "_1", drawer1);
-                } else {
+                } else if (type != TransitionType.NO){
                     Constructor<ShaderProgram> constructor = type.getShaderClass().getConstructor(Context.class);
                     ShaderProgram drawer = constructor.newInstance(context);
                     sDefaultInstance.mShaderProgramHashMap.put(String.valueOf(type.getValue()), drawer);

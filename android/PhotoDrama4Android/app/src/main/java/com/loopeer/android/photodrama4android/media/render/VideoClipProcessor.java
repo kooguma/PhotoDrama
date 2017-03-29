@@ -4,6 +4,7 @@ package com.loopeer.android.photodrama4android.media.render;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
+import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
@@ -57,6 +58,9 @@ public class VideoClipProcessor {
             SubtitleClipDrawer subtitleClipDrawer = new SubtitleClipDrawer(mMovieMakerGLSurfaceView, subtitleClip);
             subtitleClipDrawer.preLoadTexture(mMovieMakerGLSurfaceView);
             mSubtitleClipDrawers.add(subtitleClipDrawer);
+        }
+        if (mVideoGroup.subtitleClips.isEmpty()) {
+            VideoPlayManagerContainer.getDefault().subtitleLoadReady(mMovieMakerGLSurfaceView.getContext());
         }
     }
 

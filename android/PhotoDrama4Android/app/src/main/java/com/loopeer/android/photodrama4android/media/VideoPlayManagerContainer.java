@@ -40,14 +40,20 @@ public class VideoPlayManagerContainer {
         return ((Activity)context).getClass().toString();
     }
 
-    public void notifyRender(Context context) {
+    public void bitmapLoadReady(Context context) {
         VideoPlayerManager manager = VideoPlayManagerContainer.getDefault().getVideoPlayerManager(context);
         if (manager != null)
-            manager.refreshIfWait();
+            manager.bitmapLoadReady();
     }
 
     public void onFinish(Context context) {
         VideoPlayerManager manager = mVideoPlayerManagerLinkedHashMap.get(getContextKey(context));
         if (manager != null) mVideoPlayerManagerLinkedHashMap.remove(getContextKey(context));
+    }
+
+    public void subtitleLoadReady(Context context) {
+        VideoPlayerManager manager = VideoPlayManagerContainer.getDefault().getVideoPlayerManager(context);
+        if (manager != null)
+            manager.subtitleLoadReady();
     }
 }

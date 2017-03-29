@@ -5,7 +5,9 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
+
 import com.loopeer.android.photodrama4android.R;
+
 import java.io.IOException;
 
 public class MusicManager implements IMusic, MediaPlayer.OnErrorListener,
@@ -51,9 +53,9 @@ public class MusicManager implements IMusic, MediaPlayer.OnErrorListener,
     }
 
     @Override
-    public void seekToMusic(int progress, int max) {
+    public void seekToMusic(int progress) {
         if (mIsPrepared) {
-            int msec = (int) ((float) (progress / max) * mDuration);
+            int msec = (int) ((float) (progress) * mDuration);
             mMediaPlayer.seekTo(msec);
         } else {
             Log.e(TAG, "seekToMusic : " + "MediaPlayer hasn't been prepared");
@@ -63,6 +65,16 @@ public class MusicManager implements IMusic, MediaPlayer.OnErrorListener,
     @Override
     public void pauseMusic() {
         mMediaPlayer.stop();
+    }
+
+    @Override
+    public void onProgressChange(int time) {
+
+    }
+
+    @Override
+    public void onPause() {
+
     }
 
     @Override public void onDestroy() {

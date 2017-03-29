@@ -62,7 +62,7 @@ public class ImageClipDrawer2 {
             @Override
             public void onResult(ImageInfo t) {
                 updateTexture(t);
-                VideoPlayManagerContainer.getDefault().notifyRender(mContext);
+                VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext);
             }
         });
         glView.getTextureLoader().loadImageTexture(handler);
