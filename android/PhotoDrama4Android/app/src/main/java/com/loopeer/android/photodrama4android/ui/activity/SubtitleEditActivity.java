@@ -116,6 +116,7 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity implements Scro
         if (mSelectedClip != null) {
             mDrama.videoGroup.subtitleClips.remove(mSelectedClip);
             updateScrollSelectViewClips();
+            mVideoPlayerManager.refresh();
         }
     }
 
@@ -153,6 +154,7 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity implements Scro
                         mSelectedClip.content = content;
                     }
                     mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
+                    mVideoPlayerManager.requestRender();
                 default:
             }
         }

@@ -16,6 +16,7 @@ import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
+import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.media.data.VertexArray;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
@@ -67,7 +68,10 @@ public class ImageClipDrawer extends ClipDrawer{
         super(view);
         mContext = view.getContext();
         mImageClip = imageClip;
-        textureProgram = new ImageClipShaderProgram(mContext);
+
+        textureProgram = (ImageClipShaderProgram) ShaderProgramCache
+                .getInstance()
+                .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
     }
 
     public void preLoadTexture(MovieMakerGLSurfaceView glView) {

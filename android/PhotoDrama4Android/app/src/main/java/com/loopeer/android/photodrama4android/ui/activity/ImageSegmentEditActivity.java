@@ -160,7 +160,7 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         } else {
             mSelectedImageClip.endScaleTransRatio.scaleFactor = scaleFactor;
         }
-        mVideoPlayerManager.getGLThread().requestRender();
+        mVideoPlayerManager.requestRender();
     }
 
     @Override
@@ -172,7 +172,7 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
             mSelectedImageClip.endScaleTransRatio.x = x;
             mSelectedImageClip.endScaleTransRatio.y = y;
         }
-        mVideoPlayerManager.getGLThread().requestRender();
+        mVideoPlayerManager.requestRender();
     }
 
     @Override

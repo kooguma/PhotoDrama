@@ -27,10 +27,10 @@ public class VideoClipProcessor {
         mTransitionDrawers = new ArrayList<>();
         mSubtitleClipDrawers = new ArrayList<>();
         mMovieMakerGLSurfaceView = glSurfaceView;
+        ShaderProgramCache.getInstance().init(mMovieMakerGLSurfaceView.getContext());
     }
 
     public void updateData(VideoGroup videoGroup) {
-        ShaderProgramCache.getInstance().init(mMovieMakerGLSurfaceView.getContext());
         setData(videoGroup);
         updateImageClipRenders();
         updateTransitionClipRenders();

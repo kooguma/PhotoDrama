@@ -57,6 +57,10 @@ public class GLRenderWorker implements IRendererWorker {
         mDrama = drama;
     }
 
+    public void updateAll() {
+        mImageClipProcessor.updateData(mDrama.videoGroup);
+    }
+
     public void refreshTransitionRender() {
         if (mImageClipProcessor != null) mImageClipProcessor.updateTransitionClipRenders();
     }

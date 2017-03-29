@@ -8,6 +8,7 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
+import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
@@ -45,7 +46,9 @@ public class SubtitleClipDrawer extends ClipDrawer{
         super(view);
         mContext = view.getContext();
         mSubtitleClip = subtitleClip;
-        textureProgram = new ImageClipShaderProgram(mContext);
+        textureProgram = (ImageClipShaderProgram) ShaderProgramCache
+                .getInstance()
+                .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
         createVertex();
     }
 

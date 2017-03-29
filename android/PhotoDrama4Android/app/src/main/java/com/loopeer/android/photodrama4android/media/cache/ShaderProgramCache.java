@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.cache;
 import android.content.Context;
 
 import com.loopeer.android.photodrama4android.media.model.TransitionType;
+import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
 import com.loopeer.android.photodrama4android.media.programs.ShaderProgram;
 
 import java.lang.reflect.Constructor;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 public class ShaderProgramCache {
 
     private static volatile ShaderProgramCache sDefaultInstance;
+    public static String NORMAL_IMAGE_PROGRAM_KEY = "normal_image_program_key";
     private HashMap<String, ShaderProgram> mShaderProgramHashMap;
 
     private ShaderProgramCache() {
@@ -46,6 +48,13 @@ public class ShaderProgramCache {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            Constructor<ImageClipShaderProgram> constructor = ImageClipShaderProgram.class.getConstructor(Context.class);
+            ShaderProgram drawer = constructor.newInstance(context);
+            sDefaultInstance.mShaderProgramHashMap.put(String.valueOf(NORMAL_IMAGE_PROGRAM_KEY), drawer);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

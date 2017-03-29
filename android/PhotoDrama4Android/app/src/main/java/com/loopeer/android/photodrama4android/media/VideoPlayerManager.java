@@ -236,12 +236,20 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         checkSourceReadyToStart();
     }
 
+    public void refresh() {
+        mGLRenderWorker.updateAll();
+    }
+
+    public void requestRender() {
+        getGLThread().requestRender();
+    }
+
     private void checkSourceReadyToStart() {
         if (mGLThread.isStop()
                 && isMusicPrepared
                 && isImagePrepared
                 && isSubtitlePrepared)
-            mGLThread.seekToTime(mGLThread.getUsedTime());
+            requestRender();
     }
 
     public int getMaxTime() {
