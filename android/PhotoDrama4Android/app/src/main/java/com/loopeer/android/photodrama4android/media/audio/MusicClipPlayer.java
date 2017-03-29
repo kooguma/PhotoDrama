@@ -11,26 +11,25 @@ import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import java.io.File;
 import java.io.IOException;
 
-public class MusicClipPlayer {
+public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
 
     private MediaPlayer mMediaPlayer;
     private MusicClip mMusicClip;
+    private boolean mIsPrepared;
+    private MusicClipPlayerLister mMusicClipPlayerLister;
 
-    public MusicClipPlayer(Context context, MusicClip clip, MediaPlayer.OnPreparedListener listener) {
+    public MusicClipPlayer(Context context, MusicClip clip, MusicClipPlayerLister listener) {
         mMusicClip = clip;
+        mMusicClipPlayerLister = listener;
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setOnPreparedListener(listener);
+        mMediaPlayer.setOnPreparedListener(this);
         Uri uri = Uri.fromFile(new File(mMusicClip.path));
         try {
             mMediaPlayer.setDataSource(context.getApplicationContext(), uri);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public MediaPlayer getMediaPlayer() {
-        return mMediaPlayer;
     }
 
     public void releasePlayer() {
@@ -40,19 +39,19 @@ public class MusicClipPlayer {
     }
 
     public void seekToMusic(int progress) {
-        if (mMediaPlayer != null) {
+        if (mMediaPlayer != null && mIsPrepared) {
             mMediaPlayer.seekTo(mMusicClip.getSeekTime(progress));
         }
     }
 
     public void startMusic() {
-        if (mMediaPlayer != null) {
+        if (mMediaPlayer != null && mIsPrepared) {
             mMediaPlayer.start();
         }
     }
 
     public void pauseMusic() {
-        if (mMediaPlayer != null) {
+        if (mMediaPlayer != null && mIsPrepared) {
             mMediaPlayer.pause();
         }
     }
@@ -72,5 +71,15 @@ public class MusicClipPlayer {
                 startMusic();
             }
         }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mIsPrepared = true;
+        mMusicClipPlayerLister.onMusicClipPlayerPrepared(mMusicClip.getKey());
+    }
+
+    public interface MusicClipPlayerLister{
+        void onMusicClipPlayerPrepared(String key);
     }
 }

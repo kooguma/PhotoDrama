@@ -2,7 +2,6 @@ package com.loopeer.android.photodrama4android.media.audio;
 
 
 import android.content.Context;
-import android.media.MediaPlayer;
 
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
@@ -11,15 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MusicProcessor implements MediaPlayer.OnPreparedListener {
+public class MusicProcessor implements MusicClipPlayer.MusicClipPlayerLister {
 
     public HashMap<String, MusicClipPlayer> mClipPlayerHashMap;
-    public List<MediaPlayer> mHasNotPreparePlayers;
+    public List<String> mHasNotPrepareClipKeys;
     private ProcessorPrepareListener mProcessorPrepareListener;
 
     public MusicProcessor() {
         mClipPlayerHashMap = new HashMap<>();
-        mHasNotPreparePlayers = new ArrayList<>();
+        mHasNotPrepareClipKeys = new ArrayList<>();
     }
 
     public void setProcessorPrepareListener(ProcessorPrepareListener processorPrepareListener) {
@@ -30,7 +29,7 @@ public class MusicProcessor implements MediaPlayer.OnPreparedListener {
         for (MusicClip clip: clips) {
             if (!mClipPlayerHashMap.containsKey(clip.getKey())) {
                 MusicClipPlayer clipPlayer = new MusicClipPlayer(context, clip, this);
-                mHasNotPreparePlayers.add(clipPlayer.getMediaPlayer());
+                mHasNotPrepareClipKeys.add(clip.getKey());
                 mClipPlayerHashMap.put(clip.getKey(), clipPlayer);
             }
         }
@@ -74,19 +73,19 @@ public class MusicProcessor implements MediaPlayer.OnPreparedListener {
         }
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        if (mHasNotPreparePlayers.contains(mp)) {
-            mHasNotPreparePlayers.remove(mp);
-        }
-        if (mHasNotPreparePlayers.size() == 0) {
-            notifyPrepareFinished();
-        }
-    }
-
     private void notifyPrepareFinished() {
         if (mProcessorPrepareListener != null)
             mProcessorPrepareListener.musicPrepareFinished();
+    }
+
+    @Override
+    public void onMusicClipPlayerPrepared(String key) {
+        if (mHasNotPrepareClipKeys.contains(key)) {
+            mHasNotPrepareClipKeys.remove(key);
+        }
+        if (mHasNotPrepareClipKeys.size() == 0) {
+            notifyPrepareFinished();
+        }
     }
 
     public interface ProcessorPrepareListener{
