@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
-import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
+import com.loopeer.android.photodrama4android.media.model.Clip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +61,8 @@ public class ScrollSelectView extends ViewGroup {
     private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
     private SeekWrapper.SeekImpl mSeek;
 
-    private List<SubtitleClip> mSubtitleClips;
-    private SubtitleClip mSelectedClip;
+    private List<Clip> mClips;
+    private Clip mSelectedClip;
     private int MIN_SUBTITLE_SHOWTIME = 500;
 
     public ScrollSelectView(Context context) {
@@ -93,7 +93,7 @@ public class ScrollSelectView extends ViewGroup {
         mTextRectSelectedColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color_selected);
         mStrokeLineColor = ContextCompat.getColor(context, android.R.color.white);
         setWillNotDraw(false);
-        mSubtitleClips = new ArrayList<>();
+        mClips = new ArrayList<>();
         mPaint = new Paint();
         mPaint.setColor(mMiddleLineColor);
 
@@ -242,7 +242,7 @@ public class ScrollSelectView extends ViewGroup {
 
     private void updateSelectedClip() {
         mSelectedClip = null;
-        for (SubtitleClip clip : mSubtitleClips) {
+        for (Clip clip : mClips) {
             if (isManual && getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
                 mSelectedClip = clip;
                 break;
@@ -358,7 +358,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void drawTextRect(Canvas canvas) {
-        for (SubtitleClip clip : mSubtitleClips) {
+        for (Clip clip : mClips) {
             float left = mMiddlePos + mPosX + getTotalLength() * clip.startTime / mMaxValue;
             float right = mMiddlePos + mPosX + getTotalLength() * clip.getEndTime() / mMaxValue;
             if (clip == mSelectedClip) {
@@ -514,9 +514,9 @@ public class ScrollSelectView extends ViewGroup {
         requestLayout();
     }
 
-    public void updateSubtitles(List<SubtitleClip> subtitleClips) {
-        mSubtitleClips.clear();
-        mSubtitleClips.addAll(subtitleClips);
+    public void updateSubtitles(List<? extends Clip> clips) {
+        mClips.clear();
+        mClips.addAll(clips);
         invalidate();
     }
 
