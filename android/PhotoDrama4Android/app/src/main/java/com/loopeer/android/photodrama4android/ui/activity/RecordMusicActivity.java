@@ -85,7 +85,9 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
             mDrama.audioGroup.musicClips.remove(mMusicClipRecording);
             /*FileUtils.deleteFile(new File(mMusicClipRecording.path));*/
         }
+        mBinding.scrollSelectView.setProgress(mMusicClipRecording.getEndTime());
         mMusicClipRecording = null;
+        updateScrollSelectViewClips();
     }
 
     private void startRecord() {
