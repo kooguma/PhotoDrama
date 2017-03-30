@@ -4,28 +4,29 @@ package com.loopeer.android.photodrama4android.media.cache;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v4.util.LruCache;
 
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
+
+import java.util.LinkedHashMap;
 
 public class BitmapFactory {
 
     private static volatile BitmapFactory sDefaultInstance;
-    private LruCache<String, Bitmap> mMemoryCache;
+    private LinkedHashMap<String, Bitmap> mMemoryCache;
 
     private Context mContext;
 
     private BitmapFactory(Context context) {
         mContext = context;
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        final int cacheSize = maxMemory / 8;
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+        final int cacheSize = maxMemory;
+        mMemoryCache = new LinkedHashMap<String, Bitmap>();
+//        mMemoryCache = new LinkedHashMap<String, Bitmap>(cacheSize) {
+//            @Override
+//            protected int sizeOf(String key, Bitmap bitmap) {
+//                return bitmap.getByteCount() / 1024;
+//            }
+//        };
     }
 
     public static BitmapFactory init(Context context) {
@@ -52,6 +53,10 @@ public class BitmapFactory {
 
     public Bitmap getBitmapFromMemCache(String key) {
         return mMemoryCache.get(key);
+    }
+
+    public boolean contains(String key) {
+        return mMemoryCache.containsKey(key);
     }
 
     public void loadImages(String... args) {

@@ -2,16 +2,21 @@ package com.loopeer.android.photodrama4android.ui.widget;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 
 public class ScrollSelectInnderImageView extends SimpleDraweeView {
 
     private int mDefaultSize;
     private int mCurrentSize;
+    private String mLocalUrl;
 
     public ScrollSelectInnderImageView(Context context) {
         super(context);
@@ -49,6 +54,8 @@ public class ScrollSelectInnderImageView extends SimpleDraweeView {
     }
 
     public void setLocalUrl(final String localUrl) {
+        mLocalUrl = localUrl;
+
         if (getHeight() == 0) {
             post(new Runnable() {
                 @Override
@@ -58,7 +65,30 @@ public class ScrollSelectInnderImageView extends SimpleDraweeView {
             });
             return;
         }
-        ImageGroupDisplayHelper.displayImageLocal(this, localUrl, getWidth(), getHeight());
+
+        invalidate();
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mLocalUrl != null && BitmapFactory.getInstance().contains(mLocalUrl)) {
+            Matrix matrix = new Matrix();
+            Bitmap bitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mLocalUrl);
+            Bitmap localBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas localCanvas = new Canvas(localBitmap);
+            matrix.postTranslate(-1f * bitmap.getWidth() / 2, -1f * bitmap.getHeight() / 2);
+            if (1f * bitmap.getHeight() / bitmap.getWidth() > 1f * getHeight() / getWidth()) {
+                matrix.postScale(1f * getWidth() / bitmap.getWidth(), 1f * getWidth() / bitmap.getWidth());
+            } else {
+                matrix.postScale(1f * getHeight() / bitmap.getHeight(), 1f * getHeight() / bitmap.getHeight());
+            }
+            matrix.postTranslate(1f * getWidth() / 2, getHeight() / 2);
+            Paint localPaint = new Paint();
+            localPaint.setFilterBitmap(true);
+            localCanvas.drawBitmap(bitmap, matrix, localPaint);
+            canvas.drawBitmap(localBitmap, new Matrix(), localPaint);
+            localBitmap.recycle();
+        }
+    }
 }

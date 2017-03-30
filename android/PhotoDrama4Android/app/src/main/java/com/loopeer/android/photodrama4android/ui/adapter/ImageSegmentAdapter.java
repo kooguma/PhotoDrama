@@ -47,6 +47,11 @@ public class ImageSegmentAdapter extends BaseFooterAdapter<ImageClip> {
         return new DataBindingViewHolder<>(getLayoutInflater().inflate(R.layout.list_item_image_segment, parent, false));
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return R.layout.list_item_image_segment;
+    }
+
     public interface OnSelectedListener {
         void onImageSelected(ImageClip imageClip);
     }

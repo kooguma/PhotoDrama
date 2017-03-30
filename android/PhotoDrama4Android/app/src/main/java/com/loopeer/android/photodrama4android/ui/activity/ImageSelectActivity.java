@@ -83,7 +83,6 @@ public class ImageSelectActivity extends MovieMakerBaseActivity {
             }
 
             @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Log.e(PickerBottomBehavior.TAG, "onSlide");
             }
         });
         mBottomImagePickerView.post(() -> {
