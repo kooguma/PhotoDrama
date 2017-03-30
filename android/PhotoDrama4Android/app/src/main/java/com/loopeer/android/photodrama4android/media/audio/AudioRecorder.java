@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.audio;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
+import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
 import java.io.IOException;
@@ -22,10 +24,9 @@ public class AudioRecorder {
     private static final String TAG = "AudioRecorder";
 
     private MediaRecorder mRecorder;
-    private boolean permissionToRecordAccepted = false;
 
     public boolean startRecording(MusicClip musicClip) {
-        if (!permissionToRecordAccepted) return false;
+        if (!hasAudioPermission(PhotoDramaApp.getAppContext())) return false;
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -60,17 +61,10 @@ public class AudioRecorder {
             } else {
                 ActivityCompat.requestPermissions(activity, AUDIO_PERMISSIONS, REQUEST_RECORD_AUDIO_PERMISSION);
             }
-        } else {
-            permissionToRecordAccepted = true;
         }
     }
     public boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        return permissionToRecordAccepted;
+        return true;
     }
 
     public void onStop() {
@@ -78,5 +72,10 @@ public class AudioRecorder {
             mRecorder.release();
             mRecorder = null;
         }
+    }
+
+    public static boolean hasAudioPermission(Context context) {
+        int perm = context.checkCallingOrSelfPermission(AUDIO_PERMISSIONS[0]);
+        return perm == PackageManager.PERMISSION_GRANTED;
     }
 }

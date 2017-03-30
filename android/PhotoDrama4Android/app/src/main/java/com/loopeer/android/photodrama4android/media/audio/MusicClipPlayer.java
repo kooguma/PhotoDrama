@@ -29,6 +29,22 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
         }
     }
 
+    public void update(Context context, MusicClip clip, MusicClipPlayerLister listener) {
+        mMusicClip = clip;
+        mMusicClipPlayerLister = listener;
+        if (mMediaPlayer == null)
+            mMediaPlayer = new MediaPlayer();
+        if (mIsPrepared && mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
+        mIsPrepared = false;
+        try {
+            mMediaPlayer.setDataSource(mMusicClip.path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void releasePlayer() {
         if (mMediaPlayer != null) {
             mMediaPlayer.release();

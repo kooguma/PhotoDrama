@@ -201,6 +201,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     public void updateDrama(Drama drama) {
         updateTime(drama);
+        mIMusic.updateDrama(drama);
         mGLRenderWorker.updateDrama(drama);
     }
 

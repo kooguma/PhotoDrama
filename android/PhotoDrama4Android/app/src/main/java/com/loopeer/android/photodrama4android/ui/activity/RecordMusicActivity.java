@@ -77,6 +77,7 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     public void onDeleteClick(View view) {
         if (mSelectedClip != null) {
             mDrama.audioGroup.musicClips.remove(mSelectedClip);
+            mVideoPlayerManager.getIMusic().updateDrama(mDrama);
             updateScrollSelectViewClips();
         }
     }

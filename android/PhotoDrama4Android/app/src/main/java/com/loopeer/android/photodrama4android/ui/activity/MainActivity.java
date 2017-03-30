@@ -7,33 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-
-import java.io.IOException;
-import android.Manifest;
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-
-import android.widget.Toast;
-import com.loopeer.android.photodrama4android.Navigator;
-import com.loopeer.android.photodrama4android.R;
-
 import com.loopeer.android.photodrama4android.utils.FileManager;
-
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,20 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FileManager.getInstance().requestPermission(this);
-
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource("/storage/emulated/0/photodrama/audio/1490841124470.aac");
-            mPlayer.prepareAsync();
-            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mPlayer.start();
-                }
-            });
-        } catch (IOException e) {
-            Log.e("11111", "prepare() failed");
-        }
     }
 
     public void onMakeMovieClick(View view) {

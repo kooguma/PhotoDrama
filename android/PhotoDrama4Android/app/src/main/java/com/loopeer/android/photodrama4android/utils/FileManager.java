@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -18,8 +19,6 @@ import static com.loopeer.android.photodrama4android.utils.PermissionUtils.EXTER
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.REQUEST_EXTERNAL_STORAGE_PERMISSION;
 
 public class FileManager {
-    private boolean permissionToWriteAccepted = false;
-
     private static FileManager instance;
     private static String photoDramaPath = Environment.getExternalStorageDirectory() + "/photodrama";
     private static String audioPath = photoDramaPath + "/audio/";
@@ -27,12 +26,11 @@ public class FileManager {
     public final String audioDirPath = "/audio/";
 
     private FileManager() {
-        if (permissionToWriteAccepted)
-            init();
+        init();
     }
 
     private void init() {
-        if (hasSDCard() && permissionToWriteAccepted) {
+        if (hasSDCard() && hasExternalStoragePermission(PhotoDramaApp.getAppContext())) {
             audioDir = createFilePath(audioPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
@@ -65,7 +63,7 @@ public class FileManager {
     }
 
     public String createNewAudioFile() {
-        return getAudioDir().getPath() + File.separator + System.currentTimeMillis() + ".aac";
+        return getAudioDir().getPath() + File.separator + System.currentTimeMillis() + ".m4a";
     }
 
     public static void deleteFile(File file) {
@@ -103,20 +101,16 @@ public class FileManager {
                 ActivityCompat.requestPermissions(activity, EXTERNAL_STORAGE_PERMISSIONS, REQUEST_EXTERNAL_STORAGE_PERMISSION);
             }
         } else {
-            permissionToWriteAccepted = true;
             init();
         }
     }
 
+    public static boolean hasExternalStoragePermission(Context context) {
+        int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSIONS[0]);
+        return perm == PackageManager.PERMISSION_GRANTED;
+    }
+
     public boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE_PERMISSION:
-                permissionToWriteAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if (permissionToWriteAccepted == true) {
-            init();
-        }
-        return permissionToWriteAccepted;
+        return true;
     }
 }
