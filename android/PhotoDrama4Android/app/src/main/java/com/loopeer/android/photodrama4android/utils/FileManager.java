@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -29,7 +28,7 @@ public class FileManager {
         init();
     }
 
-    private void init() {
+    public void init() {
         if (hasSDCard() && hasExternalStoragePermission(PhotoDramaApp.getAppContext())) {
             audioDir = createFilePath(audioPath);
         } else {
@@ -108,9 +107,5 @@ public class FileManager {
     public static boolean hasExternalStoragePermission(Context context) {
         int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSIONS[0]);
         return perm == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        return true;
     }
 }

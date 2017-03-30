@@ -9,13 +9,14 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.SimpleArrayMap;
+import android.widget.Toast;
+
+import com.loopeer.android.photodrama4android.PhotoDramaApp;
 
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public final class PermissionUtils {
 
-    // Map of dangerous permissions introduced in later framework versions.
-    // Used to conditionally bypass permission-hold checks on older devices.
     private static final SimpleArrayMap<String, Integer> MIN_SDK_PERMISSIONS;
 
     static {
@@ -29,6 +30,12 @@ public final class PermissionUtils {
         MIN_SDK_PERMISSIONS.put("android.permission.SYSTEM_ALERT_WINDOW", 23);
         MIN_SDK_PERMISSIONS.put("android.permission.WRITE_SETTINGS", 23);
     }
+
+    public static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    public static final String [] AUDIO_PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
+
+    public static final int REQUEST_EXTERNAL_STORAGE_PERMISSION = 201;
+    public static final String [] EXTERNAL_STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private static volatile int targetSdkVersion = -1;
 
@@ -137,10 +144,46 @@ public final class PermissionUtils {
         return targetSdkVersion;
     }
 
-    public static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-    public static final String [] AUDIO_PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
 
-    public static final int REQUEST_EXTERNAL_STORAGE_PERMISSION = 201;
-    public static final String [] EXTERNAL_STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    public static void checkStoragePermission(Activity activity) {
+        if (!PermissionUtils.hasSelfPermissions(activity, EXTERNAL_STORAGE_PERMISSIONS[0])) {
+            ActivityCompat.requestPermissions(activity, EXTERNAL_STORAGE_PERMISSIONS,
+                    REQUEST_EXTERNAL_STORAGE_PERMISSION);
+        }
+    }
 
+    public static boolean onRequestPermissionsResult(Activity target, int requestCode, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE_PERMISSION:
+                return onRequestStoragePermissionsResult(target, requestCode, grantResults);
+        }
+        return true;
+    }
+
+    public static boolean onRequestStoragePermissionsResult(Activity target, int requestCode, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE_PERMISSION:
+                if (PermissionUtils.getTargetSdkVersion(target) < 23 &&
+                        !PermissionUtils.hasSelfPermissions(target, EXTERNAL_STORAGE_PERMISSIONS)) {
+                    return false;
+                }
+                if (PermissionUtils.verifyPermissions(grantResults)) {
+                    if (!PermissionUtils.hasSelfPermissions(target, EXTERNAL_STORAGE_PERMISSIONS[0])) {
+                        ActivityCompat.requestPermissions(target, EXTERNAL_STORAGE_PERMISSIONS,
+                                REQUEST_EXTERNAL_STORAGE_PERMISSION);
+                    }
+                } else {
+                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target,
+                            EXTERNAL_STORAGE_PERMISSIONS[0])) {
+                        Toast.makeText(PhotoDramaApp.getAppContext(), "Please set the permission in the app settings",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
 }
