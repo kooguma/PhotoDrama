@@ -55,6 +55,11 @@
             android:label="@string/label_sound_effect"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.BgmMusicActivity"
+            android:label="@string/label_bgm"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.TestMusicSelectedActivity">
         </activity>
     </application>

@@ -33,4 +33,14 @@ public class AudioGroup extends BaseModel {
         }
         return results;
     }
+
+    public List<MusicClip> getBgmClips() {
+        List<MusicClip> results = new ArrayList<>();
+        for (MusicClip musicClip : musicClips) {
+            if (musicClip.musicType == MusicClip.MusicType.BGM) {
+                results.add(musicClip);
+            }
+        }
+        return results;
+    }
 }

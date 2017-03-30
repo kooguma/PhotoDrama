@@ -18,6 +18,8 @@ import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
 import java.io.IOException;
 
+import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT;
+
 
 //TODO
 public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
@@ -28,6 +30,7 @@ public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
     private ActivityTestMusicSelectedBinding mBinding;
     private MediaPlayer mPlayer;
     private MusicClip mMusicClip;
+    private int mRequestCode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_test_music_selected);
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
+        mRequestCode = getIntent().getIntExtra(Navigator.EXTRA_REQUEST_CODE, REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
         //TODO
         mPlayer = new MediaPlayer();
     }
@@ -46,11 +50,19 @@ public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
             mPlayer.setDataSource(mBinding.editText.getText().toString());
             mPlayer.prepareAsync();
             mPlayer.setOnPreparedListener(mp -> {
-                mMusicClip = new MusicClip(0, MusicClip.MusicType.SOUND_EFFECT);
-                mMusicClip.path = mBinding.editText.getText().toString();
-                mMusicClip.musicStartOffset = 0;
-                mMusicClip.musicSelectedLength = mPlayer.getDuration();
-                mMusicClip.showTime = mMusicClip.musicSelectedLength;
+                if (mRequestCode == REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT) {
+                    mMusicClip = new MusicClip(0, MusicClip.MusicType.SOUND_EFFECT);
+                    mMusicClip.path = mBinding.editText.getText().toString();
+                    mMusicClip.musicStartOffset = 0;
+                    mMusicClip.musicSelectedLength = mPlayer.getDuration();
+                    mMusicClip.showTime = mMusicClip.musicSelectedLength;
+                } else {
+                    mMusicClip = new MusicClip(0, MusicClip.MusicType.BGM);
+                    mMusicClip.path = mBinding.editText.getText().toString();
+                    mMusicClip.musicStartOffset = 1000;
+                    mMusicClip.musicSelectedLength = mPlayer.getDuration();
+                    mMusicClip.showTime = mMusicClip.musicSelectedLength + 1000;
+                }
                 Log.e(TAG, mBinding.editText.getText().toString() +  " : " + mMusicClip.musicSelectedLength);
                 mPlayer.start();
             });

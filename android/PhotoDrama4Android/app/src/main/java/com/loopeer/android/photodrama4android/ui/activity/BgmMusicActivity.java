@@ -21,10 +21,11 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
-import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT;
+import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAMA_SOUND_BGM_SELECT;
+import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_BGM_LENGTH;
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_SOUND_EFFECT_LENGTH;
 
-public class SoundEffectActivity extends MovieMakerBaseActivity
+public class BgmMusicActivity extends MovieMakerBaseActivity
         implements ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
 
     private ActivitySoundEffectBinding mBinding;
@@ -35,7 +36,7 @@ public class SoundEffectActivity extends MovieMakerBaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sound_effect);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bgm_music);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
@@ -52,7 +53,7 @@ public class SoundEffectActivity extends MovieMakerBaseActivity
         if (!checkClipValidate(musicClip)) {
             return;
         }
-        Navigator.startTestMusicSelectedActivity(this, mDrama, REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
+        Navigator.startTestMusicSelectedActivity(this, mDrama, REQUEST_CODE_DRAMA_SOUND_BGM_SELECT);
     }
 
     public void onDeleteClick(View view) {
@@ -64,13 +65,13 @@ public class SoundEffectActivity extends MovieMakerBaseActivity
     }
 
     private void updateScrollSelectViewClips() {
-        mBinding.scrollSelectView.updateClips(mDrama.audioGroup.getSoundEffectClips());
+        mBinding.scrollSelectView.updateClips(mDrama.audioGroup.getBgmClips());
     }
 
     private void updateScrollImageView() {
         mBinding.scrollSelectView.setClipIndicatorPosChangeListener(this);
         mBinding.scrollSelectView.setClipSelectedListener(this);
-        mBinding.scrollSelectView.setMinClipShowTime(MIN_SOUND_EFFECT_LENGTH);
+        mBinding.scrollSelectView.setMinClipShowTime(MIN_BGM_LENGTH);
         ScrollSelectView.Adapter<TransitionImageWrapper> adapter = new ScrollSelectAdapter();
         mBinding.scrollSelectView.setAdapter(adapter);
         adapter.updateDatas(ClipsCreator.getTransiImageClipsNoEmpty(mDrama.videoGroup));
@@ -130,36 +131,52 @@ public class SoundEffectActivity extends MovieMakerBaseActivity
 
     @Override
     public boolean changeTimeByStartIndicator(Clip clip, int offset, int minValue, int maxValue) {
-        changeClipTimeByIndicator(clip, offset, maxValue);
+        int preStartTime = clip.startTime;
+        int endValue = clip.startTime + clip.showTime;
+        if (offset < 0) {
+            clip.startTime += offset;
+            for (MusicClip c : mDrama.audioGroup.getBgmClips()) {
+                if (clip != c) {
+                    if (preStartTime > c.startTime && clip.startTime <= c.getEndTime()) {
+                        clip.startTime = c.getEndTime() + 1;
+                        break;
+                    }
+                }
+            }
+            clip.showTime = endValue - clip.startTime;
+        }
+        if (offset > 0) {
+            clip.startTime += offset;
+            clip.showTime = endValue - clip.startTime;
+        }
+        if (clip.showTime <= minValue) {
+            clip.showTime = minValue;
+            clip.startTime = endValue - clip.showTime;
+        }
+        if (clip.startTime <= 0) {
+            clip.startTime = 0;
+            clip.showTime = endValue;
+        }
         return true;
     }
 
     @Override
     public boolean changeTimeByEndIndicator(Clip clip, int offset, int minValue, int maxValue) {
-        changeClipTimeByIndicator(clip, offset, maxValue);
-        return true;
-    }
-
-    private void changeClipTimeByIndicator(Clip clip, int offset, int maxValue) {
-        int preStartTime = clip.startTime;
-        clip.startTime += offset;
+        clip.showTime += offset;
         if (clip.getEndTime() >= maxValue + 1)
-            clip.startTime = maxValue + 1 - clip.showTime;
-        if (clip.startTime <= 0) {
-            clip.startTime = 0;
-        }
-        for (MusicClip c : mDrama.audioGroup.getSoundEffectClips()) {
+            clip.showTime = maxValue + 1 - clip.startTime;
+        if (clip.showTime <= minValue)
+            clip.showTime = minValue;
+
+        for (MusicClip c : mDrama.audioGroup.getBgmClips()) {
             if (clip != c) {
-                if (preStartTime < c.startTime && clip.getEndTime() >= c.startTime) {
-                    clip.startTime = c.startTime - 1 - clip.showTime;
-                    break;
-                }
-                if (preStartTime > c.startTime && clip.startTime <= c.getEndTime()) {
-                    clip.startTime = c.getEndTime() + 1;
+                if (clip.startTime < c.startTime && clip.getEndTime() >= c.startTime) {
+                    clip.showTime = c.startTime - clip.startTime;
                     break;
                 }
             }
         }
+        return true;
     }
 
     private boolean checkClipValidate(Clip recordingClip) {
@@ -167,7 +184,7 @@ public class SoundEffectActivity extends MovieMakerBaseActivity
             return false;
         if (recordingClip.getEndTime() > mVideoPlayerManager.getMaxTime())
             return false;
-        for (MusicClip clip : mDrama.audioGroup.getSoundEffectClips()) {
+        for (MusicClip clip : mDrama.audioGroup.getBgmClips()) {
             if (recordingClip != clip) {
                 if (recordingClip.startTime < clip.startTime
                         && recordingClip.startTime + MIN_SOUND_EFFECT_LENGTH >= clip.startTime)
@@ -197,7 +214,7 @@ public class SoundEffectActivity extends MovieMakerBaseActivity
         if (resultCode == RESULT_OK) {
             MusicClip musicClip = (MusicClip) data.getSerializableExtra(Navigator.EXTRA_MUSIC_CLIP);
             switch (requestCode) {
-                case REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT:
+                case REQUEST_CODE_DRAMA_SOUND_BGM_SELECT:
                     if (musicClip != null) {
                         mDrama.audioGroup.musicClips.add(musicClip);
                         mVideoPlayerManager.getIMusic().updateDrama(mDrama);
