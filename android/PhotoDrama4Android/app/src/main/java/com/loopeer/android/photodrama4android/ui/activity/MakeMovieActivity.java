@@ -29,12 +29,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_make_movie);
 
-
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        imagePipeline.clearMemoryCaches();
-        imagePipeline.clearDiskCaches();
-
-// combines above two lines
         imagePipeline.clearCaches();
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
