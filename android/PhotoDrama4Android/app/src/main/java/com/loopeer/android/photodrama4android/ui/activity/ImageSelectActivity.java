@@ -12,7 +12,13 @@ import android.widget.LinearLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.ui.widget.GalleryLinearLayout;
+import com.loopeer.bottomimagepicker.BottomImagePickerView;
+import com.loopeer.bottomimagepicker.ImageAdapter;
+import com.loopeer.bottomimagepicker.PickerBottomBehavior;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageSelectActivity extends MovieMakerBaseActivity {
 
