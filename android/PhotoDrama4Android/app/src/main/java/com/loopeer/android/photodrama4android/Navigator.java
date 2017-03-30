@@ -95,6 +95,7 @@ public class Navigator {
     //TODO test
     public static void startTestMusicSelectedActivity(Context context, Drama drama, int requestCode) {
         Intent intent = new Intent(context, TestMusicSelectedActivity.class);
+        intent.putExtra(EXTRA_REQUEST_CODE, requestCode);
         intent.putExtra(EXTRA_DRAMA, drama);
         ((Activity)context).startActivityForResult(intent, requestCode);
     }

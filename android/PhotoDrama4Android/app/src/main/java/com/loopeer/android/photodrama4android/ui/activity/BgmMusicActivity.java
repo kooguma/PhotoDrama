@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.databinding.ActivitySoundEffectBinding;
+import com.loopeer.android.photodrama4android.databinding.ActivityBgmMusicBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
@@ -23,12 +23,11 @@ import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
 import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAMA_SOUND_BGM_SELECT;
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_BGM_LENGTH;
-import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_SOUND_EFFECT_LENGTH;
 
 public class BgmMusicActivity extends MovieMakerBaseActivity
         implements ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
 
-    private ActivitySoundEffectBinding mBinding;
+    private ActivityBgmMusicBinding mBinding;
     private Drama mDrama;
     private VideoPlayerManager mVideoPlayerManager;
     private MusicClip mSelectedClip;
@@ -180,14 +179,14 @@ public class BgmMusicActivity extends MovieMakerBaseActivity
     }
 
     private boolean checkClipValidate(Clip recordingClip) {
-        if (recordingClip.startTime + MIN_SOUND_EFFECT_LENGTH > mVideoPlayerManager.getMaxTime())
+        if (recordingClip.startTime + MIN_BGM_LENGTH > mVideoPlayerManager.getMaxTime())
             return false;
         if (recordingClip.getEndTime() > mVideoPlayerManager.getMaxTime())
             return false;
         for (MusicClip clip : mDrama.audioGroup.getBgmClips()) {
             if (recordingClip != clip) {
                 if (recordingClip.startTime < clip.startTime
-                        && recordingClip.startTime + MIN_SOUND_EFFECT_LENGTH >= clip.startTime)
+                        && recordingClip.startTime + MIN_BGM_LENGTH >= clip.startTime)
                     return false;
                 if (recordingClip.startTime < clip.startTime
                         && recordingClip.getEndTime() >= clip.startTime)

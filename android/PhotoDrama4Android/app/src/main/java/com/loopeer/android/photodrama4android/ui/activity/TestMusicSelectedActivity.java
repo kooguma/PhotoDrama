@@ -83,6 +83,9 @@ public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            mPlayer.pause();
+            mPlayer.stop();
+            mPlayer.release();
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_MUSIC_CLIP, mMusicClip);
             setResult(RESULT_OK, intent);
