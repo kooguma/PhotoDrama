@@ -4,8 +4,7 @@
     android:id="@+id/container"
     android:layout_width="56dp"
     android:layout_height="56dp"
-    android:orientation="vertical"
-    android:foreground="?attr/selectableItemBackground">
+    android:orientation="vertical">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/picker_image"

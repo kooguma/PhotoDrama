@@ -3,6 +3,8 @@ package com.loopeer.bottomimagepicker;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +24,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     private List<Image> mImages;
     private int mImageSize;
     private OnImagePickListener mOnImagePickListener;
+    //保存选中状态
+    private SparseBooleanArray mSelectedArray;
 
-    public interface OnImagePickListener extends Serializable{
-        void onImagePick(Uri uri);
+    public interface OnImagePickListener extends Serializable {
+        boolean onImagePick(Uri uri);
     }
 
     public void setOnImagePickListener(OnImagePickListener listener) {
@@ -36,22 +40,24 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         notifyDataSetChanged();
     }
 
-    public ImageAdapter(List<Image> images,int imageSize) {
+    public ImageAdapter(List<Image> images, int imageSize) {
         mImages = images;
         mImageSize = imageSize;
+        mSelectedArray = new SparseBooleanArray(9);
     }
 
     @Override public ImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
             .from(parent.getContext())
             .inflate(R.layout.list_item_picker_image, parent, false);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageSize,mImageSize);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageSize, mImageSize);
         itemView.setLayoutParams(params);
         return new ImageHolder(itemView);
     }
 
     @Override public void onBindViewHolder(ImageHolder holder, int position) {
         Image image = mImages.get(position);
+        //holder.mImageView.setSelected(mSelectedArray.get(position));
         holder.bind(image);
     }
 
@@ -62,24 +68,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     class ImageHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView mImageView;
-        Uri mUri;
 
         public ImageHolder(View itemView) {
             super(itemView);
             mImageView = (SimpleDraweeView) itemView.findViewById(R.id.picker_image);
-            mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    if(mOnImagePickListener != null){
-                        mOnImagePickListener.onImagePick(mUri);
-                    }
-                }
-            });
         }
 
-        public void bind(Image image){
-            mUri = Uri.fromFile(new File(image.url));
+        public void bind(Image image) {
+            final Uri uri = Uri.fromFile(new File(image.url));
 
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(mUri)
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setResizeOptions(new ResizeOptions(mImageSize, mImageSize))
                 .setLocalThumbnailPreviewsEnabled(true)
                 .build();
@@ -89,6 +87,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
                 .setOldController(mImageView.getController())
                 .build();
             mImageView.setController(controller);
+
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if (mOnImagePickListener != null) {
+                        if (mOnImagePickListener.onImagePick(uri)) {
+                            // mSelectedArray.put(getLayoutPosition(), true);
+                            // notifyItemChanged(getLayoutPosition());
+                        }
+                    }
+                }
+            });
         }
     }
 }

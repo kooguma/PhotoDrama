@@ -56,7 +56,7 @@ import static android.support.annotation.RestrictTo.Scope.GROUP_ID;
  */
 public class PickerBottomBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
 
-    private static final String TAG = "PickerBottomBehavior";
+    public static final String TAG = "PickerBottomBehavior";
 
     /**
      * Callback for monitoring events about bottom sheets.
@@ -308,7 +308,7 @@ public class PickerBottomBehavior<V extends View> extends CoordinatorLayout.Beha
             !mIgnoreEvents &&
             mState != STATE_DRAGGING &&
             !parent.isPointInChildBounds(scroll, (int) event.getX(), (int) event.getY()) &&
-            Math.abs(mInitialY - event.getY()) > (mViewDragHelper.getTouchSlop()*4);
+            Math.abs(mInitialY - event.getY()) > (mViewDragHelper.getTouchSlop()*5);
     }
 
     @Override
@@ -332,7 +332,7 @@ public class PickerBottomBehavior<V extends View> extends CoordinatorLayout.Beha
         // The ViewDragHelper tries to capture only the top-most View. We have to explicitly tell it
         // to capture the bottom sheet in case it is not captured and the touch slop is passed.
         if (action == MotionEvent.ACTION_MOVE && !mIgnoreEvents) {
-            if (Math.abs(mInitialY - event.getY()) > mViewDragHelper.getTouchSlop()) {
+            if (Math.abs(mInitialY - event.getY()) > (mViewDragHelper.getTouchSlop()*5)) {
                 mViewDragHelper.captureChildView(child, event.getPointerId(event.getActionIndex()));
             }
         }
@@ -350,6 +350,7 @@ public class PickerBottomBehavior<V extends View> extends CoordinatorLayout.Beha
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx,
                                   int dy, int[] consumed) {
+        Log.e(TAG,"mMinOffset = " + mMinOffset + " mMaxOffset = " + mMaxOffset);
         View scrollingChild = mNestedScrollingChildRef.get();
         if (target != scrollingChild) {
             return;

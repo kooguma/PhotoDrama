@@ -5,6 +5,7 @@ import com.laputapp.model.BaseModel;
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Drama extends BaseModel{
     public AudioGroup audioGroup;
@@ -15,7 +16,7 @@ public class Drama extends BaseModel{
         videoGroup = new VideoGroup();
     }
 
-    public static Drama createFromPath(ArrayList<String> urls) {
+    public static Drama createFromPath(List<String> urls) {
         Drama drama = new Drama();
         VideoGroup videoGroup = new VideoGroup();
         videoGroup.imageClips = ClipsCreator.createImageClips(urls);

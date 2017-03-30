@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         app:tabMode="scrollable"
         app:tabTextColor="@android:color/darker_gray"
-        app:tabIndicatorColor="@android:color/black"
+        app:tabIndicatorColor="@android:color/transparent"
         app:tabSelectedTextColor="@android:color/white"/>
 
     <com.loopeer.bottomimagepicker.SlideCustomViewPager

@@ -3,32 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray">
+    android:background="@android:color/black">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image_display"
-        android:layout_width="500dp"
-        android:layout_height="500dp"/>
+    <LinearLayout
+        android:id="@+id/layout_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_display"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            app:actualImageScaleType="centerCrop"/>
 
         <HorizontalScrollView
-            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
 
-            <LinearLayout
-                android:id="@+id/image_container"
-                android:layout_width="match_parent"
+            <com.loopeer.android.photodrama4android.ui.widget.GalleryLinearLayout
+                android:id="@+id/layout_gallery"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:showDividers="middle"
+                android:padding="10dp"
+                android:gravity="center"
                 android:divider="@drawable/divider_transparent_4"
                 android:orientation="horizontal"/>
+
         </HorizontalScrollView>
+    </LinearLayout>
 
     <com.loopeer.bottomimagepicker.BottomImagePickerView
         android:id="@+id/pick_view"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:background="@android:color/black"
+        android:background="#282828"
         android:layout_alignParentBottom="true"
         app:behavior_hideable="false"
         app:layout_behavior="@string/picker_bottom_sheet_behavior"
