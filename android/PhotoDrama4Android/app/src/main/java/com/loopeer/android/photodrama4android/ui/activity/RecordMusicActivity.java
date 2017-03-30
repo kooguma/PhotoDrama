@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -25,9 +24,7 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
-
 import java.io.File;
-
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
 
 public class RecordMusicActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener

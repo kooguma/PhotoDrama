@@ -34,6 +34,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FileManager.getInstance().requestPermission(this);
+
+    /*    mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource("MediaRecorder");
+            mPlayer.prepareAsync();
+            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mPlayer.start();
+                }
+            });
+        } catch (IOException e) {
+            Log.e("11111", "prepare() failed");
+        }*/
     }
 
     public void onMakeMovieClick(View view) {

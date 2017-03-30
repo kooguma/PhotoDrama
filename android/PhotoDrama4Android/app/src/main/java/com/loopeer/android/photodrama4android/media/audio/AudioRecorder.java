@@ -35,6 +35,8 @@ public class AudioRecorder {
         }
         mRecorder.setOutputFile(musicClip.path);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setAudioEncodingBitRate(16);
+        mRecorder.setAudioSamplingRate(44100);
         try {
             mRecorder.prepare();
         } catch (IOException e) {
