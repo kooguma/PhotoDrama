@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.utils;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -135,5 +136,11 @@ public final class PermissionUtils {
         }
         return targetSdkVersion;
     }
+
+    public static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    public static final String [] AUDIO_PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
+
+    public static final int REQUEST_EXTERNAL_STORAGE_PERMISSION = 201;
+    public static final String [] EXTERNAL_STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 }
