@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import java.io.IOException;
 
@@ -40,6 +41,11 @@ public class MusicManager implements IMusic, MediaPlayer.OnErrorListener,
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setLooping(false);
+    }
+
+    @Override
+    public void updateDrama(Drama drama) {
+
     }
 
     @Override

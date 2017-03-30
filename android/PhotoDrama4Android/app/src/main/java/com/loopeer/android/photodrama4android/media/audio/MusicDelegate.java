@@ -50,6 +50,10 @@ public class MusicDelegate implements IMusic {
         }
     }
 
+    public void updateDrama(Drama drama) {
+        mBindService.updateDrama(drama);
+    }
+
     @Override
     public void startMusic() {
         if(mBindService != null) {

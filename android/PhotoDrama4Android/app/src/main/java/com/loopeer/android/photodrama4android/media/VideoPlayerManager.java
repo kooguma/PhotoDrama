@@ -216,6 +216,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         return mGLThread;
     }
 
+    public IMusic getIMusic() {
+        return mIMusic;
+    }
+
     public void setStopTouchToRestart(boolean stopTouchToRestart) {
         mIsStopTouchToRestart = stopTouchToRestart;
     }

@@ -3,11 +3,13 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityRecordMusicBinding;
@@ -22,6 +24,9 @@ import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
+import com.loopeer.android.photodrama4android.utils.FileManager;
+
+import java.io.File;
 
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
 
@@ -43,6 +48,7 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         mAudioRecorder = new AudioRecorder();
+        mAudioRecorder.requestPermission(this);
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
                 , mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -76,16 +82,21 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     }
 
     private void stopRecord(boolean validate) {
-//        mAudioRecorder.stopRecording();
-        mMusicClipRecording.setCreateIng(false);
+        mAudioRecorder.stopRecording();
         mVideoPlayerManager.pauseVideo();
+        if (mMusicClipRecording == null) return;
+
+        mMusicClipRecording.setCreateIng(false);
         mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
+        mMusicClipRecording.musicSelectedLength = mMusicClipRecording.showTime;
         if (mMusicClipRecording.showTime < MIN_RECORD_AUDIO_LENGTH
                 || !validate) {
             mDrama.audioGroup.musicClips.remove(mMusicClipRecording);
-            /*FileUtils.deleteFile(new File(mMusicClipRecording.path));*/
+            FileUtils.deleteFile(new File(mMusicClipRecording.path));
         }
+
         mBinding.scrollSelectView.setProgress(mMusicClipRecording.getEndTime());
+        mVideoPlayerManager.getIMusic().updateDrama(mDrama);
         mMusicClipRecording = null;
         updateScrollSelectViewClips();
     }
@@ -93,16 +104,16 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     private void startRecord() {
         mMusicClipRecording = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
                 , MusicClip.MusicType.RECORD_AUDIO);
+        mMusicClipRecording.path = FileManager.getInstance().createNewAudioFile();
         mMusicClipRecording.setCreateIng(true);
         if (!checkClipValidate(mMusicClipRecording)) {
             return;
         }
         mDrama.audioGroup.musicClips.add(mMusicClipRecording);
         updateScrollSelectViewClips();
-        mVideoPlayerManager.startVideoOnly();
-        /*if (mAudioRecorder.startRecording(mMusicClipRecording)) {
+        if (mAudioRecorder.startRecording(mMusicClipRecording)) {
             mVideoPlayerManager.startVideoOnly();
-        }*/
+        }
     }
 
     private void updateScrollSelectViewClips() {
@@ -257,5 +268,11 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
             mSelectedClip = null;
             mBinding.switcherBtn.setDisplayedChild(0);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mAudioRecorder.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

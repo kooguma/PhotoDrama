@@ -55,6 +55,10 @@ public class MusicService extends Service{
         return mBinder;
     }
 
+    public void updateDrama(Drama drama) {
+        mMusicProcessor.updateMusicClipPlayer(mContext, drama.audioGroup.musicClips);
+    }
+
     public class MusicBinder extends Binder {
         public MusicService getMusicService(Context context){
             MusicService.this.mContext = context;

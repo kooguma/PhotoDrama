@@ -4,11 +4,9 @@ package com.loopeer.android.photodrama4android.media.audio;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
-import java.io.File;
 import java.io.IOException;
 
 public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
@@ -24,9 +22,8 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnPreparedListener(this);
-        Uri uri = Uri.fromFile(new File(mMusicClip.path));
         try {
-            mMediaPlayer.setDataSource(context.getApplicationContext(), uri);
+            mMediaPlayer.setDataSource(mMusicClip.path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,7 +54,9 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     }
 
     public void preparePlayer() {
-        mMediaPlayer.prepareAsync();
+        if (!mIsPrepared) {
+            mMediaPlayer.prepareAsync();
+        }
     }
 
     public void onProgressChange(int usedTime) {
@@ -76,6 +75,8 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     @Override
     public void onPrepared(MediaPlayer mp) {
         mIsPrepared = true;
+        startMusic();
+        pauseMusic();
         mMusicClipPlayerLister.onMusicClipPlayerPrepared(mMusicClip.getKey());
     }
 
