@@ -10,7 +10,9 @@ import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivi
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
 import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
+import com.loopeer.android.photodrama4android.ui.activity.SoundEffectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SubtitleEditActivity;
+import com.loopeer.android.photodrama4android.ui.activity.TestMusicSelectedActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TextInputActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity;
 
@@ -18,12 +20,15 @@ public class Navigator {
 
     public static final String EXTRA_DRAMA = "extra_drama";
     public static final String EXTRA_TEXT = "extra_text";
+    public static final String EXTRA_MUSIC_CLIP = "extra_music_clip";
     public static final String EXTRA_SUBTITLE_CLIP = "extra_subtitle_clip";
     public static final int REQUEST_CODE_DRAMA_IMAGE_EDIT = 1001;
     public static final int REQUEST_CODE_DRAMA_TRANSITION_EDIT = 1002;
     public static final int REQUEST_CODE_DRAMA_SUBTITLE_EDIT = 1003;
     public static final int REQUEST_CODE_TEXT_INPUT = 1004;
     public static final int REQUEST_CODE_DRAMA_AUDIO_RECORD = 1005;
+    public static final int REQUEST_CODE_DRAMA_SOUND_EFFECT = 1006;
+    public static final int REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT = 1007;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -70,4 +75,17 @@ public class Navigator {
         intent.putExtra(EXTRA_DRAMA, drama);
         ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_AUDIO_RECORD);
     }
+
+    public static void startSoundEffectActivity(Context context, Drama drama) {
+        Intent intent = new Intent(context, SoundEffectActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_EFFECT);
+    }
+
+    //TODO test
+    public static void startTestMusicSelectedActivity(Context context) {
+        Intent intent = new Intent(context, TestMusicSelectedActivity.class);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
+    }
+
 }

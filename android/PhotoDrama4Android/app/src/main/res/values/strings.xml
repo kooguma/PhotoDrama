@@ -4,6 +4,7 @@
     <string name="label_transition_edit">Transition Edit</string>
     <string name="label_subtitle">字幕</string>
     <string name="label_record_audio">配音</string>
+    <string name="label_sound_effect">音效</string>
 
     <!-- transition edit -->
     <string name="transition_selected_effect">选择转场</string>

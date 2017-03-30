@@ -122,6 +122,10 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         Navigator.startRecordMusicActivity(this, mDrama);
     }
 
+    public void onSoundEffect(View view) {
+        Navigator.startSoundEffectActivity(this, mDrama);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,6 +139,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
                 case Navigator.REQUEST_CODE_DRAMA_TRANSITION_EDIT:
                 case Navigator.REQUEST_CODE_DRAMA_SUBTITLE_EDIT:
                 case Navigator.REQUEST_CODE_DRAMA_AUDIO_RECORD:
+                case Navigator.REQUEST_CODE_DRAMA_SOUND_EFFECT:
                     mVideoPlayerManager.updateDrama(mDrama);
                     break;
                 default:

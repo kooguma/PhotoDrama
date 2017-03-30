@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.model;
 
 public class MusicClip extends Clip {
     public static final int MIN_RECORD_AUDIO_LENGTH = 500;
+    public static final int MIN_SOUND_EFFECT_LENGTH = 500;
     public String path;
 
     public int musicStartOffset;

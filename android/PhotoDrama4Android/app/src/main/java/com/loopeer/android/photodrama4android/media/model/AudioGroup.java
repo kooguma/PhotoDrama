@@ -23,4 +23,14 @@ public class AudioGroup extends BaseModel {
         }
         return results;
     }
+
+    public List<MusicClip> getSoundEffectClips() {
+        List<MusicClip> results = new ArrayList<>();
+        for (MusicClip musicClip : musicClips) {
+            if (musicClip.musicType == MusicClip.MusicType.SOUND_EFFECT) {
+                results.add(musicClip);
+            }
+        }
+        return results;
+    }
 }

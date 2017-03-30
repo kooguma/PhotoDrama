@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,30 +12,10 @@ import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO
-    private MediaPlayer mPlayer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        FileManager.getInstance().requestPermission(this);
-
-        //TODO
-    /*    mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource("MediaRecorder");
-            mPlayer.prepareAsync();
-            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mPlayer.start();
-                }
-            });
-        } catch (IOException e) {
-            Log.e("11111", "prepare() failed");
-        }*/
     }
 
     public void onMakeMovieClick(View view) {

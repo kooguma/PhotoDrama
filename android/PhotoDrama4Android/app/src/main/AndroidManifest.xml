@@ -19,31 +19,25 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.MakeMovieActivity"
             android:screenOrientation="portrait"/>
-
         <activity android:name=".ui.activity.ImageSelectActivity"/>
-
         <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".ui.activity.TransitionEditActivity"
             android:label="@string/label_transition_edit"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".ui.activity.SubtitleEditActivity"
             android:label="@string/label_subtitle"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".ui.activity.TextInputActivity"
             android:launchMode="singleTop"
@@ -55,7 +49,13 @@
             android:name=".ui.activity.RecordMusicActivity"
             android:label="@string/label_record_audio"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.SoundEffectActivity"
+            android:label="@string/label_sound_effect"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.TestMusicSelectedActivity">
         </activity>
     </application>
 
