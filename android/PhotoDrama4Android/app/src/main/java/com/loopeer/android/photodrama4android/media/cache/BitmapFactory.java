@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
+import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,15 +19,7 @@ public class BitmapFactory {
 
     private BitmapFactory(Context context) {
         mContext = context;
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        final int cacheSize = maxMemory;
-        mMemoryCache = new LinkedHashMap<String, Bitmap>();
-//        mMemoryCache = new LinkedHashMap<String, Bitmap>(cacheSize) {
-//            @Override
-//            protected int sizeOf(String key, Bitmap bitmap) {
-//                return bitmap.getByteCount() / 1024;
-//            }
-//        };
+        mMemoryCache = new LinkedHashMap<>();
     }
 
     public static BitmapFactory init(Context context) {
@@ -71,7 +63,7 @@ public class BitmapFactory {
             for (String path :
                     params) {
                 final String imageKey = String.valueOf(path);
-                final Bitmap bitmap = ImageUtils.imageZoomByScreen(mContext, imageKey);
+                final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, imageKey);
                 addBitmapToCache(imageKey, bitmap);
             }
             return null;

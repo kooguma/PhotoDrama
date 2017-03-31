@@ -6,11 +6,11 @@ import android.opengl.EGL14;
 import android.os.Bundle;
 import android.os.Message;
 
-import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
+import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,7 @@ public class TextureLoader extends Thread {
                 mHandlerWrappers.remove(handlerWrapper);
                 return;
             }
-            final Bitmap bitmap = ImageUtils.imageZoomByScreen(mContext, handlerWrapper.getData());
+            final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, handlerWrapper.getData());
             BitmapFactory.getInstance().addBitmapToCache(handlerWrapper.getData(), bitmap);
             returnImageInfo(handlerWrapper, imageInfo);
 //            ImageTextureCache.getDefault().putImageInfo(handlerWrapper.getKey(), imageInfo);
