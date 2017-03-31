@@ -223,6 +223,7 @@ public class ScrollSelectView extends ViewGroup {
                 break;
             }
         }
+
         return true;
     }
 

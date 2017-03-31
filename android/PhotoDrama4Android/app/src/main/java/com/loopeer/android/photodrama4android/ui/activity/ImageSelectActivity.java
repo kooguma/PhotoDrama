@@ -25,11 +25,12 @@ import java.util.List;
 public class ImageSelectActivity extends MovieMakerBaseActivity {
 
     private BottomImagePickerView mBottomImagePickerView;
-    private GalleryLinearLayout mGalleryLinearLayout;
-    private LinearLayout mLayoutDisplay;
-    private SimpleDraweeView mImageDisplay;
 
-    private ImageAdapter.OnImagePickListener mPickListener
+    private  GalleryLinearLayout mGalleryLinearLayout;
+    private LinearLayout mLayoutDisplay;
+    private  SimpleDraweeView mImageDisplay;
+
+    private  ImageAdapter.OnImagePickListener mPickListener
         = new ImageAdapter.OnImagePickListener() {
         @Override public boolean onImagePick(Uri uri) {
             mGalleryLinearLayout.setUri(uri);
@@ -93,8 +94,6 @@ public class ImageSelectActivity extends MovieMakerBaseActivity {
             behavior.setPeekHeight(peekHeight);
         });
         mBottomImagePickerView.setOnImagePickListener(mPickListener);
-        mGalleryLinearLayout.setOnGalleryItemClickListener(
-            (position, uri) -> mImageDisplay.setImageURI(uri));
     }
 
     @Override
@@ -102,10 +101,10 @@ public class ImageSelectActivity extends MovieMakerBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override protected void onDestroy() {
-        super.onDestroy();
-        mGalleryLinearLayout =null;
-        mImageDisplay = null;
-        mPickListener = null;
-    }
+    // @Override protected void onDestroy() {
+    //     super.onDestroy();
+    //     mGalleryLinearLayout =null;
+    //     mImageDisplay = null;
+    //     mPickListener = null;
+    // }
 }

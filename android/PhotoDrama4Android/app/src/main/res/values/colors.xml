@@ -21,4 +21,9 @@
 
     <color name="subtitle_text_rect_color">#9d61d898</color>
     <color name="subtitle_text_rect_color_selected">#c661d898</color>
+
+
+    <color name="music_clip_progress_color">#61d898</color>
+    <color name="music_clip_progress_selected_color">#4461d898</color>
+    <color name="music_clip_progress_dot_color">#ffffff</color>
 </resources>
