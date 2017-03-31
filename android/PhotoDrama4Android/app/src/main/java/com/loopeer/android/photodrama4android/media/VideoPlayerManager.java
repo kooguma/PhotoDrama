@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
 import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
@@ -139,6 +140,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void onDestroy() {
         mGLThread.onDestroy();
         mIMusic.onDestroy();
+        BitmapFactory.getInstance().clear();
         mGLThread = null;
     }
 

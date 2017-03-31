@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BitmapFactory {
 
@@ -81,6 +82,13 @@ public class BitmapFactory {
         if (getBitmapFromMemCache(key) == null) {
             mMemoryCache.put(key, bitmap);
         }
+    }
+
+    public void clear() {
+        for (Map.Entry<String, Bitmap> entry : mMemoryCache.entrySet()) {
+            entry.getValue().recycle();
+        }
+        mMemoryCache.clear();
     }
 
 }
