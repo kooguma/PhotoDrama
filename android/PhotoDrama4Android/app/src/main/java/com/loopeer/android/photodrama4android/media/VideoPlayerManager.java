@@ -140,7 +140,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void onDestroy() {
         mGLThread.onDestroy();
         mIMusic.onDestroy();
-        BitmapFactory.getInstance().clear();
         mGLThread = null;
     }
 

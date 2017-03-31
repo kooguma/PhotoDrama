@@ -1,2 +1,3 @@
 include ':app',
-        ':library:bottomimagepicker'
+        ':library:bottomimagepicker',
+        ':library:recorder'

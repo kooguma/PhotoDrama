@@ -14,6 +14,7 @@ import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBindi
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import java.text.SimpleDateFormat;
@@ -78,6 +79,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         super.onDestroy();
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
+        BitmapFactory.getInstance().clear();
     }
 
     @Override
