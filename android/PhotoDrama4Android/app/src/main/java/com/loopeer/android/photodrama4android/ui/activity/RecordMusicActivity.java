@@ -206,7 +206,7 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     }
 
     @Override
-    public void onProgressStart(int progress, int maxValue) {
+    public void onProgressStart() {
 
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
+import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
@@ -100,4 +101,9 @@ public class Navigator {
         ((Activity)context).startActivityForResult(intent, requestCode);
     }
 
+    public static void startFullLandscapePlayActivity(Context context, Drama drama) {
+        Intent intent = new Intent(context, FullLandscapePlayActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        context.startActivity(intent);
+    }
 }

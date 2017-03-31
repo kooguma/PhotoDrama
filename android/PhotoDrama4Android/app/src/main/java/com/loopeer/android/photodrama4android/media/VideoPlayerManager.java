@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
 import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
-import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
@@ -88,7 +87,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         mGLThread.startUp();
         mIMusic.seekToMusic(seek.getProgress());
         mIMusic.startMusic();
-        onProgressStart(seek.getProgress(), mSeekbarMaxValue);
+        onProgressStart();
     }
 
     @Override
@@ -152,6 +151,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void startVideo() {
         mGLThread.startUp();
         mIMusic.startMusic();
+        onProgressStart();
     }
 
     public void startVideoOnly() {
@@ -191,9 +191,9 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
             mProgressChangeListener.onProgressChange(progress);
     }
 
-    private void onProgressStart(int progress, int maxValue) {
+    private void onProgressStart() {
         if (mProgressChangeListener != null)
-            mProgressChangeListener.onProgressStart(progress, maxValue);
+            mProgressChangeListener.onProgressStart();
     }
 
     public Drama getDrama() {
@@ -269,6 +269,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
         void onProgressChange(int progress);
 
-        void onProgressStart(int progress, int maxValue);
+        void onProgressStart();
     }
 }

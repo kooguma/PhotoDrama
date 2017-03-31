@@ -19,8 +19,8 @@ import javax.microedition.khronos.egl.EGLDisplay;
 public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
     private TextureLoader mTextureLoader;
-    private float mRatioX;
-    private float mRatioY;
+    protected float mRatioX;
+    protected float mRatioY;
 
     public MovieMakerGLSurfaceView(Context context) {
         super(context);

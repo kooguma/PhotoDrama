@@ -92,6 +92,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void checkBitmapReady() {
         mBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mImageClip.path);
+        if (mBitmap == null) return;
         mImageInfo = new ImageInfo(-1, mBitmap.getWidth(), mBitmap.getHeight());
         vertexArray = new VertexArray(createData());
     }

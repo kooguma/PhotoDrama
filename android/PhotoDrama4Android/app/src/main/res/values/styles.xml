@@ -39,10 +39,12 @@
         <item name="android:textColor">@color/text_color_white</item>
     </style>
 
-
     <style name="Toolbar.Dark">
         <item name="android:background">@color/window_background_dark</item>
         <item name="titleTextAppearance">@style/TextAppearance.PhotoDrama.Toolbar.Dark</item>
     </style>
 
+    <style name="Toolbar.Dark.Transparent">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

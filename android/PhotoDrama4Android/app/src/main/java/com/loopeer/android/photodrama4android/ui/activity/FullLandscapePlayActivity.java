@@ -1,6 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.content.Intent;
+import android.animation.ObjectAnimator;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,25 +10,31 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
+import com.loopeer.android.photodrama4android.databinding.ActivityFullLandscapePlayBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
-import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
-public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener {
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
-    private ActivityMakeMovieBinding mBinding;
+public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener {
+
+    private ActivityFullLandscapePlayBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
     private Drama mDrama;
+    private Subject mHideToolSubject = PublishSubject.create();
+    private boolean mToolShow = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_make_movie);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_full_landscape_play);
 
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         imagePipeline.clearCaches();
@@ -40,16 +46,34 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
-        mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
+        mBinding.glSurfaceView.setOnClickListener(v -> {
+            if (!mToolShow) {
+                showAllBar();
+                hideTool();
+            } else {
+                mVideoPlayerManager.pauseVideo();
+            }
+        });
 
         mVideoPlayerManager.onRestart();
+
+        registerSubscription(
+                mHideToolSubject.debounce(1500, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(o -> hideAllBar())
+                        .subscribe()
+        );
+        hideTool();
+    }
+
+    private void hideTool() {
+        mHideToolSubject.onNext(null);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override
@@ -85,88 +109,64 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         super.onDestroy();
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
-        BitmapFactory.getInstance().clear();
     }
 
     @Override
     public void onProgressInit(int progress, int maxValue) {
-        SimpleDateFormat formatter = new SimpleDateFormat("m:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(progress);
-        mBinding.textStart.setText(hms);
+        mBinding.textTimeStart.setText(hms);
         String hmsTotal = formatter.format(maxValue + 1);
-        mBinding.textTotal.setText(hmsTotal);
+        mBinding.textTimeEnd.setText(hmsTotal);
     }
 
     @Override
     public void onProgressStop() {
-        mBinding.btnPlay.setVisibility(View.VISIBLE);
+        mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
+        mBinding.btnPausePlayBtn.setSelected(true);
+        showAllBar();
     }
 
     @Override
     public void onProgressChange(int progress) {
-        SimpleDateFormat formatter = new SimpleDateFormat("m:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(progress);
-        mBinding.textStart.setText(hms);
+        mBinding.textTimeStart.setText(hms);
     }
 
     @Override
     public void onProgressStart() {
-        if (mBinding.btnPlay.getVisibility() == View.VISIBLE) mBinding.btnPlay.setVisibility(View.GONE);
+        mBinding.btnPausePlayBtn.setSelected(false);
+        mBinding.btnPlayCenter.setVisibility(View.GONE);
+        hideTool();
     }
 
     public void onPlayBtnClick(View view) {
         mVideoPlayerManager.startVideo();
-        mBinding.btnPlay.setVisibility(View.GONE);
     }
 
-    public void onStartFragmentEdit(View view) {
-        Navigator.startImageClipEditActivity(this, mDrama);
-    }
-
-    public void onFullBtnClick(View view) {
-        Navigator.startFullLandscapePlayActivity(this, mDrama);
-    }
-
-    public void onTransitionEdit(View view) {
-        Navigator.startTransitionEditActivity(this, mDrama);
-    }
-
-    public void onSubtitleEdit(View view) {
-        Navigator.startSubtitleEditActivity(this, mDrama);
-    }
-
-    public void onAudioRecord(View view) {
-        Navigator.startRecordMusicActivity(this, mDrama);
-    }
-
-    public void onSoundEffect(View view) {
-        Navigator.startSoundEffectActivity(this, mDrama);
-    }
-
-    public void onBgmClick(View view) {
-        Navigator.startBgmMusicActivity(this, mDrama);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            Drama drama = (Drama) data.getSerializableExtra(Navigator.EXTRA_DRAMA);
-            if (drama != null)
-                mDrama = drama;
-            switch (requestCode) {
-                case Navigator.REQUEST_CODE_DRAMA_IMAGE_EDIT:
-                case Navigator.REQUEST_CODE_DRAMA_TRANSITION_EDIT:
-                case Navigator.REQUEST_CODE_DRAMA_SUBTITLE_EDIT:
-                case Navigator.REQUEST_CODE_DRAMA_AUDIO_RECORD:
-                case Navigator.REQUEST_CODE_DRAMA_SOUND_EFFECT:
-                case Navigator.REQUEST_CODE_DRAMA_SOUND_BGM:
-                    mVideoPlayerManager.updateDrama(mDrama);
-                    break;
-                default:
-            }
-            mVideoPlayerManager.seekToVideo(0);
+    public void onPausePlayBtnClick(View view) {
+        if (mVideoPlayerManager.getGLThread().isStop()) {
+            mVideoPlayerManager.startVideo();
+        } else {
+            mVideoPlayerManager.pauseVideo();
         }
     }
+
+    private void hideAllBar() {
+        if (mVideoPlayerManager.getGLThread().isStop() || !mToolShow) return;
+        mToolShow = false;
+        mBinding.layoutToolBottom.clearAnimation();
+        ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, 0, mBinding.layoutToolBottom.getHeight()).start();
+        ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, 0, -mBinding.layoutToolTop.getHeight()).start();
+    }
+
+    private void showAllBar() {
+        if (mToolShow) return;
+        mToolShow = true;
+        mBinding.layoutToolBottom.setTranslationY(mBinding.layoutToolBottom.getHeight());
+        ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, -mBinding.layoutToolTop.getHeight(), 0).start();
+        ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, mBinding.layoutToolBottom.getHeight(), 0).start();
+    }
+
 }
