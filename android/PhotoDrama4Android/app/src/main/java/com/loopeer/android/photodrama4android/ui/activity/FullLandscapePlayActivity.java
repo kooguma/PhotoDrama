@@ -123,15 +123,13 @@ public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements
 
     @Override
     public void onProgressStop() {
+        showAllBar();
+
         mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
         mBinding.btnPausePlayBtn.setSelected(true);
 
         //TODO something strange
-        new Handler().postDelayed(() -> {
-            mBinding.btnPlayCenter.setVisibility(View.GONE);
-            mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
-        }, 30);
-        showAllBar();
+        new Handler().postDelayed(() -> mBinding.layoutToolBottom.requestLayout(), 30);
     }
 
     @Override
