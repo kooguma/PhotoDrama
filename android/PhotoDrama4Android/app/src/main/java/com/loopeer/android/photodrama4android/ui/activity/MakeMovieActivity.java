@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -36,6 +37,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
+//        mVideoPlayerManager.setCanRecord(true);
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
@@ -52,10 +54,22 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
 
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        }
+
+        if (item.getItemId() == R.id.menu_save) {
+//            mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
     }

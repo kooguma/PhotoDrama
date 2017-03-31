@@ -8,6 +8,7 @@ import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
+import com.loopeer.android.photodrama4android.utils.FileManager;
 
 public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife, MusicProcessor.ProcessorPrepareListener {
 
@@ -26,6 +27,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     private boolean isMusicPrepared = false;
     private boolean isImagePrepared = false;
     private boolean isSubtitlePrepared = false;
+    private boolean mIsRecording;
 
     public VideoPlayerManager(SeekWrapper seekWrapper, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
@@ -103,6 +105,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     private void finishToTime(int finishToTime) {
+        if (mIsRecording) mGLRenderWorker.endRecording();
         mGLThread.stopUp();
         mGLThread.setManual(true);
         mGLThread.setManualUpSeekBar(finishToTime);
@@ -260,6 +263,17 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     public int getMaxTime() {
         return mMaxTime;
+    }
+
+    public void startRecording() {
+        mIsRecording = true;
+        seekToVideo(0);
+        mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
+        startVideo();
+    }
+
+    public void setCanRecord(boolean canRecord) {
+        mGLRenderWorker.setWillRecord(canRecord);
     }
 
     public interface ProgressChangeListener {

@@ -21,8 +21,11 @@ public class FileManager {
     private static FileManager instance;
     private static String photoDramaPath = Environment.getExternalStorageDirectory() + "/photodrama";
     private static String audioPath = photoDramaPath + "/audio/";
+    private static String videoPath = photoDramaPath + "/video/";
     private File audioDir;
+    private File videoDir;
     public final String audioDirPath = "/audio/";
+    public final String videoDirPath = "/video/";
 
     private FileManager() {
         init();
@@ -31,8 +34,10 @@ public class FileManager {
     public void init() {
         if (hasSDCard() && hasExternalStoragePermission(PhotoDramaApp.getAppContext())) {
             audioDir = createFilePath(audioPath);
+            videoDir = createFilePath(videoPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
+            videoDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + videoDirPath);
         }
     }
 
@@ -61,8 +66,16 @@ public class FileManager {
         return audioDir;
     }
 
+    public File getVideoDirDir() {
+        return videoDir;
+    }
+
     public String createNewAudioFile() {
         return getAudioDir().getPath() + File.separator + System.currentTimeMillis() + ".m4a";
+    }
+
+    public String createNewVideoFile() {
+        return getVideoDirDir().getPath() + File.separator + System.currentTimeMillis() + ".mp4";
     }
 
     public static void deleteFile(File file) {
