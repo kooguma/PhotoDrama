@@ -22,6 +22,11 @@ public class TextInputActivity extends MovieMakerBaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_text_input);
         mContent = getIntent().getStringExtra(Navigator.EXTRA_TEXT);
         mBinding.textInput.setText(mContent);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

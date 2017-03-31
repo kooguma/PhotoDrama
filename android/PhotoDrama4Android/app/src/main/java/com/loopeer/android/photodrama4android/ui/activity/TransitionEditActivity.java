@@ -38,7 +38,6 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_transition_edit);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
@@ -46,6 +45,12 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         updateRecyclerView();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void updateRecyclerView() {

@@ -34,7 +34,6 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity implements Scro
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_subtitle_edit);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
@@ -44,6 +43,12 @@ public class SubtitleEditActivity extends MovieMakerBaseActivity implements Scro
         mVideoPlayerManager.seekToVideo(0);
         updateScrollImageView();
         updateScrollSelectViewClips();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void updateScrollImageView() {

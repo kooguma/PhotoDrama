@@ -34,7 +34,6 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         imagePipeline.clearCaches();
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -44,6 +43,13 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
 
         mVideoPlayerManager.onRestart();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override

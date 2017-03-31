@@ -2,7 +2,6 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
@@ -10,7 +9,7 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MovieMakerBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

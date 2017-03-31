@@ -38,6 +38,7 @@ public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_test_music_selected);
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mRequestCode = getIntent().getIntExtra(Navigator.EXTRA_REQUEST_CODE, REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
         //TODO
         mPlayer = new MediaPlayer();

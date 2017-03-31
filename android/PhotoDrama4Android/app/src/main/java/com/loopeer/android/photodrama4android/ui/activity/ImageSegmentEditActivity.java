@@ -37,7 +37,6 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_image_clip_edit);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
@@ -57,6 +56,12 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
             selectedImageClipStart();
         });
 
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void onPlayClick(View view) {

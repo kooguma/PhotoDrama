@@ -41,7 +41,6 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_record_music);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         mAudioRecorder = new AudioRecorder();
@@ -53,6 +52,12 @@ public class RecordMusicActivity extends MovieMakerBaseActivity implements Video
         mVideoPlayerManager.seekToVideo(0);
         updateBtn();
         updateScrollImageView();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void updateBtn() {
