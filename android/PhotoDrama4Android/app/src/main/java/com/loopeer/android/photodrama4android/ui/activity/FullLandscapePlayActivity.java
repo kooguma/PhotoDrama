@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.animation.ObjectAnimator;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -124,18 +125,12 @@ public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements
     public void onProgressStop() {
         mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
         mBinding.btnPausePlayBtn.setSelected(true);
-        mBinding.btnPlayCenter.setVisibility(View.GONE);
-        mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
 
-/*        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mBinding.btnPausePlayBtn.setSelected(true);
-                mBinding.btnPlayCenter.setVisibility(View.GONE);
-
-                mBinding.layoutToolBottom.setVisibility(View.VISIBLE);
-            }
-        }, 30);*/
+        //TODO something strange
+        new Handler().postDelayed(() -> {
+            mBinding.btnPlayCenter.setVisibility(View.GONE);
+            mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
+        }, 30);
         showAllBar();
     }
 
