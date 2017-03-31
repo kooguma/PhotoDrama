@@ -124,6 +124,18 @@ public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements
     public void onProgressStop() {
         mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
         mBinding.btnPausePlayBtn.setSelected(true);
+        mBinding.btnPlayCenter.setVisibility(View.GONE);
+        mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
+
+/*        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.btnPausePlayBtn.setSelected(true);
+                mBinding.btnPlayCenter.setVisibility(View.GONE);
+
+                mBinding.layoutToolBottom.setVisibility(View.VISIBLE);
+            }
+        }, 30);*/
         showAllBar();
     }
 
@@ -156,7 +168,6 @@ public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements
     private void hideAllBar() {
         if (mVideoPlayerManager.getGLThread().isStop() || !mToolShow) return;
         mToolShow = false;
-        mBinding.layoutToolBottom.clearAnimation();
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, 0, mBinding.layoutToolBottom.getHeight()).start();
         ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, 0, -mBinding.layoutToolTop.getHeight()).start();
     }
@@ -164,7 +175,6 @@ public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements
     private void showAllBar() {
         if (mToolShow) return;
         mToolShow = true;
-        mBinding.layoutToolBottom.setTranslationY(mBinding.layoutToolBottom.getHeight());
         ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, -mBinding.layoutToolTop.getHeight(), 0).start();
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, mBinding.layoutToolBottom.getHeight(), 0).start();
     }

@@ -21,7 +21,7 @@
 
         <LinearLayout
             android:id="@+id/layout_tool_top"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/window_background_dark_transparent75"
             android:orientation="vertical"
@@ -47,7 +47,7 @@
 
         <LinearLayout
             android:id="@+id/layout_tool_bottom"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/window_background_dark_transparent75"
             android:gravity="center_vertical"
