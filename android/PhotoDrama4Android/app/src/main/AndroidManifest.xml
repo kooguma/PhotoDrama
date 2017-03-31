@@ -8,9 +8,9 @@
     <application
         android:name=".PhotoDramaApp"
         android:allowBackup="true"
-        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.activity.MainActivity">
@@ -22,21 +22,28 @@
         </activity>
         <activity
             android:name=".ui.activity.MakeMovieActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.ImageSelectActivity"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"/>
+        <activity
+            android:name=".ui.activity.ImageSelectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"/>
         <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"/>
         <activity
             android:name=".ui.activity.TransitionEditActivity"
             android:label="@string/label_transition_edit"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Dark"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.SubtitleEditActivity"
             android:label="@string/label_subtitle"
+            android:theme="@style/AppTheme.Dark"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -49,16 +56,19 @@
         <activity
             android:name=".ui.activity.RecordMusicActivity"
             android:label="@string/label_record_audio"
+            android:theme="@style/AppTheme.Dark"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.SoundEffectActivity"
             android:label="@string/label_sound_effect"
+            android:theme="@style/AppTheme.Dark"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.BgmMusicActivity"
             android:label="@string/label_bgm"
+            android:theme="@style/AppTheme.Dark"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.TestMusicSelectedActivity">

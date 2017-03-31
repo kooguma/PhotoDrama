@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="divider">0.5dp</dimen>
+
+    <dimen name="inline_padding">2dp</dimen>
+    <dimen name="xxsmall_padding">4dp</dimen>
+    <dimen name="xsmall_padding">8dp</dimen>
+    <dimen name="small_padding">10dp</dimen>
+    <dimen name="medium_padding">12dp</dimen>
+    <dimen name="large_padding">16dp</dimen>
+    <dimen name="larger_padding">18dp</dimen>
+    <dimen name="xlarge_padding">20dp</dimen>
+    <dimen name="xxlarge_padding">24dp</dimen>
+    <dimen name="xxlarger_padding">32dp</dimen>
+    <dimen name="slarge_padding">48dp</dimen>
+    <dimen name="slarger_padding">64dp</dimen>
+    <dimen name="huge_padding">72dp</dimen>
+
+    <dimen name="text_size_xxsmall">10sp</dimen>
+    <dimen name="text_size_xsmall">10sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_lmall">13sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_xmedium">15sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_larger">18sp</dimen>
+    <dimen name="text_size_xlarge">20sp</dimen>
+    <dimen name="text_size_xxlarge">22sp</dimen>
+
+    <dimen name="elevation">4dp</dimen>
+
     <dimen name="movie_height">200dip</dimen>
     <dimen name="image_segment_width">100dip</dimen>
 

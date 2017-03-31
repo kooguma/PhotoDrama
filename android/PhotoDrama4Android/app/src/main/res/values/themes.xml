@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:textColorTertiary">@color/text_color_tertiary</item>
+        <item name="android:textColorHint">@color/text_color_hint</item>
+
+        <item name="android:windowBackground">@color/window_background_white</item>
+        <item name="actionMenuTextColor">@color/text_color_secondary</item>
+        <item name="android:textSize">@dimen/text_size_larger</item>
+        <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorControlNormal">@android:color/white</item>
+
+        <item name="homeAsUpIndicator">@drawable/ic_home_up_dark</item>
+        <item name="formTextItemStyle">@style/FormTextItemStyle</item>
+
+        <!--<item name="formEditItemStyle">@style/FormEditItemStyle</item>-->
+        <item name="android:textAllCaps">false</item>
+        <item name="android:windowAnimationStyle">@style/AppWindowAnimationStyle</item>
+
+    </style>
+
+    <style name="AppTheme.Dark">
+        <item name="toolbarStyle">@style/Toolbar.Dark</item>
+        <item name="homeAsUpIndicator">@drawable/ic_home_up_white</item>
+        <item name="android:windowBackground">@color/window_background_dark</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.Fullscreen" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.TranslucentBg.BottomSlide.Fullscreen"
+           parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.BottomSlide</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.BottomSlide" parent="AppTheme.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.BottomSlide</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.BottomSlide.Fullscreen"
+           parent="AppTheme.NoActionBar.BottomSlide">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.WindowNotTranslucent" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="ProgressLoadingTheme" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>
