@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="drama_category">
+        <item>精选</item>
+        <item>喜剧</item>
+        <item>爱情</item>
+        <item>悬疑</item>
+        <item>犯罪</item>
+        <item>动作</item>
+        <item>校园</item>
+        <item>经典</item>
+    </string-array>
+</resources>

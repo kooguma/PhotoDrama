@@ -7,6 +7,19 @@
     <string name="label_sound_effect">音效</string>
     <string name="label_bgm">配乐</string>
     <string name="label_music_select">选择配乐</string>
+    <string name="label_drama_select">选择故事</string>
+    <string name="label_about_us">关于我们</string>
+    <string name="label_feed_back">意见反馈</string>
+    <string name="label_setting">设置</string>
+    <string name="label_share">分享</string>
+
+    <!--main-->
+    <string name="main_act">我要主演</string>
+    <string name="main_create">我要创作</string>
+
+    <!--drama select-->
+    <string name="drama_select">选择故事</string>
+    <string name="drama_use">使用故事</string>
 
     <!-- transition edit -->
     <string name="transition_selected_effect">选择转场</string>

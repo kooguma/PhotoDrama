@@ -17,11 +17,6 @@ public class MainActivity extends MovieMakerBaseActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onMakeMovieClick(View view) {
-        PermissionUtils.checkStoragePermission(this);
-        Navigator.startImageSelectActivity(this);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -32,5 +27,11 @@ public class MainActivity extends MovieMakerBaseActivity {
         }
     }
 
+    public void onActClick(View view) {
+      Navigator.startDramaSelectActivity(this);
+    }
 
+    public void onCreateClick(View view) {
+
+    }
 }

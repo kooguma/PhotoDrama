@@ -3,16 +3,19 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import android.widget.TextView;
 import com.laputapp.ui.BaseActivity;
 import com.loopeer.android.photodrama4android.R;
 
 public class MovieMakerBaseActivity extends BaseActivity {
 
     private boolean mHasParent;
+    private Toolbar mToolbar;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -21,9 +24,9 @@ public class MovieMakerBaseActivity extends BaseActivity {
             mHasParent = NavUtils.getParentActivityName(this, getComponentName()) != null;
         } catch (PackageManager.NameNotFoundException e) {
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
             if (mHasParent) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
@@ -43,5 +46,18 @@ public class MovieMakerBaseActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void setCenterTitle(String title) {
+        if (mToolbar != null) {
+            mToolbar.setTitle("");
+            TextView view = (TextView) mToolbar.findViewById(R.id.txt_toolbar_title);
+            if (view != null) {
+                view.setText(title);
+            }
+        }
+    }
+
+    protected void setCenterTitle(@StringRes int resId) {
+        setCenterTitle(getString(resId));
+    }
 
 }

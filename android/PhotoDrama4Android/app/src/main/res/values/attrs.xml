@@ -21,4 +21,12 @@
         <attr name="roundCorner" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="ExportLoadingProgress">
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="progressForegroundColor" format="dimension"/>
+        <attr name="progressBackgroundColor" format="dimension"/>
+        <attr name="indicatorRadius" format="dimension"/>
+        <attr name="progressSweepAngle" format="dimension"/>
+    </declare-styleable>
+
 </resources>

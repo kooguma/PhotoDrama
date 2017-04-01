@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image_drama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:viewAspectRatio="0.65"/>
+
+            <TextView
+                android:id="@+id/txt_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image_drama"
+                tools:text="爱乐之城    第一回"/>
+
+            <TextView
+                android:layout_below="@id/txt_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="36人"/>
+
+           <Button
+               android:layout_below="@id/txt_desc"
+               style="@style/PhotoDramaButton.Black.DramaSelect"
+               android:text="@string/drama_use"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</layout>

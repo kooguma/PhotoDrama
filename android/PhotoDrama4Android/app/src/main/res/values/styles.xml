@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppWindowAnimationStyle"
-           parent="android:Animation.Activity">
+        parent="android:Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in</item>
         <item name="android:activityOpenExitAnimation">@null</item>
         <item name="android:activityCloseEnterAnimation">@null</item>
@@ -9,7 +9,7 @@
     </style>
 
     <style name="Animation.Activity.BottomSlide"
-           parent="android:Animation.Activity">
+        parent="android:Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:activityOpenExitAnimation">@android:anim/fade_out</item>
         <item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>
@@ -17,9 +17,9 @@
     </style>
 
     <style name="Toolbar"
-           parent="@style/Widget.AppCompat.Toolbar">
+        parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:elevation"
-              tools:targetApi="lollipop">4dp
+            tools:targetApi="lollipop">4dp
         </item>
         <item name="elevation">4dp</item>
         <item name="android:layout_width">match_parent</item>
@@ -28,8 +28,14 @@
         <item name="titleTextAppearance">@style/TextAppearance.PhotoDrama.Toolbar</item>
     </style>
 
+    <style name="TextAppearance.Widget.PhotoDrama.Toolbar.Title"
+        parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
     <style name="TextAppearance.PhotoDrama.Toolbar"
-           parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/text_size_larger</item>
         <item name="android:textColor">@color/text_color_primary</item>
     </style>
@@ -39,6 +45,12 @@
         <item name="android:textColor">@color/text_color_white</item>
     </style>
 
+    <style name="TabLayoutTextAppearance"
+        parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="Toolbar.Dark">
         <item name="android:background">@color/window_background_dark</item>
         <item name="titleTextAppearance">@style/TextAppearance.PhotoDrama.Toolbar.Dark</item>
@@ -46,5 +58,28 @@
 
     <style name="Toolbar.Dark.Transparent">
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="PhotoDramaButton"
+        parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="background">@android:color/black</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PhotoDramaButton.Black">
+        <item name="android:background">@drawable/bg_button_black</item>
+    </style>
+
+    <style name="PhotoDramaButton.Black.Main">
+        <item name="android:layout_width">@dimen/btn_main_width</item>
+        <item name="android:layout_height">@dimen/btn_main_height</item>
+    </style>
+
+    <style name="PhotoDramaButton.Black.DramaSelect">
+        <item name="android:layout_width">@dimen/btn_drama_select_width</item>
+        <item name="android:layout_height">@dimen/btn_drama_select_height</item>
+>>>>>>> add export loading view
     </style>
 </resources>

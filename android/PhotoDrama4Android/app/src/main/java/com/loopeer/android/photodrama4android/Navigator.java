@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
+import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
@@ -54,43 +54,43 @@ public class Navigator {
     public static void startImageClipEditActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, ImageSegmentEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_IMAGE_EDIT);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_IMAGE_EDIT);
     }
 
     public static void startTransitionEditActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, TransitionEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_TRANSITION_EDIT);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_TRANSITION_EDIT);
     }
 
     public static void startSubtitleEditActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, SubtitleEditActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SUBTITLE_EDIT);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SUBTITLE_EDIT);
     }
 
     public static void startTextInputActivity(Context context, String content) {
         Intent intent = new Intent(context, TextInputActivity.class);
         intent.putExtra(EXTRA_TEXT, content);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_TEXT_INPUT);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_TEXT_INPUT);
     }
 
     public static void startRecordMusicActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, RecordMusicActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_AUDIO_RECORD);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_AUDIO_RECORD);
     }
 
     public static void startSoundEffectActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, SoundEffectActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_EFFECT);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_EFFECT);
     }
 
     public static void startBgmMusicActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, BgmMusicActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_BGM);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_BGM);
     }
 
     //TODO test
@@ -98,12 +98,16 @@ public class Navigator {
         Intent intent = new Intent(context, TestMusicSelectedActivity.class);
         intent.putExtra(EXTRA_REQUEST_CODE, requestCode);
         intent.putExtra(EXTRA_DRAMA, drama);
-        ((Activity)context).startActivityForResult(intent, requestCode);
+        ((Activity) context).startActivityForResult(intent, requestCode);
     }
 
     public static void startFullLandscapePlayActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, FullLandscapePlayActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
+    }
+
+    public static void startDramaSelectActivity(Context context) {
+        Intent intent = new Intent(context, DramaSelectActivity.class);
         context.startActivity(intent);
     }
 }
