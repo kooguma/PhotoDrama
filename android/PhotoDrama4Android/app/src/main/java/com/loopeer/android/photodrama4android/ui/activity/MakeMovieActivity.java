@@ -37,7 +37,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
-//        mVideoPlayerManager.setCanRecord(true);
+        mVideoPlayerManager.setCanRecord(true);
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
@@ -69,7 +69,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         }
 
         if (item.getItemId() == R.id.menu_save) {
-//            mVideoPlayerManager.startRecording();
+            mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
     }

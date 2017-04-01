@@ -251,7 +251,6 @@ namespace CGE
 	{	
 		//processingFilters 将可能改变 targetTextureID和bufferTextureID, lock 以保证其他线程使用
 		std::unique_lock<std::mutex> uniqueLock(m_resultMutex);
-
 		if(m_globalFilter != nullptr)
 		{
 			m_frameHandler->processingWithFilter(m_globalFilter);

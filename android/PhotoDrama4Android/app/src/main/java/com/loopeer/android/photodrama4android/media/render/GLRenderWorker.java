@@ -42,17 +42,19 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
 
         mImageClipProcessor = new VideoClipProcessor(mMovieMakerGLSurfaceView);
         mImageClipProcessor.updateData(mDrama.videoGroup);
 
         if (mWillRecord) {
             mFrameRecorder = new FrameRecorder();
+            int height = mMovieMakerGLSurfaceView.getHeight();
+            height = height % 2 != 0 ? height - 1 : height;
             if(!mFrameRecorder.init(mMovieMakerGLSurfaceView.getWidth()
-                    , mMovieMakerGLSurfaceView.getHeight()
+                    , height
                     , mMovieMakerGLSurfaceView.getWidth()
-                    , mMovieMakerGLSurfaceView.getHeight())) {
+                    , height)) {
 
             }
         }
@@ -62,7 +64,7 @@ public class GLRenderWorker implements IRendererWorker {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         glViewport(0, 0, width, height);
         if (mWillRecord) {
-            mFrameRecorder.srcResize(width, height);
+            mFrameRecorder.srcResize(width, height % 2 != 0 ? height - 1 : height);
         }
 
     }
@@ -111,8 +113,8 @@ public class GLRenderWorker implements IRendererWorker {
                     /*if (recordingCallback != null)
 //                        recordingCallback.startRecordingOver(false);
                     return;*/
+                } else {
                     mIsRecording = true;
-
                 }
 
                /* synchronized (mRecordStateLock) {
