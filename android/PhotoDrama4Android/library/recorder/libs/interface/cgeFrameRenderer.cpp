@@ -15,7 +15,7 @@
 #define CHECK_RENDERER_STATUS \
 if(m_frameHandler == nullptr)\
 {\
-	CGE_LOG_ERROR("CGEFrameRenderer is not initialized!!\n");\
+	CGE_LOG_ERROR(" CHECK_RENDERER_STATUS CGEFrameRenderer is not initialized!!\n");\
 	return;\
 }
 
@@ -37,7 +37,6 @@ namespace CGE
 
 		glDisable(GL_BLEND);
 		assert(m_vertexArrayBuffer != 0);
-
 		glViewport(0, 0, m_dstImageSize.width, m_dstImageSize.height);
 
 		for(std::vector<CGEImageFilterInterfaceAbstract*>::iterator iter = m_vecFilters.begin();
@@ -91,7 +90,7 @@ namespace CGE
 		m_srcSize.set(srcWidth, srcHeight);
 		m_dstSize.set(dstWidth, dstHeight);
 
-		//有可能通过预先设置为 mask版
+	/*	//有可能通过预先设置为 mask版
 		if(m_textureDrawer == nullptr)
 			m_textureDrawer = TextureDrawer::create();
 
@@ -102,29 +101,28 @@ namespace CGE
 		
 		if(m_cacheDrawer == nullptr)
 			m_cacheDrawer = TextureDrawer::create();
-
 		_calcViewport(srcWidth, srcHeight, dstWidth, dstHeight);
 
 		if(m_frameHandler == nullptr)
 		{
 			m_frameHandler = new CGEFastFrameHandler();
-		}
+		}*/
 
-		return m_textureDrawer != nullptr && m_textureDrawerExtOES != nullptr && m_frameHandler->initWithRawBufferData(nullptr, dstWidth, dstHeight, CGE_FORMAT_RGBA_INT8, false);
+		return true;
 	}
 
 	void CGEFrameRenderer::srcResize(int width, int height)
 	{
-		CHECK_RENDERER_STATUS;
+//		CHECK_RENDERER_STATUS;
 
 		CGE_LOG_INFO("srcResize: %d, %d", width, height);
-		CGESizei sz = m_frameHandler->getOutputFBOSize();
+		/*CGESizei sz = m_frameHandler->getOutputFBOSize();
 		if(sz.width <= 0 || sz.height <= 0)
 		{
 			CGE_LOG_ERROR("CGEFrameRenderer not initialized!\n");
 			return ;
-		}
-		_calcViewport(width, height, sz.width, sz.height);
+		}*/
+		_calcViewport(width, height, width, height);
 	}
 
 	void CGEFrameRenderer::_calcViewport(int srcWidth, int srcHeight, int dstWidth, int dstHeight)
@@ -146,11 +144,11 @@ namespace CGE
 	{
 		CHECK_RENDERER_STATUS;
 
-		m_frameHandler->useImageFBO();
+		/*m_frameHandler->useImageFBO();
 		glViewport(m_viewport[0], m_viewport[1], m_viewport[2], m_viewport[3]);
 
 		m_textureDrawerExtOES->setTransform(transformMatrix);
-		m_textureDrawerExtOES->drawTexture(externalTexture);
+		m_textureDrawerExtOES->drawTexture(externalTexture);*/
 	}
 
 	void CGEFrameRenderer::runProc()
@@ -166,36 +164,36 @@ namespace CGE
 		CHECK_RENDERER_STATUS;
 
 		glViewport(x, y, width, height);
-		m_textureDrawer->drawTexture(m_frameHandler->getTargetTextureID());
+//		m_textureDrawer->drawTexture(m_frameHandler->getTargetTextureID());
 	}
 
 	void CGEFrameRenderer::drawCache()
 	{
 		CHECK_RENDERER_STATUS;
-
-		m_cacheDrawer->drawTexture(m_frameHandler->getTargetTextureID());
+//
+//		m_cacheDrawer->drawTexture(m_frameHandler->getTargetTextureID());
 	}
 
 	void CGEFrameRenderer::setSrcRotation(float rad)
 	{
-		m_textureDrawerExtOES->setRotation(rad);
+//		m_textureDrawerExtOES->setRotation(rad);
 	}
 
 	void CGEFrameRenderer::setSrcFlipScale(float x, float y)
 	{
-		m_textureDrawerExtOES->setFlipScale(x, y);
+//		m_textureDrawerExtOES->setFlipScale(x, y);
 	}
 
 	void CGEFrameRenderer::setRenderRotation(float rad)
 	{
-		m_textureDrawer->setRotation(rad);
+//		m_textureDrawer->setRotation(rad);
 	}
 
 	void CGEFrameRenderer::setRenderFlipScale(float x, float y)
 	{
-		m_drawerFlipScaleX = x;
-		m_drawerFlipScaleY = y;
-		m_textureDrawer->setFlipScale(x, y);
+//		m_drawerFlipScaleX = x;
+//		m_drawerFlipScaleY = y;
+//		m_textureDrawer->setFlipScale(x, y);
 	}
 
 	void CGEFrameRenderer::setFilterWithConfig(CGEConstString config, CGETextureLoadFun texLoadFunc, void* loadArg)
@@ -206,19 +204,19 @@ namespace CGE
 
 		if(config == nullptr || *config == '\0')
 		{
-			m_frameHandler->clearImageFilters(true);
+//			m_frameHandler->clearImageFilters(true);
 			return ;
 		}
-		m_frameHandler->clearImageFilters(true);
+//		m_frameHandler->clearImageFilters(true);
 	}
 
 	void CGEFrameRenderer::setFilter(CGEImageFilterInterfaceAbstract* filter)
 	{
 		CHECK_RENDERER_STATUS;
 
-		std::unique_lock<std::mutex> uniqueLock(m_resultMutex);
-		m_frameHandler->clearImageFilters(true);
-		m_frameHandler->addImageFilter(filter);
+//		std::unique_lock<std::mutex> uniqueLock(m_resultMutex);
+//		m_frameHandler->clearImageFilters(true);
+//		m_frameHandler->addImageFilter(filter);
 	}
 
 	void CGEFrameRenderer::setFilterIntensity(float value)
@@ -226,16 +224,17 @@ namespace CGE
 		CHECK_RENDERER_STATUS;
 
 		m_resultMutex.lock();
-		auto& filters = m_frameHandler->peekFilters();
+		/*auto& filters = m_frameHandler->peekFilters();
 		for(auto& filter : filters)
 		{
 			filter->setIntensity(value);
-		}
+		}*/
 		m_resultMutex.unlock();
 	}
 
 	void CGEFrameRenderer::setMaskTexture(GLuint maskTexture, float aspectRatio)
 	{
+/*
 		if(maskTexture == 0)
 		{
 			if(m_isUsingMask || m_textureDrawer == nullptr)
@@ -261,11 +260,12 @@ namespace CGE
 		m_textureDrawer = drawer;
 		drawer->setMaskTexture(maskTexture);
 		setMaskTextureRatio(aspectRatio);
+*/
 	}
 
 	void CGEFrameRenderer::setMaskTextureRatio(float aspectRatio)
 	{
-		float dstRatio = m_dstSize.width / (float)m_dstSize.height;
+/*		float dstRatio = m_dstSize.width / (float)m_dstSize.height;
 		float s = dstRatio / aspectRatio;
 		if(s > 1.0f)
 		{
@@ -274,14 +274,14 @@ namespace CGE
 		else
 		{
 			m_textureDrawer->setFlipScale(m_drawerFlipScaleX, s * m_drawerFlipScaleY);
-		}
+		}*/
 	}
 
 	GLuint CGEFrameRenderer::getTargetTexture()
 	{
 		if(m_frameHandler == nullptr)
 		{
-			CGE_LOG_ERROR("CGEFrameRenderer is not initialized!!\n");
+			CGE_LOG_ERROR("getTargetTexture CGEFrameRenderer is not initialized!!\n");
 			return 0;
 		}
 
@@ -292,7 +292,7 @@ namespace CGE
 	{
 		if(m_frameHandler == nullptr)
 		{
-			CGE_LOG_ERROR("CGEFrameRenderer is not initialized!!\n");
+			CGE_LOG_ERROR(" getBufferTexture CGEFrameRenderer is not initialized!!\n");
 			return 0;
 		}
 

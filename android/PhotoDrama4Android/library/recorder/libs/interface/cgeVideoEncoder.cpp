@@ -237,6 +237,8 @@ namespace CGE {
         m_context->pOutputFmt = m_context->pFormatCtx->oformat;
         m_context->pVideoStream = nullptr;
 
+        CGE_LOG_ERROR("Init Width %d : Height %d", width, height);
+
         if (m_context->pOutputFmt->video_codec != AV_CODEC_ID_NONE) {
             m_context->pVideoStream = addStream(m_context->pFormatCtx, &m_context->pVideoCodec,
                                                 m_context->pOutputFmt->video_codec, fps, width,
@@ -338,6 +340,9 @@ namespace CGE {
 
         /* copy data and linesize picture pointers to frame */
         *((AVPicture *) m_context->pVideoFrame) = m_context->dstPicture;
+        m_context->pVideoFrame->format = c->pix_fmt;
+        m_context->pVideoFrame->width = c->width;
+        m_context->pVideoFrame->height = c->height;
         return true;
     }
 
@@ -448,6 +453,8 @@ namespace CGE {
                 memcpy(m_context->dstPicture.data, data.data, sz1);
                 memcpy(m_context->dstPicture.linesize, data.linesize, sz2);
             }
+
+            CGE_LOG_ERROR("pVideoFrame param : %d %d %d", m_context->pVideoFrame->width, m_context->pVideoFrame->height, m_context->pVideoFrame->format);
 
             m_context->pVideoFrame->pts = data.pts;
         }

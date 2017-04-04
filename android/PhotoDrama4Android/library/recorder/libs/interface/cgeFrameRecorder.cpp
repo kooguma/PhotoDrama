@@ -158,6 +158,7 @@ namespace CGE
 			
 			m_task(data);
 
+			CGE_LOG_ERROR("putData4Write");
 			putData4Write(data);
 		}
 	}
@@ -169,36 +170,40 @@ namespace CGE
 
 		m_recordingWork = [&](void* pts){
 
-			CHECK_RECORDER_STATUS;
+//			CHECK_RECORDER_STATUS;
 
 			auto bufferCache = m_recordImageThread->getData4Write();
 
 			if(bufferCache.buffer == nullptr)
 				return ;
 
+            /*if(m_offscreenContext != nullptr)
+                m_offscreenContext->makecurrent();*/
+/*
+            if(m_offscreenContext != nullptr)
+                m_offscreenContext->swapbuffers();*/
 			// auto tm = getCurrentTimeMillis();
 
-			if(m_offscreenContext != nullptr)
-				m_offscreenContext->makecurrent();
-
+           /*
 			glViewport(0, 0, m_dstSize.width, m_dstSize.height);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			m_resultMutex.lock();
-			m_cacheDrawer->drawTexture(m_frameHandler->getBufferTextureID());
-			// m_cacheDrawer->drawTexture(m_frameHandler.getTargetTextureID());
-			glFinish();
-			// CGE_LOG_ERROR("draw texture 时间: %g", (getCurrentTimeMillis() - tm));
-			m_resultMutex.unlock();
-
+            m_resultMutex.lock();
+            m_cacheDrawer->drawTexture(m_frameHandler->getBufferTextureID());
+            // m_cacheDrawer->drawTexture(m_frameHandler.getTargetTextureID());
+            glFinish();
+            // CGE_LOG_ERROR("draw texture 时间: %g", (getCurrentTimeMillis() - tm));
+            m_resultMutex.unlock();
+*/
 			glReadPixels(0, 0, m_dstSize.width, m_dstSize.height, GL_RGBA, GL_UNSIGNED_BYTE, bufferCache.buffer);
+             CGE_LOG_ERROR("录制readpixel时间: %d", sizeof(bufferCache.buffer)/sizeof(char));
 
 			// CGE_LOG_ERROR("录制readpixel时间: %g", (getCurrentTimeMillis() - tm));
 			bufferCache.pts = (long)pts;
-			m_recordImageThread->putData4Read(bufferCache);
 
+			m_recordImageThread->putData4Read(bufferCache);
 		};
 	}
 
@@ -236,28 +241,28 @@ namespace CGE
 		}
 	}
 
-	// void CGEFrameRecorder::update(GLuint externalTexture, float* transformMatrix)
-	// {
-	// 	CHECK_RECORDER_STATUS;
+	 /*void CGEFrameRecorder::update(GLuint externalTexture, float* transformMatrix)
+	 {
+	 	CHECK_RECORDER_STATUS;
 
-	// 	m_frameHandler->useImageFBO();
-	// 	glViewport(m_viewport[0], m_viewport[1], m_viewport[2], m_viewport[3]);
+	 	m_frameHandler->useImageFBO();
+	 	glViewport(m_viewport[0], m_viewport[1], m_viewport[2], m_viewport[3]);
 
-	// 	m_textureDrawerExtOES->setTransform(transformMatrix);
-	// 	m_textureDrawerExtOES->drawTexture(externalTexture);
-	// }
+	 	m_textureDrawerExtOES->setTransform(transformMatrix);
+	 	m_textureDrawerExtOES->drawTexture(externalTexture);
+	 }*/
 
 	void CGEFrameRecorder::runProc()
 	{	
 		//processingFilters 将可能改变 targetTextureID和bufferTextureID, lock 以保证其他线程使用
 		std::unique_lock<std::mutex> uniqueLock(m_resultMutex);
-		if(m_globalFilter != nullptr)
+	/*	if(m_globalFilter != nullptr)
 		{
 			m_frameHandler->processingWithFilter(m_globalFilter);
 		}
 
 		m_frameHandler->processingFilters();
-
+*/
 		if(isRecordingStarted() && !m_isRecordingPaused)
 		{
 
@@ -298,36 +303,44 @@ namespace CGE
 			}
 
 			if(m_recordThread != nullptr)
-			{
-				m_frameHandler->useImageFBO();
+			/*{
+
+		*//*		m_frameHandler->useImageFBO();
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_frameHandler->getBufferTextureID(), 0);
+
 
 				glViewport(0, 0, m_dstSize.width, m_dstSize.height);
 				m_cacheDrawer->drawTexture(m_frameHandler->getTargetTextureID());
+
 				glFinish();
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_frameHandler->getTargetTextureID(), 0);
+
+*//*
 
 				if(m_recordThread->isActive() && m_recordThread->totalWorks() != 0)
 					return;
 
 				m_recordThread->run(CGEThreadPool::Work(m_recordingWork, (void*)m_currentPTS));
 			}
-			else
+			else*/
 			{
 				auto bufferCache = m_recordImageThread->getData4Write();
+                CGE_LOG_ERROR("bufferCache.buffer");
 
 				if(bufferCache.buffer != nullptr)
 				{
-					// auto tm = getCurrentTimeMillis();
+					 auto tm = getCurrentTimeMillis();
 
-					m_frameHandler->useImageFBO();
+//					m_frameHandler->useImageFBO();
 
-					// CGE_LOG_ERROR("draw texture 时间: %g", (getCurrentTimeMillis() - tm));
+					 CGE_LOG_ERROR("draw texture 时间: %g", (getCurrentTimeMillis() - tm));
 
 					glReadPixels(0, 0, m_dstSize.width, m_dstSize.height, GL_RGBA, GL_UNSIGNED_BYTE, bufferCache.buffer);
 
-					// CGE_LOG_ERROR("录制readpixel时间: %g", (getCurrentTimeMillis() - tm));
-					bufferCache.pts = m_currentPTS;
+//					 CGE_LOG_ERROR("录制readpixel时间: %g %d", (getCurrentTimeMillis() - tm), sizeof(bufferCache.buffer));
+                    CGE_LOG_ERROR("录制readpixel时间: %d", sizeof(bufferCache.buffer)/sizeof(char));
+
+                    bufferCache.pts = m_currentPTS;
 					m_recordImageThread->putData4Read(bufferCache);
 				}
 			}
@@ -388,7 +401,7 @@ namespace CGE
 			imageData.data[0] = data.buffer;
 			imageData.pts = data.pts;
 
-			// CGE_LOG_ERROR("PTS: %d", (int)data.pts);
+			 CGE_LOG_ERROR("PTS: %d  data buffer size %d w : %d h : %d", (int)data.pts, sizeof(data.buffer), imageData.width, imageData.height);
 
 			if(!m_encoder->record(imageData))
 			{

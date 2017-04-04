@@ -1,7 +1,6 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
@@ -17,7 +16,6 @@ import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glViewport;
 import static android.opengl.Matrix.setIdentityM;
-import static org.wysaid.myUtils.FileUtil.LOG_TAG;
 
 public class GLRenderWorker implements IRendererWorker {
 
@@ -96,60 +94,22 @@ public class GLRenderWorker implements IRendererWorker {
         if (mImageClipProcessor != null) mImageClipProcessor.updateSubtitleClipRenders();
     }
 
-    public synchronized void startRecording(final String filename /*final StartRecordingCallback recordingCallback*/) {
-        mMovieMakerGLSurfaceView.queueEvent(new Runnable() {
-            @Override
-            public void run() {
-
-                if (mFrameRecorder == null) {
-                    Log.e(LOG_TAG, "Error: startRecording after release!!");
-                    /*if (recordingCallback != null) {
-//                        recordingCallback.startRecordingOver(false);
-                    }*/
-                    return;
-                }
-
-                if (!mFrameRecorder.startRecording(30, filename)) {
-                    /*if (recordingCallback != null)
-//                        recordingCallback.startRecordingOver(false);
-                    return;*/
-                } else {
-                    mIsRecording = true;
-                }
-
-               /* synchronized (mRecordStateLock) {
-                    mShouldRecord = true;
-                    mAudioAddRunnable = new AudioAddRunnable();
-                    mAudioThread = new Thread(mAudioAddRunnable);
-                    mAudioThread.start();
-                }*/
+    public synchronized void startRecording(final String filename) {
+        mMovieMakerGLSurfaceView.queueEvent(() -> {
+            if (mFrameRecorder.startRecording(30, filename)) {
+                mIsRecording = true;
             }
         });
     }
 
-    public synchronized void endRecording(/*final EndRecordingCallback callback*/) {
-        Log.i(LOG_TAG, "notify quit...");
+    public synchronized void endRecording() {
         mIsRecording = false;
-       /* synchronized (mRecordStateLock) {
-            mShouldRecord = false;
-        }*/
-
         if(mFrameRecorder == null) {
-            Log.e(LOG_TAG, "Error: endRecording after release!!");
             return;
         }
-
-//        joinAudioRecording();
-
-        mMovieMakerGLSurfaceView.queueEvent(new Runnable() {
-            @Override
-            public void run() {
-                if (mFrameRecorder != null)
-                    mFrameRecorder.endRecording(true);
-                /*if (callback != null) {
-                    callback.endRecordingOK();
-                }*/
-            }
+        mMovieMakerGLSurfaceView.queueEvent(() -> {
+            if (mFrameRecorder != null)
+                mFrameRecorder.endRecording(true);
         });
     }
 
