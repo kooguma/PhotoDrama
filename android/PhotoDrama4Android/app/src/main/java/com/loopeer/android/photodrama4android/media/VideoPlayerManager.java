@@ -274,10 +274,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         startVideo();
     }
 
-    public void setCanRecord(boolean canRecord) {
-        mGLRenderWorker.setWillRecord(canRecord);
-    }
-
     public interface ProgressChangeListener {
         void onProgressInit(int progress, int maxValue);
 

@@ -37,7 +37,6 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
-        mVideoPlayerManager.setCanRecord(true);
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);

@@ -39,19 +39,30 @@ public class GLRenderWorker implements IRendererWorker {
     private VideoClipProcessor mImageClipProcessor;
     private final float[] projectionMatrix = new float[16];
     private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
-    private boolean mWillRecord;
     private boolean mIsRecording;
     private EglHelperLocal mEglHelperLocal;
+
+    private final float[] mIdentityMatrix;
+    private EglCore mEglCore;
+
+    // Used for off-screen rendering.
+    private int mOffscreenTexture;
+    private int mFramebuffer;
+    private int mDepthBuffer;
+    private FullFrameRect mFullScreen;
+
+    // Used for recording.
+    private WindowSurface mInputWindowSurface;
+    private TextureMovieEncoder mVideoEncoder;
+    private Rect mVideoRect;
 
     public GLRenderWorker(Context context, Drama drama, MovieMakerGLSurfaceView view) {
         mContext = context;
         mMovieMakerGLSurfaceView = view;
         mDrama = drama;
-
         mIdentityMatrix = new float[16];
         Matrix.setIdentityM(mIdentityMatrix, 0);
         mVideoRect = new Rect();
-
     }
 
     public Drama getDrama() {
@@ -60,13 +71,16 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         mImageClipProcessor = new VideoClipProcessor(mMovieMakerGLSurfaceView);
         mImageClipProcessor.updateData(mDrama.videoGroup);
-
-
-        prepareGl();
+        mEglHelperLocal = mMovieMakerGLSurfaceView.getEglHelperLocal();
+        mEglHelperLocal.makeCurrent();
+        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
+        mFullScreen = new FullFrameRect(
+                new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+        GLES20.glDisable(GLES20.GL_CULL_FACE);
     }
 
     @Override
@@ -82,37 +96,25 @@ public class GLRenderWorker implements IRendererWorker {
             setIdentityM(projectionMatrix, 0);
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
         } else {
-            //fbo start
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFramebuffer);
             GlUtil.checkGlError("glBindFramebuffer");
-            //fbo end
-
             glClear(GL_COLOR_BUFFER_BIT);
             setIdentityM(projectionMatrix, 0);
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
-
-            //fbo start
-            // Blit to display.
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
             GlUtil.checkGlError("glBindFramebuffer");
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
             mEglHelperLocal.swapBuffers();
-
-            // Blit to encoder.
             mVideoEncoder.frameAvailableSoon();
             mInputWindowSurface.makeCurrent();
-            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    // again, only really need to
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);     //  clear pixels outside rect
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             GLES20.glViewport(mVideoRect.left, mVideoRect.top,
                     mVideoRect.width(), mVideoRect.height());
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
-            mInputWindowSurface.setPresentationTime(usedTime * 1000 * 1000);
             mInputWindowSurface.swapBuffers();
-
-            // Restore previous values.
             GLES20.glViewport(0, 0, mEglHelperLocal.getWidth(), mEglHelperLocal.getHeight());
             mEglHelperLocal.makeCurrent();
-            //fbo end
 
         }
     }
@@ -145,43 +147,17 @@ public class GLRenderWorker implements IRendererWorker {
         }
     }
 
-    public void setWillRecord(boolean willRecord) {
-        mWillRecord = willRecord;
-    }
-
-    private final float[] mIdentityMatrix;
-    private EglCore mEglCore;
-
-    // Used for off-screen rendering.
-    private int mOffscreenTexture;
-    private int mFramebuffer;
-    private int mDepthBuffer;
-    private FullFrameRect mFullScreen;
-
-    // Used for recording.
-    private File mOutputFile;
-    private WindowSurface mInputWindowSurface;
-    private TextureMovieEncoder mVideoEncoder;
-    private Rect mVideoRect;
-
     private void prepareFramebuffer(int width, int height) {
         GlUtil.checkGlError("prepareFramebuffer start");
 
         int[] values = new int[1];
-
-        // Create a texture object and bind it.  This will be the color buffer.
         GLES20.glGenTextures(1, values, 0);
         GlUtil.checkGlError("glGenTextures");
         mOffscreenTexture = values[0];   // expected > 0
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mOffscreenTexture);
         GlUtil.checkGlError("glBindTexture " + mOffscreenTexture);
-
-        // Create texture storage.
         GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height, 0,
                 GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-
-        // Set parameters.  We're probably using non-power-of-two dimensions, so
-        // some values may not be available for use.
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
                 GLES20.GL_NEAREST);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER,
@@ -191,8 +167,6 @@ public class GLRenderWorker implements IRendererWorker {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
                 GLES20.GL_CLAMP_TO_EDGE);
         GlUtil.checkGlError("glTexParameter");
-
-        // Create framebuffer object and bind it.
         GLES20.glGenFramebuffers(1, values, 0);
         GlUtil.checkGlError("glGenFramebuffers");
         mFramebuffer = values[0];    // expected > 0
@@ -224,8 +198,6 @@ public class GLRenderWorker implements IRendererWorker {
         if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
             throw new RuntimeException("Framebuffer not complete, status=" + status);
         }
-
-        // Switch back to the default framebuffer.
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 
         GlUtil.checkGlError("prepareFramebuffer done");
@@ -260,10 +232,9 @@ public class GLRenderWorker implements IRendererWorker {
                 mVideoRect.width() + "x" + mVideoRect.height());
 
         VideoEncoderCore encoderCore;
-        mOutputFile = new File(fileName);
         try {
             encoderCore = new VideoEncoderCore(VIDEO_WIDTH, VIDEO_HEIGHT,
-                    BIT_RATE, mOutputFile);
+                    BIT_RATE, new File(fileName));
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -282,24 +253,4 @@ public class GLRenderWorker implements IRendererWorker {
         }
     }
 
-    private void prepareGl() {
-
-        mEglHelperLocal = mMovieMakerGLSurfaceView.getEglHelperLocal();
-        mEglHelperLocal.makeCurrent();
-        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
-
-        // Used for blitting texture to FBO.
-        mFullScreen = new FullFrameRect(
-                new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
-
-        // Set the background color.
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        // Disable depth testing -- we're 2D only.
-        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-
-        // Don't need backface culling.  (If you're feeling pedantic, you can turn it on to
-        // make sure we're defining our shapes correctly.)
-        GLES20.glDisable(GLES20.GL_CULL_FACE);
-    }
 }
