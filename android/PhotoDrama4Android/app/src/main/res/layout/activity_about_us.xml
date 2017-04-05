@@ -9,6 +9,7 @@
     <com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/window_background_white"
         android:orientation="vertical">
 
         <include layout="@layout/view_toolbar"/>
@@ -22,11 +23,10 @@
             android:src="@mipmap/ic_launcher_round"
             android:contentDescription="@string/label_image"/>
 
-        <TextView
+        <Button
             style="@style/PhotoDramaText.Primary"
             android:id="@+id/txtRate"
             android:onClick="onRateClick"
-            android:padding="@dimen/xsmall_padding"
             android:background="?selectableItemBackground"
             android:layout_marginBottom="100dp"
             android:layout_alignParentBottom="true"

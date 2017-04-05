@@ -53,7 +53,17 @@
     <string name="settings_cache_size_format">%.1fMB</string>
     <string name="settings_clear_cache_success">缓存已清楚</string>
 
-    <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
+    <!--share-->
+    <string name="share_export_success">导出成功，已保存至手机相册</string>
+    <string name="share_qq">QQ</string>
+    <string name="share_wx">微信</string>
+    <string name="share_pyq">朋友圈</string>
+    <string name="share_wb">微博</string>
+    <string name="share_qzone">QQ空间</string>
+    <string name="share_back">返回首页</string>
 
+    <string name="share_to">分享至</string>
+
+    <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
 
 </resources>

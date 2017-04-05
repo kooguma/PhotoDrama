@@ -13,7 +13,7 @@
         <item name="android:textColorTertiary">@color/text_color_tertiary</item>
         <item name="android:textColorHint">@color/text_color_hint</item>
 
-        <item name="android:windowBackground">@color/window_background_white</item>
+        <item name="android:windowBackground">@color/window_background_gray</item>
         <item name="actionMenuTextColor">@color/text_color_secondary</item>
         <item name="android:textSize">@dimen/text_size_larger</item>
         <item name="toolbarStyle">@style/Toolbar</item>

@@ -7,19 +7,32 @@
 
     <include layout="@layout/view_toolbar"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/drama_select_tab_select"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="scrollable"
-        app:tabTextAppearance="@style/TabLayoutTextAppearance"
-        app:tabSelectedTextColor="@android:color/black"
-        app:tabIndicatorColor="@android:color/black"/>
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/drama_select_tab_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMinWidth="72dp"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
+            android:background="@color/color_white"
+            app:tabTextAppearance="@style/TabLayoutTextAppearance"
+            app:tabSelectedTextColor="@android:color/black"
+            app:tabIndicatorColor="@android:color/black"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_tab_slide"/>
+    </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/drama_select_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 
 </com.loopeer.compatinset.InsetLinearLayout>

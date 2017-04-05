@@ -9,4 +9,9 @@ public class ShareActivity extends MovieMakerBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
     }
+
+    @Override protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        setCenterTitle(R.string.label_share);
+    }
 }
