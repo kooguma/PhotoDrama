@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.loopeer.compatinset.InsetLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:blurkit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -23,11 +24,15 @@
             app:tabSelectedTextColor="@android:color/black"
             app:tabIndicatorColor="@android:color/black"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_tab_slide"/>
+        <!--<com.wonderkiln.blurkit.BlurLayout-->
+            <!--android:id="@+id/blurLayout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="48dp"-->
+            <!--blurkit:blk_blurRadius="1"-->
+            <!--blurkit:blk_downscaleFactor="1"-->
+            <!--blurkit:blk_fps="60"-->
+            <!--android:layout_alignParentRight="true"/>-->
+
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
