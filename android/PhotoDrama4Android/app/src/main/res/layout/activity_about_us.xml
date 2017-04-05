@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.loopeer.compatinset.InsetFramelayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout>
 
-    <include layout="@layout/view_toolbar"/>
+    <data>
 
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="110dp"
-        android:layout_gravity="top|center"
-        android:contentDescription="@string/label_image"/>
+        <import type="com.loopeer.android.photodrama4android.BuildConfig"/>
+    </data>
 
-    <TextView
-        style="@style/PhotoDramaText.Secondary"
-        android:layout_gravity="bottom|center"
-        android:text="@string/about_version_format"
-        android:layout_marginBottom="152dp"/>
+    <com.loopeer.compatinset.InsetFramelayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        style="@style/PhotoDramaText.Primary"
-        android:layout_marginBottom="100dp"
-        android:layout_gravity="bottom|center"
-        android:text="@string/about_rank_us"/>
+        <include layout="@layout/view_toolbar"/>
 
-</com.loopeer.compatinset.InsetFramelayout>
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="110dp"
+            android:layout_gravity="top|center"
+            android:src="@mipmap/ic_launcher_round"
+            android:contentDescription="@string/label_image"/>
+
+        <TextView
+            style="@style/PhotoDramaText.Secondary"
+            android:layout_gravity="bottom|center"
+            android:text="@{@string/about_version_format(BuildConfig.VERSION_NAME)}"
+            android:layout_marginBottom="152dp"/>
+
+        <TextView
+            style="@style/PhotoDramaText.Primary"
+            android:layout_marginBottom="100dp"
+            android:onClick="onRateClick"
+            android:padding="@dimen/xsmall_padding"
+            android:background="?selectableItemBackground"
+            android:layout_gravity="bottom|center"
+            android:text="@string/about_rank_us"/>
+
+    </com.loopeer.compatinset.InsetFramelayout>
+</layout>
