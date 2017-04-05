@@ -79,6 +79,8 @@
     <style name="PhotoDramaButton.Black.Main">
         <item name="android:layout_width">@dimen/btn_main_width</item>
         <item name="android:layout_height">@dimen/btn_main_height</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
     <style name="PhotoDramaButton.Black.DramaSelect">
@@ -99,6 +101,10 @@
     <style name="PhotoDramaText.Secondary">
         <item name="android:textColor">@color/text_color_secondary</item>
         <item name="android:textSize">@dimen/text_size_larger</item>
+    </style>
+
+    <style name="PhotoDramaFormItem" parent="FormItemViewStyle">
+        <item name="android:background">@android:color/white</item>
     </style>
 
 </resources>

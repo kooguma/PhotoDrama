@@ -5,13 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
+import com.loopeer.android.photodrama4android.ui.activity.FeedbackActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
+import com.loopeer.android.photodrama4android.ui.activity.MainActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
 import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
+import com.loopeer.android.photodrama4android.ui.activity.SettingActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SoundEffectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SubtitleEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TestMusicSelectedActivity;
@@ -108,6 +112,21 @@ public class Navigator {
 
     public static void startDramaSelectActivity(Context context) {
         Intent intent = new Intent(context, DramaSelectActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startSettingActivity(Context context) {
+        Intent intent = new Intent(context, SettingActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startFeedbackActivity(Context context) {
+        Intent intent = new Intent(context, FeedbackActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startAboutActivity(Context context) {
+        Intent intent = new Intent(context, AboutActivity.class);
         context.startActivity(intent);
     }
 }

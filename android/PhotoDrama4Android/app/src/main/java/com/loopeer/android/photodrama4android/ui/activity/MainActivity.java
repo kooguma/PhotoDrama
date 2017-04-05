@@ -2,6 +2,8 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
@@ -33,5 +35,9 @@ public class MainActivity extends MovieMakerBaseActivity {
 
     public void onCreateClick(View view) {
 
+    }
+
+    public void onSettingClick(View view) {
+        Navigator.startSettingActivity(this);
     }
 }

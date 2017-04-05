@@ -108,7 +108,7 @@ dependencies {
     compile libs.cardview
 
     compile project(':library:bottomimagepicker')
-
+    compile project(':library:formitemview')
     compile project(':library:recorder')
 
     //    compile 'com.android.support:multidex:1.0.1'

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="cacheSizeInM"
+            type="double"/>
+        <variable
+            name="asd"
+            type="int"/>
+
+    </data>
+
+    <com.loopeer.compatinset.InsetLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/window_background_gray"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_toolbar"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xsmall_padding"/>
+
+        <com.loopeer.formitemview.FormTextItem
+            style="@style/PhotoDramaFormItem"
+            android:onClick="onFeedBackClick"
+            app:descText="@string/setting_feedback"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider"
+            android:background="@color/divider"/>
+
+        <com.loopeer.formitemview.FormTextItem
+            android:id="@+id/item_cache"
+            style="@style/PhotoDramaFormItem"
+            app:imageRightVisible="gone"
+            android:onClick="onClearCacheClick"
+            app:contentGravity="right"
+            app:contentTextColor="@color/text_color_tertiary"
+            app:contentText="@{@string/settings_cache_size_format(cacheSizeInM)}"
+            app:descText="@string/setting_clear_cache"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xsmall_padding"/>
+
+        <com.loopeer.formitemview.FormTextItem
+            style="@style/PhotoDramaFormItem"
+            android:onClick="onAboutClick"
+            app:descText="@string/setting_about_us"/>
+
+    </com.loopeer.compatinset.InsetLinearLayout>
+</layout>

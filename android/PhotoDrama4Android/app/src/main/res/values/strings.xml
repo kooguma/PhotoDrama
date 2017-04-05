@@ -32,6 +32,8 @@
     <string name="common_done">Done</string>
     <string name="common_save">保存</string>
     <string name="common_commit">提交</string>
+    <string name="common_sure">确定</string>
+    <string name="common_cancel">取消</string>
 
     <!--about us-->
     <string name="label_image">图标</string>
@@ -42,6 +44,16 @@
     <!--feedback-->
     <string name="feedback_hint">提出您的意见或建议，我们会努力做得更好哦 ~</string>
 
+    <!--setting-->
+    <string name="setting_feedback">意见反馈</string>
+    <string name="setting_clear_cache">清除缓存</string>
+    <string name="setting_about_us">关于我们</string>
+    <string name="setting_login_out">退出登录</string>
+    <string name="setting_is_clear_cache">是否清除缓存？</string>
+    <string name="settings_cache_size_format">%.1fMB</string>
+    <string name="settings_clear_cache_success">缓存已清楚</string>
+
     <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
+
 
 </resources>

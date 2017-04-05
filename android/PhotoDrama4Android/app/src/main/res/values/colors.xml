@@ -7,6 +7,7 @@
 
     <color name="window_background_dark">#333333</color>
     <color name="window_background_white">@android:color/white</color>
+    <color name="window_background_gray">#f4f4f4</color>
 
     <color name="text_color_primary">#222222</color>
     <color name="text_color_secondary">#444444</color>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme"
+        parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -16,7 +17,9 @@
         <item name="actionMenuTextColor">@color/text_color_secondary</item>
         <item name="android:textSize">@dimen/text_size_larger</item>
         <item name="toolbarStyle">@style/Toolbar</item>
-        <item name="android:toolbarStyle" tools:targetApi="lollipop">@style/Toolbar</item>
+        <item name="android:toolbarStyle"
+            tools:targetApi="lollipop">@style/Toolbar
+        </item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="colorControlNormal">@color/text_color_primary</item>
 
@@ -31,7 +34,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="toolbarStyle">@style/Toolbar.Dark</item>
-        <item name="android:toolbarStyle" tools:targetApi="lollipop">@style/Toolbar.Dark</item>
+        <item name="android:toolbarStyle"
+            tools:targetApi="lollipop">@style/Toolbar.Dark
+        </item>
         <item name="homeAsUpIndicator">@drawable/ic_home_up_white</item>
         <item name="android:windowBackground">@color/window_background_dark</item>
     </style>
@@ -41,37 +46,46 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="AppTheme">
+    <style name="AppTheme.NoActionBar"
+        parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Fullscreen" parent="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar.Fullscreen"
+        parent="AppTheme.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <!--<style name="AppTheme.NoActionBar.Main">-->
+        <!--<item name="android:windowBackground">@drawable/bg_login</item>-->
+    <!--</style>-->
+
     <style name="AppTheme.NoActionBar.TranslucentBg.BottomSlide.Fullscreen"
-           parent="AppTheme.NoActionBar">
+        parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.Activity.BottomSlide</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.BottomSlide" parent="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar.BottomSlide"
+        parent="AppTheme.NoActionBar">
         <item name="android:windowAnimationStyle">@style/Animation.Activity.BottomSlide</item>
     </style>
 
     <style name="AppTheme.NoActionBar.BottomSlide.Fullscreen"
-           parent="AppTheme.NoActionBar.BottomSlide">
+        parent="AppTheme.NoActionBar.BottomSlide">
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.WindowNotTranslucent" parent="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar.WindowNotTranslucent"
+        parent="AppTheme.NoActionBar">
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
-    <style name="ProgressLoadingTheme" parent="Base.Theme.AppCompat.Light.Dialog">
+    <style name="ProgressLoadingTheme"
+        parent="Base.Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="android:backgroundDimEnabled">false</item>
