@@ -9,18 +9,24 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.recorder.gles.EglHelperLocal;
+
+import java.lang.ref.WeakReference;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
 
 public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
     private TextureLoader mTextureLoader;
     protected float mRatioX;
     protected float mRatioY;
+
+    private EglHelperLocal mEglHelperLocal;
 
     public MovieMakerGLSurfaceView(Context context) {
         super(context);
@@ -58,6 +64,8 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
     }
 
     private void init() {
+        mEglHelperLocal = new EglHelperLocal(new WeakReference<>(this));
+
         setEGLContextFactory(new EGLContextFactory() {
 
             @Override
@@ -73,10 +81,41 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
                 EGLContext renderContext = egl.eglCreateContext(display, eglConfig, EGL11.EGL_NO_CONTEXT, contextAttributes);
                 mTextureLoader = new TextureLoader();
                 mTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
+                updateContext(egl, renderContext, display, eglConfig);
                 if (!mTextureLoader.isAlive()) mTextureLoader.start();
                 return renderContext;
             }
         });
+
+        setEGLWindowSurfaceFactory(new EGLWindowSurfaceFactory() {
+            public EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display,
+                                                  EGLConfig config, Object nativeWindow) {
+                EGLSurface result = null;
+                try {
+                    result = egl.eglCreateWindowSurface(display, config, nativeWindow, null);
+                    updateSurface(result);
+                } catch (IllegalArgumentException e) {
+                }
+                return result;
+            }
+
+            public void destroySurface(EGL10 egl, EGLDisplay display,
+                                       EGLSurface surface) {
+                egl.eglDestroySurface(display, surface);
+            }
+        });
+    }
+
+    private void updateSurface(EGLSurface result) {
+        mEglHelperLocal.update(result);
+    }
+
+    private void updateContext(EGL10 egl, EGLContext renderContext, EGLDisplay display, EGLConfig eglConfig) {
+        mEglHelperLocal.update(egl, renderContext, display, eglConfig);
+    }
+
+    public EglHelperLocal getEglHelperLocal() {
+        return mEglHelperLocal;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 
-import android.content.Context;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
@@ -20,8 +19,6 @@ public class SlideDrawer extends TransitionDrawer{
     private static final int STRIDE = (POSITION_COMPONENT_COUNT
             + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
 
-    private Context mContext;
-
     private ImageClipShaderProgram textureProgram0;
     private ImageClipShaderProgram textureProgram1;
 
@@ -30,7 +27,6 @@ public class SlideDrawer extends TransitionDrawer{
 
     public SlideDrawer(View view, TransitionClip transitionClip) {
         super(view, transitionClip);
-        mContext = view.getContext();
         textureProgram0 = (ImageClipShaderProgram) ShaderProgramCache
                 .getInstance()
                 .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()) + "_0");
@@ -40,26 +36,26 @@ public class SlideDrawer extends TransitionDrawer{
                 .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()) + "_1");
     }
 
-    public void updateProgramBindData0(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void updateProgramBindData0(long usedTime, float[] pMatrix) {
         textureProgram0.useProgram();
         textureProgram0.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre);
-        bindData0(isRecording);
+        bindData0();
     }
 
-    public void updateProgramBindData(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void updateProgramBindData(long usedTime, float[] pMatrix) {
         textureProgram1.useProgram();
         textureProgram1.setUniforms(pMatrix, viewMatrix1, modelMatrix1, mTextureIdNext);
-        bindData1(isRecording);
+        bindData1();
     }
 
-    private void bindData0(boolean isRecording) {
-        getVertexArray(isRecording).setVertexAttribPointer(
+    private void bindData0() {
+        vertexArray.setVertexAttribPointer(
                 0,
                 textureProgram0.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        getVertexArray(isRecording).setVertexAttribPointer(
+        vertexArray.setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram0.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -68,14 +64,14 @@ public class SlideDrawer extends TransitionDrawer{
 
 
 
-    private void bindData1(boolean isRecording) {
-        getVertexArray(isRecording).setVertexAttribPointer(
+    private void bindData1() {
+        vertexArray.setVertexAttribPointer(
                 0,
                 textureProgram1.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        getVertexArray(isRecording).setVertexAttribPointer(
+        vertexArray.setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram1.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -96,9 +92,9 @@ public class SlideDrawer extends TransitionDrawer{
     public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
         if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
         updateViewMatrices(usedTime);
-        updateProgramBindData0(usedTime, pMatrix, isRecording);
+        updateProgramBindData0(usedTime, pMatrix);
         draw();
-        updateProgramBindData(usedTime, pMatrix, isRecording);
+        updateProgramBindData(usedTime, pMatrix);
         draw();
     }
 

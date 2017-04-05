@@ -66,14 +66,14 @@ public class SubtitleClipDrawer extends ClipDrawer{
         glView.getTextureLoader().loadImageTexture(handler);
     }
 
-    private void bindData(boolean isRecording) {
-        getVertexArray(isRecording).setVertexAttribPointer(
+    private void bindData() {
+        vertexArray.setVertexAttribPointer(
                 0,
                 textureProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        getVertexArray(isRecording).setVertexAttribPointer(
+        vertexArray.setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -89,7 +89,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
         setIdentityM(viewMatrix, 0);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void drawFrame(long usedTime, float[] pMatrix) {
         if (mSubtitleInfo == null) return;
         if (usedTime < mSubtitleClip.startTime || usedTime > mSubtitleClip.getEndTime()) return;
         glEnable(GL_BLEND);
@@ -97,7 +97,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
         updateViewMatrices(usedTime);
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mSubtitleInfo.textureObjectId);
-        bindData(isRecording);
+        bindData();
         draw();
         glDisable(GL_BLEND);
     }

@@ -80,17 +80,17 @@ public class VideoClipProcessor {
         }
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void drawFrame(long usedTime, float[] pMatrix) {
         for (ClipDrawer render : mImageClipDrawers) {
-            render.drawFrame(usedTime, pMatrix, isRecording);
+            render.drawFrame(usedTime, pMatrix);
         }
 
         for (ClipDrawer render : mTransitionDrawers) {
-            render.drawFrame(usedTime, pMatrix, isRecording);
+            render.drawFrame(usedTime, pMatrix);
         }
 
         for (ClipDrawer render : mSubtitleClipDrawers) {
-            render.drawFrame(usedTime, pMatrix, isRecording);
+            render.drawFrame(usedTime, pMatrix);
         }
     }
 }

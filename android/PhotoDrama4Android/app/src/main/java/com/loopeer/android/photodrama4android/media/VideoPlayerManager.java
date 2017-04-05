@@ -107,7 +107,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     private void finishToTime(int finishToTime) {
         if (mIsRecording) {
             mGLRenderWorker.endRecording();
-            mGLThread.setRecording(false);
         }
         mGLThread.stopUp();
         mGLThread.setManual(true);
@@ -271,7 +270,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void startRecording() {
         mIsRecording = true;
         seekToVideo(0);
-        mGLThread.setRecording(true);
         mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
         startVideo();
     }

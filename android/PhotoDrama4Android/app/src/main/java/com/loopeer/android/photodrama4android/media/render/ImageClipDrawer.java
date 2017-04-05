@@ -105,14 +105,14 @@ public class ImageClipDrawer extends ClipDrawer{
         mImageInfo = TextureHelper.loadTexture(mContext, mImageClip.path);
     }
 
-    private void bindData(boolean isRecording) {
-        getVertexArray(isRecording).setVertexAttribPointer(
+    private void bindData() {
+        vertexArray.setVertexAttribPointer(
                 0,
                 textureProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        getVertexArray(isRecording).setVertexAttribPointer(
+        vertexArray.setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -162,14 +162,14 @@ public class ImageClipDrawer extends ClipDrawer{
         setIdentityM(viewMatrix, 0);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void drawFrame(long usedTime, float[] pMatrix) {
         if (mImageInfo == null) return;
         if (usedTime < mImageClip.startWithPreTransitionTime || usedTime > mImageClip.endWithNextTransitionTime) return;
         updateViewMatrices(usedTime);
         if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);
-        bindData(isRecording);
+        bindData();
         draw();
     }
 }

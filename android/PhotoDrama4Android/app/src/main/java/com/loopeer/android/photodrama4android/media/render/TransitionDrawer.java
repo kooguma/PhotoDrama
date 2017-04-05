@@ -35,14 +35,14 @@ public abstract class TransitionDrawer extends ClipDrawer {
         setIdentityM(viewMatrix, 0);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void drawFrame(long usedTime, float[] pMatrix) {
         if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
         updateViewMatrices(usedTime);
-        updateProgramBindData(usedTime, pMatrix, isRecording);
+        updateProgramBindData(usedTime, pMatrix);
         draw();
     }
 
-    abstract public void updateProgramBindData(long usedTime, float[] pMatrix, boolean isRecording);
+    abstract public void updateProgramBindData(long usedTime, float[] pMatrix);
 
     protected float getProgress(long usedTime) {
         return 1f * (usedTime - mTransitionClip.startTime) / mTransitionClip.showTime;
