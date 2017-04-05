@@ -80,6 +80,21 @@
     <style name="PhotoDramaButton.Black.DramaSelect">
         <item name="android:layout_width">@dimen/btn_drama_select_width</item>
         <item name="android:layout_height">@dimen/btn_drama_select_height</item>
->>>>>>> add export loading view
     </style>
+
+    <style name="PhotoDramaText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="PhotoDramaText.Primary">
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:textSize">@dimen/text_size_larger</item>
+    </style>
+
+    <style name="PhotoDramaText.Secondary">
+        <item name="android:textColor">@color/text_color_secondary</item>
+        <item name="android:textSize">@dimen/text_size_larger</item>
+    </style>
+
 </resources>

@@ -32,6 +32,11 @@
     <string name="common_done">Done</string>
     <string name="common_save">保存</string>
 
+    <!--about us-->
+    <string name="label_image">图标</string>
+    <string name="about_version_format">v%s</string>
+    <string name="about_rank_us">好评鼓励</string>
+
     <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
 
 </resources>

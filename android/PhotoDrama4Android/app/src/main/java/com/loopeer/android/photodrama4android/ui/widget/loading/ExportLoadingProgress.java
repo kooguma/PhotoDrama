@@ -25,20 +25,20 @@ public class ExportLoadingProgress extends AppCompatImageView {
     public ExportLoadingProgress(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         Resources res = getResources();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExportLoadingView,
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExportLoadingProgress,
             defStyleAttr,
             0);
         final int foregroundColor = a.getColor(
-            R.styleable.ExportLoadingView_progressForegroundColor,
+            R.styleable.ExportLoadingProgress_progressForegroundColor,
             res.getColor(R.color.export_loading_foreground_progress_color));
         final int backgroundColor = a.getColor(
-            R.styleable.ExportLoadingView_progressBackgroundColor,
+            R.styleable.ExportLoadingProgress_progressBackgroundColor,
             res.getColor(R.color.export_loading_background_progress_color));
-        final float strokeWidth = a.getDimension(R.styleable.ExportLoadingView_strokeWidth,
+        final float strokeWidth = a.getDimension(R.styleable.ExportLoadingProgress_strokeWidth,
             res.getDimension(R.dimen.export_loading_stroke_width));
-        final float indicatorRadius = a.getDimension(R.styleable.ExportLoadingView_indicatorRadius,
+        final float indicatorRadius = a.getDimension(R.styleable.ExportLoadingProgress_indicatorRadius,
             res.getDimension(R.dimen.export_loading_stroke_width));
-        final float sweepAngle = a.getDimension(R.styleable.ExportLoadingView_progressSweepAngle,
+        final float sweepAngle = a.getDimension(R.styleable.ExportLoadingProgress_progressSweepAngle,
             res.getDimension(R.dimen.export_loading_progress_sweep_angle));
 
         mDrawable = new ExportLoadingDrawable.Builder()
