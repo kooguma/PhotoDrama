@@ -18,7 +18,6 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
-import com.loopeer.android.photodrama4android.media.data.VertexArray;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
@@ -49,7 +48,6 @@ public class ImageClipDrawer extends ClipDrawer{
             + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
 
     private Context mContext;
-    private VertexArray vertexArray;
 
     private Bitmap mBitmap;
     public ImageInfo mImageInfo;
@@ -94,7 +92,6 @@ public class ImageClipDrawer extends ClipDrawer{
         mBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mImageClip.path);
         if (mBitmap == null) return;
         mImageInfo = new ImageInfo(-1, mBitmap.getWidth(), mBitmap.getHeight());
-        vertexArray = new VertexArray(createData());
     }
 
     private void updateTexture(ImageInfo t) {
@@ -102,22 +99,20 @@ public class ImageClipDrawer extends ClipDrawer{
             Log.e(TAG, t.toString());
         }
         mImageInfo = t;
-        vertexArray = new VertexArray(createData());
     }
 
     public void updateTexture() {
         mImageInfo = TextureHelper.loadTexture(mContext, mImageClip.path);
-        createVertex();
     }
 
-    private void bindData() {
-        vertexArray.setVertexAttribPointer(
+    private void bindData(boolean isRecording) {
+        getVertexArray(isRecording).setVertexAttribPointer(
                 0,
                 textureProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPointer(
+        getVertexArray(isRecording).setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -167,14 +162,14 @@ public class ImageClipDrawer extends ClipDrawer{
         setIdentityM(viewMatrix, 0);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix) {
-        if (mImageInfo == null || vertexArray == null) return;
+    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+        if (mImageInfo == null) return;
         if (usedTime < mImageClip.startWithPreTransitionTime || usedTime > mImageClip.endWithNextTransitionTime) return;
         updateViewMatrices(usedTime);
         if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);
-        bindData();
+        bindData(isRecording);
         draw();
     }
 }

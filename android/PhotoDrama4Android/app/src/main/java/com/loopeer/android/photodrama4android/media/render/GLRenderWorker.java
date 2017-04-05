@@ -40,7 +40,7 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         mImageClipProcessor = new VideoClipProcessor(mMovieMakerGLSurfaceView);
         mImageClipProcessor.updateData(mDrama.videoGroup);
@@ -71,9 +71,9 @@ public class GLRenderWorker implements IRendererWorker {
     public void drawFrame(Context context, GL10 gl, long usedTime) {
         glClear(GL_COLOR_BUFFER_BIT);
         setIdentityM(projectionMatrix, 0);
-        mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
+        mImageClipProcessor.drawFrame(usedTime, projectionMatrix, mIsRecording);
         if (mIsRecording) {
-            mFrameRecorder.runProc();
+            mFrameRecorder.runProc(usedTime);
         }
 
     }

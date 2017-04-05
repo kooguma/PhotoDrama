@@ -252,7 +252,7 @@ namespace CGE
 	 	m_textureDrawerExtOES->drawTexture(externalTexture);
 	 }*/
 
-	void CGEFrameRecorder::runProc()
+     void CGEFrameRecorder::runProc(jlong usedTime)
 	{	
 		//processingFilters 将可能改变 targetTextureID和bufferTextureID, lock 以保证其他线程使用
 		std::unique_lock<std::mutex> uniqueLock(m_resultMutex);
@@ -275,9 +275,7 @@ namespace CGE
 			}
 			else
 			{
-				double currentTime = getCurrentTimeMillis();
-				m_recordingTimestamp += currentTime - m_lastRecordingTime;
-				m_lastRecordingTime = currentTime;
+				m_recordingTimestamp = usedTime;
 				// CGE_LOG_INFO("time stamp %g...", m_recordingTimestamp);
 			}
 

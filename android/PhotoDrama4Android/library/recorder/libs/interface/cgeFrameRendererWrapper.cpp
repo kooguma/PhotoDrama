@@ -202,10 +202,10 @@ JNIEXPORT void JNICALL Java_org_wysaid_nativePort_FrameRenderer_nativeSetMaskFli
 }
 
 JNIEXPORT void JNICALL Java_org_wysaid_nativePort_FrameRenderer_nativeRunProc
-   (JNIEnv *env, jobject, jlong addr)
+   (JNIEnv *env, jobject, jlong addr, jlong usedTime)
 {
 	CGEFrameRenderer* renderer = (CGEFrameRenderer*)addr;
-	renderer->runProc();
+	renderer->runProc(usedTime);
 }
 
 /////////////////  Render Utils  /////////////////////////////

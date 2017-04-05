@@ -33,9 +33,9 @@ public class FrameRenderer {
             nativeUpdate(mNativeAddress, externalTexture, transformMatrix);
     }
 
-    public void runProc() {
+    public void runProc(long usedTime) {
         if(mNativeAddress != 0)
-            nativeRunProc(mNativeAddress);
+            nativeRunProc(mNativeAddress, usedTime);
     }
 
     //Won't effect the framebuffer
@@ -152,7 +152,7 @@ public class FrameRenderer {
     protected native long nativeCreateRenderer();
     protected native boolean nativeInit(long holder, int srcWidth, int srcHeight, int dstWidth, int dstHeight);
     protected native void nativeUpdate(long holder, int externalTexture, float[] transformMatrix);
-    protected native void nativeRunProc(long holder);
+    protected native void nativeRunProc(long nativeAddress, long useTime);
 
     protected native void nativeRender(long holder, int x, int y, int width, int height);
     protected native void nativeDrawCache(long holder);

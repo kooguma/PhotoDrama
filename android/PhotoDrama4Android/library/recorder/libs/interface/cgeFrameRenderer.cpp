@@ -151,7 +151,7 @@ namespace CGE
 		m_textureDrawerExtOES->drawTexture(externalTexture);*/
 	}
 
-	void CGEFrameRenderer::runProc()
+	void CGEFrameRenderer::runProc(jlong i)
 	{
 		CHECK_RENDERER_STATUS;
 		m_resultMutex.lock();
@@ -181,7 +181,7 @@ namespace CGE
 
 	void CGEFrameRenderer::setSrcFlipScale(float x, float y)
 	{
-//		m_textureDrawerExtOES->setFlipScale(x, y);
+		m_textureDrawerExtOES->setFlipScale(x, y);
 	}
 
 	void CGEFrameRenderer::setRenderRotation(float rad)

@@ -49,7 +49,6 @@ public class SubtitleClipDrawer extends ClipDrawer{
         textureProgram = (ImageClipShaderProgram) ShaderProgramCache
                 .getInstance()
                 .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
-        createVertex();
     }
 
     public void preLoadTexture(MovieMakerGLSurfaceView glView) {
@@ -67,14 +66,14 @@ public class SubtitleClipDrawer extends ClipDrawer{
         glView.getTextureLoader().loadImageTexture(handler);
     }
 
-    private void bindData() {
-        vertexArray.setVertexAttribPointer(
+    private void bindData(boolean isRecording) {
+        getVertexArray(isRecording).setVertexAttribPointer(
                 0,
                 textureProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPointer(
+        getVertexArray(isRecording).setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -90,15 +89,15 @@ public class SubtitleClipDrawer extends ClipDrawer{
         setIdentityM(viewMatrix, 0);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix) {
-        if (mSubtitleInfo == null || vertexArray == null) return;
+    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+        if (mSubtitleInfo == null) return;
         if (usedTime < mSubtitleClip.startTime || usedTime > mSubtitleClip.getEndTime()) return;
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         updateViewMatrices(usedTime);
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mSubtitleInfo.textureObjectId);
-        bindData();
+        bindData(isRecording);
         draw();
         glDisable(GL_BLEND);
     }

@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_org_wysaid_nativePort_FrameRenderer_nativeSetMaskFli
   (JNIEnv *, jobject, jlong, jfloat, jfloat);
 
  JNIEXPORT void JNICALL Java_org_wysaid_nativePort_FrameRenderer_nativeRunProc
-   (JNIEnv *, jobject, jlong);
+   (JNIEnv *, jobject, jlong, jlong);
 
 /////////////////  Render Utils  /////////////////////////////
 

@@ -87,7 +87,7 @@ namespace CGE
 		//会影响framebuffer设置。
 		// void update(GLuint externalTexture, float* transformMatrix);
 
-		void runProc();
+		void runProc(jlong i);
 
 		////////////////////////////////////////////////////////////
 		//        视频录制相关

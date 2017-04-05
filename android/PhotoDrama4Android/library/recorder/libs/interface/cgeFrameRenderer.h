@@ -50,7 +50,7 @@ namespace CGE
 		virtual void update(GLuint externalTexture, float* transformMatrix);
 
 		//滤镜process接口, 不调用将不产生滤镜效果
-		virtual void runProc();
+		virtual void runProc(jlong usedTime);
 
 		//不设置framebuffer， 若要绘制到屏幕， 需绑定到0
 		void render(int x, int y, int width, int height);

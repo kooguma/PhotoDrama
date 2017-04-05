@@ -33,35 +33,34 @@ public class FadeDrawer extends TransitionDrawer{
         textureProgram = (FadeShaderProgram) ShaderProgramCache
                 .getInstance()
                 .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()));
-        createVertex();
     }
 
     @Override
-    public void updateProgramBindData(long usedTime, float[] pMatrix) {
+    public void updateProgramBindData(long usedTime, float[] pMatrix, boolean isRecording) {
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre, mTextureIdNext
                 , getProgress(usedTime));
-        bindData();
+        bindData(isRecording);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix) {
+    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
         if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         updateViewMatrices(usedTime);
-        updateProgramBindData(usedTime, pMatrix);
+        updateProgramBindData(usedTime, pMatrix, isRecording);
         draw();
         glDisable(GL_BLEND);
     }
 
-    private void bindData() {
-        vertexArray.setVertexAttribPointer(
+    private void bindData(boolean isRecording) {
+        getVertexArray(isRecording).setVertexAttribPointer(
                 0,
                 textureProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPointer(
+        getVertexArray(isRecording).setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,

@@ -14,16 +14,18 @@ import static android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY;
 
 public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IPlayerLife {
 
-    private GLSurfaceView mGLSurfaceView;
-    private Context mContext;
-    private boolean mIsStop;
-    private IRendererWorker mIRendererWorker;
-    private long mUsedTime;
-    private long mSumTime;
-    private boolean mIsManual;
-    private boolean mIsFinish;
-    private boolean mIsBackGround;
-    private SeekChangeListener mSeekChangeListener;
+    protected GLSurfaceView mGLSurfaceView;
+    protected Context mContext;
+    protected boolean mIsStop;
+    protected IRendererWorker mIRendererWorker;
+    protected long mUsedTime;
+    protected long mSumTime;
+    protected boolean mIsManual;
+    protected boolean mIsFinish;
+    protected boolean mIsBackGround;
+    protected SeekChangeListener mSeekChangeListener;
+    protected boolean mIsRecording;
+    private int mFps = 30;
 
     public GLThreadRender(Context context, GLSurfaceView gLSurfaceView, IRendererWorker iRendererWorker) {
         mGLSurfaceView = gLSurfaceView;
@@ -56,6 +58,10 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         }
     }
 
+    public void setRecording(boolean recording) {
+        mIsRecording = recording;
+    }
+
     @Override
     public void run() {
         synchronized (this) {
@@ -77,11 +83,15 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
                     long startTime = System.currentTimeMillis();
                     mGLSurfaceView.requestRender();
                     this.wait();
-                    Thread.sleep(Math.max(0, 30 - (System.currentTimeMillis() - startTime)));//睡眠
-                    if (!mIsBackGround)
-                        mUsedTime = mUsedTime + System.currentTimeMillis() - startTime;
-                    else
-                        mIsBackGround = false;
+                    if (mIsRecording) {
+                        mUsedTime = mUsedTime + 1000 / mFps;
+                    } else {
+                        Thread.sleep(Math.max(0, 30 - (System.currentTimeMillis() - startTime)));//睡眠
+                        if (!mIsBackGround)
+                            mUsedTime = mUsedTime + System.currentTimeMillis() - startTime;
+                        else
+                            mIsBackGround = false;
+                    }
                     if (mSeekChangeListener != null) {
                         mGLSurfaceView.post((new Runnable() {
                             @Override

@@ -38,43 +38,44 @@ public class SlideDrawer extends TransitionDrawer{
         textureProgram1 = (ImageClipShaderProgram) ShaderProgramCache
                 .getInstance()
                 .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()) + "_1");
-        createVertex();
     }
 
-    public void updateProgramBindData0(long usedTime, float[] pMatrix) {
+    public void updateProgramBindData0(long usedTime, float[] pMatrix, boolean isRecording) {
         textureProgram0.useProgram();
         textureProgram0.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre);
-        bindData0();
+        bindData0(isRecording);
     }
 
-    public void updateProgramBindData(long usedTime, float[] pMatrix) {
+    public void updateProgramBindData(long usedTime, float[] pMatrix, boolean isRecording) {
         textureProgram1.useProgram();
         textureProgram1.setUniforms(pMatrix, viewMatrix1, modelMatrix1, mTextureIdNext);
-        bindData1();
+        bindData1(isRecording);
     }
 
-    private void bindData0() {
-        vertexArray.setVertexAttribPointer(
+    private void bindData0(boolean isRecording) {
+        getVertexArray(isRecording).setVertexAttribPointer(
                 0,
                 textureProgram0.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPointer(
+        getVertexArray(isRecording).setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram0.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
                 STRIDE);
     }
 
-    private void bindData1() {
-        vertexArray.setVertexAttribPointer(
+
+
+    private void bindData1(boolean isRecording) {
+        getVertexArray(isRecording).setVertexAttribPointer(
                 0,
                 textureProgram1.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPointer(
+        getVertexArray(isRecording).setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram1.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
@@ -92,12 +93,12 @@ public class SlideDrawer extends TransitionDrawer{
         translateM(viewMatrix1, 0, 0f, -2f * (1f - getProgress(usedTime)), 0f);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix) {
+    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
         if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
         updateViewMatrices(usedTime);
-        updateProgramBindData0(usedTime, pMatrix);
+        updateProgramBindData0(usedTime, pMatrix, isRecording);
         draw();
-        updateProgramBindData(usedTime, pMatrix);
+        updateProgramBindData(usedTime, pMatrix, isRecording);
         draw();
     }
 

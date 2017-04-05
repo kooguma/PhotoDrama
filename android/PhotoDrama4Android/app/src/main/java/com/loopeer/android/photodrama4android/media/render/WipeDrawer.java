@@ -27,25 +27,24 @@ public class WipeDrawer extends TransitionDrawer{
         textureProgram = (WipeShaderProgram) ShaderProgramCache
                 .getInstance()
                 .getTextureId(String.valueOf(mTransitionClip.transitionType.getValue()));
-        createVertex();
     }
 
     @Override
-    public void updateProgramBindData(long usedTime, float[] pMatrix) {
+    public void updateProgramBindData(long usedTime, float[] pMatrix, boolean isRecording) {
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mTextureIdPre, mTextureIdNext
                 , getProgress(usedTime), 2);
-        bindData();
+        bindData(isRecording);
     }
 
-    private void bindData() {
-        vertexArray.setVertexAttribPointer(
+    private void bindData(boolean isRecording) {
+        getVertexArray(isRecording).setVertexAttribPointer(
                 0,
                 textureProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPointer(
+        getVertexArray(isRecording).setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
                 textureProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
