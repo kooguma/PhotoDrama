@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            type="com.loopeer.android.photodrama4android.model.validator.FeedbackValidator"
+            name="validator"/>
+    </data>
+
+    <com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/view_toolbar"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:paddingLeft="@dimen/medium_padding"
+            android:paddingRight="@dimen/medium_padding"
+            android:paddingTop="@dimen/large_padding"
+            android:layout_below="@id/toolbar"
+            android:background="@null"
+            android:inputType="text"
+            android:hint="@string/feedback_hint"
+            android:text="@={validator.feedback}"
+            android:gravity="top|left"/>
+
+        <Button
+            style="@style/PhotoDramaButton.BlackSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/common_commit"
+            android:enabled="@{validator.enable}"
+            android:layout_alignParentBottom="true"/>
+
+    </com.loopeer.compatinset.InsetRelativeLayout>
+</layout>

@@ -31,6 +31,7 @@
     <string name="transition_name_fade">渐变</string>
     <string name="common_done">Done</string>
     <string name="common_save">保存</string>
+    <string name="common_commit">提交</string>
 
     <!--about us-->
     <string name="label_image">图标</string>
@@ -38,6 +39,8 @@
     <string name="about_rank_us">好评鼓励</string>
     <string name="about_rank_no_app">还没有安装应用市场</string>
 
+    <!--feedback-->
+    <string name="feedback_hint">提出您的意见或建议，我们会努力做得更好哦 ~</string>
 
     <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
 

@@ -68,6 +68,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="PhotoDramaButton.BlackSelector">
+        <item name="android:background">@drawable/selector_button_black</item>
+    </style>
+
     <style name="PhotoDramaButton.Black">
         <item name="android:background">@drawable/bg_button_black</item>
     </style>
