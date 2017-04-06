@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.media.model;
 
-
 import com.laputapp.model.BaseModel;
 import com.loopeer.android.photodrama4android.media.mediaio.XmlDrama;
 import com.loopeer.android.photodrama4android.media.mediaio.XmlImageClip;
@@ -36,7 +35,6 @@ public class Drama extends BaseModel {
         return imageClip.getEndTime();
     }
 
-
     public XmlDrama toXml() {
         ArrayList<XmlImageClip> xmlImageClips = new ArrayList<>();
         ArrayList<XmlTransition> xmlTransitions = new ArrayList<>();
@@ -64,4 +62,21 @@ public class Drama extends BaseModel {
         }
         return new XmlDrama(xmlImageClips, xmlTransitions, xmlSubtitleClips, xmlMusicClips);
     }
+
+    public List<String> getAudioPaths() {
+        List<String> results = new ArrayList<>();
+        for (MusicClip musicClip : audioGroup.musicClips) {
+            results.add(musicClip.path);
+        }
+        return results;
+    }
+
+    public List<String> getImagePaths() {
+        List<String> results = new ArrayList<>();
+        for (ImageClip imageClip : videoGroup.imageClips) {
+            results.add(imageClip.path);
+        }
+        return results;
+    }
+
 }

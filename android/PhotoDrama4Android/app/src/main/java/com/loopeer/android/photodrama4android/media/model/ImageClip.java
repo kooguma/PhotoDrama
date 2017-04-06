@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media.model;
 
 
 import com.loopeer.android.photodrama4android.media.mediaio.XmlImageClip;
+import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 
 public class ImageClip extends Clip{
     public String path;
@@ -59,7 +60,7 @@ public class ImageClip extends Clip{
 
     public XmlImageClip toXml() {
         XmlImageClip xmlImageClip = new XmlImageClip();
-        xmlImageClip.path = path;
+        xmlImageClip.path = ZipUtils.clipFileName(path);
         xmlImageClip.startTime = startTime;
         xmlImageClip.duration = showTime;
         xmlImageClip.startTransition = startScaleTransRatio.toXml();

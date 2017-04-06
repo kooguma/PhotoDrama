@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media.model;
 
 
 import com.loopeer.android.photodrama4android.media.mediaio.XmlMusicClip;
+import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 
 public class MusicClip extends Clip {
     public static final int MIN_RECORD_AUDIO_LENGTH = 500;
@@ -64,7 +65,7 @@ public class MusicClip extends Clip {
 
     public XmlMusicClip toXml() {
         XmlMusicClip xmlMusicClip = new XmlMusicClip();
-        xmlMusicClip.path = path;
+        xmlMusicClip.path = ZipUtils.clipFileName(path);
         xmlMusicClip.type = musicType.ordinal();
         xmlMusicClip.startTime = startTime;
         xmlMusicClip.duration = startTime;

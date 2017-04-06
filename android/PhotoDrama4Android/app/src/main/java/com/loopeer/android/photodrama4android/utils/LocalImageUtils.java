@@ -106,7 +106,7 @@ public class LocalImageUtils {
         int screenHeight = DisplayUtils.getScreenHeight(context);
 
         //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
-        opt.inSampleSize = 1;
+//        opt.inSampleSize = calculateInSampleSize(opt, screenWidth, screenHeight);
         //根据屏的大小和图片大小计算出缩放比例
         if (picWidth > picHeight) {
             if (picWidth > screenWidth) {
@@ -119,12 +119,40 @@ public class LocalImageUtils {
                 opt.inTargetDensity = screenHeight;
             }
         }
-
         //这次再真正地生成一个有像素的，经过缩放了的bitmap
         opt.inJustDecodeBounds = false;
         bm = BitmapFactory.decodeFile(uri, opt);
         bm = rotateBitmap(bm, degree);
+        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片*/
         return bm;
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options,
+                                             int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and
+            // width
+            final int heightRatio = Math.round((float) height
+                    / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will
+            // guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? widthRatio : heightRatio;
+        }
+
+        return inSampleSize;
     }
 
     private static Bitmap zoomImage(Bitmap bgimage, double newWidth, double newHeight) {

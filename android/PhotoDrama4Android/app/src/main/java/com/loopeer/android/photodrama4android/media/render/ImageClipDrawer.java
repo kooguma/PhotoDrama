@@ -129,7 +129,7 @@ public class ImageClipDrawer extends ClipDrawer{
         matrix.postTranslate(-1f * mBitmap.getWidth() * mViewHeight / mBitmap.getHeight() / 2, -1f * mViewHeight / 2);
         matrix.postScale(mImageClip.getScaleFactor(usedTime)
                 , mImageClip.getScaleFactor(usedTime));
-        matrix.postTranslate(mImageClip.getTransX(usedTime), mImageClip.getTransY(usedTime));
+        matrix.postTranslate(mImageClip.getTransX(usedTime) * mViewWidth, mImageClip.getTransY(usedTime) * mViewHeight);
         matrix.postTranslate(mViewWidth / 2, mViewHeight / 2);
 
         Bitmap localBitmap = Bitmap.createBitmap(mViewWidth, mViewHeight, Bitmap.Config.ARGB_8888);

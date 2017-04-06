@@ -78,7 +78,7 @@ public class FileManager {
         return dramaDir;
     }
 
-    public File getDirDir() {
+    public File getDir() {
         return createFilePath(photoDramaPath);
     }
 
@@ -99,6 +99,12 @@ public class FileManager {
                     item.delete();
                 }
             }
+        }
+    }
+
+    public static void deleteFile(File... files) {
+        for (File file : files) {
+            deleteFile(file);
         }
     }
 

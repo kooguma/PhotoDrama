@@ -59,6 +59,7 @@
         <activity
             android:name=".ui.activity.TextInputActivity"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
         <service android:name=".media.audio.MusicService"/>
@@ -85,6 +86,7 @@
         <activity
             android:name=".ui.activity.MusicSelectActivity"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
             android:label="@string/label_music_select"></activity>
 

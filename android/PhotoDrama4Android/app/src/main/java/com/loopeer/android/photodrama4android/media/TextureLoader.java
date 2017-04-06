@@ -78,7 +78,7 @@ public class TextureLoader extends Thread {
     private void handleSubtitleTexture() {
         if (mHandlerWrappers.isEmpty()) return;
         HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper = mHandlerWrappers.get(0);
-        if (handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_SUBTITLE) {
+        if (handlerWrapper != null && handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_SUBTITLE) {
             SubtitleInfo subtitleInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
             returnSubtitleInfo(handlerWrapper, subtitleInfo);
             mHandlerWrappers.remove(handlerWrapper);
@@ -88,7 +88,7 @@ public class TextureLoader extends Thread {
     private void handleImageTexture() {
         if (mHandlerWrappers.isEmpty()) return;
         HandlerWrapper<String, ImageInfo> handlerWrapper = mHandlerWrappers.get(0);
-        if (handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE) {
+        if (handlerWrapper != null && handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE) {
 //            ImageInfo imageInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
             ImageInfo imageInfo = null;
             if (BitmapFactory.getInstance().getBitmapFromMemCache(handlerWrapper.getData()) != null) {
