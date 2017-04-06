@@ -45,7 +45,12 @@ public class BitmapFactory {
     }
 
     public Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
+        Bitmap bitmap = mMemoryCache.get(key);
+        if (bitmap == null || bitmap.isRecycled()) {
+            bitmap = LocalImageUtils.imageZoomByScreen(mContext, key);
+            addBitmapToCache(key, bitmap);
+        }
+        return bitmap;
     }
 
     public boolean contains(String key) {
@@ -62,18 +67,18 @@ public class BitmapFactory {
         protected Bitmap doInBackground(String... params) {
             for (String path :
                     params) {
-                final String imageKey = String.valueOf(path);
-                final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, imageKey);
-                addBitmapToCache(imageKey, bitmap);
+                Bitmap bitmapPre = LocalImageUtils.imageZoomByScreen(mContext, path);
+                if (bitmapPre == null || bitmapPre.isRecycled()) {
+                    final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, path);
+                    addBitmapToCache(path, bitmap);
+                }
             }
             return null;
         }
     }
 
     public void addBitmapToCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
-        }
+        mMemoryCache.put(key, bitmap);
     }
 
     public void clear() {

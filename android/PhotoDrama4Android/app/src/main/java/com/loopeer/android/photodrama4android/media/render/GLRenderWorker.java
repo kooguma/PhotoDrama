@@ -121,6 +121,7 @@ public class GLRenderWorker implements IRendererWorker {
 
     public void updateDrama(Drama drama) {
         mDrama = drama;
+        if (mImageClipProcessor != null) mImageClipProcessor.updateData(mDrama.videoGroup);
     }
 
     public void updateAll() {

@@ -21,7 +21,7 @@ public class ClipsCreator {
             ScaleTranslateRatio deft = new ScaleTranslateRatio(2.5f, 0f, 0f);
             ImageClip imageClip;
             if (imageClips.isEmpty()) {
-                imageClip = new ImageClip(urls.get(i));
+                imageClip = new ImageClip(urls.get(i), 0);
             } else {
                 ImageClip preImageClip = imageClips.get(i - 1);
                 imageClip = new ImageClip(urls.get(i), preImageClip.showTime + preImageClip.startTime);

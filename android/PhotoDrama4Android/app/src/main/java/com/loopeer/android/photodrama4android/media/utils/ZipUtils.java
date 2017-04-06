@@ -37,10 +37,9 @@ public class ZipUtils {
                 Bitmap bitmap = BitmapFactory.getInstance().getBitmapFromMemCache(path);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-                bitmap.recycle();
-                byte[] bitmapdata = bos.toByteArray();
+                byte[] data = bos.toByteArray();
                 FileOutputStream fos = new FileOutputStream(f);
-                fos.write(bitmapdata);
+                fos.write(data);
                 fos.flush();
                 fos.close();
                 imageScaleFiles.add(f);
@@ -56,16 +55,29 @@ public class ZipUtils {
         File dramaXml = new File(dramaXmlPath);
         files.add(dramaXml);
         files.addAll(imageScaleFiles);
-        String name = DateUtils.getCurrentTimeString();
+//        String name = DateUtils.getCurrentTimeString();
+        String name = "demo";
         ZipUtil.packEntries(files.toArray(new File[]{}), new File(FileManager.getInstance().getDir() + "/" + name + ".zip"));
         FileManager.deleteFile(imageScaleFiles.toArray(new File[]{}));
         FileManager.deleteFile(dramaXml);
+        BitmapFactory.getInstance().loadImages(imagePaths.toArray(new String[]{}));
+    }
+
+    public static Drama unzipFile(String zipFilePath) {
+        String unzipFilePackage = zipFilePath.replace(".zip", "");
+        ZipUtil.unpack(new File(zipFilePath), new File(unzipFilePackage));
+        Drama drama = xmlToDrama(unzipFilePackage);
+        return drama;
     }
 
     public static String clipFileName(String path) {
         if (TextUtils.isEmpty(path)) return null;
         String[] results = path.split("/");
         return results[results.length - 1];
+    }
+
+    public static String pathFromPackageFile(String packagePath, String name) {
+        return packagePath + File.separator + name;
     }
 
     public static String dramaToXml(Drama drama) {
@@ -81,7 +93,8 @@ public class ZipUtils {
         return path;
     }
 
-    public static Drama xmlToDrama(String xmlPath) {
+    public static Drama xmlToDrama(String xmlPackage) {
+        String xmlPath = xmlPackage  + "/drama.xml";
         Serializer serializer = new Persister();
         File source = new File(xmlPath);
         XmlDrama xmlDrama = null;
@@ -91,7 +104,7 @@ public class ZipUtils {
             e.printStackTrace();
         }
         if (xmlDrama == null) return null;
-        Drama drama = xmlDrama.toDrama();
+        Drama drama = xmlDrama.toDrama(xmlPackage);
         return drama;
     }
 }

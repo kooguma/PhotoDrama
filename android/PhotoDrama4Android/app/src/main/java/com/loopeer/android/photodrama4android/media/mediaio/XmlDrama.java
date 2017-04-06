@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media.mediaio;
 
 
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -23,6 +24,9 @@ public class XmlDrama {
     @ElementList(name = "MusicClips")
     public ArrayList<XmlMusicClip> musicClips;
 
+    public XmlDrama() {
+    }
+
     public XmlDrama(ArrayList<XmlImageClip> imageClips, ArrayList<XmlTransition> transitions
             , ArrayList<XmlSubtitleClip> subtitleClips, ArrayList<XmlMusicClip> musicClips) {
         this.imageClips = imageClips;
@@ -31,11 +35,11 @@ public class XmlDrama {
         this.musicClips = musicClips;
     }
 
-    public Drama toDrama() {
+    public Drama toDrama(String xmlPackage) {
         Drama drama = new Drama();
         if (imageClips != null && !imageClips.isEmpty()) {
             for (XmlImageClip imageClip : imageClips) {
-                drama.videoGroup.imageClips.add(imageClip.toObject());
+                drama.videoGroup.imageClips.add(imageClip.toObject(xmlPackage));
             }
         }
         if (transitions != null && !transitions.isEmpty()) {
@@ -50,9 +54,10 @@ public class XmlDrama {
         }
         if (musicClips != null && !musicClips.isEmpty()) {
             for (XmlMusicClip xmlMusicClip : musicClips) {
-                drama.audioGroup.musicClips.add(xmlMusicClip.toObject());
+                drama.audioGroup.musicClips.add(xmlMusicClip.toObject(xmlPackage));
             }
         }
+        ClipsCreator.updateImageTransitionClips(drama.videoGroup);
         return drama;
     }
 }

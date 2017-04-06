@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.loopeer.android.photodrama4android.Navigator;
@@ -18,8 +17,12 @@ import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
-
 import java.text.SimpleDateFormat;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener {
 
@@ -53,7 +56,6 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
-
 
 
     @Override
@@ -125,7 +127,8 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
 
     @Override
     public void onProgressStart() {
-        if (mBinding.btnPlay.getVisibility() == View.VISIBLE) mBinding.btnPlay.setVisibility(View.GONE);
+        if (mBinding.btnPlay.getVisibility() == View.VISIBLE)
+            mBinding.btnPlay.setVisibility(View.GONE);
     }
 
     public void onPlayBtnClick(View view) {
@@ -162,7 +165,21 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
     }
 
     public void onCreateZip(View view) {
-        ZipUtils.zipFile(mDrama);
+        mVideoPlayerManager.pauseVideo();
+        showProgressLoading("");
+        Observable.create(subscriber -> {
+            subscriber.onStart();
+            ZipUtils.zipFile(mDrama);
+            subscriber.onNext(null);
+            subscriber.onCompleted();})
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                    dismissProgressLoading();
+                    showToast(R.string.drama_make_zip_success);
+                })
+                .subscribe();
+
     }
 
     @Override

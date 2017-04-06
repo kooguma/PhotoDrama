@@ -1,9 +1,12 @@
 package com.loopeer.android.photodrama4android.media.mediaio;
 
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
+import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+
+import java.io.File;
 
 @Root(name = "ImageClip")
 public class XmlImageClip {
@@ -22,9 +25,9 @@ public class XmlImageClip {
     @Element(name = "EndTransition")
     public XmlScaleTransition endTransition;
 
-    public ImageClip toObject() {
+    public ImageClip toObject(String xmlPackage) {
         ImageClip imageClip = new ImageClip();
-        imageClip.path = path;
+        imageClip.path = ZipUtils.pathFromPackageFile(xmlPackage, path);
         imageClip.startTime = startTime;
         imageClip.showTime = duration;
         imageClip.startScaleTransRatio = startTransition.toObject();

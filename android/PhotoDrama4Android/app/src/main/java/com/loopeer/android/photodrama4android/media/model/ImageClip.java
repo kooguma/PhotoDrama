@@ -13,10 +13,6 @@ public class ImageClip extends Clip{
 
     public ImageClip() {}
 
-    public ImageClip(String path) {
-        this.path = path;
-    }
-
     public ImageClip(String path, int startTime) {
         this.path = path;
         this.startTime = startTime;

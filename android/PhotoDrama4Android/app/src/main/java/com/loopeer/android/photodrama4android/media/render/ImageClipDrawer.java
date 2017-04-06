@@ -164,7 +164,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mImageInfo == null) return;
-        if (usedTime < mImageClip.startWithPreTransitionTime || usedTime > mImageClip.endWithNextTransitionTime) return;
+        if (usedTime < mImageClip.startWithPreTransitionTime || (mImageClip.endWithNextTransitionTime > 0 && usedTime > mImageClip.endWithNextTransitionTime)) return;
         updateViewMatrices(usedTime);
         if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
         textureProgram.useProgram();

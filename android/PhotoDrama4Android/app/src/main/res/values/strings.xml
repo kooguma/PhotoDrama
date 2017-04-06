@@ -70,5 +70,8 @@
 
     <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
 
+    <!-- drama make -->
+    <string name="drama_make_zip_success">导出成功</string>
+    <string name="drama_unzip_success">解压成功</string>
 
 </resources>
