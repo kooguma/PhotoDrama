@@ -109,9 +109,10 @@ dependencies {
     compile libs.flexbox
     compile libs.cardview
     compile libs.ztZip
-    compile (libs.simpleXml){
-        exclude module: 'stax-api'
+
+    compile('org.simpleframework:simple-xml:2.7.+'){
         exclude module: 'stax'
+        exclude module: 'stax-api'
         exclude module: 'xpp3'
     }
 
