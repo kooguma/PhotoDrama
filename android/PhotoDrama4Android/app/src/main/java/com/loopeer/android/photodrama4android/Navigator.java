@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaDetailActivity;
@@ -39,6 +40,7 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT = 1007;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM_SELECT = 1008;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM = 1009;
+    private static final String EXTRA_THEME ="extra_theme" ;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -131,8 +133,9 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void startDramaDetailActivity(Context context) {
+    public static void startDramaDetailActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaDetailActivity.class);
+        intent.putExtra(EXTRA_THEME,theme);
         context.startActivity(intent);
     }
 }

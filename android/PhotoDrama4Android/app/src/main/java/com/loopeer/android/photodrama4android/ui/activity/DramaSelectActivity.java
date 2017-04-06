@@ -6,20 +6,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.api.ResponseObservable;
+import com.loopeer.android.photodrama4android.api.service.CategoryService;
+import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.ui.fragment.DramaSelectFragment;
+import com.loopeer.android.photodrama4android.utils.Toaster;
+import java.util.ArrayList;
 import java.util.List;
+import okhttp3.ResponseBody;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
 public class DramaSelectActivity extends MovieMakerBaseActivity {
-
-    private static final int sDefaultCount = 8;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private DramaSelectFragment[] mFragments;
-    private String[] mTitles;
+    private List<Category> mTitles = new ArrayList<>();
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +44,27 @@ public class DramaSelectActivity extends MovieMakerBaseActivity {
         mTabLayout = (TabLayout) findViewById(R.id.drama_select_tab_select);
         mViewPager = (ViewPager) findViewById(R.id.drama_select_view_pager);
 
-        mFragments = new DramaSelectFragment[sDefaultCount];
-        mTitles = getResources().getStringArray(R.array.drama_category);
-
-        for (int i = 0; i < sDefaultCount; i++) {
-            mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[i]));
-            mFragments[i] = new DramaSelectFragment();
-        }
-
-        mViewPager.setAdapter(new DramaSelectViewPager(getSupportFragmentManager()));
-        mTabLayout.setupWithViewPager(mViewPager);
+        registerSubscription(
+            ResponseObservable.unwrap(this, CategoryService.INSTANCE.categories())
+                .doOnTerminate(() -> {
+                    mViewPager.setAdapter(
+                        new DramaSelectViewPager(getSupportFragmentManager()));
+                    mTabLayout.setupWithViewPager(mViewPager);
+                })
+                .subscribe(categories -> {
+                    if (categories != null && !categories.isEmpty()) {
+                        mTitles.clear();
+                        mTitles.addAll(categories);
+                        mFragments = new DramaSelectFragment[categories.size()];
+                        for (int i = 0; i < mTitles.size(); i++) {
+                            final String title = mTitles.get(i).name;
+                            final String id = mTitles.get(i).id;
+                            mTabLayout.addTab(mTabLayout.newTab().setText(title));
+                            mFragments[i] = DramaSelectFragment.newDramaSelectFragment(id);
+                        }
+                    }
+                },throwable -> Toaster.showToast("error : " + throwable.getMessage()))
+        );
 
     }
 
@@ -60,11 +79,11 @@ public class DramaSelectActivity extends MovieMakerBaseActivity {
         }
 
         @Override public CharSequence getPageTitle(int position) {
-            return mTitles == null ? null : mTitles[position];
+            return mTitles == null ? null : mTitles.get(position).name;
         }
 
         @Override public int getCount() {
-            return mTitles == null ? 0 : mTitles.length;
+            return mTitles == null ? 0 : mTitles.size();
         }
     }
 }

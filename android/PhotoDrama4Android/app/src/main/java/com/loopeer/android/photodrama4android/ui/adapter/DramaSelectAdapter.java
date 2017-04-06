@@ -19,14 +19,14 @@ public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
         super(context);
     }
 
-    @Override public void bindItem(Theme drama, int var2, RecyclerView.ViewHolder holder) {
+    @Override public void bindItem(Theme theme, int var2, RecyclerView.ViewHolder holder) {
         ListItemDramaSelectBinding binding
             = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
         // TODO: 2017/4/6
-        binding.imageDrama.setImageURI(drama.image);
+        binding.setTheme(theme);
         binding.btnUseDrama.setOnClickListener(l ->{
             if(mOnItemClickListener != null){
-                mOnItemClickListener.onItemClick(drama);
+                mOnItemClickListener.onItemClick(theme);
             }
         });
         binding.executePendingBindings();

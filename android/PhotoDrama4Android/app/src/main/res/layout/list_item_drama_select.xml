@@ -4,7 +4,7 @@
     <data>
 
         <variable
-            name="drama"
+            name="theme"
             type="com.loopeer.android.photodrama4android.model.Theme"/>
 
     </data>
@@ -31,6 +31,7 @@
                 android:id="@+id/image_drama"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:imageUri="@{theme.coverImage}"
                 app:viewAspectRatio="1.52"/>
 
             <TextView
@@ -43,7 +44,7 @@
                 android:layout_marginRight="@dimen/medium_padding"
                 android:layout_marginLeft="@dimen/medium_padding"
                 android:layout_below="@id/image_drama"
-                android:text="爱乐之城    第一回"/>
+                android:text="@{theme.name}"/>
 
             <Button
                 style="@style/PhotoDramaButton.Black.DramaSelect"
@@ -64,7 +65,7 @@
                 android:drawableLeft="@drawable/ic_people"
                 android:layout_alignBaseline="@id/btn_use_drama"
                 android:layout_marginLeft="@dimen/medium_padding"
-                android:text="36人"/>
+                android:text="@{@string/drama_people_format(theme.usedCount)}"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

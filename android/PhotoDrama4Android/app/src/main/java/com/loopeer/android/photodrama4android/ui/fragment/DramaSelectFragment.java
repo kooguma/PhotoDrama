@@ -10,6 +10,7 @@ import com.laputapp.http.BaseResponse;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.api.service.ThemeService;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.DramaSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.OnItemClickListener;
@@ -20,10 +21,22 @@ import rx.Observable;
 public class DramaSelectFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Theme>, OnItemClickListener<Theme> {
 
+    private static final String KEY_CATEGORY_ID = "CATEGORY_ID";
+
     private DramaSelectAdapter mSelectAdapter;
+    private String mCategoryId;
+
+    public static DramaSelectFragment newDramaSelectFragment(String categoryId) {
+        DramaSelectFragment fragment = new DramaSelectFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_CATEGORY_ID, categoryId);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCategoryId = getArguments().getString(KEY_CATEGORY_ID);
         mSelectAdapter = new DramaSelectAdapter(getContext());
         mSelectAdapter.setOnItemClickListener(this);
     }
@@ -47,21 +60,10 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
 
     @Override
     public Observable<BaseResponse<List<Theme>>> requestData(String page, String pageSize) {
-        List<Theme> dramas = new ArrayList<>();
-        Theme drama = new Theme();
-        drama.image
-            = "http://i2.hdslb.com/bfs/archive/d88114babdbe68083378a896fece513d07fb7a46.jpg";
-        dramas.add(drama);
-        dramas.add(drama);
-        dramas.add(drama);
-        dramas.add(drama);
-        dramas.add(drama);
-        dramas.add(drama);
-        getRecyclerManager().onCacheLoaded(dramas);
-        return null;
+        return ThemeService.INSTANCE.list(mCategoryId);
     }
 
-    @Override public void onItemClick(Theme drama) {
-        Navigator.startDramaDetailActivity(getContext());
+    @Override public void onItemClick(Theme theme) {
+        Navigator.startDramaDetailActivity(getContext(),theme);
     }
 }
