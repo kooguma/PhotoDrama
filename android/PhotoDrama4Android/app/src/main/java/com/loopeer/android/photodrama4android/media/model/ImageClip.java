@@ -1,12 +1,16 @@
 package com.loopeer.android.photodrama4android.media.model;
 
 
+import com.loopeer.android.photodrama4android.media.mediaio.XmlImageClip;
+
 public class ImageClip extends Clip{
     public String path;
     public int startWithPreTransitionTime = 0;
     public int endWithNextTransitionTime = 0;
     public ScaleTranslateRatio startScaleTransRatio;
     public ScaleTranslateRatio endScaleTransRatio;
+
+    public ImageClip() {}
 
     public ImageClip(String path) {
         this.path = path;
@@ -51,5 +55,15 @@ public class ImageClip extends Clip{
                 "startWithPreTransitionTime=" + startWithPreTransitionTime +
                 ", endWithNextTransitionTime=" + endWithNextTransitionTime +
                 '}';
+    }
+
+    public XmlImageClip toXml() {
+        XmlImageClip xmlImageClip = new XmlImageClip();
+        xmlImageClip.path = path;
+        xmlImageClip.startTime = startTime;
+        xmlImageClip.duration = showTime;
+        xmlImageClip.startTransition = startScaleTransRatio.toXml();
+        xmlImageClip.endTransition = endScaleTransRatio.toXml();
+        return xmlImageClip;
     }
 }

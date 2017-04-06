@@ -160,6 +160,10 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
         Navigator.startBgmMusicActivity(this, mDrama);
     }
 
+    public void onCreateZip(View view) {
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

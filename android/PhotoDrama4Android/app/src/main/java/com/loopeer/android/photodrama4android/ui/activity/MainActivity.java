@@ -2,12 +2,11 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 
@@ -17,6 +16,8 @@ public class MainActivity extends MovieMakerBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ZipUtils.zipFile();
     }
 
     @Override
@@ -34,7 +35,7 @@ public class MainActivity extends MovieMakerBaseActivity {
     }
 
     public void onCreateClick(View view) {
-
+        Navigator.startImageSelectActivity(this);
     }
 
     public void onSettingClick(View view) {
