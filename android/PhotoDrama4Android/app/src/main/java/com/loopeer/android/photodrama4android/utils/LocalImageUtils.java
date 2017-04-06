@@ -105,8 +105,6 @@ public class LocalImageUtils {
         int screenWidth = DisplayUtils.getScreenWidth(context);
         int screenHeight = DisplayUtils.getScreenHeight(context);
 
-        //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
-//        opt.inSampleSize = calculateInSampleSize(opt, screenWidth, screenHeight);
         //根据屏的大小和图片大小计算出缩放比例
         if (picWidth > picHeight) {
             if (picWidth > screenWidth) {
@@ -123,10 +121,6 @@ public class LocalImageUtils {
         opt.inJustDecodeBounds = false;
         bm = BitmapFactory.decodeFile(uri, opt);
         bm = rotateBitmap(bm, degree);
-        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片*/
         return bm;
     }
 

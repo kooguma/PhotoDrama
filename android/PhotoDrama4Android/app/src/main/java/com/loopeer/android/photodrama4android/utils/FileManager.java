@@ -91,6 +91,10 @@ public class FileManager {
     }
 
     public static void deleteFile(File file) {
+        if (!file.isDirectory()) {
+            file.delete();
+            return;
+        }
         if (file != null && file.exists() && file.list() != null) {
             for (File item : file.listFiles()) {
                 if (item.isDirectory()) {

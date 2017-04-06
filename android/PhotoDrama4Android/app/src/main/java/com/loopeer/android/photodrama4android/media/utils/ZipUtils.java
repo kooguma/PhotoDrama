@@ -35,7 +35,6 @@ public class ZipUtils {
                 File f = new File(FileManager.getInstance().getDir(), clipFileName(path));
                 f.createNewFile();
                 Bitmap bitmap = BitmapFactory.getInstance().getBitmapFromMemCache(path);
-//                Bitmap scalebmp2 = LocalImageUtils.compressImage(bitmap);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
                 bitmap.recycle();
