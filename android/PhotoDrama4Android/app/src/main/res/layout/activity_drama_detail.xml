@@ -1,16 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.loopeer.compatinset.InsetLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.compatinset.InsetScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/window_background_white"
     android:fitsSystemWindows="@bool/fits_system_windows"
     android:orientation="vertical">
 
-    <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:screenRatioX="782"
-        app:screenRatioY="519"
-        android:orientation="vertical"/>
-</com.loopeer.compatinset.InsetLinearLayout>
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/layout_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/gl_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:screenRatioX="782"
+                app:screenRatioY="519"
+                android:orientation="vertical"/>
+
+            <include layout="@layout/view_tool_bottom"/>
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_padding"
+            android:background="@color/window_background_gray"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+
+            <TextView
+                style="@style/PhotoDramaText.Primary.larger"
+                android:id="@+id/txt_drama_name"
+                android:layout_marginTop="@dimen/large_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:text="爱乐之城 - 第一回"/>
+
+            <Button
+                style="@style/PhotoDramaButton.Black.DramaSelect"
+                android:id="@+id/btn_use_drama"
+                android:layout_below="@id/txt_drama_name"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/medium_padding"
+                android:text="@string/drama_use"
+                android:layout_marginRight="@dimen/medium_padding"/>
+
+            <TextView
+                style="@style/PhotoDramaText.Secondary.Small"
+                android:id="@+id/txt_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_drama_name"
+                android:drawablePadding="@dimen/small_padding"
+                android:layout_marginTop="@dimen/xxlarge_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:drawableLeft="@drawable/ic_people"
+                android:layout_alignBaseline="@id/btn_use_drama"
+                android:text="36人"/>
+
+            <TextView
+                style="@style/PhotoDramaText.Secondary.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/xxlarge_padding"
+                android:layout_toRightOf="@id/txt_people"
+                android:layout_alignBaseline="@id/btn_use_drama"
+                android:text="作者：三毛"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_padding"
+            android:background="@color/window_background_gray"/>
+
+        <LinearLayout
+            android:id="@+id/layout_episode_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="14dp"
+            android:paddingLeft="@dimen/medium_padding"
+            android:paddingRight="@dimen/medium_padding"
+            android:gravity="center"
+            android:paddingBottom="22dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/PhotoDramaText.Primary.larger"
+                android:id="@+id/txt_episode"
+                android:text="@string/drama_episode"/>
+
+            <TextView
+                style="@style/PhotoDramaText.Secondary.Normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="02/10"
+                android:gravity="right"/>
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/scroll_view_episode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="22dp"/>
+
+        <TextView
+            style="@style/PhotoDramaText.Primary"
+            android:layout_width="match_parent"
+            android:paddingTop="14dp"
+            android:paddingLeft="@dimen/medium_padding"
+            android:text="@string/drama_brief"/>
+
+        <TextView
+            style="@style/PhotoDramaText.Secondary.Normal"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/medium_padding"
+            android:paddingLeft="@dimen/large_padding"
+            android:lineSpacingExtra="@dimen/xsmall_padding"
+            android:gravity="left"
+            android:paddingBottom="40dp"
+            android:paddingRight="@dimen/large_padding"
+            android:text="《欢乐喜剧人》第八期精彩上演。最为紧张刺激的踢馆赛再添猛将，张子栋邀“吕秀才”喻恩泰再演古装喜剧;文松挑战时装题材喜剧；蒋欣助阵常远演绎浪漫校园爱情喜剧，两人在意外事件后互换灵魂。"/>
+    </LinearLayout>
+</com.loopeer.compatinset.InsetScrollView>

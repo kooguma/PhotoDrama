@@ -2,8 +2,9 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 
-public class MusicSelectActivity extends MovieMakerBaseActivity{
+public class MusicSelectActivity extends MovieMakerBaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

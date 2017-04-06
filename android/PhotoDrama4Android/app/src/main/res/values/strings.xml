@@ -66,5 +66,7 @@
     <string name="share_to">分享至</string>
 
     <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
+    <string name="drama_episode">剧集</string>
+    <string name="drama_brief">简介</string>
 
 </resources>

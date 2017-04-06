@@ -1,7 +1,6 @@
 package com.loopeer.android.photodrama4android.media.model;
 
 
-import com.google.gson.annotations.SerializedName;
 import com.laputapp.model.BaseModel;
 import com.loopeer.android.photodrama4android.media.mediaio.XmlDrama;
 import com.loopeer.android.photodrama4android.media.mediaio.XmlImageClip;
@@ -13,8 +12,7 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Drama extends BaseModel{
-    @SerializedName("")
+public class Drama extends BaseModel {
     public AudioGroup audioGroup;
     public VideoGroup videoGroup;
 

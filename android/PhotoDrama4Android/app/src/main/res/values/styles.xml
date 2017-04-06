@@ -86,6 +86,7 @@
     <style name="PhotoDramaButton.Black.DramaSelect">
         <item name="android:layout_width">@dimen/btn_drama_select_width</item>
         <item name="android:layout_height">@dimen/btn_drama_select_height</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="PhotoDramaText">
@@ -112,6 +113,10 @@
         <item name="android:textSize">@dimen/text_size_larger</item>
     </style>
 
+    <style name="PhotoDramaText.Secondary.Normal">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:gravity">center</item>
+    </style>
 
     <style name="PhotoDramaText.Secondary.Small">
         <item name="android:textSize">@dimen/text_size_small</item>
