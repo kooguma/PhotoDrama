@@ -8,18 +8,18 @@ import android.view.ViewGroup;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectBinding;
-import com.loopeer.android.photodrama4android.model.Drama;
+import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 
-public class DramaSelectAdapter<T extends Drama> extends BaseFooterAdapter<T> {
+public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
 
-    private OnItemClickListener<Drama> mOnItemClickListener;
+    private OnItemClickListener<Theme> mOnItemClickListener;
 
     public DramaSelectAdapter(Context context) {
         super(context);
     }
 
-    @Override public void bindItem(Drama drama, int var2, RecyclerView.ViewHolder holder) {
+    @Override public void bindItem(Theme drama, int var2, RecyclerView.ViewHolder holder) {
         ListItemDramaSelectBinding binding
             = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
         // TODO: 2017/4/6
@@ -37,7 +37,7 @@ public class DramaSelectAdapter<T extends Drama> extends BaseFooterAdapter<T> {
         return new DataBindingViewHolder<>(v);
     }
 
-    public void setOnItemClickListener(OnItemClickListener<Drama> listener) {
+    public void setOnItemClickListener(OnItemClickListener<Theme> listener) {
         mOnItemClickListener = listener;
     }
 

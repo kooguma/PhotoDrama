@@ -25,14 +25,12 @@
             app:tabSelectedTextColor="@android:color/black"
             app:tabIndicatorColor="@android:color/black"/>
 
-        <!--<com.wonderkiln.blurkit.BlurLayout-->
-        <!--android:id="@+id/blurLayout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="48dp"-->
-        <!--blurkit:blk_blurRadius="1"-->
-        <!--blurkit:blk_downscaleFactor="1"-->
-        <!--blurkit:blk_fps="60"-->
-        <!--android:layout_alignParentRight="true"/>-->
+        <ImageView
+            android:id="@+id/blurLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shape_tab_slide"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

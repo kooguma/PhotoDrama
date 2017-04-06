@@ -5,7 +5,7 @@
 
         <variable
             name="drama"
-            type="com.loopeer.android.photodrama4android.model.Drama"/>
+            type="com.loopeer.android.photodrama4android.model.Theme"/>
 
     </data>
 
@@ -23,6 +23,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?selectableItemBackgroundBorderless"
             android:orientation="vertical">
 
             <com.facebook.drawee.view.SimpleDraweeView

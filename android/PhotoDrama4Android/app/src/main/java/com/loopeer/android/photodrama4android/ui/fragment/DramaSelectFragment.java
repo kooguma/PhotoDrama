@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
-import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.model.Drama;
+import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.DramaSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.OnItemClickListener;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 import rx.Observable;
 
 public class DramaSelectFragment extends MovieMakerBaseFragment
-    implements IPageRecycler<Drama>, OnItemClickListener<Drama> {
+    implements IPageRecycler<Theme>, OnItemClickListener<Theme> {
 
     private DramaSelectAdapter mSelectAdapter;
 
@@ -38,7 +37,7 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
         return 0;
     }
 
-    @Override public BaseFooterAdapter<Drama> createRecyclerViewAdapter() {
+    @Override public BaseFooterAdapter<Theme> createRecyclerViewAdapter() {
         if (mSelectAdapter == null) {
             mSelectAdapter = new DramaSelectAdapter(getContext());
             mSelectAdapter.setOnItemClickListener(this);
@@ -47,9 +46,9 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     }
 
     @Override
-    public Observable<BaseResponse<List<Drama>>> requestData(String page, String pageSize) {
-        List<Drama> dramas = new ArrayList<>();
-        Drama drama = new Drama();
+    public Observable<BaseResponse<List<Theme>>> requestData(String page, String pageSize) {
+        List<Theme> dramas = new ArrayList<>();
+        Theme drama = new Theme();
         drama.image
             = "http://i2.hdslb.com/bfs/archive/d88114babdbe68083378a896fece513d07fb7a46.jpg";
         dramas.add(drama);
@@ -62,7 +61,7 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
         return null;
     }
 
-    @Override public void onItemClick(Drama drama) {
+    @Override public void onItemClick(Theme drama) {
         Navigator.startDramaDetailActivity(getContext());
     }
 }
