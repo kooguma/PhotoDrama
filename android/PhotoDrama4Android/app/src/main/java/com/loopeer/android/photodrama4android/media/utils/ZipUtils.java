@@ -13,7 +13,7 @@ import java.io.File;
 
 public class ZipUtils {
 
-    public static void zipFile() {
+    public static void zipFile(Drama mDrama) {
         String name = DateUtils.getCurrentTimeString();
         /*File file = new File(FileManager.getInstance().getDirDir() + "/" + name);
         if (!file.exists()) {

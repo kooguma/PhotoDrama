@@ -17,6 +17,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 
 import java.text.SimpleDateFormat;
 
@@ -161,7 +162,7 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
     }
 
     public void onCreateZip(View view) {
-
+        ZipUtils.zipFile(mDrama);
     }
 
     @Override

@@ -33,6 +33,7 @@ public class Drama extends BaseModel{
     }
 
     public int getShowTimeTotal() {
+        if (videoGroup.imageClips.isEmpty()) return 0;
         ImageClip imageClip = videoGroup.imageClips.get(videoGroup.imageClips.size() - 1);
         return imageClip.getEndTime();
     }
