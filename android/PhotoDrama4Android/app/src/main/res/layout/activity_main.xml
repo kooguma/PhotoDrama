@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_login"
     android:orientation="vertical"
+    android:fitsSystemWindows="@bool/fits_system_windows"
     tools:context=".ui.activity.MainActivity">
 
     <ImageButton
@@ -31,4 +33,4 @@
         android:layout_marginBottom="45dp"
         android:onClick="onCreateClick"/>
 
-</RelativeLayout>
+</com.loopeer.compatinset.InsetRelativeLayout>

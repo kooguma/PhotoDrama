@@ -3,13 +3,21 @@
 
     <data>
 
+        <variable
+            name="drama"
+            type="com.loopeer.android.photodrama4android.model.Drama"/>
+
     </data>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_padding"
+        android:layout_marginLeft="@dimen/large_padding"
+        android:layout_marginRight="@dimen/large_padding"
+        app:cardElevation="4dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -21,25 +29,40 @@
                 android:id="@+id/image_drama"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:viewAspectRatio="0.65"/>
+                app:viewAspectRatio="1.52"/>
 
             <TextView
+                style="@style/PhotoDramaText.Primary"
                 android:id="@+id/txt_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xsmall_padding"
+                android:drawableRight="@drawable/ic_arrow_right"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
                 android:layout_below="@id/image_drama"
-                tools:text="爱乐之城    第一回"/>
+                android:text="爱乐之城    第一回"/>
+
+            <Button
+                style="@style/PhotoDramaButton.Black.DramaSelect"
+                android:id="@+id/btn_use_drama"
+                android:layout_marginTop="@dimen/large_padding"
+                android:layout_below="@id/txt_desc"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:layout_marginBottom="@dimen/medium_padding"
+                android:text="@string/drama_use"/>
 
             <TextView
-                android:layout_below="@id/txt_desc"
+                android:id="@+id/txt_people"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="36人"/>
-
-           <Button
-               android:layout_below="@id/txt_desc"
-               style="@style/PhotoDramaButton.Black.DramaSelect"
-               android:text="@string/drama_use"/>
+                android:layout_below="@id/txt_desc"
+                android:drawablePadding="@dimen/small_padding"
+                android:drawableLeft="@drawable/ic_people"
+                android:layout_alignBaseline="@id/btn_use_drama"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:text="36人"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

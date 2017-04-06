@@ -16,6 +16,7 @@
             android:id="@+id/drama_select_tab_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabBackground="@color/window_background_white"
             app:tabMinWidth="72dp"
             app:tabGravity="fill"
             app:tabMode="scrollable"
@@ -25,13 +26,13 @@
             app:tabIndicatorColor="@android:color/black"/>
 
         <!--<com.wonderkiln.blurkit.BlurLayout-->
-            <!--android:id="@+id/blurLayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="48dp"-->
-            <!--blurkit:blk_blurRadius="1"-->
-            <!--blurkit:blk_downscaleFactor="1"-->
-            <!--blurkit:blk_fps="60"-->
-            <!--android:layout_alignParentRight="true"/>-->
+        <!--android:id="@+id/blurLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="48dp"-->
+        <!--blurkit:blk_blurRadius="1"-->
+        <!--blurkit:blk_downscaleFactor="1"-->
+        <!--blurkit:blk_fps="60"-->
+        <!--android:layout_alignParentRight="true"/>-->
 
     </RelativeLayout>
 

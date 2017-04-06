@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
+import com.loopeer.android.photodrama4android.ui.activity.DramaDetailActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FeedbackActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
@@ -127,6 +128,11 @@ public class Navigator {
 
     public static void startAboutActivity(Context context) {
         Intent intent = new Intent(context, AboutActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startDramaDetailActivity(Context context) {
+        Intent intent = new Intent(context, DramaDetailActivity.class);
         context.startActivity(intent);
     }
 }
