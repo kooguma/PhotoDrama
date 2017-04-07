@@ -27,6 +27,7 @@ public class MovieMakerBaseActivity extends BaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_black);
             if (mHasParent) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }

@@ -101,10 +101,4 @@ public class ImageSelectActivity extends MovieMakerBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // @Override protected void onDestroy() {
-    //     super.onDestroy();
-    //     mGalleryLinearLayout =null;
-    //     mImageDisplay = null;
-    //     mPickListener = null;
-    // }
 }

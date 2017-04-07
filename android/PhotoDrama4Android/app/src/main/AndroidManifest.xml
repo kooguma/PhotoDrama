@@ -143,6 +143,10 @@
             android:screenOrientation="portrait"
             android:label="@string/label_share"/>
 
+        <activity android:name=".ui.activity.DramaEditActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/label_drama_edit"/>
+
         <activity
             android:name=".ui.activity.FullLandscapePlayActivity"
             android:theme="@style/AppTheme.Dark.NoActionBar"

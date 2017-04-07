@@ -91,7 +91,7 @@ public class BottomImagePickerView extends LinearLayout {
         for (int i = 0; i < folders.size(); i++) {
             ImageFolder folder = folders.get(i);
             mTitles.add(folder.name);
-            mFragments.add(PickerFragment.newInstance(folder.images,mOnImagePickListener));
+            mFragments.add(PickerFragment.newInstance(folder.images, mOnImagePickListener));
         }
         mFragmentAdapter.notifyDataSetChanged();
     }
@@ -129,6 +129,10 @@ public class BottomImagePickerView extends LinearLayout {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         return PickerFragment.getUnitSize(wm) * PickerFragment.IMAGE_SIZE_UNIT +
             mTabLayout.getHeight() + mIcon.getHeight();
+    }
+
+    public ImageView getIconView() {
+        return mIcon;
     }
 
     private class PickerFragmentAdapter extends FragmentStatePagerAdapter {

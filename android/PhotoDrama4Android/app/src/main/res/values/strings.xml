@@ -13,6 +13,7 @@
     <string name="label_feed_back">意见反馈</string>
     <string name="label_setting">设置</string>
     <string name="label_share">分享</string>
+    <string name="label_drama_edit">故事编排</string>
 
     <!--main-->
     <string name="main_act">我要主演</string>

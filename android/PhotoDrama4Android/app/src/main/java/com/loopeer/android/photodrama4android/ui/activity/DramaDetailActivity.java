@@ -1,11 +1,8 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.view.View;
-import android.widget.SeekBar;
-
+import android.widget.Button;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
@@ -17,10 +14,6 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaDetailActivity extends MovieMakerBaseActivity {
@@ -29,6 +22,7 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
     private AppCompatSeekBar mSeekBar;
     private DramaFetchHelper mDramaFetchHelper;
     private Theme mTheme;
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +58,10 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.onRestart();
-
+        mButton = (Button) findViewById(R.id.btn_use_drama);
+        mButton.setOnClickListener(v -> {
+            Navigator.startDramaEditActivity(DramaDetailActivity.this);
+        });
     }
 
     @Override
