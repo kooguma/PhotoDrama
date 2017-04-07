@@ -27,7 +27,7 @@ public class FileManager {
     private File dramaDir;
     public final String audioDirPath = "/audio/";
     public final String videoDirPath = "/video/";
-    public final String dramaDirPath = "/video/";
+    public final String dramaDirPath = "/drama/";
     private String audioPath = photoDramaPath + audioDirPath;
     private String videoPath = photoDramaPath + videoDirPath;
     private String dramaPath = photoDramaPath + dramaDirPath;
@@ -82,10 +82,18 @@ public class FileManager {
 
     public File getDramaPackage(Theme theme) {
         File file = new File(getDramaDir(), getDramaPackageName(theme));
-        if (file.exists() && file.isDirectory()) {
+        if (file != null && file.exists() && file.isDirectory()) {
             return file;
         }
         return null;
+    }
+
+    public File createDramaPackage(Theme theme) {
+        File file = new File(getDramaDir(), getDramaPackageName(theme));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
     }
 
     public String getDramaPackageName(Theme theme) {

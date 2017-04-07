@@ -17,6 +17,10 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaDetailActivity extends MovieMakerBaseActivity {
@@ -25,6 +29,7 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
     private AppCompatSeekBar mSeekBar;
     private DramaFetchHelper mDramaFetchHelper;
     private Theme mTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +45,15 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
         if (mTheme == null) return;
         showProgressLoading("");
         mDramaFetchHelper = new DramaFetchHelper(this);
-        mDramaFetchHelper.getDrama(mTheme, drama -> {
-            mVideoPlayerManager.updateDrama(drama);
-            dismissProgressLoading();
-            showToast(R.string.drama_unzip_success);
-        });
+        mDramaFetchHelper.getDrama(mTheme,
+                drama -> {
+                    mVideoPlayerManager.updateDrama(drama);
+                    showToast(R.string.drama_unzip_success);
+                }, throwable -> {
+                    showToast(throwable.toString());
+                }, () -> {
+                    dismissProgressLoading();
+                });
     }
 
     private void setupView() {
