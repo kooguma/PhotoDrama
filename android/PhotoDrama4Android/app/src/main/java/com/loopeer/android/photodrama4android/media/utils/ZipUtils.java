@@ -55,8 +55,7 @@ public class ZipUtils {
         File dramaXml = new File(dramaXmlPath);
         files.add(dramaXml);
         files.addAll(imageScaleFiles);
-//        String name = DateUtils.getCurrentTimeString();
-        String name = "demo";
+        String name = DateUtils.getCurrentTimeString();
         ZipUtil.packEntries(files.toArray(new File[]{}), new File(FileManager.getInstance().getDir() + "/" + name + ".zip"));
         FileManager.deleteFile(imageScaleFiles.toArray(new File[]{}));
         FileManager.deleteFile(dramaXml);

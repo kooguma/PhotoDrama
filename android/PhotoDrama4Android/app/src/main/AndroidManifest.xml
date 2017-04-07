@@ -143,7 +143,8 @@
             android:screenOrientation="portrait"
             android:label="@string/label_share"/>
 
-        <activity android:name=".ui.activity.DramaEditActivity"
+        <activity
+            android:name=".ui.activity.DramaEditActivity"
             android:screenOrientation="portrait"
             android:label="@string/label_drama_edit"/>
 

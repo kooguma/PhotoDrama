@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -50,6 +51,14 @@ public class LocalSquareImageView extends SimpleDraweeView implements View.OnCli
         GenericDraweeHierarchyBuilder builder1 = new GenericDraweeHierarchyBuilder(getContext().getResources());
         builder1.setPlaceholderImage(ContextCompat.getDrawable(getContext(), placeholderDrawable), ScalingUtils.ScaleType.CENTER_CROP);
         getControllerBuilder().build().setHierarchy(builder1.build());
+        getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        invalidate();
+                    }
+                });
     }
 
     @Override
@@ -63,29 +72,15 @@ public class LocalSquareImageView extends SimpleDraweeView implements View.OnCli
 
     public void setLocalUrl(final String localUrl) {
         if (!TextUtils.isEmpty(mInternetUrl)) mInternetUrl = null;
-        if (getHeight() == 0) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    setLocalUrl(localUrl);
-                }
-            });
-            return;
-        }
-
         mLocalUrl = localUrl;
 
-        if (!BitmapFactory.getInstance().contains(localUrl)) {
-            ImageGroupDisplayHelper.displayImageLocal(this, mLocalUrl, getWidth(), getHeight());
-        } else {
-            invalidate();
-        }
+        invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mLocalUrl != null && BitmapFactory.getInstance().contains(mLocalUrl)) {
+        if (mLocalUrl != null && BitmapFactory.getInstance().contains(mLocalUrl) && getHeight() != 0) {
             canvas.clipRect(0, 0, getWidth(), getHeight());
             Matrix matrix = new Matrix();
             Bitmap bitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mLocalUrl);

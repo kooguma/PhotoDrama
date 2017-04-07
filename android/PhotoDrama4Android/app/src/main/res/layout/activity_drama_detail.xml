@@ -35,8 +35,8 @@
                     android:id="@+id/gl_surface_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:screenRatioX="782"
-                    app:screenRatioY="519"
+                    app:screenRatioX="@integer/gl_screen_x"
+                    app:screenRatioY="@integer/gl_screen_y"
                     android:orientation="vertical"/>
 
                 <include layout="@layout/view_tool_bottom"/>

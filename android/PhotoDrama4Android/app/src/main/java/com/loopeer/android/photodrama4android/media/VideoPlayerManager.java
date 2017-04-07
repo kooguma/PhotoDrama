@@ -28,6 +28,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     private boolean isImagePrepared = false;
     private boolean isSubtitlePrepared = false;
     private boolean mIsRecording;
+    private BitmapReadyListener mBitmapReadyListener;
 
     public VideoPlayerManager(SeekWrapper seekWrapper, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
@@ -237,8 +238,9 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         checkSourceReadyToStart();
     }
 
-    public void bitmapLoadReady() {
+    public void bitmapLoadReady(String path) {
         isImagePrepared = true;
+        if (mBitmapReadyListener != null) mBitmapReadyListener.bitmapReady(path);
         checkSourceReadyToStart();
     }
 
@@ -274,6 +276,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         startVideo();
     }
 
+    public void setBitmapReadyListener(BitmapReadyListener bitmapReadyListener) {
+        this.mBitmapReadyListener = bitmapReadyListener;
+    }
+
     public interface ProgressChangeListener {
         void onProgressInit(int progress, int maxValue);
 
@@ -282,5 +288,9 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         void onProgressChange(int progress);
 
         void onProgressStart();
+    }
+
+    public interface BitmapReadyListener{
+        void bitmapReady(String path);
     }
 }

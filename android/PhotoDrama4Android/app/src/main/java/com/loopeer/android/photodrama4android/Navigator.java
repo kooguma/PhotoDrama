@@ -140,8 +140,9 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void startDramaEditActivity(Context context) {
+    public static void startDramaEditActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaEditActivity.class);
+        intent.putExtra(EXTRA_THEME,theme);
         context.startActivity(intent);
     }
 }

@@ -95,7 +95,7 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
         mVideoPlayerManager.onRestart();
         mButton = (Button) findViewById(R.id.btn_use_drama);
         mButton.setOnClickListener(v -> {
-            Navigator.startDramaEditActivity(DramaDetailActivity.this);
+            Navigator.startDramaEditActivity(DramaDetailActivity.this, mTheme);
         });
     }
 

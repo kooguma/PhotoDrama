@@ -40,10 +40,10 @@ public class VideoPlayManagerContainer {
         return ((Activity)context).getClass().toString();
     }
 
-    public void bitmapLoadReady(Context context) {
+    public void bitmapLoadReady(Context context, String path) {
         VideoPlayerManager manager = VideoPlayManagerContainer.getDefault().getVideoPlayerManager(context);
         if (manager != null)
-            manager.bitmapLoadReady();
+            manager.bitmapLoadReady(path);
     }
 
     public void onFinish(Context context) {

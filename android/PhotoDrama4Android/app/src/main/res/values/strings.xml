@@ -39,6 +39,7 @@
 
     <!-- common -->
     <string name="common_done">Done</string>
+    <string name="common_export">导出</string>
     <string name="common_save">保存</string>
     <string name="common_commit">提交</string>
     <string name="common_sure">确定</string>

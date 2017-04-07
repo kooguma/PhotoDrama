@@ -18,7 +18,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 public class DramaSelectFragment extends MovieMakerBaseFragment
-    implements IPageRecycler<Theme>, OnItemClickListener<Theme> {
+    implements IPageRecycler<Theme>{
 
     private static final String KEY_CATEGORY_ID = "CATEGORY_ID";
 
@@ -37,7 +37,6 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
         super.onCreate(savedInstanceState);
         mCategoryId = getArguments().getString(KEY_CATEGORY_ID);
         mSelectAdapter = new DramaSelectAdapter(getContext());
-        mSelectAdapter.setOnItemClickListener(this);
     }
 
     @Nullable @Override
@@ -52,7 +51,6 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     @Override public BaseFooterAdapter<Theme> createRecyclerViewAdapter() {
         if (mSelectAdapter == null) {
             mSelectAdapter = new DramaSelectAdapter(getContext());
-            mSelectAdapter.setOnItemClickListener(this);
         }
         return mSelectAdapter;
     }
@@ -60,9 +58,5 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     @Override
     public Flowable<BaseResponse<List<Theme>>> requestData(String page, String pageSize) {
         return ThemeService.INSTANCE.list(mCategoryId);
-    }
-
-    @Override public void onItemClick(Theme theme) {
-        Navigator.startDramaDetailActivity(getContext(),theme);
     }
 }

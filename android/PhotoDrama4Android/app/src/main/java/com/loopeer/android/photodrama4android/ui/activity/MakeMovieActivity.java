@@ -64,7 +64,6 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_save, menu);

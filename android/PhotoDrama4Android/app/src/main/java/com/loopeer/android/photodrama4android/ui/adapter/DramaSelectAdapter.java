@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
+import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectBinding;
 import com.loopeer.android.photodrama4android.model.Theme;
@@ -22,12 +23,17 @@ public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
     @Override public void bindItem(Theme theme, int var2, RecyclerView.ViewHolder holder) {
         ListItemDramaSelectBinding binding
             = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
-        // TODO: 2017/4/6
+
         binding.setTheme(theme);
+        binding.imageDrama.setOnClickListener(v -> {
+//            Navigator.startDramaDetailActivity(getContext(),theme);
+
+        });
+        binding.layoutBottom.setOnClickListener(v -> {
+            Navigator.startDramaDetailActivity(getContext(),theme);
+        });
         binding.btnUseDrama.setOnClickListener(l ->{
-            if(mOnItemClickListener != null){
-                mOnItemClickListener.onItemClick(theme);
-            }
+            Navigator.startDramaEditActivity(getContext(),theme);
         });
         binding.executePendingBindings();
     }
@@ -36,10 +42,5 @@ public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.list_item_drama_select,parent,false);
         return new DataBindingViewHolder<>(v);
     }
-
-    public void setOnItemClickListener(OnItemClickListener<Theme> listener) {
-        mOnItemClickListener = listener;
-    }
-
 
 }

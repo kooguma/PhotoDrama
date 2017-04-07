@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+<layout>
 
-
-    <include layout="@layout/view_toolbar_dark"/>
-
-    <LinearLayout
-        android:id="@+id/layout_display"
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/container"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-     <!--   <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-            android:id="@+id/gl_surface_view"
+        <LinearLayout
+            android:id="@+id/layout_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleX="16"
-            android:scaleY="9"/>-->
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <include layout="@layout/view_toolbar_dark" />
 
-    <com.loopeer.bottomimagepicker.BottomImagePickerView
-        android:id="@+id/pick_view"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="@color/window_background_dark"
-        android:layout_alignParentBottom="true"
-        app:behavior_hideable="false"
-        app:layout_behavior="@string/picker_bottom_sheet_behavior"
-        android:orientation="vertical"/>
+            <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+                android:id="@+id/gl_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:screenRatioX="@integer/gl_screen_x"
+                app:screenRatioY="@integer/gl_screen_y"/>
 
-</android.support.design.widget.CoordinatorLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="86dp"
+                android:clipToPadding="false"
+                android:paddingBottom="18dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="18dp" />
+        </LinearLayout>
+
+        <com.loopeer.bottomimagepicker.BottomImagePickerView
+            android:id="@+id/pick_view"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/window_background_dark"
+            android:orientation="vertical"
+            app:behavior_hideable="false"
+            app:layout_behavior="@string/picker_bottom_sheet_behavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

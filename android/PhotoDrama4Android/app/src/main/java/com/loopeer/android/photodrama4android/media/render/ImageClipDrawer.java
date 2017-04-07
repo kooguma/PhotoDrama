@@ -81,7 +81,7 @@ public class ImageClipDrawer extends ClipDrawer{
                 , mImageClip.path
                 , t -> {
                     checkBitmapReady();
-                    VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext);
+                    VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext, mImageClip.path);
                 });
         glView.getTextureLoader().loadImageTexture(handler);
     }
