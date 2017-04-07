@@ -40,7 +40,7 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT = 1007;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM_SELECT = 1008;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM = 1009;
-    private static final String EXTRA_THEME ="extra_theme" ;
+    public static final String EXTRA_THEME ="extra_theme" ;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);

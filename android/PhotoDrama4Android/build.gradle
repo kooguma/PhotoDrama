@@ -36,7 +36,7 @@ ext {
     ]
 
     supportLibraryVersion = '25.2.0'
-    laputappVersion = '1.4.5-beta39'
+    laputappVersion = '1.4.5-beta42'
     leakcanaryVersion = '1.5'
     andebugVersion = '1.0.3'
     developModuleVersion = '0.0.3'

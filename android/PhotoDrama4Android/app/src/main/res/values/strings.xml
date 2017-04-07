@@ -33,11 +33,14 @@
     <string name="transition_name_wipe">擦出</string>
     <string name="transition_name_dissolve">叠化</string>
     <string name="transition_name_fade">渐变</string>
+
+    <!-- common -->
     <string name="common_done">Done</string>
     <string name="common_save">保存</string>
     <string name="common_commit">提交</string>
     <string name="common_sure">确定</string>
     <string name="common_cancel">取消</string>
+    <string name="common_net_error">网络错误</string>
 
     <!--about us-->
     <string name="label_image">图标</string>

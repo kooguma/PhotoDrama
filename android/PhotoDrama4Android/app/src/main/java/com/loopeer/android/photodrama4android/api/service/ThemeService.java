@@ -4,14 +4,15 @@ import com.laputapp.http.BaseResponse;
 import com.loopeer.android.photodrama4android.api.ApiService;
 import com.loopeer.android.photodrama4android.model.Theme;
 import java.util.List;
+
+import io.reactivex.Flowable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
 
 public interface ThemeService {
     ThemeService INSTANCE = ApiService.getRetrofit().create(ThemeService.class);
 
     @GET("/api/v1/themes/list")
-    Observable<BaseResponse<List<Theme>>> list(@Query("category_id") String categoryId);
+    Flowable<BaseResponse<List<Theme>>> list(@Query("category_id") String categoryId);
 
 }

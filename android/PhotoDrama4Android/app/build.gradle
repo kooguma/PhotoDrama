@@ -115,6 +115,7 @@ dependencies {
         exclude module: 'stax-api'
         exclude module: 'xpp3'
     }
+    compile 'zlc.season:rxdownload2:2.0.0-beta4'
 
     compile project(':library:bottomimagepicker')
     compile project(':library:formitemview')

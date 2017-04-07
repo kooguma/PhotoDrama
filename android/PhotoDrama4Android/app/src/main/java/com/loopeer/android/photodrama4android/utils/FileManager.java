@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
+import com.loopeer.android.photodrama4android.model.Series;
+import com.loopeer.android.photodrama4android.model.Theme;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -74,8 +76,29 @@ public class FileManager {
         return videoDir;
     }
 
-    public File getDraamDir() {
+    public File getDramaDir() {
         return dramaDir;
+    }
+
+    public File getDramaPackage(Theme theme) {
+        File file = new File(getDramaDir(), getDramaPackageName(theme));
+        if (file.exists() && file.isDirectory()) {
+            return file;
+        }
+        return null;
+    }
+
+    public String getDramaPackageName(Theme theme) {
+        return "drama_" + theme.id;
+    }
+
+    public String getDramaZipPath(Theme theme) {
+        File file = new File(getDramaDir(), getDramaZipName(theme));
+        return file.getAbsolutePath();
+    }
+
+    public String getDramaZipName(Theme theme) {
+        return "drama_" + theme.id + ".zip";
     }
 
     public File getDir() {

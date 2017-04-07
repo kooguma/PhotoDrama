@@ -2,7 +2,7 @@ package com.loopeer.android.photodrama4android.api;
 
 import android.content.Context;
 import com.loopeer.android.photodrama4android.BuildConfig;
-import com.loopeer.android.photodrama4android.api.calladapter.ResponseRxJavaCallAdapterFactory;
+import com.loopeer.android.photodrama4android.api.calladapter.RxJava2CallAdapterFactory;
 import com.loopeer.android.photodrama4android.utils.gson.GsonHelper;
 import java.io.File;
 import okhttp3.Cache;
@@ -24,7 +24,7 @@ public class ApiService {
         sRetrofit = new Retrofit.Builder()
                 .client(buildOkHttpClient(context))
                 .addConverterFactory(GsonConverterFactory.create(GsonHelper.getDefault()))
-                .addCallAdapterFactory(ResponseRxJavaCallAdapterFactory.create(context))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(API_URL)
                 .build();
     }
@@ -33,7 +33,7 @@ public class ApiService {
         context = context.getApplicationContext();
         return new Retrofit.Builder()
                 .client(buildOkHttpClient(context))
-                .addCallAdapterFactory(ResponseRxJavaCallAdapterFactory.create(context))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(API_URL)
                 .build();
     }

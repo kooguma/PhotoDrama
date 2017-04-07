@@ -16,6 +16,7 @@
 package com.loopeer.android.photodrama4android.api.calladapter;
 
 import java.io.IOException;
+
 import retrofit2.Response;
 
 /** The result of executing an HTTP request. */

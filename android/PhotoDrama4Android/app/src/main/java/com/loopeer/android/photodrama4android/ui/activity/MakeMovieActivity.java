@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.loopeer.android.photodrama4android.Navigator;
@@ -17,10 +18,16 @@ import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
+
 import java.text.SimpleDateFormat;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
@@ -167,14 +174,16 @@ public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPl
     public void onCreateZip(View view) {
         mVideoPlayerManager.pauseVideo();
         showProgressLoading("");
-        Observable.create(subscriber -> {
-            subscriber.onStart();
-            ZipUtils.zipFile(mDrama);
-            subscriber.onNext(null);
-            subscriber.onCompleted();})
-                .subscribeOn(Schedulers.io())
+
+        Flowable.fromCallable(new Callable<Drama>() {
+            @Override
+            public Drama call() throws Exception {
+                ZipUtils.zipFile(mDrama);
+                return null;
+            }
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
+                .doOnComplete(() -> {
                     dismissProgressLoading();
                     showToast(R.string.drama_make_zip_success);
                 })

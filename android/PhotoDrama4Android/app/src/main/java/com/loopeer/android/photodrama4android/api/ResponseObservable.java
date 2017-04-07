@@ -6,9 +6,8 @@ import com.laputapp.http.BaseResponse;
 import com.laputapp.ui.BaseActivity;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import java.io.IOException;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class ResponseObservable {
@@ -22,7 +21,7 @@ public class ResponseObservable {
     }
 
 
-    public static <T> Observable<T> unwrap(Observable<BaseResponse<T>> observable) {
+    public static <T> Flowable<T> unwrap(Flowable<BaseResponse<T>> observable) {
         return observable
                 .filter(tResponse -> {
                     if (!tResponse.isSuccessed()) {
@@ -36,7 +35,7 @@ public class ResponseObservable {
                 .map(tResponse -> tResponse.mData);
     }
 
-    public static <T> Observable<T> unwrap(BaseActivity activity, Observable<BaseResponse<T>> observable) {
+    public static <T> Flowable<T> unwrap(BaseActivity activity, Flowable<BaseResponse<T>> observable) {
         return observable
                 .filter(tResponse -> {
                     if (!tResponse.isSuccessed()) {
@@ -48,12 +47,12 @@ public class ResponseObservable {
                     return tResponse.isSuccessed();
                 })
                 .map(tResponse -> tResponse.mData)
-                .doOnSubscribe(() -> activity.showProgressLoading(""))
+                .doOnSubscribe(subscription -> activity.showProgressLoading(""))
                 .doOnTerminate(activity::dismissProgressLoading);
     }
 
 
-    public static <T> Observable<T> unwrapWithoutResponseFilter(Observable<BaseResponse<T>> observable) {
+    public static <T> Flowable<T> unwrapWithoutResponseFilter(Flowable<BaseResponse<T>> observable) {
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(throwable -> {
@@ -62,7 +61,7 @@ public class ResponseObservable {
                     }
                     checkNetError(throwable);
                 })
-                .onErrorResumeNext(Observable.empty())
+                .onErrorResumeNext(Flowable.empty())
                 .doOnNext(tResponse -> {
                     if (BuildConfig.DEBUG) {
                         Log.d(TAG, String.format("code: %s, msg: %s", tResponse.mCode, tResponse.mMsg));

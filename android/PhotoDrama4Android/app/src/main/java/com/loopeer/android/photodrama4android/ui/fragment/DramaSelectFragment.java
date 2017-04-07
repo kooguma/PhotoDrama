@@ -14,9 +14,8 @@ import com.loopeer.android.photodrama4android.api.service.ThemeService;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.DramaSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.OnItemClickListener;
-import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 public class DramaSelectFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Theme>, OnItemClickListener<Theme> {
@@ -59,7 +58,7 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     }
 
     @Override
-    public Observable<BaseResponse<List<Theme>>> requestData(String page, String pageSize) {
+    public Flowable<BaseResponse<List<Theme>>> requestData(String page, String pageSize) {
         return ThemeService.INSTANCE.list(mCategoryId);
     }
 

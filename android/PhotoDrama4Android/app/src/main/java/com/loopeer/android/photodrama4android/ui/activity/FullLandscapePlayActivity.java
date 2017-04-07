@@ -20,9 +20,9 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener {
 

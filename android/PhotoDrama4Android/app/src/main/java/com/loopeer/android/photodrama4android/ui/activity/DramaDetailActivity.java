@@ -6,23 +6,16 @@ import android.support.v7.widget.AppCompatSeekBar;
 import android.view.View;
 import android.widget.SeekBar;
 
+import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
-import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
-import com.loopeer.android.photodrama4android.utils.FileManager;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
+import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
+import com.loopeer.android.photodrama4android.model.Theme;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
@@ -30,7 +23,8 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
     private VideoPlayerManager mVideoPlayerManager;
     private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
     private AppCompatSeekBar mSeekBar;
-
+    private DramaFetchHelper mDramaFetchHelper;
+    private Theme mTheme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,24 +32,19 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
         mMovieMakerGLSurfaceView = (MovieMakerGLSurfaceView) findViewById(R.id.gl_surface_view);
         setupView();
 
+        mTheme = (Theme) getIntent().getSerializableExtra(Navigator.EXTRA_THEME);
         loadDrama();
     }
 
     private void loadDrama() {
+        if (mTheme == null) return;
         showProgressLoading("");
-        Observable.create((Observable.OnSubscribe<Drama>) subscriber -> {
-            subscriber.onStart();
-            Drama drama = ZipUtils.unzipFile(FileManager.getInstance().getDir() + "/demo" + ".zip");
-            subscriber.onNext(drama);
-            subscriber.onCompleted();})
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(o -> mVideoPlayerManager.updateDrama(o))
-                .doOnCompleted(() -> {
-                    dismissProgressLoading();
-                    showToast(R.string.drama_unzip_success);
-                })
-                .subscribe();
+        mDramaFetchHelper = new DramaFetchHelper(this);
+        mDramaFetchHelper.getDrama(mTheme, drama -> {
+            mVideoPlayerManager.updateDrama(drama);
+            dismissProgressLoading();
+            showToast(R.string.drama_unzip_success);
+        });
     }
 
     private void setupView() {
@@ -67,6 +56,35 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.onRestart();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mVideoPlayerManager.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mVideoPlayerManager.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mVideoPlayerManager.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoPlayManagerContainer.getDefault().onFinish(this);
+        mVideoPlayerManager.onDestroy();
+        mDramaFetchHelper.unSubscribe();
+        BitmapFactory.getInstance().clear();
     }
 
 }

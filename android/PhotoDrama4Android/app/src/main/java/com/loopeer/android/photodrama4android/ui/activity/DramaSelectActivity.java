@@ -6,10 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.CategoryService;
@@ -18,9 +14,6 @@ import com.loopeer.android.photodrama4android.ui.fragment.DramaSelectFragment;
 import com.loopeer.android.photodrama4android.utils.Toaster;
 import java.util.ArrayList;
 import java.util.List;
-import okhttp3.ResponseBody;
-import rx.functions.Action0;
-import rx.functions.Action1;
 
 public class DramaSelectActivity extends MovieMakerBaseActivity {
 
