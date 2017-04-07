@@ -6,6 +6,10 @@
         <variable
             name="theme"
             type="com.loopeer.android.photodrama4android.model.Theme"/>
+
+        <variable
+            name="series"
+            type="com.loopeer.android.photodrama4android.model.Series"/>
     </data>
 
     <com.loopeer.compatinset.InsetScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -53,7 +57,7 @@
                     android:id="@+id/txt_drama_name"
                     android:layout_marginTop="@dimen/large_padding"
                     android:layout_marginLeft="@dimen/medium_padding"
-                    android:text="@{theme.name}"/>
+                    android:text="@{series.name}"/>
 
                 <Button
                     style="@style/PhotoDramaButton.Black.DramaSelect"
@@ -84,7 +88,7 @@
                     android:layout_marginLeft="@dimen/xxlarge_padding"
                     android:layout_toRightOf="@id/txt_people"
                     android:layout_alignBaseline="@id/btn_use_drama"
-                    android:text="@{@string/drama_author_format(theme.name)}"/>
+                    android:text="@{@string/drama_author_format(series.author)}"/>
             </RelativeLayout>
 
             <View
@@ -112,7 +116,7 @@
                     style="@style/PhotoDramaText.Secondary.Normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="02/10"
+                    android:text="@{series.formatSeriesIndex(context,theme)}"
                     android:gravity="right"/>
             </LinearLayout>
 
@@ -120,7 +124,18 @@
                 android:id="@+id/scroll_view_episode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="22dp"/>
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:scrollbars="none"
+                android:paddingBottom="22dp">
+
+                <LinearLayout
+                    android:id="@+id/layout_episode"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </HorizontalScrollView>
 
             <TextView
                 style="@style/PhotoDramaText.Primary"

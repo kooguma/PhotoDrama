@@ -16,6 +16,7 @@ public class MainActivity extends MovieMakerBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PermissionUtils.checkStoragePermission(this);
     }
 
     @Override

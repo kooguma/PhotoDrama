@@ -26,6 +26,8 @@
     <string name="drama_author_format">作者：%s</string>
     <string name="drama_episode">剧集</string>
     <string name="drama_brief">简介</string>
+    <string name="drama_index_format">%02d</string>
+
     <!-- transition edit -->
     <string name="transition_selected_effect">选择转场</string>
     <string name="transition_selected_segment">选择片段</string>
@@ -77,5 +79,6 @@
     <!-- drama make -->
     <string name="drama_make_zip_success">导出成功</string>
     <string name="drama_unzip_success">解压成功</string>
+    <string name="drama_series_format">%1$02d/%2$02d</string>
 
 </resources>
