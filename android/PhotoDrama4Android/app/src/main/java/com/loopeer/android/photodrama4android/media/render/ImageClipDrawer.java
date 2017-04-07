@@ -62,6 +62,8 @@ public class ImageClipDrawer extends ClipDrawer{
     private int mHorizontalBlockNum = 1;
     private int mVerticalBlockNum = 1;
 
+    private float mViewScaleFactor;
+
     public ImageClipDrawer(View view, ImageClip imageClip) {
         super(view);
         mContext = view.getContext();
@@ -77,13 +79,10 @@ public class ImageClipDrawer extends ClipDrawer{
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE
                 , mImageClip.path
-                , new HandlerWrapper.Callback<ImageInfo>() {
-            @Override
-            public void onResult(ImageInfo t) {
-                checkBitmapReady();
-                VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext);
-            }
-        });
+                , t -> {
+                    checkBitmapReady();
+                    VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext);
+                });
         glView.getTextureLoader().loadImageTexture(handler);
     }
 
@@ -92,17 +91,11 @@ public class ImageClipDrawer extends ClipDrawer{
         mBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mImageClip.path);
         if (mBitmap == null) return;
         mImageInfo = new ImageInfo(-1, mBitmap.getWidth(), mBitmap.getHeight());
-    }
-
-    private void updateTexture(ImageInfo t) {
-        if (BuildConfig.LOG_ON) {
-            Log.e(TAG, t.toString());
+        if (1f * mBitmap.getWidth() / mBitmap.getHeight() > 1f * mViewWidth / mViewHeight) {
+            mViewScaleFactor = 1f * mViewWidth / mBitmap.getWidth();
+        } else {
+            mViewScaleFactor = 1f * mViewHeight / mBitmap.getHeight();
         }
-        mImageInfo = t;
-    }
-
-    public void updateTexture() {
-        mImageInfo = TextureHelper.loadTexture(mContext, mImageClip.path);
     }
 
     private void bindData() {
@@ -125,12 +118,12 @@ public class ImageClipDrawer extends ClipDrawer{
 
     private void getTexture(long usedTime) {
         Matrix matrix = new Matrix();
-        matrix.postScale(1f * mViewHeight / mBitmap.getHeight(), 1f * mViewHeight / mBitmap.getHeight());
-        matrix.postTranslate(-1f * mBitmap.getWidth() * mViewHeight / mBitmap.getHeight() / 2, -1f * mViewHeight / 2);
+        matrix.postScale(mViewScaleFactor, mViewScaleFactor);
+        matrix.postTranslate(-1f * mViewScaleFactor * mBitmap.getWidth() / 2, -1f * mViewScaleFactor * mBitmap.getHeight() / 2);
         matrix.postScale(mImageClip.getScaleFactor(usedTime)
                 , mImageClip.getScaleFactor(usedTime));
-        matrix.postTranslate(mImageClip.getTransX(usedTime) * mViewWidth, mImageClip.getTransY(usedTime) * mViewHeight);
         matrix.postTranslate(mViewWidth / 2, mViewHeight / 2);
+        matrix.postTranslate(mImageClip.getTransX(usedTime) * mViewWidth, mImageClip.getTransY(usedTime) * mViewHeight);
 
         Bitmap localBitmap = Bitmap.createBitmap(mViewWidth, mViewHeight, Bitmap.Config.ARGB_8888);
         Canvas localCanvas = new Canvas(localBitmap);
