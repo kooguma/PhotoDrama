@@ -15,10 +15,12 @@ public class MusicDelegate implements IMusic {
     private MusicService mBindService;
     private boolean mIsBind = false;
     private Context mContext;
+    private Drama mDrama;
 
     private ServiceConnection mConn;
 
     public MusicDelegate(Context context, Drama drama, MusicProcessor.ProcessorPrepareListener listener) {
+        mDrama = drama;
         mContext = context;
         mConn = new ServiceConnection() {
             @Override
@@ -30,7 +32,7 @@ public class MusicDelegate implements IMusic {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 MusicService.MusicBinder mBinder = (MusicService.MusicBinder) service;
                 mBindService = mBinder.getMusicService(mContext);
-                mBindService.initMusicProcessor(drama, listener);
+                mBindService.initMusicProcessor(mDrama, listener);
                 mIsBind = true;
             }
         };
@@ -51,33 +53,34 @@ public class MusicDelegate implements IMusic {
     }
 
     public void updateDrama(Drama drama) {
-        mBindService.updateDrama(drama);
+        if (mBindService != null)
+            mBindService.updateDrama(drama);
     }
 
     @Override
     public void startMusic() {
-        if(mBindService != null) {
+        if (mBindService != null) {
             mBindService.startMusic();
         }
     }
 
     @Override
     public void seekToMusic(int progress) {
-        if(mBindService != null) {
+        if (mBindService != null) {
             mBindService.seekToMusic(progress);
         }
     }
 
     @Override
     public void pauseMusic() {
-        if(mBindService != null) {
+        if (mBindService != null) {
             mBindService.pauseMusic();
         }
     }
 
     @Override
     public void onProgressChange(int time) {
-        if(mBindService != null) {
+        if (mBindService != null) {
             mBindService.onProgressChange(time);
         }
     }

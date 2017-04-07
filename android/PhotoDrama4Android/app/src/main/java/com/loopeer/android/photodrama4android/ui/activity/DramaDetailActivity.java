@@ -44,6 +44,7 @@ public class DramaDetailActivity extends MovieMakerBaseActivity {
                     mVideoPlayerManager.updateDrama(drama);
                     showToast(R.string.drama_unzip_success);
                 }, throwable -> {
+                    throwable.printStackTrace();
                     showToast(throwable.toString());
                 }, () -> {
                     dismissProgressLoading();
