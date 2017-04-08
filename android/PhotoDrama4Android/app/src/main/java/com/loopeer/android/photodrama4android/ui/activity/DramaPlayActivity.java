@@ -1,7 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.animation.ObjectAnimator;
-import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
@@ -15,17 +14,11 @@ import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
+import com.loopeer.android.photodrama4android.ui.widget.ElasticDragDismissFrameLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -40,6 +33,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     private DramaFetchHelper mDramaFetchHelper;
     private Subject mHideToolSubject = PublishSubject.create();
     private boolean mToolShow = true;
+    private boolean mBottomDismiss = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +44,6 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
         mTheme = (Theme) getIntent().getSerializableExtra(Navigator.EXTRA_THEME);
         setupView();
         loadDrama();
-
 
         registerSubscription(
                 mHideToolSubject.debounce(1500, TimeUnit.MILLISECONDS)
@@ -114,6 +107,20 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
                     mVideoPlayerManager.startVideo();
                 else
                     mVideoPlayerManager.pauseVideo();
+            }
+        });
+
+        mBinding.dragContainer.addListener(new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
+            @Override
+            public void onDragDismissed() {
+                finish();
+            }
+
+            @Override
+            public void onDrag(float elasticOffset, float elasticOffsetPixels, float rawOffset, float rawOffsetPixels) {
+                if (rawOffset == 1.0f) {
+                    mBottomDismiss = elasticOffsetPixels > 0.0f;
+                }
             }
         });
     }
@@ -213,5 +220,13 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
         }
     }
 
-
+    @Override
+    public void finish() {
+        super.finish();
+        if (mBottomDismiss) {
+            overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_bottom);
+        } else {
+            overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_top);
+        }
+    }
 }
