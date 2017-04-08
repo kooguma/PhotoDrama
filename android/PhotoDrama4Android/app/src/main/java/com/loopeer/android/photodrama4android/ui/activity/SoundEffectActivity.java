@@ -24,7 +24,7 @@ import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT;
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_SOUND_EFFECT_LENGTH;
 
-public class SoundEffectActivity extends MovieMakerBaseActivity
+public class SoundEffectActivity extends PhotoDramaBaseActivity
         implements ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
 
     private ActivitySoundEffectBinding mBinding;

@@ -23,7 +23,7 @@ import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
 import static com.loopeer.android.photodrama4android.media.model.SubtitleClip.MIN_SUBTITLE_LENGTH;
 
-public class SubtitleEditActivity extends MovieMakerBaseActivity implements ScrollSelectView.ClipSelectedListener, ScrollSelectView.ClipIndicatorPosChangeListener {
+public class SubtitleEditActivity extends PhotoDramaBaseActivity implements ScrollSelectView.ClipSelectedListener, ScrollSelectView.ClipIndicatorPosChangeListener {
 
     private ActivitySubtitleEditBinding mBinding;
     private Drama mDrama;

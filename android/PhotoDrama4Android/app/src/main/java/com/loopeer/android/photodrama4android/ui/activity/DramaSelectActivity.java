@@ -15,7 +15,7 @@ import com.loopeer.android.photodrama4android.utils.Toaster;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DramaSelectActivity extends MovieMakerBaseActivity {
+public class DramaSelectActivity extends PhotoDramaBaseActivity {
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;

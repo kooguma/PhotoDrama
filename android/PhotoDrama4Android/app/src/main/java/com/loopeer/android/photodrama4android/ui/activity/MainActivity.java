@@ -6,11 +6,10 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 
-public class MainActivity extends MovieMakerBaseActivity {
+public class MainActivity extends PhotoDramaBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

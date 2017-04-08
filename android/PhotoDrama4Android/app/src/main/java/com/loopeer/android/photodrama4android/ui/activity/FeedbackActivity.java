@@ -6,7 +6,7 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityFeedBackBinding;
 import com.loopeer.android.photodrama4android.model.validator.FeedbackValidator;
 
-public class FeedbackActivity extends MovieMakerBaseActivity {
+public class FeedbackActivity extends PhotoDramaBaseActivity {
 
     private FeedbackValidator mValidator;
 

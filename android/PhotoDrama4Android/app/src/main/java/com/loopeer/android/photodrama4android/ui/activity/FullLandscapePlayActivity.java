@@ -24,7 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-public class FullLandscapePlayActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener {
+public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener {
 
     private ActivityFullLandscapePlayBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;

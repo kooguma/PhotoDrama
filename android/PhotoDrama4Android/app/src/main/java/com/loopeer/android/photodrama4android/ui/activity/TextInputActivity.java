@@ -11,7 +11,7 @@ import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityTextInputBinding;
 
-public class TextInputActivity extends MovieMakerBaseActivity {
+public class TextInputActivity extends PhotoDramaBaseActivity {
 
     private ActivityTextInputBinding mBinding;
     private String mContent;

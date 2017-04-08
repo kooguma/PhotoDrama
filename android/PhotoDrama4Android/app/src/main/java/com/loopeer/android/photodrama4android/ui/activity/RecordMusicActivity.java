@@ -27,7 +27,7 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import java.io.File;
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
 
-public class RecordMusicActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener
+public class RecordMusicActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener
         , ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
 
     private ActivityRecordMusicBinding mBinding;

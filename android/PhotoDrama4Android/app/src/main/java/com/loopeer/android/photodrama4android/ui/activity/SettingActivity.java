@@ -1,18 +1,15 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.databinding.ActivitySettingBinding;
 import com.loopeer.android.photodrama4android.utils.CacheUtils;
 import com.loopeer.android.photodrama4android.utils.Toaster;
 import com.loopeer.formitemview.FormItemView;
 
-public class SettingActivity extends MovieMakerBaseActivity {
+public class SettingActivity extends PhotoDramaBaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

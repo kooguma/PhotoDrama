@@ -22,7 +22,7 @@ import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAM
 
 
 //TODO
-public class TestMusicSelectedActivity extends MovieMakerBaseActivity {
+public class TestMusicSelectedActivity extends PhotoDramaBaseActivity {
 
     private static final String TAG = "TestMusicSelectedActivi";
 

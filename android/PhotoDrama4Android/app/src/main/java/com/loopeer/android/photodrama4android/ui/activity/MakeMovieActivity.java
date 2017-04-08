@@ -23,15 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class MakeMovieActivity extends MovieMakerBaseActivity implements VideoPlayerManager.ProgressChangeListener {
+public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener {
 
     private ActivityMakeMovieBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;

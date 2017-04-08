@@ -1,28 +1,21 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.databinding.DataBindingUtil;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
-import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
@@ -31,15 +24,13 @@ import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.EditDramaSegmentAdapter;
-import com.loopeer.android.photodrama4android.ui.adapter.ImageSegmentAdapter;
-import com.loopeer.android.photodrama4android.ui.widget.GalleryLinearLayout;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class DramaEditActivity extends MovieMakerBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener
+public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener
         , VideoPlayerManager.BitmapReadyListener, VideoPlayerManager.ProgressChangeListener {
 
     private ActivityDramaEditBinding mBinding;

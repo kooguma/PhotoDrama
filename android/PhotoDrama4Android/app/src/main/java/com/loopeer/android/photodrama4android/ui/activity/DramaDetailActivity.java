@@ -23,7 +23,7 @@ import com.loopeer.android.photodrama4android.model.Theme;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class DramaDetailActivity extends MovieMakerBaseActivity {
+public class DramaDetailActivity extends PhotoDramaBaseActivity {
     private ActivityDramaDetailBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
     private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;

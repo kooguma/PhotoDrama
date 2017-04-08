@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.laputapp.ui.BaseActivity;
 import com.loopeer.android.photodrama4android.R;
 
-public class MovieMakerBaseActivity extends BaseActivity {
+public class PhotoDramaBaseActivity extends BaseActivity {
 
     private boolean mHasParent;
     private Toolbar mToolbar;

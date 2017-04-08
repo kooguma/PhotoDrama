@@ -22,7 +22,7 @@ import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSelectActivity extends MovieMakerBaseActivity {
+public class ImageSelectActivity extends PhotoDramaBaseActivity {
 
     private BottomImagePickerView mBottomImagePickerView;
 

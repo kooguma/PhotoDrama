@@ -24,7 +24,7 @@ import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 import static com.loopeer.android.photodrama4android.Navigator.REQUEST_CODE_DRAMA_SOUND_BGM_SELECT;
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_BGM_LENGTH;
 
-public class BgmMusicActivity extends MovieMakerBaseActivity
+public class BgmMusicActivity extends PhotoDramaBaseActivity
         implements ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
 
     private ActivityBgmMusicBinding mBinding;

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.loopeer.android.photodrama4android.R;
 
-public class AboutActivity extends MovieMakerBaseActivity {
+public class AboutActivity extends PhotoDramaBaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
