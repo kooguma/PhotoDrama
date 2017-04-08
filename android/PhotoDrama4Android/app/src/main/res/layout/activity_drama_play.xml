@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/window_background_dark">
+
+        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+            android:id="@+id/gl_surface_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:screenRatioX="@integer/gl_screen_x"
+            app:screenRatioY="@integer/gl_screen_y" />
+
+        <LinearLayout
+            android:id="@+id/layout_tool_bottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="15dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <ImageView
+                android:id="@+id/btn_pause_play_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onPausePlayBtnClick"
+                android:src="@drawable/selector_play_white_no_circle" />
+
+            <TextView
+                android:id="@+id/text_time_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/text_size_small"
+                tools:text="13:00" />
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_time_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/text_size_small"
+                tools:text="13:00" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.loopeer.compatinset.SingleInsetHolderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="@bool/fits_system_windows"
+                app:insetStatusBarColor="@android:color/transparent"/>
+
+            <ImageButton
+                style="?actionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onCloseClick"
+                android:src="@drawable/ic_close" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

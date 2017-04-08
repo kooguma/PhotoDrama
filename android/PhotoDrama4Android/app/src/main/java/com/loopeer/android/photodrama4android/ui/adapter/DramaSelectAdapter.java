@@ -14,8 +14,6 @@ import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolde
 
 public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
 
-    private OnItemClickListener<Theme> mOnItemClickListener;
-
     public DramaSelectAdapter(Context context) {
         super(context);
     }
@@ -25,16 +23,9 @@ public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
             = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
 
         binding.setTheme(theme);
-        binding.imageDrama.setOnClickListener(v -> {
-//            Navigator.startDramaDetailActivity(getContext(),theme);
-
-        });
-        binding.layoutBottom.setOnClickListener(v -> {
-            Navigator.startDramaDetailActivity(getContext(),theme);
-        });
-        binding.btnUseDrama.setOnClickListener(l ->{
-            Navigator.startDramaEditActivity(getContext(),theme);
-        });
+        binding.imageDrama.setOnClickListener(v -> Navigator.startDramaPlayActivity(getContext(), theme));
+        binding.layoutBottom.setOnClickListener(v -> Navigator.startDramaDetailActivity(getContext(),theme));
+        binding.btnUseDrama.setOnClickListener(l -> Navigator.startDramaEditActivity(getContext(),theme));
         binding.executePendingBindings();
     }
 

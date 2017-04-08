@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.loopeer.android.photodrama4android">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
         android:name=".PhotoDramaApp"
@@ -18,141 +18,144 @@
 
         <meta-data
             android:name="com.loopeer.andebug.API_URL"
-            android:value="${API_URL}"/>
+            android:value="${API_URL}" />
 
         <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.activity.MakeMovieActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
 
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
 
         <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
 
         <activity
             android:name=".ui.activity.TransitionEditActivity"
             android:label="@string/label_transition_edit"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".ui.activity.SubtitleEditActivity"
             android:label="@string/label_subtitle"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".ui.activity.TextInputActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
-        <service android:name=".media.audio.MusicService"/>
+        <service android:name=".media.audio.MusicService" />
 
         <activity
             android:name=".ui.activity.RecordMusicActivity"
             android:label="@string/label_record_audio"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".ui.activity.SoundEffectActivity"
             android:label="@string/label_sound_effect"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".ui.activity.BgmMusicActivity"
             android:label="@string/label_bgm"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
 
         <activity
             android:name=".ui.activity.MusicSelectActivity"
+            android:label="@string/label_music_select"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
-            android:label="@string/label_music_select"></activity>
+            android:theme="@style/AppTheme"></activity>
 
         <activity
             android:name=".ui.activity.DramaSelectActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_drama_select">
+            android:label="@string/label_drama_select"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity"/>
+                android:value=".ui.activity.MainActivity" />
         </activity>
 
         <activity
             android:name=".ui.activity.DramaDetailActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_drama_detail">
+            android:label="@string/label_drama_detail"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.DramaSelectActivity"/>
+                android:value=".ui.activity.DramaSelectActivity" />
         </activity>
 
-        <activity android:name=".ui.activity.TestMusicSelectedActivity">
-        </activity>
+        <activity android:name=".ui.activity.TestMusicSelectedActivity"></activity>
         <activity
             android:name=".ui.activity.SettingActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_setting">
+            android:label="@string/label_setting"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity"/>
+                android:value=".ui.activity.MainActivity" />
         </activity>
 
         <activity
             android:name=".ui.activity.AboutActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_about_us">
+            android:label="@string/label_about_us"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.SettingActivity"/>
+                android:value=".ui.activity.SettingActivity" />
         </activity>
 
         <activity
             android:name=".ui.activity.FeedbackActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_feed_back">
+            android:label="@string/label_feed_back"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.SettingActivity"/>
+                android:value=".ui.activity.SettingActivity" />
         </activity>
 
         <activity
             android:name=".ui.activity.ShareActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_share"/>
+            android:label="@string/label_share"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.DramaEditActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/label_drama_edit"/>
+            android:label="@string/label_drama_edit"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.FullLandscapePlayActivity"
-            android:theme="@style/AppTheme.Dark.NoActionBar"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Dark.NoActionBar" />
+
+        <activity
+            android:name=".ui.activity.DramaPlayActivity"
+            android:screenOrientation="sensor"
+            android:theme="@style/AppTheme.Dark.NoActionBar" />
     </application>
 
 </manifest>

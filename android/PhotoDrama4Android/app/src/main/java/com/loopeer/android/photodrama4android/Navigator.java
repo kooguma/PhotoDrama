@@ -10,6 +10,7 @@ import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaDetailActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaEditActivity;
+import com.loopeer.android.photodrama4android.ui.activity.DramaPlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FeedbackActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
@@ -42,6 +43,8 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM_SELECT = 1008;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM = 1009;
     public static final String EXTRA_THEME ="extra_theme" ;
+    public static final String EXTRA_USEDTIME ="extra_usedtime" ;
+    public static final String EXTRA_IS_TO_START ="extra_is_to_start" ;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -143,6 +146,12 @@ public class Navigator {
 
     public static void startDramaEditActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaEditActivity.class);
+        intent.putExtra(EXTRA_THEME,theme);
+        context.startActivity(intent);
+    }
+
+    public static void startDramaPlayActivity(Context context, Theme theme) {
+        Intent intent = new Intent(context, DramaPlayActivity.class);
         intent.putExtra(EXTRA_THEME,theme);
         context.startActivity(intent);
     }

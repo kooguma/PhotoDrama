@@ -151,7 +151,7 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
     }
 
     public void onPausePlayBtnClick(View view) {
-        if (mVideoPlayerManager.getGLThread().isStop()) {
+        if (mVideoPlayerManager.isStop()) {
             mVideoPlayerManager.startVideo();
         } else {
             mVideoPlayerManager.pauseVideo();

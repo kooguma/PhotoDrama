@@ -69,7 +69,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     @Override
     public void onProgressChanged(SeekWrapper.SeekImpl seek, int progress, boolean fromUser) {
-        mGLThread.setManualUpSeekBar(progress);
+        if (mGLThread == null) return;
         onProgressChange(progress);
     }
 
@@ -227,6 +227,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     public GLThreadRender getGLThread() {
         return mGLThread;
+    }
+
+    public int getUsedTime() {
+        return (int) mGLThread.getUsedTime();
     }
 
     public IMusic getIMusic() {
