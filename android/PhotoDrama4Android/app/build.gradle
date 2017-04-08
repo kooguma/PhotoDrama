@@ -11,17 +11,13 @@ android {
         targetSdkVersion configs.targetSdkVersion
         versionCode configs.versionCode
         versionName configs.versionName
-        ndk {
-            abiFilters /*"arm64-v8a",*/ "armeabi-v7a", "armeabi", "x86"
-        }
         manifestPlaceholders = [API_URL: configs.apiUrlDebug]
-//        multiDexEnabled true
         renderscriptTargetApi 24
         renderscriptSupportModeEnabled true
     }
 
     signingConfigs {
-        /*    release {
+            release {
             Properties properties = new Properties()
             FileInputStream fis = new FileInputStream("$project.rootDir/keystore.properties")
             properties.load(fis)
@@ -45,31 +41,27 @@ android {
 
             storePassword = properties.store_password
             keyPassword = properties.key_password
-        }*/
+        }
     }
 
 
     buildTypes {
         debug {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-//            buildConfigField 'String', 'API_URL', "\"$configs.apiUrlDebug\""
             buildConfigField 'String', 'API_URL', "\"$configs.apiUrlDebug\""
             buildConfigField 'boolean', 'LOG_ON', "true"
 
         }
 
         release {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField 'String', 'API_URL', "\"$configs.apiUrlRelease\""
             buildConfigField 'boolean', 'LOG_ON', "false"
-
-//            buildConfigField 'String', 'API_URL', "\"$configs.apiUrlRelease\""
         }
     }
 
