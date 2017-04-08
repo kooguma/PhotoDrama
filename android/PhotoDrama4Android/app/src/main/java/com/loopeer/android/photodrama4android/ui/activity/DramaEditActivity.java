@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
+import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
@@ -37,7 +40,7 @@ import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaEditActivity extends MovieMakerBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener
-        , VideoPlayerManager.BitmapReadyListener {
+        , VideoPlayerManager.BitmapReadyListener, VideoPlayerManager.ProgressChangeListener {
 
     private ActivityDramaEditBinding mBinding;
     private ImageView mIcon;
@@ -49,7 +52,8 @@ public class DramaEditActivity extends MovieMakerBaseActivity implements EditDra
     private DramaFetchHelper mDramaFetchHelper;
     private ImageClip mSelectedImageClip;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drama_edit);
 
@@ -79,7 +83,8 @@ public class DramaEditActivity extends MovieMakerBaseActivity implements EditDra
         mEditDramaSegmentAdapter.updateData(mDrama.videoGroup.imageClips);
     }
 
-    @Override protected void onPostCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white);
@@ -109,9 +114,15 @@ public class DramaEditActivity extends MovieMakerBaseActivity implements EditDra
                 mBinding.glSurfaceView, new Drama());
         mVideoPlayerManager.setBitmapReadyListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
+        mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
 
-        mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
+        mBinding.glSurfaceView.setOnClickListener(v -> {
+            if (mVideoPlayerManager.isStop())
+                mVideoPlayerManager.startVideo();
+            else
+                mVideoPlayerManager.pauseVideo();
+        });
         mBottomImagePickerView = (BottomImagePickerView) findViewById(R.id.pick_view);
         mIcon = mBottomImagePickerView.getIconView();
 
@@ -119,16 +130,27 @@ public class DramaEditActivity extends MovieMakerBaseActivity implements EditDra
         behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(
-                @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
+                    @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
             }
 
-            @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 final float degrees = slideOffset * 180;
                 mIcon.setRotation(degrees);
             }
         });
         mBottomImagePickerView.setOnImagePickListener(new ImageAdapter.OnImagePickListener() {
-            @Override public boolean onImagePick(Uri uri) {
+            @Override
+            public boolean onImagePick(Uri uri) {
+                BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
+                mSelectedImageClip.path = uri.getPath();
+                HandlerWrapper handler = new HandlerWrapper(
+                        Looper.getMainLooper(),
+                        HandlerWrapper.TYPE_LOAD_IMAGE
+                        , mSelectedImageClip.path
+                        , t -> VideoPlayManagerContainer.getDefault().bitmapLoadReady(DramaEditActivity.this
+                        , mSelectedImageClip.path));
+                mBinding.glSurfaceView.getTextureLoader().loadImageTexture(handler);
                 return false;
             }
         });
@@ -136,15 +158,15 @@ public class DramaEditActivity extends MovieMakerBaseActivity implements EditDra
 
         mBinding.glSurfaceView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mBinding.glSurfaceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int containerHeight = mBinding.container.getHeight();
-                int recyclerBottom = mBinding.recyclerView.getBottom();
-                int minSheetHeight = containerHeight - recyclerBottom;
-                behavior.setPeekHeight(minSheetHeight);
-            }
-        });
+                    @Override
+                    public void onGlobalLayout() {
+                        mBinding.glSurfaceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        int containerHeight = mBinding.container.getHeight();
+                        int recyclerBottom = mBinding.recyclerView.getBottom();
+                        int minSheetHeight = containerHeight - recyclerBottom;
+                        behavior.setPeekHeight(minSheetHeight);
+                    }
+                });
     }
 
     private void updateSegmentList() {
@@ -193,5 +215,30 @@ public class DramaEditActivity extends MovieMakerBaseActivity implements EditDra
     @Override
     public void bitmapReady(String path) {
         mEditDramaSegmentAdapter.onBitmapReady(path);
+    }
+
+    public void onFullBtnClick(View view) {
+        Navigator.startFullLandscapePlayActivity(this, mDrama);
+    }
+
+    @Override
+    public void onProgressInit(int progress, int maxValue) {
+
+    }
+
+    @Override
+    public void onProgressStop() {
+        mBinding.btnPlay.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onProgressChange(int progress) {
+
+    }
+
+    @Override
+    public void onProgressStart() {
+        mBinding.btnPlay.setVisibility(View.GONE);
     }
 }

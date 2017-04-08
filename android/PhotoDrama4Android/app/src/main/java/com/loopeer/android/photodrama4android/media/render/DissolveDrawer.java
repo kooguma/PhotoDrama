@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.media.programs.DissolveShaderProgram;
@@ -18,7 +19,7 @@ public class DissolveDrawer extends TransitionDrawer{
 
     private DissolveShaderProgram textureProgram;
 
-    public DissolveDrawer(View view, TransitionClip transitionClip) {
+    public DissolveDrawer(MovieMakerGLSurfaceView view, TransitionClip transitionClip) {
         super(view, transitionClip);
         textureProgram = (DissolveShaderProgram) ShaderProgramCache
                 .getInstance()

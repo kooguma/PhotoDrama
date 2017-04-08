@@ -1,8 +1,10 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 
+import android.opengl.GLSurfaceView;
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.data.VertexArray;
 
 public abstract class ClipDrawer {
@@ -10,12 +12,14 @@ public abstract class ClipDrawer {
     protected int mViewWidth;
     protected int mViewHeight;
     public static float[] mVertexData;
+    protected MovieMakerGLSurfaceView mGLSurfaceView;
 
     static {
         initVertex();
     }
 
-    public ClipDrawer(View view) {
+    public ClipDrawer(MovieMakerGLSurfaceView view) {
+        mGLSurfaceView = view;
         mViewWidth = view.getWidth();
         mViewHeight = view.getHeight();
     }

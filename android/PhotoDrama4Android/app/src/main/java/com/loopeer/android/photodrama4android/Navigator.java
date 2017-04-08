@@ -112,6 +112,7 @@ public class Navigator {
     public static void startFullLandscapePlayActivity(Context context, Drama drama) {
         Intent intent = new Intent(context, FullLandscapePlayActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
+        context.startActivity(intent);
     }
 
     public static void startDramaSelectActivity(Context context) {

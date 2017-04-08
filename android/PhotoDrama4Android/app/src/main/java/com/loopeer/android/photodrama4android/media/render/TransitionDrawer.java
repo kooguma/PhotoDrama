@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 
@@ -19,7 +20,7 @@ public abstract class TransitionDrawer extends ClipDrawer {
     protected int mTextureIdPre;
     protected int mTextureIdNext;
 
-    public TransitionDrawer(View view, TransitionClip transitionClip) {
+    public TransitionDrawer(MovieMakerGLSurfaceView view, TransitionClip transitionClip) {
         super(view);
         mTransitionClip = transitionClip;
     }

@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
@@ -25,7 +26,7 @@ public class SlideDrawer extends TransitionDrawer{
     protected final float[] modelMatrix1 = new float[16];
     protected final float[] viewMatrix1 = new float[16];
 
-    public SlideDrawer(View view, TransitionClip transitionClip) {
+    public SlideDrawer(MovieMakerGLSurfaceView view, TransitionClip transitionClip) {
         super(view, transitionClip);
         textureProgram0 = (ImageClipShaderProgram) ShaderProgramCache
                 .getInstance()

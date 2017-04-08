@@ -42,7 +42,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
     private int mHorizontalBlockNum = 1;
     private int mVerticalBlockNum = 1;
 
-    public SubtitleClipDrawer(View view, SubtitleClip subtitleClip) {
+    public SubtitleClipDrawer(MovieMakerGLSurfaceView view, SubtitleClip subtitleClip) {
         super(view);
         mContext = view.getContext();
         mSubtitleClip = subtitleClip;

@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.view.View;
 
+import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.media.programs.WipeShaderProgram;
@@ -18,7 +19,7 @@ public class WipeDrawer extends TransitionDrawer{
 
     private WipeShaderProgram textureProgram;
 
-    public WipeDrawer(View view, TransitionClip transitionClip) {
+    public WipeDrawer(MovieMakerGLSurfaceView view, TransitionClip transitionClip) {
         super(view, transitionClip);
         textureProgram = (WipeShaderProgram) ShaderProgramCache
                 .getInstance()

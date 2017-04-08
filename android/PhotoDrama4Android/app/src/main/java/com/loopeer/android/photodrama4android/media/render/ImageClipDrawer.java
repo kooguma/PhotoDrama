@@ -64,7 +64,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     private float mViewScaleFactor;
 
-    public ImageClipDrawer(View view, ImageClip imageClip) {
+    public ImageClipDrawer(MovieMakerGLSurfaceView view, ImageClip imageClip) {
         super(view);
         mContext = view.getContext();
         mImageClip = imageClip;
@@ -156,6 +156,10 @@ public class ImageClipDrawer extends ClipDrawer{
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {
+        if (mBitmap == null || mBitmap.isRecycled()) {
+            preLoadTexture(mGLSurfaceView);
+            return;
+        }
         if (mImageInfo == null) return;
         if (usedTime < mImageClip.startWithPreTransitionTime || (mImageClip.endWithNextTransitionTime > 0 && usedTime > mImageClip.endWithNextTransitionTime)) return;
         updateViewMatrices(usedTime);

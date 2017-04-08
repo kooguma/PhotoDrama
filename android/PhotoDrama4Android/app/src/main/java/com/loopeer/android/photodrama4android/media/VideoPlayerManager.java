@@ -160,6 +160,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         onProgressStart();
     }
 
+    public boolean isStop() {
+        return mGLThread.isStop();
+    }
+
     public void startVideoOnly() {
         mGLThread.startUp();
     }
@@ -179,6 +183,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     public void seekToVideo(int time) {
         mGLThread.seekToTime(time);
+        onProgressStop();
         if (mSeekWrapper != null) mSeekWrapper.setProgress(time);
     }
 

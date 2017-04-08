@@ -17,12 +17,32 @@
 
             <include layout="@layout/view_toolbar_dark" />
 
-            <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-                android:id="@+id/gl_surface_view"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:screenRatioX="@integer/gl_screen_x"
-                app:screenRatioY="@integer/gl_screen_y"/>
+                android:layout_height="wrap_content">
+
+                <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+                    android:id="@+id/gl_surface_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:screenRatioX="@integer/gl_screen_x"
+                    app:screenRatioY="@integer/gl_screen_y"/>
+
+                <ImageView
+                    android:id="@+id/btn_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_play_green_large"/>
+
+                <android.support.v7.widget.AppCompatImageButton
+                    style="?actionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:onClick="onFullBtnClick"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:src="@drawable/ic_full"/>
+            </FrameLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"

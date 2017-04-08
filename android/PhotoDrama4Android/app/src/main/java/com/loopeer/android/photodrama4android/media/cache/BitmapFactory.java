@@ -81,6 +81,14 @@ public class BitmapFactory {
         mMemoryCache.put(key, bitmap);
     }
 
+    public void removeBitmapToCache(String key) {
+        Bitmap bitmap = mMemoryCache.get(key);
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
+        }
+        mMemoryCache.remove(key);
+    }
+
     public void clear() {
         for (Map.Entry<String, Bitmap> entry : mMemoryCache.entrySet()) {
             entry.getValue().recycle();
