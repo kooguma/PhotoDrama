@@ -70,7 +70,8 @@ public class VideoClipProcessor {
             TransitionClip transitionClip = mVideoGroup.transitionClips.get(i);
             if (transitionClip.showTime == 0) continue;
             try {
-                Constructor<TransitionDrawer> constructor = transitionClip.transitionType.getDrawerClass().getConstructor(View.class,
+                Constructor<TransitionDrawer> constructor = transitionClip.transitionType.getDrawerClass()
+                        .getConstructor(MovieMakerGLSurfaceView.class,
                         TransitionClip.class);
                 TransitionDrawer drawer = constructor.newInstance(mMovieMakerGLSurfaceView, transitionClip);
                 mTransitionDrawers.add(drawer);
