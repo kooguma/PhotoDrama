@@ -313,6 +313,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
             mRecordingListener.recordFinished();
     }
 
+    public boolean isRecording() {
+        return mIsRecording;
+    }
+
     public interface ProgressChangeListener {
         void onProgressInit(int progress, int maxValue);
 

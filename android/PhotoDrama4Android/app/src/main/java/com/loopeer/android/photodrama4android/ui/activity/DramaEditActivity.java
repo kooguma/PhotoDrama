@@ -287,4 +287,10 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         dismissExportProgressLoading();
         Navigator.startShareActivity(this);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mVideoPlayerManager.isRecording()) return;
+        super.onBackPressed();
+    }
 }

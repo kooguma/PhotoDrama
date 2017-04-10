@@ -137,6 +137,7 @@
     </style>
 
     <style name="ExportProgressLoadingTheme" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/export_color_bg</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="android:backgroundDimEnabled">false</item>

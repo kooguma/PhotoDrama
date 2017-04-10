@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/view_toolbar_dark" />
+            <include layout="@layout/view_toolbar_dark_inset" />
 
             <FrameLayout
                 android:layout_width="match_parent"
