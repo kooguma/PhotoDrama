@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -93,6 +94,18 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
+        findViewById(R.id.btn_pause_play_btn).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (mVideoPlayerManager.isStop()) {
+                    v.setBackgroundResource(R.drawable.ic_pause_white_large);
+                    mVideoPlayerManager.startVideo();
+                } else {
+                    v.setBackgroundResource(R.drawable.ic_play_white_large);
+                    mVideoPlayerManager.pauseVideo();
+                }
+            }
+        });
+
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),
             mBinding.glSurfaceView, new Drama());
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
