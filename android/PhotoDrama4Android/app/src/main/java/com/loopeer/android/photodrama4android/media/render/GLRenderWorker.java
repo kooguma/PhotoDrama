@@ -76,7 +76,7 @@ public class GLRenderWorker implements IRendererWorker {
         mImageClipProcessor.updateData(mDrama.videoGroup);
         mEglHelperLocal = mMovieMakerGLSurfaceView.getEglHelperLocal();
         mEglHelperLocal.makeCurrent();
-        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
+        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, mEglHelperLocal.mEglConfig, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
         mFullScreen = new FullFrameRect(
                 new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);

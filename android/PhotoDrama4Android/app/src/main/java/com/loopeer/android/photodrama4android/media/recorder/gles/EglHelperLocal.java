@@ -41,7 +41,7 @@ public class EglHelperLocal {
     public EGL10 mEgl;
     EGLDisplay mEglDisplay;
     EGLSurface mEglSurface;
-    EGLConfig mEglConfig;
+    public EGLConfig mEglConfig;
     public EGLContext mEglContext;
 
     public void update(EGL10 egl, EGLContext renderContext, EGLDisplay display, EGLConfig eglConfig) {

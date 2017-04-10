@@ -73,9 +73,10 @@ public final class EglCore {
      * Prepares EGL display and context.
      * <p>
      * Equivalent to EglCore(null, 0).
+     * @param i
      */
-    public EglCore() {
-        this(null, null, 0);
+    public EglCore(int i) {
+        this(null, null, null, 0);
     }
 
     /**
@@ -84,7 +85,7 @@ public final class EglCore {
      * @param sharedContext The context to share, or null if sharing is not desired.
      * @param flags Configuration bit flags, e.g. FLAG_RECORDABLE.
      */
-    public EglCore(EGL10 egl, EGLContext sharedContext, int flags) {
+    public EglCore(EGL10 egl, EGLContext sharedContext, EGLConfig eglConfig, int flags) {
         mGL10 = egl;
         if (mEGLDisplay != null) {
             throw new RuntimeException("EGL already set up");
@@ -103,45 +104,9 @@ public final class EglCore {
             mEGLDisplay = null;
             throw new RuntimeException("unable to initialize EGL10");
         }
-        // Try to get a GLES3 context, if requested.
-        if ((flags & FLAG_TRY_GLES3) != 0) {
-            //Log.d(TAG, "Trying GLES 3");
-            EGLConfig config = getConfig(flags, 3);
-            if (config != null) {
-                int[] attrib3_list = {
-                        EGL14.EGL_CONTEXT_CLIENT_VERSION, 3,
-                        EGL14.EGL_NONE
-                };
-                EGLContext context = mGL10.eglCreateContext(mEGLDisplay, config, sharedContext,
-                        attrib3_list);
+        mEGLContext = sharedContext;
+        mEGLConfig = eglConfig;
 
-                if (EGL14.eglGetError() == EGL14.EGL_SUCCESS) {
-                    //Log.d(TAG, "Got GLES 3 config");
-                    mEGLConfig = config;
-                    mEGLContext = context;
-                    mGlVersion = 3;
-                }
-            }
-        }
-        if (mEGLContext == EGL10.EGL_NO_CONTEXT) {  // GLES 2 only, or GLES 3 attempt failed
-            //Log.d(TAG, "Trying GLES 2");
-            EGLConfig config = getConfig(flags, 2);
-            if (config == null) {
-                throw new RuntimeException("Unable to find a suitable EGLConfig");
-            }
-            int[] attrib2_list = {
-                    EGL14.EGL_CONTEXT_CLIENT_VERSION, 2,
-                    EGL14.EGL_NONE
-            };
-            EGLContext context = mGL10.eglCreateContext(mEGLDisplay, config, sharedContext,
-                    attrib2_list);
-            checkEglError("eglCreateContext");
-            mEGLConfig = config;
-            mEGLContext = context;
-            mGlVersion = 2;
-        }
-
-//        mEGLContext = sharedContext;
         // Confirm with query.
         int[] values = new int[1];
         mGL10.eglQueryContext(mEGLDisplay, mEGLContext, EGL_CONTEXT_CLIENT_VERSION,
@@ -186,6 +151,7 @@ public final class EglCore {
             Log.w(TAG, "unable to find RGB8888 / " + version + " EGLConfig");
             return null;
         }
+
         return configs[0];
     }
 

@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +21,9 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
+
+import static android.opengl.EGL14.EGL_OPENGL_ES2_BIT;
+import static android.opengl.EGLExt.EGL_OPENGL_ES3_BIT_KHR;
 
 public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
@@ -105,6 +109,8 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
                 egl.eglDestroySurface(display, surface);
             }
         });
+
+        setEGLConfigChooser((egl, display) -> getConfig(egl, display, 0, 2));
     }
 
     private void updateSurface(EGLSurface result) {
@@ -127,5 +133,31 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
     public TextureLoader getTextureLoader() {
         return mTextureLoader;
+    }
+
+    private EGLConfig getConfig(EGL10 egl, EGLDisplay display, int flags, int version) {
+        int renderableType = EGL_OPENGL_ES2_BIT;
+        if (version >= 3) {
+            renderableType |= EGL_OPENGL_ES3_BIT_KHR;
+        }
+        int[] attribList = {
+                EGL10.EGL_RED_SIZE, 8,
+                EGL10.EGL_GREEN_SIZE, 8,
+                EGL10.EGL_BLUE_SIZE, 8,
+                EGL10.EGL_ALPHA_SIZE, 8,
+                EGL10.EGL_RENDERABLE_TYPE, renderableType,
+                EGL10.EGL_NONE, 0,
+                EGL10.EGL_NONE
+        };
+
+        attribList[attribList.length - 3] = 0x3142;
+        attribList[attribList.length - 2] = 1;
+        EGLConfig[] configs = new EGLConfig[1];
+        int[] numConfigs = new int[1];
+        if (!egl.eglChooseConfig(display, attribList, configs, configs.length,
+                numConfigs)) {
+            return null;
+        }
+        return configs[0];
     }
 }
