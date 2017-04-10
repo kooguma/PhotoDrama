@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
@@ -25,6 +26,7 @@ import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
+
 import java.text.SimpleDateFormat;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
@@ -43,7 +45,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         setupView();
         parseIntent();
         loadDrama(mTheme);
-        updateSeries(mTheme,true);
+        updateSeries(mTheme, true);
     }
 
     private void parseIntent() {
@@ -55,42 +57,46 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
 
     private void loadDrama(Theme theme) {
         if (theme == null) return;
+        mVideoPlayerManager.onStop();
         mLoader.showProgress();
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
-            drama -> {
-                mVideoPlayerManager.updateDrama(drama);
-                mVideoPlayerManager.seekToVideo(0);
-                mVideoPlayerManager.startVideo();
-            }, throwable -> {
-                throwable.printStackTrace();
-                mLoader.showMessage(throwable.getMessage());
-            }, () -> {
-                mLoader.showContent();
-            });
-    }
-
-    private void updateSeries(Theme theme , boolean isFirstLoad) {
-        if (theme == null) return;
-        registerSubscription(
-            ResponseObservable.unwrap(SeriesService.INSTANCE.detail(theme.seriesId))
-                .subscribe(series -> {
-                    mBinding.setSeries(series);
-                    if(isFirstLoad) {
-                    for (int i = 0; i < series.themes.size(); i++) {
-                        final Theme t = series.themes.get(i);
-                        mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
-                    }
-                    final int index = series.getSeriesIndex(mTheme) - 1;
-                    final View child = mBinding.layoutEpisode.getChildAt(index);
-                    setSelected(child);
-                        mBinding.scrollViewEpisode.post(
-                            () -> mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0));
-                    }
+                drama -> {
+                    mVideoPlayerManager.updateDrama(drama);
+                    mVideoPlayerManager.seekToVideo(0);
+                    mVideoPlayerManager.startVideo();
                 }, throwable -> {
                     throwable.printStackTrace();
-                    showToast(throwable.toString());
-                }, () -> dismissProgressLoading())
+                    mLoader.showMessage(throwable.getMessage());
+                }, () -> {
+                    mLoader.showContent();
+                });
+    }
+
+    private void updateSeries(Theme theme, boolean isFirstLoad) {
+        if (theme == null) return;
+        registerSubscription(
+                ResponseObservable.unwrap(SeriesService.INSTANCE.detail(theme.seriesId))
+                        .subscribe(series -> {
+                            mBinding.setSeries(series);
+                            if (isFirstLoad) {
+                                for (int i = 0; i < series.themes.size(); i++) {
+                                    final Theme t = series.themes.get(i);
+                                    mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
+                                }
+                                final int index = series.getSeriesIndex(mTheme) - 1;
+                                final View child = mBinding.layoutEpisode.getChildAt(index);
+                                setSelected(child);
+                                mBinding.scrollViewEpisode.post(
+                                        () -> {
+                                            if (child != null)
+                                                mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
+                                        });
+                            }
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            showToast(throwable.toString());
+                        }, () -> dismissProgressLoading())
         );
     }
 
@@ -98,22 +104,19 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),
-            mBinding.glSurfaceView, new Drama());
+                mBinding.glSurfaceView, new Drama());
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
-        mVideoPlayerManager.seekToVideo(0);
-        mVideoPlayerManager.startVideo();
     }
 
     private Button generaEpisodeButton(int index, final Theme theme) {
         Button button = (Button) LayoutInflater.from(this)
-            .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
+                .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
         button.setText(getString(R.string.drama_index_format, index));
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
-                mVideoPlayerManager.onStop();
                 loadDrama(theme);
                 // TODO: 2017/4/10  
                 //updateSeries(theme,false);
@@ -173,7 +176,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         BitmapFactory.getInstance().clear();
     }
 
-    @Override public void onProgressInit(int progress, int maxValue) {
+    @Override
+    public void onProgressInit(int progress, int maxValue) {
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(progress);
         mBinding.textTimeStart.setText(hms);
@@ -181,11 +185,13 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         mBinding.textTimeEnd.setText("-" + hmsTotal);
     }
 
-    @Override public void onProgressStop() {
+    @Override
+    public void onProgressStop() {
         mBinding.btnPausePlayBtn.setSelected(true);
     }
 
-    @Override public void onProgressChange(int progress) {
+    @Override
+    public void onProgressChange(int progress) {
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(progress);
         mBinding.textTimeStart.setText(hms);
@@ -193,7 +199,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         mBinding.textTimeEnd.setText("- " + hmsTotal);
     }
 
-    @Override public void onProgressStart() {
+    @Override
+    public void onProgressStart() {
         mBinding.btnPausePlayBtn.setSelected(false);
     }
 

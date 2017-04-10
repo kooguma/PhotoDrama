@@ -41,7 +41,9 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     }
 
     public void stopUp() {
-        mIsStop = true;
+        synchronized (this) {
+            mIsStop = true;
+        }
     }
 
     public boolean isStop() {
@@ -116,10 +118,12 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     public void onDrawFrame(GL10 gl) {
         if (!mIsManual) {
             synchronized (this) {
+                if (isStop()) return;
                 mIRendererWorker.drawFrame(mContext, gl, mUsedTime);
                 this.notify();
             }
         } else {
+            if (isStop()) return;
             mIRendererWorker.drawFrame(mContext, gl, mUsedTime);
         }
     }

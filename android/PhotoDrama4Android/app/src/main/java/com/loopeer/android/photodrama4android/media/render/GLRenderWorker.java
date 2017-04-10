@@ -117,7 +117,6 @@ public class GLRenderWorker implements IRendererWorker {
             mInputWindowSurface.swapBuffers();
             GLES20.glViewport(0, 0, mEglHelperLocal.getWidth(), mEglHelperLocal.getHeight());
             mEglHelperLocal.makeCurrent();
-
         }
     }
 
