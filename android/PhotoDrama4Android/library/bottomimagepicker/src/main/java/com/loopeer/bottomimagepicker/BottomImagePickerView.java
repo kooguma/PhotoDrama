@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BottomImagePickerView extends LinearLayout {
+
+    private static final String STATE = "state";
+    private static final String TAB_INDEX = "tab_index";
 
     private static final int LOADER_ID_FOLDER = 10001;
 
@@ -40,6 +46,8 @@ public class BottomImagePickerView extends LinearLayout {
     private LoaderManagerImpl mLoaderManager;
 
     private ImageAdapter.OnImagePickListener mOnImagePickListener;
+
+    private int mCurTabIndex = -1;
 
     public void setOnImagePickListener(ImageAdapter.OnImagePickListener listener) {
         this.mOnImagePickListener = listener;
@@ -80,9 +88,48 @@ public class BottomImagePickerView extends LinearLayout {
         mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setSlideEnable(true);
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override public void onTabSelected(TabLayout.Tab tab) {
+                mCurTabIndex = tab.getPosition();
+            }
+
+            @Override public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, mLoaderManager);
 
+    }
+
+    @Override protected void onRestoreInstanceState(Parcelable state) {
+        if (state != null && state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            final int index = bundle.getInt(TAB_INDEX);
+            state = bundle.getParcelable(STATE);
+            mTabLayout.post(new Runnable() {
+                @Override public void run() {
+                    TabLayout.Tab tab = mTabLayout.getTabAt(index);
+                    if (tab != null && mCurTabIndex != -1) {
+                        tab.select();
+                    }
+                }
+            });
+
+        }
+        super.onRestoreInstanceState(state);
+    }
+
+    @Override protected Parcelable onSaveInstanceState() {
+        final int index = mCurTabIndex;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(STATE, super.onSaveInstanceState());
+        bundle.putInt(TAB_INDEX, index);
+        return bundle;
     }
 
     public void setData(List<ImageFolder> folders) {

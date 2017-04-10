@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ public class PickerFragment extends Fragment {
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_picker);
         mRecyclerView.setAdapter(mImageAdapter);
         //weak reference
@@ -72,11 +74,23 @@ public class PickerFragment extends Fragment {
         mRecyclerView.setPadding(mUnit * DECORATION_SIZE_UNIT, 0, 0, mUnit * DECORATION_SIZE_UNIT);
     }
 
+    @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            mImages = savedInstanceState.getParcelableArrayList(IMAGE_LIST);
+            mImageAdapter.setImages(mImages);
+        }
+    }
+
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(IMAGE_LIST, (ArrayList<? extends Parcelable>) mImages);
+    }
+
     public static int getUnitSize(WindowManager wm) {
         Display display = wm.getDefaultDisplay();
         int screenWidth = display.getWidth();
         return screenWidth / (DECORATION_COUNT + IMAGE_COUNT * IMAGE_SIZE_UNIT);
     }
-
 
 }
