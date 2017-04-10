@@ -34,31 +34,44 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <FrameLayout
-                    android:id="@+id/layout_player"
+                <ViewAnimator
+                    android:id="@+id/animator"
+                    android:background="@android:color/black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-                        android:id="@+id/gl_surface_view"
+                    <FrameLayout
+                        android:id="@+id/layout_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+                            android:id="@+id/gl_surface_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:screenRatioX="@integer/gl_screen_x"
+                            app:screenRatioY="@integer/gl_screen_y"/>
+
+                        <ImageButton
+                            android:id="@+id/btn_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:layout_gravity="top|left"
+                            android:layout_marginLeft="@dimen/large_padding"
+                            android:layout_marginTop="@dimen/xxlarge_padding"
+                            android:onClick="onCloseClick"
+                            android:src="@drawable/ic_back_white"/>
+
+                        <include layout="@layout/view_tool_bottom_small"/>
+                    </FrameLayout>
+
+                    <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:screenRatioX="@integer/gl_screen_x"
                         app:screenRatioY="@integer/gl_screen_y"/>
-
-                    <ImageButton
-                        android:id="@+id/btn_close"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:layout_gravity="top|left"
-                        android:layout_marginLeft="@dimen/large_padding"
-                        android:layout_marginTop="@dimen/xxlarge_padding"
-                        android:onClick="onCloseClick"
-                        android:src="@drawable/ic_back_white"/>
-
-                    <include layout="@layout/view_tool_bottom_small"/>
-                </FrameLayout>
+                </ViewAnimator>
 
                 <View
                     android:layout_width="match_parent"

@@ -16,6 +16,8 @@ import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.widget.ElasticDragDismissFrameLayout;
 
+import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
+import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,6 +33,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     private VideoPlayerManager mVideoPlayerManager;
     private Drama mDrama;
     private DramaFetchHelper mDramaFetchHelper;
+    private ILoader mLoader;
     private Subject mHideToolSubject = PublishSubject.create();
     private boolean mToolShow = true;
     private boolean mBottomDismiss = true;
@@ -72,16 +75,16 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
 
     private void loadDrama() {
         if (mTheme == null) return;
-        showProgressLoading("");
+        mLoader.showProgress();
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(mTheme,
                 drama -> {
                     updateDrama(drama);
                 }, throwable -> {
                     throwable.printStackTrace();
-                    showToast(throwable.toString());
+                    mLoader.showMessage(throwable.getMessage());
                 }, () -> {
-                    dismissProgressLoading();
+                    mLoader.showContent();
                 });
     }
 
@@ -91,6 +94,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     private void setupView() {
+        mLoader = new ThemeLoader(mBinding.animator);
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar),
                 mBinding.glSurfaceView, new Drama());
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);

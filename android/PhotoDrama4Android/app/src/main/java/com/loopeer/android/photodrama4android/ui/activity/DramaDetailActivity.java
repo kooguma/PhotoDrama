@@ -22,17 +22,17 @@ import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
+import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
+import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaDetailActivity extends PhotoDramaBaseActivity {
     private ActivityDramaDetailBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
-    // private LinearLayout mBinding.layoutEpisode;
-    // private HorizontalScrollView         mBinding.scrollViewEpisode ;
     private DramaFetchHelper mDramaFetchHelper;
+    private ILoader mLoader;
     private Theme mTheme;
-    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +53,18 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
 
     private void loadDrama(Theme theme) {
         if (theme == null) return;
-        showProgressLoading("");
+        mLoader.showProgress();
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
             drama -> {
                 mVideoPlayerManager.updateDrama(drama);
                 mVideoPlayerManager.seekToVideo(0);
                 mVideoPlayerManager.startVideo();
-                showToast(R.string.drama_unzip_success);
             }, throwable -> {
                 throwable.printStackTrace();
-                showToast(throwable.toString());
+                mLoader.showMessage(throwable.getMessage());
             }, () -> {
-                dismissProgressLoading();
+                mLoader.showContent();
             });
     }
 
@@ -92,6 +91,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
     }
 
     private void setupView() {
+        mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),
             mBinding.glSurfaceView, new Drama());

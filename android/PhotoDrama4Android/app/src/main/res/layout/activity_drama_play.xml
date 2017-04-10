@@ -2,7 +2,6 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <com.loopeer.android.photodrama4android.ui.widget.ElasticDragDismissFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drag_container"
         android:layout_width="match_parent"
@@ -15,93 +14,111 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
+
             <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-                    android:id="@+id/gl_surface_view"
-                    android:layout_width="wrap_content"
+                <ViewAnimator
+                    android:id="@+id/animator"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:screenRatioX="@integer/gl_screen_x"
-                    app:screenRatioY="@integer/gl_screen_y" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
-                    android:id="@+id/layout_tool_bottom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="15dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent">
-
-                    <ImageView
-                        android:id="@+id/btn_pause_play_btn"
+                    <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+                        android:id="@+id/gl_surface_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onPausePlayBtnClick"
-                        android:src="@drawable/selector_play_white_no_circle" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:screenRatioX="@integer/gl_screen_x"
+                        app:screenRatioY="@integer/gl_screen_y"/>
 
-                    <TextView
-                        android:id="@+id/text_time_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="17dp"
-                        android:layout_marginRight="4dp"
-                        android:textColor="@color/text_color_white"
-                        android:textSize="@dimen/text_size_small"
-                        tools:text="13:00" />
-
-                    <android.support.v7.widget.AppCompatSeekBar
-                        android:id="@+id/seek_bar"
+                    <LinearLayout
+                        android:id="@+id/layout_tool_bottom"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="15dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent">
 
-                        android:layout_weight="1" />
+                        <ImageView
+                            android:id="@+id/btn_pause_play_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="onPausePlayBtnClick"
+                            android:src="@drawable/selector_play_white_no_circle"/>
 
-                    <TextView
-                        android:id="@+id/text_time_end"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/text_time_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:layout_marginRight="4dp"
+                            android:textColor="@color/text_color_white"
+                            android:textSize="@dimen/text_size_small"
+                            tools:text="13:00"/>
+
+                        <android.support.v7.widget.AppCompatSeekBar
+                            android:id="@+id/seek_bar"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/text_time_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:textColor="@color/text_color_white"
+                            android:textSize="@dimen/text_size_small"
+                            tools:text="13:00"/>
+
+                    </LinearLayout>
+
+                    <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:textColor="@color/text_color_white"
-                        android:textSize="@dimen/text_size_small"
-                        tools:text="13:00" />
+                        app:screenRatioX="@integer/gl_screen_x"
+                        app:screenRatioY="@integer/gl_screen_y"/>
 
-                </LinearLayout>
-
+                </ViewAnimator>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="368dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:layout_editor_absoluteY="25dp"
+                    tools:layout_editor_absoluteX="8dp">
 
                     <com.loopeer.compatinset.SingleInsetHolderView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fitsSystemWindows="@bool/fits_system_windows"
-                        app:insetStatusBarColor="@android:color/transparent" />
+                        app:insetStatusBarColor="@android:color/transparent"/>
 
                     <ImageButton
                         style="?actionButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onCloseClick"
-                        android:src="@drawable/ic_close" />
+                        android:src="@drawable/ic_close"/>
                 </LinearLayout>
             </android.support.constraint.ConstraintLayout>
 
         </com.loopeer.android.librarys.imagegroupview.view.FixedNestedScrollView>
-
 
     </com.loopeer.android.photodrama4android.ui.widget.ElasticDragDismissFrameLayout>
 

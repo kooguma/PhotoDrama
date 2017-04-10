@@ -1,32 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="screenRatioX"
+        format="integer"/>
+    <attr name="screenRatioY"
+        format="integer"/>
+
     <declare-styleable name="MovieMakerGLSurfaceView">
-        <attr name="screenRatioX" format="integer"/>
-        <attr name="screenRatioY" format="integer"/>
+        <attr name="screenRatioX"/>
+        <attr name="screenRatioY"/>
+    </declare-styleable>
+
+    <declare-styleable name="TextProgressBar">
+        <attr name="screenRatioX"/>
+        <attr name="screenRatioY"/>
     </declare-styleable>
 
     <declare-styleable name="ScrollSelectView">
-        <attr name="imageShowHeight" format="dimension"/>
-        <attr name="indicatorRectangleHeight" format="dimension"/>
-        <attr name="indicatorTriangleHeight" format="dimension"/>
-        <attr name="indicatorBottomMargin" format="dimension"/>
-        <attr name="indicatorWidth" format="dimension"/>
+        <attr name="imageShowHeight"
+            format="dimension"/>
+        <attr name="indicatorRectangleHeight"
+            format="dimension"/>
+        <attr name="indicatorTriangleHeight"
+            format="dimension"/>
+        <attr name="indicatorBottomMargin"
+            format="dimension"/>
+        <attr name="indicatorWidth"
+            format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="MusicClipView">
-        <attr name="progressbarColor" format="color"/>
-        <attr name="progressbarSelectedColor" format="color"/>
-        <attr name="dotColor" format="color"/>
-        <attr name="progressMax" format="integer"/>
-        <attr name="roundCorner" format="boolean"/>
+        <attr name="progressbarColor"
+            format="color"/>
+        <attr name="progressbarSelectedColor"
+            format="color"/>
+        <attr name="dotColor"
+            format="color"/>
+        <attr name="progressMax"
+            format="integer"/>
+        <attr name="roundCorner"
+            format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ExportLoadingProgress">
-        <attr name="strokeWidth" format="dimension"/>
-        <attr name="progressForegroundColor" format="dimension"/>
-        <attr name="progressBackgroundColor" format="dimension"/>
-        <attr name="indicatorRadius" format="dimension"/>
-        <attr name="progressSweepAngle" format="dimension"/>
+        <attr name="strokeWidth"
+            format="dimension"/>
+        <attr name="progressForegroundColor"
+            format="dimension"/>
+        <attr name="progressBackgroundColor"
+            format="dimension"/>
+        <attr name="indicatorRadius"
+            format="dimension"/>
+        <attr name="progressSweepAngle"
+            format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="ElasticDragDismissFrameLayout">

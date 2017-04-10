@@ -17,6 +17,8 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
+import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
+import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
