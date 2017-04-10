@@ -159,6 +159,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void pauseVideo() {
         mGLThread.stopUp();
         mIMusic.pauseMusic();
+        if (isRecording()) mGLRenderWorker.endRecording();
         onProgressStop();
     }
 

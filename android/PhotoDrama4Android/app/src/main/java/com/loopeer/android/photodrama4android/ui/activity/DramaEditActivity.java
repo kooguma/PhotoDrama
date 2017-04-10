@@ -243,6 +243,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         if (mExportProgressLoading == null) {
             mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
+            mExportProgressLoading.setCancelable(false);
             mExportProgressLoading.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
