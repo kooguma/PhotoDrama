@@ -36,9 +36,9 @@
 
                 <ViewAnimator
                     android:id="@+id/animator"
-                    android:background="@android:color/black"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/black">
 
                     <FrameLayout
                         android:id="@+id/layout_player"
@@ -62,8 +62,55 @@
                             android:layout_marginTop="@dimen/xxlarge_padding"
                             android:onClick="onCloseClick"
                             android:src="@drawable/ic_back_white"/>
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:id="@+id/layout_tool_bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/window_background_dark_transparent75"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:layout_gravity="bottom"
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="4dp">
 
-                        <include layout="@layout/view_tool_bottom_small"/>
+                            <ImageView
+                                android:id="@+id/btn_pause_play_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onPausePlayBtnClick"
+                                android:src="@drawable/selector_play_white_large"/>
+
+                            <TextView
+                                android:id="@+id/text_time_start"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="17dp"
+                                android:layout_marginRight="4dp"
+                                android:textColor="@color/text_color_white"
+                                android:textSize="@dimen/text_size_small"
+                                tools:text="13:00"/>
+
+                            <android.support.v7.widget.AppCompatSeekBar
+                                android:id="@+id/seek_bar"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+
+                                android:layout_weight="1"/>
+
+                            <TextView
+                                android:id="@+id/text_time_end"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:textColor="@color/text_color_white"
+                                android:textSize="@dimen/text_size_small"
+                                tools:text="13:00"/>
+
+                        </LinearLayout>
+
                     </FrameLayout>
 
                     <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
@@ -114,6 +161,7 @@
                         android:text="@{@string/drama_people_format(theme.usedCount)}"/>
 
                     <TextView
+                        android:id="@+id/txt_index"
                         style="@style/PhotoDramaText.Secondary.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
