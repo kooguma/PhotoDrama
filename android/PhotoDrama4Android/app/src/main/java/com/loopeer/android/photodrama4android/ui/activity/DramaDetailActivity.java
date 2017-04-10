@@ -3,9 +3,11 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -26,9 +28,8 @@ import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 public class DramaDetailActivity extends PhotoDramaBaseActivity {
     private ActivityDramaDetailBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
-    private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
-    private LinearLayout mLayoutEpisode;
-    private AppCompatSeekBar mSeekBar;
+    // private LinearLayout mBinding.layoutEpisode;
+    // private HorizontalScrollView         mBinding.scrollViewEpisode ;
     private DramaFetchHelper mDramaFetchHelper;
     private Theme mTheme;
     private Button mButton;
@@ -37,10 +38,9 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drama_detail);
-        mMovieMakerGLSurfaceView = (MovieMakerGLSurfaceView) findViewById(R.id.gl_surface_view);
         setupView();
         parseIntent();
-        loadDrama();
+        loadDrama(mTheme);
         updateSeries();
     }
 
@@ -51,13 +51,15 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
         }
     }
 
-    private void loadDrama() {
-        if (mTheme == null) return;
+    private void loadDrama(Theme theme) {
+        if (theme == null) return;
         showProgressLoading("");
         mDramaFetchHelper = new DramaFetchHelper(this);
-        mDramaFetchHelper.getDrama(mTheme,
+        mDramaFetchHelper.getDrama(theme,
             drama -> {
                 mVideoPlayerManager.updateDrama(drama);
+                mVideoPlayerManager.seekToVideo(0);
+                mVideoPlayerManager.startVideo();
                 showToast(R.string.drama_unzip_success);
             }, throwable -> {
                 throwable.printStackTrace();
@@ -75,8 +77,13 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
                     mBinding.setSeries(series);
                     for (int i = 0; i < series.themes.size(); i++) {
                         final Theme theme = series.themes.get(i);
-                        mLayoutEpisode.addView(generaEpisodeButton(i+1,theme));
+                        mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
                     }
+                    final int index = series.getSeriesIndex(mTheme) - 1;
+                    final View child = mBinding.layoutEpisode.getChildAt(index);
+                    setSelected(child);
+                    mBinding.scrollViewEpisode.post(
+                        () -> mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0));
                 }, throwable -> {
                     throwable.printStackTrace();
                     showToast(throwable.toString());
@@ -85,43 +92,48 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity {
     }
 
     private void setupView() {
-        mSeekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mSeekBar),
-            mMovieMakerGLSurfaceView, new Drama());
-        mLayoutEpisode = (LinearLayout) findViewById(R.id.layout_episode);
-        mMovieMakerGLSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
+        AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
+        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),
+            mBinding.glSurfaceView, new Drama());
+        mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.onRestart();
-        mButton = (Button) findViewById(R.id.btn_use_drama);
-        mButton.setOnClickListener(v -> {
-            Navigator.startDramaEditActivity(DramaDetailActivity.this, mTheme);
-        });
     }
 
-    private Button generaEpisodeButton(int index,final Theme theme) {
+    private Button generaEpisodeButton(int index, final Theme theme) {
         Button button = (Button) LayoutInflater.from(this)
-            .inflate(R.layout.view_episode_button, mLayoutEpisode, false);
-        button.setText(getString(R.string.drama_index_format,index));
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                setSelected(v);
+            .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
+        button.setText(getString(R.string.drama_index_format, index));
+        button.setOnClickListener(v -> {
+            if (!v.isSelected()) {
+                mVideoPlayerManager.onStop();
+                loadDrama(theme);
             }
+            setSelected(v);
         });
         return button;
     }
 
-    private void setSelected(View btn){
-        final int count = mLayoutEpisode.getChildCount();
-        for (int i = 0 ; i < count ; i++){
-            View v = mLayoutEpisode.getChildAt(i);
-            if(v.equals(btn)){
+    private void setSelected(View btn) {
+        final int count = mBinding.layoutEpisode.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View v = mBinding.layoutEpisode.getChildAt(i);
+            if (v.equals(btn)) {
                 v.setSelected(true);
-            }else {
+            } else {
                 v.setSelected(false);
             }
         }
 
+    }
+
+    public void onEditClick(View view) {
+        Navigator.startDramaEditActivity(DramaDetailActivity.this, mTheme);
+    }
+
+    public void onCloseClick(View view) {
+        onBackPressed();
     }
 
     @Override

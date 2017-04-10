@@ -17,6 +17,10 @@ public class Series extends BaseModel {
 
 
     public String formatSeriesIndex(Context context,Theme theme){
-        return context.getString(R.string.drama_series_format,themes.indexOf(theme),themesCount);
+        return context.getString(R.string.drama_series_format,getSeriesIndex(theme),themesCount);
+    }
+
+    public int getSeriesIndex(Theme theme){
+        return themes.indexOf(theme);
     }
 }
