@@ -68,7 +68,7 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
     }
 
     private void hideTool() {
-        mHideToolSubject.onNext(null);
+        mHideToolSubject.onNext(new Object());
     }
 
     @Override
