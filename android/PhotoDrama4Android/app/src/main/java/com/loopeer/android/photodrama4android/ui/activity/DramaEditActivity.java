@@ -1,17 +1,20 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.laputapp.widget.ProgressLoading;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
@@ -24,6 +27,7 @@ import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.EditDramaSegmentAdapter;
+import com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingDialog;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
@@ -31,7 +35,7 @@ import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener
-        , VideoPlayerManager.BitmapReadyListener, VideoPlayerManager.ProgressChangeListener {
+        , VideoPlayerManager.BitmapReadyListener, VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener {
 
     private ActivityDramaEditBinding mBinding;
     private ImageView mIcon;
@@ -42,6 +46,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     private Drama mDrama;
     private DramaFetchHelper mDramaFetchHelper;
     private ImageClip mSelectedImageClip;
+    private ExportLoadingDialog mExportProgressLoading;
+    private boolean mExportProgressShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +101,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         }
 
         if (item.getItemId() == R.id.menu_export) {
-
+            mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -107,6 +113,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
+        mVideoPlayerManager.setRecordingListener(this);
 
         mBinding.glSurfaceView.setOnClickListener(v -> {
             if (mVideoPlayerManager.isStop())
@@ -220,16 +227,64 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     @Override
     public void onProgressStop() {
         mBinding.btnPlay.setVisibility(View.VISIBLE);
-
     }
 
     @Override
     public void onProgressChange(int progress) {
-
     }
 
     @Override
     public void onProgressStart() {
         mBinding.btnPlay.setVisibility(View.GONE);
+    }
+
+
+    public void showExportProgress(String message) {
+        if (mExportProgressLoading == null) {
+            mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
+            mExportProgressLoading.setCanceledOnTouchOutside(false);
+            mExportProgressLoading.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    mExportProgressShow = false;
+                }
+            });
+        }
+        if (!TextUtils.isEmpty(message)) {
+            mExportProgressLoading.setMessage(message);
+        } else {
+            mExportProgressLoading.setMessage(null);
+        }
+        mExportProgressShow = true;
+        mExportProgressLoading.show();
+    }
+
+    public boolean isExportProgressShow() {
+        return mExportProgressShow;
+    }
+
+    public void dismissExportProgressLoading() {
+        if (mExportProgressLoading != null && !isFinishing()) {
+            mExportProgressShow = false;
+            mExportProgressLoading.dismiss();
+        }
+    }
+
+    @Override
+    public void recordStart() {
+        showExportProgress(getString(R.string.drama_export_message));
+    }
+
+    @Override
+    public void recordChange(int progress) {
+        if (mExportProgressLoading != null) {
+            mExportProgressLoading.setProgress(1f * progress / (mVideoPlayerManager.getSeekbarMaxValue() + 1));
+        }
+    }
+
+    @Override
+    public void recordFinished() {
+        dismissExportProgressLoading();
+        Navigator.startShareActivity(this);
     }
 }

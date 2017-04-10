@@ -20,6 +20,7 @@ import com.loopeer.android.photodrama4android.ui.activity.MainActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
 import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SettingActivity;
+import com.loopeer.android.photodrama4android.ui.activity.ShareActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SoundEffectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SubtitleEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TestMusicSelectedActivity;
@@ -153,6 +154,11 @@ public class Navigator {
     public static void startDramaPlayActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaPlayActivity.class);
         intent.putExtra(EXTRA_THEME,theme);
+        context.startActivity(intent);
+    }
+
+    public static void startShareActivity(Context context) {
+        Intent intent = new Intent(context, ShareActivity.class);
         context.startActivity(intent);
     }
 }

@@ -15,6 +15,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
     private ProgressChangeListener mProgressChangeListener;
+    private RecordingListener mRecordingListener;
     private GLRenderWorker mGLRenderWorker;
     private int mSeekbarMaxValue;
     private IMusic mIMusic;
@@ -63,6 +64,10 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         onProgressInit(mStartTime, mSeekbarMaxValue);
     }
 
+    public void setRecordingListener(RecordingListener recordingListener) {
+        this.mRecordingListener = recordingListener;
+    }
+
     public void setSeekBarMaxValue(int seekBarMaxValue) {
         mSeekbarMaxValue = seekBarMaxValue;
     }
@@ -98,6 +103,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         if (mSeekWrapper != null) mSeekWrapper.setProgress((int) usedTime);
         onProgressChange((int) usedTime);
         mIMusic.onProgressChange((int) usedTime);
+        recordChange((int) usedTime);
     }
 
     @Override
@@ -108,6 +114,8 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     private void finishToTime(int finishToTime) {
         if (mIsRecording) {
             mGLRenderWorker.endRecording();
+            recordFinished();
+            mIsRecording = false;
         }
         mGLThread.stopUp();
         mGLThread.setManual(true);
@@ -280,6 +288,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     public void startRecording() {
         mIsRecording = true;
+        recordStart();
         seekToVideo(0);
         mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
         startVideo();
@@ -287,6 +296,21 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     public void setBitmapReadyListener(BitmapReadyListener bitmapReadyListener) {
         this.mBitmapReadyListener = bitmapReadyListener;
+    }
+
+    public void recordStart() {
+        if (mRecordingListener != null && mIsRecording)
+            mRecordingListener.recordStart();
+    }
+
+    public void recordChange(int progress) {
+        if (mRecordingListener != null && mIsRecording)
+            mRecordingListener.recordChange(progress);
+    }
+
+    public void recordFinished() {
+        if (mRecordingListener != null && mIsRecording)
+            mRecordingListener.recordFinished();
     }
 
     public interface ProgressChangeListener {
@@ -299,7 +323,15 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         void onProgressStart();
     }
 
-    public interface BitmapReadyListener{
+    public interface RecordingListener {
+        void recordStart();
+
+        void recordChange(int progress);
+
+        void recordFinished();
+    }
+
+    public interface BitmapReadyListener {
         void bitmapReady(String path);
     }
 }

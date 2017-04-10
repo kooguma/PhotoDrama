@@ -136,5 +136,10 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
-
+    <style name="ExportProgressLoadingTheme" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@color/export_color_bg</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
 </resources>

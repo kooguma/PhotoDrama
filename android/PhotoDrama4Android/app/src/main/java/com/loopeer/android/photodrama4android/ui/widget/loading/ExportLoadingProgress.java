@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -59,12 +60,10 @@ public class ExportLoadingProgress extends AppCompatImageView {
 
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        startAnimation();
     }
 
     @Override protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        stopAnimation();
     }
 
     public void startAnimation() {
@@ -77,5 +76,9 @@ public class ExportLoadingProgress extends AppCompatImageView {
         if (mDrawable != null) {
             mDrawable.stop();
         }
+    }
+
+    public void setProgress(@FloatRange(from = 0f, to = 1f) float progress) {
+        mDrawable.setProgress(progress * 360);
     }
 }

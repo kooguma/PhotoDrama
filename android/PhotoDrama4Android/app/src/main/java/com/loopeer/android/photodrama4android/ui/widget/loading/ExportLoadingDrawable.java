@@ -29,7 +29,6 @@ public class ExportLoadingDrawable extends Drawable implements Animatable {
 
     private ExportLoadingDrawable(Params mParams) {
         this.mParams = mParams;
-        // TODO: 2017/4/1
         setupAnimation();
     }
 
