@@ -91,6 +91,8 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void drawFrame(Context context, GL10 gl, long usedTime) {
+        glViewport(0, 0, mMovieMakerGLSurfaceView.getWidth(), mMovieMakerGLSurfaceView.getHeight());
+
         if (!mIsRecording) {
             glClear(GL_COLOR_BUFFER_BIT);
             setIdentityM(projectionMatrix, 0);

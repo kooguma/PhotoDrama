@@ -206,8 +206,8 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
 
         if (shouldScale) {
             final float scale = 1 - ((1 - dragDismissScale) * dragFraction);
-            setScaleX(scale);
-            setScaleY(scale);
+            /*setScaleX(scale);
+            setScaleY(scale);*/
         }
 
         // if we've reversed direction and gone past the settle point then clear the flags to

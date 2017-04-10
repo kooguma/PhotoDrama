@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.R;
@@ -56,7 +57,7 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT) {
             setMeasuredDimension(getDefaultSize(0, widthMeasureSpec), getDefaultSize(0, heightMeasureSpec));
-            int childWidthSize = getMeasuredWidth();
+            int childWidthSize = (getMeasuredWidth());
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
             heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (1f * childWidthSize * mRatioY / mRatioX), MeasureSpec.EXACTLY);
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
