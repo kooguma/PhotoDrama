@@ -161,4 +161,9 @@ public class Navigator {
         Intent intent = new Intent(context, ShareActivity.class);
         context.startActivity(intent);
     }
+
+    public static void startMainActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
 }

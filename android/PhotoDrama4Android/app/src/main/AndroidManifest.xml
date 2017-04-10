@@ -20,7 +20,8 @@
             android:name="com.loopeer.andebug.API_URL"
             android:value="${API_URL}" />
 
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
