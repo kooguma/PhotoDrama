@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/container"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
 
         <LinearLayout
             android:id="@+id/layout_display"
@@ -17,32 +16,45 @@
 
             <include layout="@layout/view_toolbar_dark_inset" />
 
-            <FrameLayout
+            <ViewAnimator
+                android:id="@+id/animator"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@android:color/black">
 
-                <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-                    android:id="@+id/gl_surface_view"
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+                        android:id="@+id/gl_surface_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:screenRatioX="@integer/gl_screen_x"
+                        app:screenRatioY="@integer/gl_screen_y"/>
+
+                    <ImageView
+                        android:id="@+id/btn_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_play_green_large"/>
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        style="?actionButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onFullBtnClick"
+                        android:layout_gravity="bottom|right"
+                        android:src="@drawable/ic_full"/>
+                </FrameLayout>
+
+                <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:screenRatioX="@integer/gl_screen_x"
                     app:screenRatioY="@integer/gl_screen_y"/>
-
-                <ImageView
-                    android:id="@+id/btn_play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_play_green_large"/>
-
-                <android.support.v7.widget.AppCompatImageButton
-                    style="?actionButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:onClick="onFullBtnClick"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:src="@drawable/ic_full"/>
-            </FrameLayout>
+            </ViewAnimator>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -52,7 +64,7 @@
                 android:paddingBottom="18dp"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:paddingTop="18dp" />
+                android:paddingTop="18dp"/>
         </LinearLayout>
 
         <com.loopeer.bottomimagepicker.BottomImagePickerView
@@ -63,7 +75,7 @@
             android:background="@color/window_background_dark"
             android:orientation="vertical"
             app:behavior_hideable="false"
-            app:layout_behavior="@string/picker_bottom_sheet_behavior" />
+            app:layout_behavior="@string/picker_bottom_sheet_behavior"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

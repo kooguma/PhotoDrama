@@ -28,14 +28,15 @@ import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.EditDramaSegmentAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingDialog;
+import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
+import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 
-import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
-
 public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener
         , VideoPlayerManager.BitmapReadyListener, VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener {
+
 
     private ActivityDramaEditBinding mBinding;
     private ImageView mIcon;
@@ -44,6 +45,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     private EditDramaSegmentAdapter mEditDramaSegmentAdapter;
     private VideoPlayerManager mVideoPlayerManager;
     private Drama mDrama;
+    private ILoader mLoader;
     private DramaFetchHelper mDramaFetchHelper;
     private ImageClip mSelectedImageClip;
     private ExportLoadingDialog mExportProgressLoading;
@@ -61,17 +63,17 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
 
     private void loadDrama() {
         if (mTheme == null) return;
-        showProgressLoading("");
+        mLoader.showProgress();
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(mTheme,
-                drama -> {
-                    updateDrama(drama);
-                }, throwable -> {
-                    throwable.printStackTrace();
-                    showToast(throwable.toString());
-                }, () -> {
-                    dismissProgressLoading();
-                });
+            drama -> {
+                updateDrama(drama);
+            }, throwable -> {
+                throwable.printStackTrace();
+                mLoader.showMessage(throwable.getMessage());
+            }, () -> {
+                mLoader.showContent();
+            });
     }
 
     private void updateDrama(Drama drama) {
@@ -107,8 +109,9 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     }
 
     private void setupView() {
+        mLoader = new ThemeLoader(mBinding.animator);
         mVideoPlayerManager = new VideoPlayerManager(null,
-                mBinding.glSurfaceView, new Drama());
+            mBinding.glSurfaceView, new Drama());
         mVideoPlayerManager.setBitmapReadyListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -116,10 +119,11 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         mVideoPlayerManager.setRecordingListener(this);
 
         mBinding.glSurfaceView.setOnClickListener(v -> {
-            if (mVideoPlayerManager.isStop())
+            if (mVideoPlayerManager.isStop()) {
                 mVideoPlayerManager.startVideo();
-            else
+            } else {
                 mVideoPlayerManager.pauseVideo();
+            }
         });
         mBottomImagePickerView = (BottomImagePickerView) findViewById(R.id.pick_view);
         mIcon = mBottomImagePickerView.getIconView();
@@ -128,7 +132,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(
-                    @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
+                @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
             }
 
             @Override
@@ -143,10 +147,11 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
                 BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
                 mSelectedImageClip.path = uri.getPath();
                 HandlerWrapper handler = new HandlerWrapper(
-                        Looper.getMainLooper(),
-                        HandlerWrapper.TYPE_LOAD_IMAGE
-                        , mSelectedImageClip.path
-                        , t -> VideoPlayManagerContainer.getDefault().bitmapLoadReady(DramaEditActivity.this
+                    Looper.getMainLooper(),
+                    HandlerWrapper.TYPE_LOAD_IMAGE
+                    , mSelectedImageClip.path
+                    , t -> VideoPlayManagerContainer.getDefault()
+                    .bitmapLoadReady(DramaEditActivity.this
                         , mSelectedImageClip.path));
                 mBinding.glSurfaceView.getTextureLoader().loadImageTexture(handler);
                 return false;
@@ -155,25 +160,25 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         updateSegmentList();
 
         mBinding.glSurfaceView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mBinding.glSurfaceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        int containerHeight = mBinding.container.getHeight();
-                        int recyclerBottom = mBinding.recyclerView.getBottom();
-                        int minSheetHeight = containerHeight - recyclerBottom;
-                        behavior.setPeekHeight(minSheetHeight);
-                    }
-                });
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mBinding.glSurfaceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    int containerHeight = mBinding.container.getHeight();
+                    int recyclerBottom = mBinding.recyclerView.getBottom();
+                    int minSheetHeight = containerHeight - recyclerBottom;
+                    behavior.setPeekHeight(minSheetHeight);
+                }
+            });
     }
 
     private void updateSegmentList() {
         mEditDramaSegmentAdapter = new EditDramaSegmentAdapter(this);
         mEditDramaSegmentAdapter.setOnSelectedListener(this);
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mBinding.recyclerView.setLayoutManager(
+            new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mBinding.recyclerView.setAdapter(mEditDramaSegmentAdapter);
     }
-
 
     @Override
     protected void onPause() {

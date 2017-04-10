@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.hepler;
 
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.widget.ViewAnimator;
 import android.widget.ViewSwitcher;
 import com.loopeer.android.photodrama4android.ui.widget.TextProgressBar;
