@@ -73,6 +73,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
                 drama -> {
+                    BitmapFactory.getInstance().clear();
                     mVideoPlayerManager.updateDrama(drama);
                     mVideoPlayerManager.seekToVideo(0);
                     mVideoPlayerManager.startVideo();
