@@ -97,21 +97,14 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
         mLoader = new ThemeLoader(mBinding.animator);
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar),
                 mBinding.glSurfaceView, new Drama());
+        mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
         mVideoPlayerManager.startVideo();
 
         mBinding.glSurfaceView.setOnClickListener(v -> {
-            if (!mToolShow) {
-                showAllBar();
-                hideTool();
-            } else {
-                if (mVideoPlayerManager.isStop())
-                    mVideoPlayerManager.startVideo();
-                else
-                    mVideoPlayerManager.pauseVideo();
-            }
+            onPlayRectClick();
         });
 
         mBinding.dragContainer.addListener(new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -127,6 +120,22 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
                 }
             }
         });
+    }
+
+    private void onPlayRectClick() {
+        if (!mToolShow) {
+            showAllBar();
+            hideTool();
+        } else {
+            if (mVideoPlayerManager.isStop())
+                mVideoPlayerManager.startVideo();
+            else
+                mVideoPlayerManager.pauseVideo();
+        }
+    }
+
+    public void onBgClick(View view) {
+        onPlayRectClick();
     }
 
     @Override
@@ -156,10 +165,6 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
         mVideoPlayerManager.onDestroy();
         mDramaFetchHelper.unSubscribe();
         BitmapFactory.getInstance().clear();
-    }
-
-    public void onFullBtnClick(View view) {
-        Navigator.startFullLandscapePlayActivity(this, mDrama);
     }
 
     @Override
