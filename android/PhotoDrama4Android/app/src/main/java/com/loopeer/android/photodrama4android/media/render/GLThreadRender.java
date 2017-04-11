@@ -123,7 +123,6 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
                 this.notify();
             }
         } else {
-            if (isStop()) return;
             mIRendererWorker.drawFrame(mContext, gl, mUsedTime);
         }
     }

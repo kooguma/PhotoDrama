@@ -3,20 +3,15 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.SeriesService;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaDetailBinding;
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
@@ -28,6 +23,11 @@ import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
@@ -37,6 +37,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
     private DramaFetchHelper mDramaFetchHelper;
     private ILoader mLoader;
     private Theme mTheme;
+    private Subject<Theme> mLoadSubject = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,14 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drama_detail);
         setupView();
         parseIntent();
-        loadDrama(mTheme);
         updateSeries(mTheme, true);
+        registerSubscription(
+                mLoadSubject.debounce(300, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(o -> loadDrama(o))
+                        .subscribe()
+        );
+        loadDramaSend(mTheme);
     }
 
     private void parseIntent() {
@@ -55,10 +62,14 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         }
     }
 
+
+    private void loadDramaSend(Theme theme) {
+        mLoader.showProgress();
+        mLoadSubject.onNext(theme);
+    }
+
     private void loadDrama(Theme theme) {
         if (theme == null) return;
-        mVideoPlayerManager.onStop();
-        mLoader.showProgress();
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
                 drama -> {
@@ -68,9 +79,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
                 }, throwable -> {
                     throwable.printStackTrace();
                     mLoader.showMessage(throwable.getMessage());
-                }, () -> {
-                    mLoader.showContent();
-                });
+                }, () -> mLoader.showContent());
     }
 
     private void updateSeries(Theme theme, boolean isFirstLoad) {
@@ -117,9 +126,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         button.setText(getString(R.string.drama_index_format, index));
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
-                loadDrama(theme);
-                // TODO: 2017/4/10  
-                //updateSeries(theme,false);
+                mVideoPlayerManager.pauseVideo();
+                loadDramaSend(theme);
             }
             setSelected(v);
         });
