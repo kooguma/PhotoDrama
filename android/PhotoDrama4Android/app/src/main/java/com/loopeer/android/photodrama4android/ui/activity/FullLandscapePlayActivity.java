@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,7 +59,19 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
             }
         });
 
-        mVideoPlayerManager.onRestart();
+        int usedTime = getIntent().getIntExtra(Navigator.EXTRA_USEDTIME,-1);
+        boolean restart = getIntent().getBooleanExtra(Navigator.EXTRA_IS_TO_START,false);
+
+        if(usedTime != -1) {
+            if (mVideoPlayerManager != null) {
+                mVideoPlayerManager.seekToVideo(usedTime);
+                if (restart) {
+                    mVideoPlayerManager.startVideo();
+                }
+            }
+        }else {
+            mVideoPlayerManager.onRestart();
+        }
 
         registerSubscription(
                 mHideToolSubject.debounce(1500, TimeUnit.MILLISECONDS)
@@ -83,7 +96,7 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -114,6 +127,21 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
     }
+
+    @Override public void onBackPressed() {
+        setResultIntent();
+        super.onBackPressed();
+    }
+
+    private void setResultIntent(){
+        final int usedTime = mVideoPlayerManager.getUsedTime();
+        final boolean restart = !mVideoPlayerManager.isStop();
+        Intent intent = new Intent();
+        intent.putExtra(Navigator.EXTRA_USEDTIME,usedTime);
+        intent.putExtra(Navigator.EXTRA_IS_TO_START,restart);
+        setResult(RESULT_OK,intent);
+    }
+
 
     @Override
     public void onProgressInit(int progress, int maxValue) {

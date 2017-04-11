@@ -29,6 +29,18 @@
                 android:fitsSystemWindows="@bool/fits_system_windows"
                 app:insetStatusBarColor="@android:color/transparent"/>
 
+
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="@dimen/large_padding"
+                android:layout_marginTop="@dimen/xxlarge_padding"
+                android:onClick="onCloseClick"
+                android:src="@drawable/ic_back_white"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,16 +64,7 @@
                             app:screenRatioX="@integer/gl_screen_x"
                             app:screenRatioY="@integer/gl_screen_y"/>
 
-                        <ImageButton
-                            android:id="@+id/btn_close"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:layout_gravity="top|left"
-                            android:layout_marginLeft="@dimen/large_padding"
-                            android:layout_marginTop="@dimen/xxlarge_padding"
-                            android:onClick="onCloseClick"
-                            android:src="@drawable/ic_back_white"/>
+
                         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                             xmlns:tools="http://schemas.android.com/tools"
                             android:id="@+id/layout_tool_bottom"
@@ -72,9 +75,9 @@
                             android:orientation="horizontal"
                             android:layout_gravity="bottom"
                             android:paddingBottom="8dp"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="4dp">
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="8dp">
 
                             <ImageView
                                 android:id="@+id/btn_pause_play_btn"
@@ -108,6 +111,16 @@
                                 android:textColor="@color/text_color_white"
                                 android:textSize="@dimen/text_size_small"
                                 tools:text="13:00"/>
+
+
+                            <android.support.v7.widget.AppCompatImageButton
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="8dp"
+                                android:onClick="onFullBtnClick"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:layout_gravity="center_vertical|right"
+                                android:src="@drawable/ic_full"/>
 
                         </LinearLayout>
 

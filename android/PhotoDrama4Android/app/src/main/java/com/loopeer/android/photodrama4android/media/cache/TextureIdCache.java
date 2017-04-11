@@ -26,6 +26,7 @@ public class TextureIdCache {
     public int getTextureId(int key) {
         if (mIdsMap == null) return 0;
         Integer i = mIdsMap.get(key);
+        if (i == null) return 0;
         return i;
     }
 

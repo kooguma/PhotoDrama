@@ -1,8 +1,11 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -31,13 +34,18 @@ import io.reactivex.subjects.Subject;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class DramaDetailActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener {
+public class DramaDetailActivity extends PhotoDramaBaseActivity
+    implements VideoPlayerManager.ProgressChangeListener {
     private ActivityDramaDetailBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
     private DramaFetchHelper mDramaFetchHelper;
     private ILoader mLoader;
+    private Drama mDrama;
     private Theme mTheme;
     private Subject<Theme> mLoadSubject = PublishSubject.create();
+    private Subject mHideToolSubject = PublishSubject.create();
+    private boolean mToolShow = true;
+    private int mUsedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +55,18 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         parseIntent();
         updateSeries(mTheme, true);
         registerSubscription(
-                mLoadSubject.debounce(300, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext(o -> loadDrama(o))
-                        .subscribe()
+            mLoadSubject.debounce(300, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(o -> loadDrama(o))
+                .subscribe()
         );
+        registerSubscription(
+            mHideToolSubject.debounce(1500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(o -> hideAllBar())
+                .subscribe()
+        );
+        hideTool();
         loadDramaSend(mTheme);
     }
 
@@ -62,7 +77,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         }
     }
 
-
     private void loadDramaSend(Theme theme) {
         mLoader.showProgress();
         mLoadSubject.onNext(theme);
@@ -72,41 +86,43 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         if (theme == null) return;
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
-                drama -> {
-                    BitmapFactory.getInstance().clear();
-                    mVideoPlayerManager.updateDrama(drama);
-                    mVideoPlayerManager.seekToVideo(0);
-                    mVideoPlayerManager.startVideo();
-                }, throwable -> {
-                    throwable.printStackTrace();
-                    mLoader.showMessage(throwable.getMessage());
-                }, () -> mLoader.showContent());
+            drama -> {
+                BitmapFactory.getInstance().clear();
+                mVideoPlayerManager.updateDrama(drama);
+                mVideoPlayerManager.seekToVideo(mUsedTime);
+                mVideoPlayerManager.startVideo();
+                mDrama = drama;
+            }, throwable -> {
+                throwable.printStackTrace();
+                mLoader.showMessage(throwable.getMessage());
+            }, () -> mLoader.showContent());
     }
 
     private void updateSeries(Theme theme, boolean isFirstLoad) {
         if (theme == null) return;
         registerSubscription(
-                ResponseObservable.unwrap(SeriesService.INSTANCE.detail(theme.seriesId))
-                        .subscribe(series -> {
-                            mBinding.setSeries(series);
-                            if (isFirstLoad) {
-                                for (int i = 0; i < series.themes.size(); i++) {
-                                    final Theme t = series.themes.get(i);
-                                    mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
+            ResponseObservable.unwrap(SeriesService.INSTANCE.detail(theme.seriesId))
+                .subscribe(series -> {
+                    mBinding.setSeries(series);
+                    if (isFirstLoad) {
+                        for (int i = 0; i < series.themes.size(); i++) {
+                            final Theme t = series.themes.get(i);
+                            mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
+                        }
+                        final int index = series.getSeriesIndex(mTheme) - 1;
+                        final View child = mBinding.layoutEpisode.getChildAt(index);
+                        setSelected(child);
+                        mBinding.scrollViewEpisode.post(
+                            () -> {
+                                if (child != null) {
+                                    mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
                                 }
-                                final int index = series.getSeriesIndex(mTheme) - 1;
-                                final View child = mBinding.layoutEpisode.getChildAt(index);
-                                setSelected(child);
-                                mBinding.scrollViewEpisode.post(
-                                        () -> {
-                                            if (child != null)
-                                                mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
-                                        });
-                            }
-                        }, throwable -> {
-                            throwable.printStackTrace();
-                            showToast(throwable.toString());
-                        }, () -> dismissProgressLoading())
+                            });
+                    }
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    showToast(throwable.toString());
+                }, () -> dismissProgressLoading())
         );
     }
 
@@ -114,8 +130,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),
-                mBinding.glSurfaceView, new Drama());
-        mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
+            mBinding.glSurfaceView, new Drama());
+        mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -123,7 +139,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
 
     private Button generaEpisodeButton(int index, final Theme theme) {
         Button button = (Button) LayoutInflater.from(this)
-                .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
+            .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
         button.setText(getString(R.string.drama_index_format, index));
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
@@ -148,6 +164,37 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
 
     }
 
+    private void onPlayRectClick() {
+        if (!mToolShow) {
+            showAllBar();
+            hideTool();
+        } else {
+            if (mVideoPlayerManager.isStop()) {
+                mVideoPlayerManager.startVideo();
+            } else {
+                mVideoPlayerManager.pauseVideo();
+            }
+        }
+    }
+
+    private void hideTool() {
+        mHideToolSubject.onNext(new Object());
+    }
+
+    private void hideAllBar() {
+        if (mVideoPlayerManager.getGLThread().isStop() || !mToolShow) return;
+        mToolShow = false;
+        ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, 0,
+            mBinding.layoutToolBottom.getHeight()).start();
+    }
+
+    private void showAllBar() {
+        if (mToolShow) return;
+        mToolShow = true;
+        ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y,
+            mBinding.layoutToolBottom.getHeight(), 0).start();
+    }
+
     public void onEditClick(View view) {
         Navigator.startDramaEditActivity(DramaDetailActivity.this, mTheme);
     }
@@ -166,7 +213,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
     @Override
     protected void onResume() {
         super.onResume();
-
         mVideoPlayerManager.onResume();
     }
 
@@ -205,7 +251,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
         String hms = formatter.format(progress);
         mBinding.textTimeStart.setText(hms);
         String hmsTotal = formatter.format(mVideoPlayerManager.getSeekbarMaxValue() + 1 - progress);
-        mBinding.textTimeEnd.setText("- " + hmsTotal);
+        mBinding.textTimeEnd.setText(hmsTotal);
     }
 
     @Override
@@ -218,6 +264,29 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity implements Video
             mVideoPlayerManager.startVideo();
         } else {
             mVideoPlayerManager.pauseVideo();
+        }
+    }
+
+    public void onFullBtnClick(View view) {
+        Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
+            mVideoPlayerManager.isStop(),
+            mVideoPlayerManager.getUsedTime());
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == Navigator.REQUEST_FULL_SCREEN) {
+            boolean restart = data.getBooleanExtra(Navigator.EXTRA_IS_TO_START, false);
+            int usedTime = data.getIntExtra(Navigator.EXTRA_USEDTIME, -1);
+            if (usedTime != -1) {
+                mUsedTime = usedTime;
+                if (mVideoPlayerManager != null) {
+                    mVideoPlayerManager.seekToVideo(usedTime);
+                    if (restart) {
+                        mVideoPlayerManager.startVideo();
+                    }
+                }
+            }
         }
     }
 }

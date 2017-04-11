@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.os.Bundle;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
@@ -43,6 +44,7 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT = 1007;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM_SELECT = 1008;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM = 1009;
+    public static final int REQUEST_FULL_SCREEN = 10010;
     public static final String EXTRA_THEME ="extra_theme" ;
     public static final String EXTRA_USEDTIME ="extra_usedtime" ;
     public static final String EXTRA_IS_TO_START ="extra_is_to_start" ;
@@ -117,6 +119,14 @@ public class Navigator {
         Intent intent = new Intent(context, FullLandscapePlayActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
         context.startActivity(intent);
+    }
+
+    public static void startFullLandscapePlayActivityForResult(Activity activity, Drama drama,boolean isStop,int usedTime) {
+        Intent intent = new Intent(activity, FullLandscapePlayActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        intent.putExtra(EXTRA_USEDTIME,usedTime);
+        intent.putExtra(EXTRA_IS_TO_START,!isStop);
+        activity.startActivityForResult(intent,REQUEST_FULL_SCREEN);
     }
 
     public static void startDramaSelectActivity(Context context) {
