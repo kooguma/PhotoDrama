@@ -30,16 +30,6 @@
                 app:insetStatusBarColor="@android:color/transparent"/>
 
 
-            <ImageButton
-                android:id="@+id/btn_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_gravity="top|left"
-                android:layout_marginLeft="@dimen/large_padding"
-                android:layout_marginTop="@dimen/xxlarge_padding"
-                android:onClick="onCloseClick"
-                android:src="@drawable/ic_back_white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -253,6 +243,19 @@
                     android:paddingRight="@dimen/large_padding"
                     android:text="@{theme.description}"/>
             </LinearLayout>
+
+
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="@dimen/large_padding"
+                android:layout_marginTop="@dimen/xxlarge_padding"
+                android:onClick="onCloseClick"
+                android:src="@drawable/ic_back_white"/>
+
         </FrameLayout>
 
     </ScrollView>
