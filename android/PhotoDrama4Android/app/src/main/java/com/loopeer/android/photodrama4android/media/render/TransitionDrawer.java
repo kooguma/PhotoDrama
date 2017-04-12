@@ -37,9 +37,9 @@ public abstract class TransitionDrawer extends ClipDrawer {
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {
-        if (mTextureIdPre == 0 || mTextureIdNext == 0) return;
         if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
         updateViewMatrices(usedTime);
+        if (mTextureIdPre == 0 || mTextureIdNext == 0) return;
         updateProgramBindData(usedTime, pMatrix);
         draw();
     }
