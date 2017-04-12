@@ -15,12 +15,12 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-
         <meta-data
             android:name="com.loopeer.andebug.API_URL"
             android:value="${API_URL}" />
 
-        <activity android:name=".ui.activity.MainActivity"
+        <activity
+            android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,24 +28,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.MakeMovieActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-
         <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-
         <activity
             android:name=".ui.activity.TransitionEditActivity"
             android:label="@string/label_transition_edit"
@@ -84,14 +80,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-
         <activity
             android:name=".ui.activity.MusicSelectActivity"
             android:label="@string/label_music_select"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.DramaSelectActivity"
             android:label="@string/label_drama_select"
@@ -100,7 +94,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.MainActivity" />
         </activity>
-
         <activity
             android:name=".ui.activity.DramaDetailActivity"
             android:label="@string/label_drama_detail"
@@ -109,8 +102,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.DramaSelectActivity" />
         </activity>
-
-        <activity android:name=".ui.activity.TestMusicSelectedActivity"></activity>
+        <activity android:name=".ui.activity.TestMusicSelectedActivity" />
         <activity
             android:name=".ui.activity.SettingActivity"
             android:label="@string/label_setting"
@@ -119,7 +111,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.MainActivity" />
         </activity>
-
         <activity
             android:name=".ui.activity.AboutActivity"
             android:label="@string/label_about_us"
@@ -128,7 +119,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.SettingActivity" />
         </activity>
-
         <activity
             android:name=".ui.activity.FeedbackActivity"
             android:label="@string/label_feed_back"
@@ -137,26 +127,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.SettingActivity" />
         </activity>
-
         <activity
             android:name=".ui.activity.ShareActivity"
             android:label="@string/label_share"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.DramaEditActivity"
             android:label="@string/label_drama_edit"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.FullLandscapePlayActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Dark.NoActionBar" />
-
         <activity
             android:name=".ui.activity.DramaPlayActivity"
             android:screenOrientation="sensor"
             android:theme="@style/AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen" />
+        <activity android:name=".ui.activity.TestFFmpegActivity"
+            android:label="111testFfmpeg"></activity>
     </application>
 
 </manifest>

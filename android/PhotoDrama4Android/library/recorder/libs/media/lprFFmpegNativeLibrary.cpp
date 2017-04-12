@@ -6,6 +6,7 @@ extern "C" {
 
 JNIEXPORT void JNICALL Java_com_loopeer_media_FFmpegNativeLibrary_avRegisterAll(JNIEnv *, jclass) {
     av_register_all();
+    avfilter_register_all();
     avcodec_register_all();
     av_log_set_callback(custom_log);
 }

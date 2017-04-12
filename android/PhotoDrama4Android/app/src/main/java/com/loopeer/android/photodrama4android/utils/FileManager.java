@@ -117,6 +117,10 @@ public class FileManager {
         return getAudioDir().getPath() + File.separator + System.currentTimeMillis() + ".m4a";
     }
 
+    public String createNewAudioWAVFile() {
+        return getAudioDir().getPath() + File.separator + System.currentTimeMillis() + ".wav";
+    }
+
     public String createNewVideoFile() {
         return getVideoDir().getPath() + File.separator + System.currentTimeMillis() + ".mp4";
     }

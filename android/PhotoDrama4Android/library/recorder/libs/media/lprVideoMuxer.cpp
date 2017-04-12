@@ -58,7 +58,7 @@ static int open_input_file(const char *filename,
         return AVERROR_EXIT;
     }
 
-    /** allocate a new decoding context */
+    /** allocate a new decoding context*/
     avctx = avcodec_alloc_context3(input_codec);
     if (!avctx) {
         fprintf(stderr, "Could not allocate a decoding context\n");
@@ -68,6 +68,10 @@ static int open_input_file(const char *filename,
 
     /** initialize the stream parameters with demuxer information */
     error = avcodec_parameters_to_context(avctx, (*input_format_context)->streams[0]->codecpar);
+
+    LPR_LOG_ERROR("channels %d", avctx->channels);
+    LPR_LOG_ERROR("channels layout %d", avctx->channel_layout);
+
     if (error < 0) {
         avformat_close_input(input_format_context);
         avcodec_free_context(&avctx);
@@ -427,6 +431,48 @@ static int add_samples_to_fifo(AVAudioFifo *fifo,
 }
 
 /**
+ * Initialize one input frame for writing to the output file.
+ * The frame will be exactly frame_size samples large.
+ */
+static int init_output_frame(AVFrame **frame,
+                             AVCodecContext *output_codec_context,
+                             int frame_size)
+{
+    int error;
+
+    /** Create a new frame to store the audio samples. */
+    if (!(*frame = av_frame_alloc())) {
+        fprintf(stderr, "Could not allocate output frame\n");
+        return AVERROR_EXIT;
+    }
+
+    /**
+     * Set the frame's parameters, especially its size and format.
+     * av_frame_get_buffer needs this to allocate memory for the
+     * audio samples of the frame.
+     * Default channel layouts based on the number of channels
+     * are assumed for simplicity.
+     */
+    (*frame)->nb_samples     = frame_size;
+    (*frame)->channel_layout = output_codec_context->channel_layout;
+    (*frame)->format         = output_codec_context->sample_fmt;
+    (*frame)->sample_rate    = output_codec_context->sample_rate;
+
+    /**
+     * Allocate the samples of the created frame. This call will make
+     * sure that the audio frame can hold as many samples as specified.
+     */
+    if ((error = av_frame_get_buffer(*frame, 0)) < 0) {
+        fprintf(stderr, "Could not allocate output frame samples (error '%s')\n",
+                get_error_text(error));
+        av_frame_free(frame);
+        return error;
+    }
+
+    return 0;
+}
+
+/**
  * Read one audio frame from the input file, decodes, converts and stores
  * it in the FIFO buffer.
  */
@@ -491,48 +537,6 @@ static int read_decode_convert_and_store(AVAudioFifo *fifo,
     av_frame_free(&input_frame);
 
     return ret;
-}
-
-/**
- * Initialize one input frame for writing to the output file.
- * The frame will be exactly frame_size samples large.
- */
-static int init_output_frame(AVFrame **frame,
-                             AVCodecContext *output_codec_context,
-                             int frame_size)
-{
-    int error;
-
-    /** Create a new frame to store the audio samples. */
-    if (!(*frame = av_frame_alloc())) {
-        fprintf(stderr, "Could not allocate output frame\n");
-        return AVERROR_EXIT;
-    }
-
-    /**
-     * Set the frame's parameters, especially its size and format.
-     * av_frame_get_buffer needs this to allocate memory for the
-     * audio samples of the frame.
-     * Default channel layouts based on the number of channels
-     * are assumed for simplicity.
-     */
-    (*frame)->nb_samples     = frame_size;
-    (*frame)->channel_layout = output_codec_context->channel_layout;
-    (*frame)->format         = output_codec_context->sample_fmt;
-    (*frame)->sample_rate    = output_codec_context->sample_rate;
-
-    /**
-     * Allocate the samples of the created frame. This call will make
-     * sure that the audio frame can hold as many samples as specified.
-     */
-    if ((error = av_frame_get_buffer(*frame, 0)) < 0) {
-        fprintf(stderr, "Could not allocate output frame samples (error '%s')\n",
-                get_error_text(error));
-        av_frame_free(frame);
-        return error;
-    }
-
-    return 0;
 }
 
 /** Global timestamp for the audio frames */
@@ -647,7 +651,6 @@ int convertAac(const char* inputFile, const char* outFile)
     int ret = AVERROR_EXIT;
 
     /** Register all codecs and formats so that they can be used. */
-    av_register_all();
     /** Open the input file for reading. */
     if (open_input_file(inputFile, &input_format_context,
                         &input_codec_context))
@@ -767,3 +770,6 @@ Java_com_loopeer_media_VideoMuxer_nativeConvert(JNIEnv *env, jobject instance, j
     env->ReleaseStringUTFChars(inputPath_, videoPath);
     env->ReleaseStringUTFChars(outputPath_, audioPath);
 }
+
+
+

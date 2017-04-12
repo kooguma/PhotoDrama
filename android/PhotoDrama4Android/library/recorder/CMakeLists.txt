@@ -23,6 +23,7 @@ add_library(
     SHARED
     libs/media/lprFFmpegNativeLibrary.cpp
     libs/media/lprVideoMuxer.cpp
+    libs/media/lprAmix.cpp
 )
 
 target_link_libraries(
