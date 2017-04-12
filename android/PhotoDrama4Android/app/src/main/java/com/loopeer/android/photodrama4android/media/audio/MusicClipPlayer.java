@@ -15,6 +15,7 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     private MusicClip mMusicClip;
     private boolean mIsPrepared;
     private MusicClipPlayerLister mMusicClipPlayerLister;
+    private boolean mIsPause;
 
     public MusicClipPlayer(Context context, MusicClip clip, MusicClipPlayerLister listener) {
         mMusicClip = clip;
@@ -57,12 +58,14 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     }
 
     public void startMusic() {
+        mIsPause = false;
         if (mMediaPlayer != null && mIsPrepared) {
             mMediaPlayer.start();
         }
     }
 
     public void pauseMusic() {
+        mIsPause = true;
         if (mMediaPlayer != null && mIsPrepared) {
             mMediaPlayer.pause();
         }
@@ -77,12 +80,16 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     public void onProgressChange(int usedTime) {
         if (usedTime < mMusicClip.startTime || usedTime > mMusicClip.getEndTime()) {
             if (mMediaPlayer.isPlaying()) {
-                pauseMusic();
+                if (mMediaPlayer != null && mIsPrepared) {
+                    mMediaPlayer.pause();
+                }
             }
         } else {
-            if (!mMediaPlayer.isPlaying()) {
+            if (!mMediaPlayer.isPlaying() && !mIsPause) {
                 seekToMusic(usedTime);
-                startMusic();
+                if (mMediaPlayer != null && mIsPrepared) {
+                    mMediaPlayer.start();
+                }
             }
         }
     }
@@ -90,8 +97,8 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     @Override
     public void onPrepared(MediaPlayer mp) {
         mIsPrepared = true;
-        startMusic();
-        pauseMusic();
+        mMediaPlayer.start();
+        mMediaPlayer.pause();
         mMusicClipPlayerLister.onMusicClipPlayerPrepared(mMusicClip.getKey());
     }
 

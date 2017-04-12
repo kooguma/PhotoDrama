@@ -38,7 +38,7 @@ public class XmlMusicClip {
         musicClip.path = ZipUtils.pathFromPackageFile(xmlPackage, path);
         musicClip.musicType = MusicClip.MusicType.values()[type];
         musicClip.startTime = startTime;
-        musicClip.startTime = duration;
+        musicClip.showTime = duration;
         musicClip.volume = volume;
         musicClip.musicStartOffset = startOffset;
         musicClip.musicSelectedLength = cutDuration;
