@@ -25,14 +25,13 @@ public class TestFFmpegActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-               /* new VideoMixer().mix(
+                new VideoMixer().mix(
                         "/storage/emulated/0/talk/download/car.wav"
-                        *//*mBinding.editPath1.getText().toString()*//*
-                        , "/storage/emulated/0/talk/download/wind.wav"*//*mBinding.editPath2.getText().toString()*//*
-                        , FileManager.getInstance().createNewAudioWAVFile());*/
-                new VideoMuxer().muxing(
+                        , "/storage/emulated/0/talk/download/wind.wav"
+                        , FileManager.getInstance().createNewAudioWAVFile());
+                /*new VideoMuxer().muxing(
                         "/storage/emulated/0/qqmusic/song/Eliza Doolittle - Rollerblades [mqms2].mp3"
-                        , FileManager.getInstance().createNewAudioFile());
+                        , FileManager.getInstance().createNewAudioFile());*/
             }
         }).start();
     }
