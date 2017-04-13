@@ -75,6 +75,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     @Override
     public void onProgressChanged(SeekWrapper.SeekImpl seek, int progress, boolean fromUser) {
         if (mGLThread == null) return;
+        if (fromUser) seekToVideo(progress);
         onProgressChange(progress);
     }
 
