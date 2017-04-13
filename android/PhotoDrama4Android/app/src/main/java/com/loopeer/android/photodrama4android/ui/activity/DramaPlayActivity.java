@@ -24,8 +24,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
-
 public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener {
 
     private ActivityDramaPlayBinding mBinding;
@@ -37,6 +35,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     private Subject mHideToolSubject = PublishSubject.create();
     private boolean mToolShow = true;
     private boolean mBottomDismiss = true;
+    private boolean mIsPaused;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +179,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     public void onProgressStop() {
         mBinding.btnPausePlayBtn.setSelected(true);
         showAllBar();
+        mIsPaused = true;
     }
 
     @Override
@@ -193,6 +193,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
 
     @Override
     public void onProgressStart() {
+        mIsPaused = false;
         hideTool();
         mBinding.btnPausePlayBtn.setSelected(false);
     }
@@ -213,7 +214,7 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(Navigator.EXTRA_USEDTIME, mVideoPlayerManager.getUsedTime());
-        outState.putBoolean(Navigator.EXTRA_IS_TO_START, !mVideoPlayerManager.isStop());
+        outState.putBoolean(Navigator.EXTRA_IS_TO_START, mIsPaused);
     }
 
     @Override
