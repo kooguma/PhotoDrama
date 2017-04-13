@@ -14,10 +14,6 @@ android {
         manifestPlaceholders = [API_URL: configs.apiUrlDebug]
         renderscriptTargetApi 24
         renderscriptSupportModeEnabled true
-
-        ndk {
-            abiFilters "armeabi-v7a"
-        }
     }
 
     signingConfigs {
@@ -115,7 +111,6 @@ dependencies {
 
     compile project(':library:bottomimagepicker')
     compile project(':library:formitemview')
-    compile project(':library:recorder')
 
     //    compile 'com.android.support:multidex:1.0.1'
     compile 'com.qiniu:qiniu-android-sdk:7.3.2'

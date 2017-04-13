@@ -143,8 +143,6 @@
             android:name=".ui.activity.DramaPlayActivity"
             android:screenOrientation="sensor"
             android:theme="@style/AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen" />
-        <activity android:name=".ui.activity.TestFFmpegActivity"
-            android:label="111testFfmpeg"></activity>
     </application>
 
 </manifest>
