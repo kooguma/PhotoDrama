@@ -9,8 +9,10 @@ import android.util.Log;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.model.Drama;
-import com.loopeer.android.photodrama4android.media.recorder.TextureMovieEncoder;
-import com.loopeer.android.photodrama4android.media.recorder.VideoEncoderCore;
+import com.loopeer.android.photodrama4android.media.recorder.MediaAudioEncoder;
+import com.loopeer.android.photodrama4android.media.recorder.MediaEncoder;
+import com.loopeer.android.photodrama4android.media.recorder.MediaMuxerWrapper;
+import com.loopeer.android.photodrama4android.media.recorder.MediaVideoEncoder;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglHelperLocal;
 import com.loopeer.android.photodrama4android.media.recorder.gles.FullFrameRect;
@@ -18,7 +20,6 @@ import com.loopeer.android.photodrama4android.media.recorder.gles.GlUtil;
 import com.loopeer.android.photodrama4android.media.recorder.gles.Texture2dProgram;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -53,7 +54,7 @@ public class GLRenderWorker implements IRendererWorker {
 
     // Used for recording.
     private WindowSurface mInputWindowSurface;
-    private TextureMovieEncoder mVideoEncoder;
+    private MediaMuxerWrapper mMuxerWrapper;
     private Rect mVideoRect;
 
     public GLRenderWorker(Context context, Drama drama, MovieMakerGLSurfaceView view) {
@@ -107,7 +108,7 @@ public class GLRenderWorker implements IRendererWorker {
             GlUtil.checkGlError("glBindFramebuffer");
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
             mEglHelperLocal.swapBuffers();
-            mVideoEncoder.frameAvailableSoon();
+            mMuxerWrapper.frameVideoAvailableSoon();
             mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -145,7 +146,7 @@ public class GLRenderWorker implements IRendererWorker {
     public synchronized void endRecording() {
         if (mIsRecording) {
             mIsRecording = false;
-            stopEncoder();
+            stopRecording();
         }
     }
 
@@ -207,9 +208,6 @@ public class GLRenderWorker implements IRendererWorker {
 
     private void startEncoder(String fileName) {
         Log.d(TAG, "starting to record");
-        // Record at 1280x720, regardless of the window dimensions.  The encoder may
-        // explode if given "strange" dimensions, e.g. a width that is not a multiple
-        // of 16.  We can box it as needed to preserve dimensions.
         final int BIT_RATE = 4000000;   // 4Mbps
         final int VIDEO_WIDTH = 1280;
         final int VIDEO_HEIGHT = 720;
@@ -229,25 +227,40 @@ public class GLRenderWorker implements IRendererWorker {
         int offX = (VIDEO_WIDTH - outWidth) / 2;
         int offY = (VIDEO_HEIGHT - outHeight) / 2;
         mVideoRect.set(offX, offY, offX + outWidth, offY + outHeight);
-        Log.d(TAG, "Adjusting window " + windowWidth + "x" + windowHeight +
-                " to +" + offX + ",+" + offY + " " +
-                mVideoRect.width() + "x" + mVideoRect.height());
-
-        VideoEncoderCore encoderCore;
-        try {
-            encoderCore = new VideoEncoderCore(VIDEO_WIDTH, VIDEO_HEIGHT,
-                    BIT_RATE, new File(fileName));
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
-        mInputWindowSurface = new WindowSurface(mEglCore, encoderCore.getInputSurface(), true);
-        mVideoEncoder = new TextureMovieEncoder(encoderCore);
+        startRecording(fileName, VIDEO_WIDTH, VIDEO_HEIGHT, BIT_RATE);
     }
 
-    private void stopEncoder() {
-        if (mVideoEncoder != null) {
-            mVideoEncoder.stopRecording();
-            mVideoEncoder = null;
+    private void startRecording(String fileName, int width, int height, int bitRate) {
+        try {
+            mMuxerWrapper = new MediaMuxerWrapper(fileName);	// if you record audio only, ".m4a" is also OK.
+            if (true) {
+                new MediaVideoEncoder(mMuxerWrapper, mMediaEncoderListener, width, height, bitRate);
+            }
+            if (true) {
+                new MediaAudioEncoder(mMuxerWrapper, mMediaEncoderListener, mDrama.audioGroup);
+            }
+            mMuxerWrapper.prepare();
+            mInputWindowSurface = new WindowSurface(mEglCore, mMuxerWrapper.getInputSurface(), true);
+            mMuxerWrapper.startRecording();
+        } catch (final IOException e) {
+            Log.e(TAG, "startCapture:", e);
+        }
+    }
+
+    private final MediaEncoder.MediaEncoderListener mMediaEncoderListener = new MediaEncoder.MediaEncoderListener() {
+        @Override
+        public void onPrepared(final MediaEncoder encoder) {
+        }
+
+        @Override
+        public void onStopped(final MediaEncoder encoder) {
+        }
+    };
+
+    private void stopRecording() {
+        if (mMuxerWrapper != null) {
+            mMuxerWrapper.stopRecording();
+            mMuxerWrapper = null;
         }
         if (mInputWindowSurface != null) {
             mInputWindowSurface.release();
