@@ -8,12 +8,16 @@ import android.util.Log;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import static android.media.MediaExtractor.SEEK_TO_CLOSEST_SYNC;
 
 public class MediaAudioDecoder extends MediaDecoder {
 
     private static final String TAG = "MediaAudioDecoder";
+    private final static long audioBytesPerSample = 44100 * 16 / 8;
 
     private MusicClip mMusicClip;
 
@@ -52,7 +56,11 @@ public class MediaAudioDecoder extends MediaDecoder {
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
+        int rawFileSizeCount = 0;
+        long audioTimeUs = 0;
         try {
+            extractor.seekTo(1000 * 1000 * 36, SEEK_TO_CLOSEST_SYNC);
+
             while (!sawOutputEOS) {
                 if (!sawInputEOS) {
                     int inputBufIndex = codec.dequeueInputBuffer(kTimeOutUs);
@@ -65,7 +73,7 @@ public class MediaAudioDecoder extends MediaDecoder {
                         if (sampleSize < 0) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                        } else if (extractor.getSampleTime() / 1000 > 1000 * 20){
+                        } else if (extractor.getSampleTime() / 1000 > 1000 * 48) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                         } else {
@@ -79,7 +87,6 @@ public class MediaAudioDecoder extends MediaDecoder {
                 if (res >= 0) {
 
                     int outputBufIndex = res;
-                    // Simply ignore codec config buffers.
                     if ((info.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
                         codec.releaseOutputBuffer(outputBufIndex, false);
                         continue;
@@ -101,8 +108,10 @@ public class MediaAudioDecoder extends MediaDecoder {
                             ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
                             byteBuffer.put(data, offset, length);
                             byteBuffer.flip();
-                            callback.onDecode(byteBuffer, length, info.presentationTimeUs);
+                            callback.onDecode(byteBuffer, length, audioTimeUs);
+                            audioTimeUs = (long) (1000000 * (rawFileSizeCount / 2.0) / audioBytesPerSample);
                             offset += length;
+                            rawFileSizeCount += length;
                         }
                     }
 
@@ -110,7 +119,7 @@ public class MediaAudioDecoder extends MediaDecoder {
 
                     if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                         sawOutputEOS = true;
-                        callback.onDecode(null, 0, info.presentationTimeUs);
+                        callback.onDecode(null, 0, audioTimeUs);
                     }
 
                 } else if (res == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
@@ -127,7 +136,7 @@ public class MediaAudioDecoder extends MediaDecoder {
 
     }
 
-    public interface DecodeCallback{
+    public interface DecodeCallback {
         void onDecode(final ByteBuffer buffer, final int length, final long presentationTimeUs);
     }
 }

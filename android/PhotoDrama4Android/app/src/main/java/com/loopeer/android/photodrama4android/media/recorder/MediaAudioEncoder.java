@@ -1,29 +1,23 @@
 package com.loopeer.android.photodrama4android.media.recorder;
-
-import android.media.AudioFormat;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
-import android.media.MediaRecorder;
 import android.util.Log;
-
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.AudioGroup;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class MediaAudioEncoder extends MediaEncoder {
-    private static final boolean DEBUG = BuildConfig.DEBUG;    // TODO set false on release
+    private static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "MediaAudioEncoder";
 
     private static final String MIME_TYPE = "audio/mp4a-latm";
-    private static final int SAMPLE_RATE = 44100/*44100*/;    // 44.1[KHz] is only setting guaranteed to be available on all devices.
-    private static final int BIT_RATE = 64000;
-    public static final int SAMPLES_PER_FRAME = 1024;    // AAC, bytes/frame/channel
-    public static final int FRAMES_PER_BUFFER = 25;    // AAC, frame/buffer/sec
+    private static final int SAMPLE_RATE = 44100;
+    private static final int BIT_RATE = 128000;
+    private static final int CHANNEL_COUNT = 2;
     private long mRecordStartTime = 0;
 
     private AudioThread mAudioThread = null;
@@ -45,26 +39,16 @@ public class MediaAudioEncoder extends MediaEncoder {
             Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE);
             return;
         }
-        if (DEBUG) Log.i(TAG, "selected codec: " + audioCodecInfo.getName());
-        final MediaFormat audioFormat = MediaFormat.createAudioFormat(MIME_TYPE, SAMPLE_RATE, 1);
-        audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-        audioFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
-        audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
-        audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-        if (DEBUG) Log.i(TAG, "format: " + audioFormat);
-        mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
-        mMediaCodec.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-/*
 
         mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
         MediaFormat format = new MediaFormat();
         format.setString(MediaFormat.KEY_MIME, MIME_TYPE);
-        format.setInteger(MediaFormat.KEY_BIT_RATE, 128000);
-        format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 2);
-        format.setInteger(MediaFormat.KEY_SAMPLE_RATE, 44100);
+        format.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
+        format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, CHANNEL_COUNT);
+        format.setInteger(MediaFormat.KEY_SAMPLE_RATE, SAMPLE_RATE);
         format.setInteger(MediaFormat.KEY_AAC_PROFILE,
                 MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-        mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);*/
+        mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mMediaCodec.start();
         if (DEBUG) Log.i(TAG, "prepare finishing");
         if (mListener != null) {
@@ -79,7 +63,6 @@ public class MediaAudioEncoder extends MediaEncoder {
     @Override
     protected void startRecording() {
         super.startRecording();
-        // create and execute audio capturing thread using internal mic
         mRecordStartTime = System.nanoTime() / 1000;
         if (mAudioThread == null) {
             mAudioThread = new AudioThread();
@@ -141,6 +124,7 @@ public class MediaAudioEncoder extends MediaEncoder {
     @Override
     protected long getPTSUs() {
         if (prevOutputPTSUs > mBufferInfo.presentationTimeUs) {
+            if (DEBUG) Log.d(TAG, "prevOutputPTSUs > mBufferInfo.presentationTimeUs :  " + prevOutputPTSUs + " > " +  mBufferInfo.presentationTimeUs);
             return prevOutputPTSUs;
         }
         return mBufferInfo.presentationTimeUs;
@@ -258,15 +242,8 @@ public class MediaAudioEncoder extends MediaEncoder {
 
                     mBufferInfo.presentationTimeUs = getPTSUs();
 
-                    if(prevOutputPTSUs < mBufferInfo.presentationTimeUs){
-                        muxer.writeSampleData(mTrackIndex, encodedData, mBufferInfo);
-                        prevOutputPTSUs = mBufferInfo.presentationTimeUs;
-                    }else{
-                        if (DEBUG) {
-                            Log.e(TAG, "error sample! its presentationTimeUs should not lower than before.");
-                        }
-                    }
-
+                    muxer.writeSampleData(mTrackIndex, encodedData, mBufferInfo);
+                    prevOutputPTSUs = mBufferInfo.presentationTimeUs;
                 }
                 mMediaCodec.releaseOutputBuffer(encoderStatus, false);
                 if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
