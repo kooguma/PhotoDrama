@@ -11,12 +11,10 @@ import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 
 public abstract class MediaEncoder implements Runnable {
-    private static final boolean DEBUG = BuildConfig.DEBUG;    // TODO set false on release
+    private static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "MediaEncoder";
 
-    protected static final int TIMEOUT_USEC = 10000;    // 10[msec]
-    protected static final int MSG_FRAME_AVAILABLE = 1;
-    protected static final int MSG_STOP_RECORDING = 9;
+    protected static final int TIMEOUT_USEC = 10000;
 
     public interface MediaEncoderListener {
         void onPrepared(MediaEncoder encoder);
