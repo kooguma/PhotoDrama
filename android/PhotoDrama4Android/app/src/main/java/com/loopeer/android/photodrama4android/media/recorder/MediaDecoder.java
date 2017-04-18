@@ -1,5 +1,18 @@
 package com.loopeer.android.photodrama4android.media.recorder;
 
+public abstract class MediaDecoder implements Runnable{
 
-public abstract class MediaDecoder {
+    protected DecodeProgressCallback mCallback;
+
+    public MediaDecoder(DecodeProgressCallback callback) {
+        mCallback = callback;
+    }
+
+    public void startDecode() {
+        new Thread(this, getClass().getSimpleName()).start();
+    }
+
+    public interface DecodeProgressCallback {
+        void onFinish();
+    }
 }

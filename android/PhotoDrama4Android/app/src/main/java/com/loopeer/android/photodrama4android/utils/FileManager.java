@@ -10,7 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
-import com.loopeer.android.photodrama4android.model.Series;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import com.loopeer.android.photodrama4android.media.utils.MD5Util;
 import com.loopeer.android.photodrama4android.model.Theme;
 
 import java.io.File;
@@ -23,14 +24,17 @@ public class FileManager {
     private static FileManager instance;
     private static String photoDramaPath = Environment.getExternalStorageDirectory() + "/photodrama";
     private File audioDir;
+    private File tempAudioDir;
     private File videoDir;
     private File dramaDir;
     public final String audioDirPath = "/audio/";
+    public final String tempAudioDirPath = "/temp/audio/";
     public final String videoDirPath = "/video/";
     public final String dramaDirPath = "/drama/";
     private String audioPath = photoDramaPath + audioDirPath;
     private String videoPath = photoDramaPath + videoDirPath;
     private String dramaPath = photoDramaPath + dramaDirPath;
+    private String tempAudioPath = photoDramaPath + tempAudioDirPath;
 
     private FileManager() {
         init();
@@ -41,9 +45,11 @@ public class FileManager {
             audioDir = createFilePath(audioPath);
             videoDir = createFilePath(videoPath);
             dramaDir = createFilePath(dramaPath);
+            tempAudioDir = createFilePath(tempAudioPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
             videoDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + videoDirPath);
+            tempAudioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + tempAudioPath);
         }
     }
 
@@ -74,6 +80,10 @@ public class FileManager {
 
     public File getVideoDir() {
         return videoDir;
+    }
+
+    public File getTempAudioDir() {
+        return tempAudioDir;
     }
 
     public File getDramaDir() {
@@ -123,6 +133,11 @@ public class FileManager {
 
     public String createNewVideoFile() {
         return getVideoDir().getPath() + File.separator + System.currentTimeMillis() + ".mp4";
+    }
+
+    public String getDecodeAudioFilePath(MusicClip musicClip) {
+        String name = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" + musicClip.musicSelectedLength);
+        return getTempAudioDir().getPath() + File.separator + name;
     }
 
     public static void deleteFile(File file) {

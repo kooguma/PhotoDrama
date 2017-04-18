@@ -8,46 +8,24 @@ import android.util.Log;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
-import com.loopeer.android.photodrama4android.media.utils.MD5Util;
-import com.loopeer.android.photodrama4android.utils.FileManager;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static android.media.MediaExtractor.SEEK_TO_CLOSEST_SYNC;
 
-public class MediaAudioDecoder extends MediaDecoder {
+public class MediaAudioRealTimeDecoder {
 
     private static final String TAG = "MediaAudioDecoder";
+    private final static long audioBytesPerSample = 44100 * 16 / 8;
 
     private MusicClip mMusicClip;
-    public String mTempOutPath;
 
-    MediaAudioDecoder(MusicClip musicClip, DecodeProgressCallback callback) {
-        super(callback);
+    MediaAudioRealTimeDecoder(MusicClip musicClip) {
         mMusicClip = musicClip;
-        mTempOutPath = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" + musicClip.musicSelectedLength);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof MediaAudioDecoder) {
-            return ((MediaAudioDecoder) obj).mTempOutPath.equals(this.mTempOutPath);
-        }
-        return false;
-    }
-
-    @Override
-    public void run() {
-        try {
-            decode();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void decode() throws IOException {
+    public void decode(DecodeCallback callback) throws IOException {
         MediaExtractor extractor = new MediaExtractor();
         extractor.setDataSource(mMusicClip.path);
 
@@ -76,12 +54,12 @@ public class MediaAudioDecoder extends MediaDecoder {
 
         final long kTimeOutUs = 5000;
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
-        FileOutputStream fosDecoder = new FileOutputStream(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
+        int rawFileSizeCount = 0;
         long audioTimeUs = 0;
         try {
-            extractor.seekTo(mMusicClip.getSelectStartUs(), SEEK_TO_CLOSEST_SYNC);
+            extractor.seekTo(1000 * 1000 * 36, SEEK_TO_CLOSEST_SYNC);
 
             while (!sawOutputEOS) {
                 if (!sawInputEOS) {
@@ -95,7 +73,7 @@ public class MediaAudioDecoder extends MediaDecoder {
                         if (sampleSize < 0) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                        } else if (extractor.getSampleTime() > mMusicClip.getSelectEndUs()) {
+                        } else if (extractor.getSampleTime() / 1000 > 1000 * 48) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                         } else {
@@ -115,19 +93,33 @@ public class MediaAudioDecoder extends MediaDecoder {
                     }
 
                     if (info.size != 0) {
+
                         ByteBuffer outBuf = codecOutputBuffers[outputBufIndex];
+
                         outBuf.position(info.offset);
                         outBuf.limit(info.offset + info.size);
+
                         byte[] data = new byte[info.size];
                         outBuf.get(data);
-                        fosDecoder.write(data);
+                        if (BuildConfig.DEBUG) Log.e(TAG, "OutputBuffers info size: " + info.size);
+                        int offset = 0;
+                        while (offset < data.length) {
+                            int length = data.length - offset > 4096 ? 4096 : data.length - offset;
+                            ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
+                            byteBuffer.put(data, offset, length);
+                            byteBuffer.flip();
+                            callback.onDecode(byteBuffer, length, audioTimeUs);
+                            audioTimeUs = (long) (1000000 * (rawFileSizeCount / 2.0) / audioBytesPerSample);
+                            offset += length;
+                            rawFileSizeCount += length;
+                        }
                     }
 
                     codec.releaseOutputBuffer(outputBufIndex, false);
 
                     if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                         sawOutputEOS = true;
-                        mCallback.onFinish();
+                        callback.onDecode(null, 0, audioTimeUs);
                     }
 
                 } else if (res == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
@@ -137,11 +129,14 @@ public class MediaAudioDecoder extends MediaDecoder {
                 }
             }
         } finally {
-            fosDecoder.close();
             codec.stop();
             codec.release();
             extractor.release();
         }
 
+    }
+
+    public interface DecodeCallback {
+        void onDecode(final ByteBuffer buffer, final int length, final long presentationTimeUs);
     }
 }

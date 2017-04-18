@@ -45,6 +45,14 @@ public class MusicClip extends Clip {
         isCreateIng = createIng;
     }
 
+    public long getSelectStartUs() {
+        return musicStartOffset * 1000;
+    }
+
+    public long getSelectEndUs() {
+        return (musicStartOffset + musicSelectedLength - 1) * 1000;
+    }
+
     @Override
     public String toString() {
         return "MusicClip{" +
