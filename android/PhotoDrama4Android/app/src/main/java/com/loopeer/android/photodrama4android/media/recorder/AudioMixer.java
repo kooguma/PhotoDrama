@@ -37,7 +37,6 @@ public class AudioMixer {
             if (DEBUG) Log.e(TAG, "processClip time : " + startTime + " : " + endTime);
             processClip(startTime, endTime);
         }
-
         mMuxingCallback.onMuxData(null, 0, mTimeClips.get(mTimeClips.size() - 1));
     }
 
@@ -51,7 +50,6 @@ public class AudioMixer {
             for (MusicBufferClipProcessor processor :
                     mMusicBufferClipProcessors) {
                 if (DEBUG) Log.e(TAG, "processor read time : " + timeOffset + " : " + timelength);
-
                 byte[] data = processor.read(timeOffset, timelength);
                 if (data != null) {
                     if (audioBytes[0] == null) {

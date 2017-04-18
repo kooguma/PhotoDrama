@@ -82,16 +82,15 @@ public class MediaAudioDecoder extends MediaDecoder {
         long audioTimeUs = 0;
         try {
             extractor.seekTo(mMusicClip.getSelectStartUs(), SEEK_TO_CLOSEST_SYNC);
-
+            if (BuildConfig.DEBUG) {
+                Log.e(TAG, "extractor extract time : " + mMusicClip.getSelectStartUs() + " : " + mMusicClip.getSelectEndUs());
+            }
             while (!sawOutputEOS) {
                 if (!sawInputEOS) {
                     int inputBufIndex = codec.dequeueInputBuffer(kTimeOutUs);
                     if (inputBufIndex >= 0) {
                         ByteBuffer dstBuf = codecInputBuffers[inputBufIndex];
                         int sampleSize = extractor.readSampleData(dstBuf, 0);
-                        if (BuildConfig.DEBUG) {
-                            Log.e(TAG, "extractor.readSampleData size : " + sampleSize);
-                        }
                         if (sampleSize < 0) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);

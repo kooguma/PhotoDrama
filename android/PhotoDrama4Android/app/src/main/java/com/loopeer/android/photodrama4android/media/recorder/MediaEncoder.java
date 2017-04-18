@@ -44,9 +44,7 @@ public abstract class MediaEncoder implements Runnable {
         muxer.addEncoder(this);
         mListener = listener;
         synchronized (mSync) {
-            // create BufferInfo here for effectiveness(to reduce GC)
             mBufferInfo = new MediaCodec.BufferInfo();
-            // wait for starting thread
             new Thread(this, getClass().getSimpleName()).start();
             try {
                 mSync.wait();
@@ -166,11 +164,13 @@ public abstract class MediaEncoder implements Runnable {
         encode(null, 0, getPTSUs());
     }
 
-    protected void encode(final ByteBuffer buffer, final int length, final long presentationTimeUs) {
+    protected void encode(byte[] buffer, final int length, final long presentationTimeUs) {
         if (!mIsCapturing) return;
+        if (DEBUG) Log.e(TAG, "encode length and presentationTimeUs    : " + length + "  : " + presentationTimeUs);
         final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
         while (mIsCapturing) {
             final int inputBufferIndex = mMediaCodec.dequeueInputBuffer(TIMEOUT_USEC);
+            if (DEBUG) Log.e(TAG, "encode inputBufferIndex : " + inputBufferIndex);
             if (inputBufferIndex >= 0) {
                 final ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
                 inputBuffer.clear();
@@ -214,7 +214,7 @@ public abstract class MediaEncoder implements Runnable {
                 encoderOutputBuffers = mMediaCodec.getOutputBuffers();
             } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                 if (DEBUG) Log.v(TAG, "INFO_OUTPUT_FORMAT_CHANGED");
-                if (mMuxerStarted) {    // second time request is error
+                if (mMuxerStarted) {
                     throw new RuntimeException("format changed twice");
                 }
                 final MediaFormat format = mMediaCodec.getOutputFormat(); // API >= 16
@@ -231,13 +231,11 @@ public abstract class MediaEncoder implements Runnable {
                     }
                 }
             } else if (encoderStatus < 0) {
-                // unexpected status
                 if (DEBUG)
                     Log.w(TAG, "drain:unexpected result from encoder#dequeueOutputBuffer: " + encoderStatus);
             } else {
                 final ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
                 if (encodedData == null) {
-                    // this never should come...may be a MediaCodec internal error
                     throw new RuntimeException("encoderOutputBuffer " + encoderStatus + " was null");
                 }
                 if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
@@ -246,10 +244,8 @@ public abstract class MediaEncoder implements Runnable {
                 }
 
                 if (mBufferInfo.size != 0) {
-                    // encoded data is ready, clear waiting counter
                     count = 0;
                     if (!mMuxerStarted) {
-                        // muxer is not ready...this will prrograming failure.
                         throw new RuntimeException("drain:muxer hasn't started");
                     }
                     mBufferInfo.presentationTimeUs = getPTSUs();
@@ -259,7 +255,7 @@ public abstract class MediaEncoder implements Runnable {
                 mMediaCodec.releaseOutputBuffer(encoderStatus, false);
                 if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                     mIsCapturing = false;
-                    break;      // out of while
+                    break;
                 }
             }
         }

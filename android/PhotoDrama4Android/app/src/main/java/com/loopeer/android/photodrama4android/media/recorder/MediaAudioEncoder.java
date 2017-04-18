@@ -122,9 +122,7 @@ public class MediaAudioEncoder extends MediaEncoder {
                     return;
                 }
                 if (DEBUG) Log.e(TAG, "mix encode data :   " + data[0] + " : " + data[data.length - 1] +  " time" + presentationTimeUs);
-                ByteBuffer byteBuffer = ByteBuffer.allocate(length);
-                byteBuffer.put(data);
-                encode(byteBuffer, length, presentationTimeUs + mRecordStartTime);
+                encode(data, length, presentationTimeUs + mRecordStartTime);
                 frameAvailableSoon();
             }).startMux();
         }
@@ -184,7 +182,7 @@ public class MediaAudioEncoder extends MediaEncoder {
     }
 
 
-    protected void encode(final ByteBuffer buffer, final int length, final long presentationTimeUs) {
+    protected void encode(byte[] buffer, final int length, final long presentationTimeUs) {
         if (!mIsCapturing) return;
         if (DEBUG) Log.e(TAG, "encode length and presentationTimeUs    : " + length + "  : " + presentationTimeUs);
         final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
@@ -251,13 +249,11 @@ public class MediaAudioEncoder extends MediaEncoder {
                     }
                 }
             } else if (encoderStatus < 0) {
-                // unexpected status
                 if (DEBUG)
                     Log.w(TAG, "drain:unexpected result from encoder#dequeueOutputBuffer: " + encoderStatus);
             } else {
                 final ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
                 if (encodedData == null) {
-                    // this never should come...may be a MediaCodec internal error
                     throw new RuntimeException("encoderOutputBuffer " + encoderStatus + " was null");
                 }
                 if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
@@ -266,10 +262,8 @@ public class MediaAudioEncoder extends MediaEncoder {
                 }
 
                 if (mBufferInfo.size != 0) {
-                    // encoded data is ready, clear waiting counter
                     count = 0;
                     if (!mMuxerStarted) {
-                        // muxer is not ready...this will prrograming failure.
                         throw new RuntimeException("drain:muxer hasn't started");
                     }
                     mBufferInfo.presentationTimeUs = getPTSUs();

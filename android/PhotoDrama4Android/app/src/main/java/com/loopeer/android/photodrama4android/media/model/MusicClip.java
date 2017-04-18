@@ -50,7 +50,7 @@ public class MusicClip extends Clip {
     }
 
     public long getSelectEndUs() {
-        return (musicStartOffset + musicSelectedLength - 1) * 1000;
+        return (musicStartOffset + (musicSelectedLength > showTime ? showTime : musicSelectedLength) - 1) * 1000;
     }
 
     @Override
