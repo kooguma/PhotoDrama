@@ -34,17 +34,13 @@ public class MusicBufferClipProcessor {
         if (timeOffsetUs < mMusicClip.startTime * 1000 || timeOffsetUs > mMusicClip.getEndTime() * 1000) return null;
         int dataLength = AudioBufferTimeParser.getDataOffset(timeLengthUs);
         int dataOffset = AudioBufferTimeParser.getDataOffset((timeOffsetUs - mMusicClip.startTime * 1000) % (mMusicClip.musicSelectedLength * 1000));
-        if (DEBUG) Log.e(TAG, "MusicBufferClipProcessor read size : " + dataOffset + " : " + dataLength);
-
         byte[] buffer = new byte[dataLength];
         try {
 //            mAudioFileStreams.seek(dataOffset);
-            if (DEBUG) Log.e(TAG, "MusicBufferClipProcessor read dataOffset : " + mAudioFileStreams.getFilePointer());
             if (mAudioFileStreams.read(buffer) != -1) {
                 return buffer;
             }
         } catch (IOException e) {
-            if (DEBUG) Log.e(TAG, "MusicBufferClipProcessor read : " + e.toString());
             e.printStackTrace();
         }
         return null;

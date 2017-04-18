@@ -31,10 +31,11 @@ public class AudioMixer {
     }
 
     public void startMux() {
+        if (DEBUG) Log.e(TAG, mTimeClips.toString());
+
         for (int i = 0; i < mTimeClips.size() - 1; i++) {
             int startTime = mTimeClips.get(i);
             int endTime = mTimeClips.get(i + 1);
-            if (DEBUG) Log.e(TAG, "processClip time : " + startTime + " : " + endTime);
             processClip(startTime, endTime);
         }
         mMuxingCallback.onMuxData(null, 0, mTimeClips.get(mTimeClips.size() - 1));
@@ -49,24 +50,28 @@ public class AudioMixer {
             int mergeStreamCount = 0;
             for (MusicBufferClipProcessor processor :
                     mMusicBufferClipProcessors) {
-                if (DEBUG) Log.e(TAG, "processor read time : " + timeOffset + " : " + timelength);
                 byte[] data = processor.read(timeOffset, timelength);
                 if (data != null) {
                     if (audioBytes[0] == null) {
                         audioBytes[0] = Arrays.copyOf(data, data.length);
                         if (DEBUG) Log.e(TAG, "count 1");
                         mergeStreamCount++;
+                        continue;
                     }
                     if (audioBytes[1] == null) {
                         audioBytes[1] = Arrays.copyOf(data, data.length);
+                        if (DEBUG) Log.e(TAG, "count 2");
                         mergeStreamCount++;
+                        continue;
                     }
                     if (audioBytes[2] == null) {
                         audioBytes[2] = Arrays.copyOf(data, data.length);
+                        if (DEBUG) Log.e(TAG, "count 3");
                         mergeStreamCount++;
+                        continue;
                     }
                 } else {
-                    if (DEBUG) Log.e(TAG, "read data null");
+//                    if (DEBUG) Log.e(TAG, "read data null");
                 }
             }
             byte[][] audioMergeBytes = new byte[mergeStreamCount][];
@@ -75,10 +80,7 @@ public class AudioMixer {
             }
             byte[] mixBytes = mixRawAudioBytes(audioMergeBytes);
             if (mixBytes != null) {
-                if (DEBUG) Log.e(TAG, "onMuxData data :  " + mixBytes.length + " :  offset " + timeOffset);
                 mMuxingCallback.onMuxData(mixBytes, mixBytes.length, timeOffset);
-            } else {
-                if (DEBUG) Log.e(TAG, "mix null  " );
             }
             timeOffset += timelength;
             audioBytes[0] = null;
@@ -103,6 +105,7 @@ public class AudioMixer {
 
         for (int rw = 0; rw < bMulRoadAudioes.length; ++rw) {
             if (bMulRoadAudioes[rw].length != realMixAudio.length) {
+                if (DEBUG) Log.e(TAG, "bMulRoadAudioes[rw].length != realMixAudio.length" + bMulRoadAudioes[rw].length + " : " + realMixAudio.length);
                 return null;
             }
         }

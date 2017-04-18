@@ -121,7 +121,6 @@ public class MediaAudioEncoder extends MediaEncoder {
                     frameAvailableSoon();
                     return;
                 }
-                if (DEBUG) Log.e(TAG, "mix encode data :   " + data[0] + " : " + data[data.length - 1] +  " time" + presentationTimeUs);
                 encode(data, length, presentationTimeUs + mRecordStartTime);
                 frameAvailableSoon();
             }).startMux();
@@ -181,14 +180,12 @@ public class MediaAudioEncoder extends MediaEncoder {
         }
     }
 
-
     protected void encode(byte[] buffer, final int length, final long presentationTimeUs) {
         if (!mIsCapturing) return;
-        if (DEBUG) Log.e(TAG, "encode length and presentationTimeUs    : " + length + "  : " + presentationTimeUs);
+//        if (DEBUG) Log.e(TAG, "encode length and presentationTimeUs    : " + length + "  : " + presentationTimeUs);
         final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
         while (mIsCapturing) {
             final int inputBufferIndex = mMediaCodec.dequeueInputBuffer(TIMEOUT_USEC);
-            if (DEBUG) Log.e(TAG, "encode inputBufferIndex : " + inputBufferIndex);
             if (inputBufferIndex >= 0) {
                 final ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
                 inputBuffer.clear();
@@ -209,7 +206,6 @@ public class MediaAudioEncoder extends MediaEncoder {
             }
         }
     }
-
 
     protected void drain() {
         if (mMediaCodec == null) return;
@@ -267,7 +263,6 @@ public class MediaAudioEncoder extends MediaEncoder {
                         throw new RuntimeException("drain:muxer hasn't started");
                     }
                     mBufferInfo.presentationTimeUs = getPTSUs();
-                    if (DEBUG) Log.e(TAG, "write presentationTimeUs : " + mBufferInfo.presentationTimeUs);
                     muxer.writeSampleData(mTrackIndex, encodedData, mBufferInfo);
                     prevOutputPTSUs = mBufferInfo.presentationTimeUs;
                 }
