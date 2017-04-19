@@ -14,6 +14,8 @@ import java.util.TreeSet;
 public class AudioMixer {
     private static final String TAG = "AudioMixer";
     private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final int MULTI_CHANNEL_COUNT = 3;
+    private static final float VOLUME_ADJUST_PARAM = 1f;
 
     public List<Integer> mTimeClips = new ArrayList<>();
     public MuxingCallback mMuxingCallback;
@@ -42,12 +44,15 @@ public class AudioMixer {
             }
             processClip(startTime, endTime);
         }
+        if (DEBUG) Log.e(TAG, "Mux Finished");
+
         mMuxingCallback.onMuxData(null, 0, mTimeClips.get(mTimeClips.size() - 1));
     }
 
     private void processClip(int startTime, int endTime) {
         int timeOffset = startTime;
         byte[][] audioBytes = new byte[3][];
+        float[] volumes = new float[]{1f, 1f, 1f};
         while (timeOffset < endTime) {
             long timelength = endTime - timeOffset > AudioBufferTimeParser.BUFFER_SIZE_TIME_LENGTH
                     ? AudioBufferTimeParser.BUFFER_SIZE_TIME_LENGTH : endTime - timeOffset;
@@ -55,19 +60,23 @@ public class AudioMixer {
             for (MusicBufferClipProcessor processor :
                     mMusicBufferClipProcessors) {
                 byte[] data = processor.read(timeOffset, timelength);
+                float volume = processor.getVolume(timeOffset, timelength);
                 if (data != null) {
                     if (audioBytes[0] == null) {
                         audioBytes[0] = Arrays.copyOf(data, data.length);
+                        volumes[0] = volume;
                         mergeStreamCount++;
                         continue;
                     }
                     if (audioBytes[1] == null) {
                         audioBytes[1] = Arrays.copyOf(data, data.length);
+                        volumes[1] = volume;
                         mergeStreamCount++;
                         continue;
                     }
                     if (audioBytes[2] == null) {
                         audioBytes[2] = Arrays.copyOf(data, data.length);
+                        volumes[1] = volume;
                         mergeStreamCount++;
                         continue;
                     }
@@ -83,16 +92,18 @@ public class AudioMixer {
                 int dataLength = AudioBufferTimeParser.getDataOffset(timelength);
                 mixBytes = new byte[dataLength];
             } else {
-                mixBytes = mixAudioBytes(audioMergeBytes);
+                mixBytes = mixAudioBytes(audioMergeBytes, volumes);
             }
             if (mixBytes != null) {
                 mMuxingCallback.onMuxData(mixBytes, mixBytes.length, timeOffset);
-                if (DEBUG) Log.e(TAG, "mMuxingCallback.onMuxData : " + mixBytes + " : "  + mixBytes.length + " : "  + timeOffset);
             }
             timeOffset += timelength;
             audioBytes[0] = null;
             audioBytes[1] = null;
             audioBytes[2] = null;
+            volumes[0] = 1f;
+            volumes[1] = 1f;
+            volumes[2] = 1f;
         }
     }
 
@@ -100,15 +111,12 @@ public class AudioMixer {
         void onMuxData(byte[] data, int length, long presentationTimeUs);
     }
 
-    byte[] mixAudioBytes(byte[][] audioes) {
+    byte[] mixAudioBytes(byte[][] audioes, float[] volumes) {
 
         if (audioes == null || audioes.length == 0)
             return null;
 
         byte[] resultAudio = audioes[0];
-
-        if (audioes.length == 1)
-            return resultAudio;
 
         for (int rw = 0; rw < audioes.length; ++rw) {
             if (audioes[rw].length != resultAudio.length) {
@@ -128,14 +136,15 @@ public class AudioMixer {
 
         short[] sMixAudio = new short[coloum];
         int mixVal;
-        int sr = 0;
+        int sr;
         for (int sc = 0; sc < coloum; ++sc) {
             mixVal = 0;
             sr = 0;
             for (; sr < row; ++sr) {
-                mixVal += sAudioes[sr][sc];
+                int v = sAudioes[sr][sc];
+                mixVal += (int)(VOLUME_ADJUST_PARAM * volumes[sr] * v);
             }
-            sMixAudio[sc] = (short) (mixVal / row);
+            sMixAudio[sc] = (short) (mixVal / MULTI_CHANNEL_COUNT);
         }
 
         for (sr = 0; sr < coloum; ++sr) {

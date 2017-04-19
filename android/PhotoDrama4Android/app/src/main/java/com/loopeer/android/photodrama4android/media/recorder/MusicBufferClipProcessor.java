@@ -39,11 +39,8 @@ public class MusicBufferClipProcessor {
                 lastLength = (pointer + dataLength) % mAudioFileStreams.length();
             }
             if ((length = mAudioFileStreams.read(buffer)) != -1) {
-                if (DEBUG) Log.e(TAG, "mAudioFileStreams.read(buffer): " + timeOffsetUs +  " : "  + timeLengthUs);
                 return buffer;
             } else {
-                if (DEBUG) Log.e(TAG, "mAudioFileStreams.read(buffer): " + offset +  " : "  + lastLength + " : " + timeOffsetUs + " : " + timeLengthUs);
-
                 if (length < dataLength) {
                     mAudioFileStreams.seek(0);
                     mAudioFileStreams.read(buffer, (int)offset, (int)lastLength);
@@ -56,4 +53,7 @@ public class MusicBufferClipProcessor {
     }
 
 
+    public float getVolume(int timeOffset, long timelength) {
+        return mMusicClip.volume;
+    }
 }

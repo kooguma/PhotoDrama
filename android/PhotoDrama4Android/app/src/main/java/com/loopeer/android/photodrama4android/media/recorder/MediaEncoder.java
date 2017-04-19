@@ -164,11 +164,9 @@ public abstract class MediaEncoder implements Runnable {
 
     protected void encode(byte[] buffer, final int length, final long presentationTimeUs) {
         if (!mIsCapturing) return;
-        if (DEBUG) Log.e(TAG, "encode length and presentationTimeUs    : " + length + "  : " + presentationTimeUs);
         final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
         while (mIsCapturing) {
             final int inputBufferIndex = mMediaCodec.dequeueInputBuffer(TIMEOUT_USEC);
-            if (DEBUG) Log.e(TAG, "encode inputBufferIndex : " + inputBufferIndex);
             if (inputBufferIndex >= 0) {
                 final ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
                 inputBuffer.clear();

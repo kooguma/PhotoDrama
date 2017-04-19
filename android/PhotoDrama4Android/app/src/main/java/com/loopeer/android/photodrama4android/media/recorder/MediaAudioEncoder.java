@@ -90,16 +90,6 @@ public class MediaAudioEncoder extends MediaEncoder {
 
         @Override
         public void run() {
-//            mDrama.audioGroup.musicClips.remove(0);
-            //TODO test
-            MusicClip musicClip1 = new MusicClip();
-            musicClip1.startTime = 4000;
-            musicClip1.showTime = 1000 * 10;
-            musicClip1.musicStartOffset = 4000;
-            musicClip1.musicSelectedLength = 1000 * 10;
-            musicClip1.path = "/storage/emulated/0/qqmusic/song/火星电台 - 陆垚知马俐 [mqms2].mp3";
-            mDrama.audioGroup.musicClips.add(musicClip1);
-            //TODO test end
             List<MediaAudioDecoder> mediaAudioDecoders = new ArrayList<>();
             for (MusicClip musicClip : mDrama.audioGroup.musicClips) {
                 MediaAudioDecoder mediaAudioDecoder = new MediaAudioDecoder(musicClip, mAudioMixerThread);
@@ -188,101 +178,6 @@ public class MediaAudioEncoder extends MediaEncoder {
         if (DEBUG) Log.d(TAG, "sending EOS to encoder");
         if (!mIsEOS) {
             encode(null, 0, getPTSUs());
-        }
-    }
-
-    protected void encode(byte[] buffer, final int length, final long presentationTimeUs) {
-        if (!mIsCapturing) return;
-//        if (DEBUG) Log.e(TAG, "encode length and presentationTimeUs    : " + length + "  : " + presentationTimeUs);
-        final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
-        while (mIsCapturing) {
-            final int inputBufferIndex = mMediaCodec.dequeueInputBuffer(TIMEOUT_USEC);
-            if (inputBufferIndex >= 0) {
-                final ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
-                inputBuffer.clear();
-                if (buffer != null) {
-                    inputBuffer.put(buffer);
-                }
-                if (length <= 0) {
-                    mIsEOS = true;
-                    mMediaCodec.queueInputBuffer(inputBufferIndex, 0, 0,
-                            presentationTimeUs, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                    break;
-                } else {
-                    mMediaCodec.queueInputBuffer(inputBufferIndex, 0, length,
-                            presentationTimeUs, 0);
-                }
-                break;
-            } else if (inputBufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER) {
-            }
-        }
-    }
-
-    protected void drain() {
-        if (mMediaCodec == null) return;
-        ByteBuffer[] encoderOutputBuffers = mMediaCodec.getOutputBuffers();
-        int encoderStatus, count = 0;
-        final MediaMuxerWrapper muxer = mWeakMuxer.get();
-        if (muxer == null) {
-            Log.w(TAG, "muxer is unexpectedly null");
-            return;
-        }
-        LOOP:
-        while (mIsCapturing) {
-            encoderStatus = mMediaCodec.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
-            if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
-                if (!mIsEOS) {
-                    if (++count > 5)
-                        break LOOP;
-                }
-            } else if (encoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
-                encoderOutputBuffers = mMediaCodec.getOutputBuffers();
-            } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                if (DEBUG) Log.v(TAG, "INFO_OUTPUT_FORMAT_CHANGED");
-                if (mMuxerStarted) {    // second time request is error
-                    throw new RuntimeException("format changed twice");
-                }
-                final MediaFormat format = mMediaCodec.getOutputFormat(); // API >= 16
-                mTrackIndex = muxer.addTrack(format);
-                mMuxerStarted = true;
-                if (!muxer.start()) {
-                    synchronized (muxer) {
-                        while (!muxer.isStarted())
-                            try {
-                                muxer.wait(100);
-                            } catch (final InterruptedException e) {
-                                break LOOP;
-                            }
-                    }
-                }
-            } else if (encoderStatus < 0) {
-                if (DEBUG)
-                    Log.w(TAG, "drain:unexpected result from encoder#dequeueOutputBuffer: " + encoderStatus);
-            } else {
-                final ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
-                if (encodedData == null) {
-                    throw new RuntimeException("encoderOutputBuffer " + encoderStatus + " was null");
-                }
-                if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
-                    if (DEBUG) Log.d(TAG, "drain:BUFFER_FLAG_CODEC_CONFIG");
-                    mBufferInfo.size = 0;
-                }
-
-                if (mBufferInfo.size != 0) {
-                    count = 0;
-                    if (!mMuxerStarted) {
-                        throw new RuntimeException("drain:muxer hasn't started");
-                    }
-                    mBufferInfo.presentationTimeUs = getPTSUs();
-                    muxer.writeSampleData(mTrackIndex, encodedData, mBufferInfo);
-                    prevOutputPTSUs = mBufferInfo.presentationTimeUs;
-                }
-                mMediaCodec.releaseOutputBuffer(encoderStatus, false);
-                if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                    mIsCapturing = false;
-                    break;      // out of while
-                }
-            }
         }
     }
 }
