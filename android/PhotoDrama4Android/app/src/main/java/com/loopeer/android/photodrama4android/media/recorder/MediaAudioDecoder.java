@@ -74,12 +74,10 @@ public class MediaAudioDecoder extends MediaDecoder {
         ByteBuffer[] codecInputBuffers = codec.getInputBuffers();
         ByteBuffer[] codecOutputBuffers = codec.getOutputBuffers();
 
-        final long kTimeOutUs = 5000;
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
         FileOutputStream fosDecoder = new FileOutputStream(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
-        long audioTimeUs = 0;
         try {
             extractor.seekTo(mMusicClip.getSelectStartUs(), SEEK_TO_CLOSEST_SYNC);
             if (BuildConfig.DEBUG) {
@@ -87,7 +85,7 @@ public class MediaAudioDecoder extends MediaDecoder {
             }
             while (!sawOutputEOS) {
                 if (!sawInputEOS) {
-                    int inputBufIndex = codec.dequeueInputBuffer(kTimeOutUs);
+                    int inputBufIndex = codec.dequeueInputBuffer(TIMEOUT_USEC);
                     if (inputBufIndex >= 0) {
                         ByteBuffer dstBuf = codecInputBuffers[inputBufIndex];
                         int sampleSize = extractor.readSampleData(dstBuf, 0);
@@ -104,7 +102,7 @@ public class MediaAudioDecoder extends MediaDecoder {
                         }
                     }
                 }
-                int res = codec.dequeueOutputBuffer(info, kTimeOutUs);
+                int res = codec.dequeueOutputBuffer(info, TIMEOUT_USEC);
                 if (res >= 0) {
 
                     int outputBufIndex = res;
@@ -132,7 +130,6 @@ public class MediaAudioDecoder extends MediaDecoder {
                 } else if (res == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
                     codecOutputBuffers = codec.getOutputBuffers();
                 } else if (res == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                    MediaFormat oformat = codec.getOutputFormat();
                 }
             }
         } finally {

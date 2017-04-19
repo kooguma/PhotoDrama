@@ -54,31 +54,27 @@ public class AudioMixer {
                 if (data != null) {
                     if (audioBytes[0] == null) {
                         audioBytes[0] = Arrays.copyOf(data, data.length);
-                        if (DEBUG) Log.e(TAG, "count 1");
                         mergeStreamCount++;
                         continue;
                     }
                     if (audioBytes[1] == null) {
                         audioBytes[1] = Arrays.copyOf(data, data.length);
-                        if (DEBUG) Log.e(TAG, "count 2");
                         mergeStreamCount++;
                         continue;
                     }
                     if (audioBytes[2] == null) {
                         audioBytes[2] = Arrays.copyOf(data, data.length);
-                        if (DEBUG) Log.e(TAG, "count 3");
                         mergeStreamCount++;
                         continue;
                     }
                 } else {
-//                    if (DEBUG) Log.e(TAG, "read data null");
                 }
             }
             byte[][] audioMergeBytes = new byte[mergeStreamCount][];
             for (int i = 0; i < mergeStreamCount; i++) {
                 audioMergeBytes[i] = audioBytes[i];
             }
-            byte[] mixBytes = mixRawAudioBytes(audioMergeBytes);
+            byte[] mixBytes = mixAudioBytes(audioMergeBytes);
             if (mixBytes != null) {
                 mMuxingCallback.onMuxData(mixBytes, mixBytes.length, timeOffset);
             }
@@ -93,30 +89,29 @@ public class AudioMixer {
         void onMuxData(byte[] data, int length, long presentationTimeUs);
     }
 
-    byte[] mixRawAudioBytes(byte[][] bMulRoadAudioes) {
+    byte[] mixAudioBytes(byte[][] audioes) {
 
-        if (bMulRoadAudioes == null || bMulRoadAudioes.length == 0)
+        if (audioes == null || audioes.length == 0)
             return null;
 
-        byte[] realMixAudio = bMulRoadAudioes[0];
+        byte[] resultAudio = audioes[0];
 
-        if (bMulRoadAudioes.length == 1)
-            return realMixAudio;
+        if (audioes.length == 1)
+            return resultAudio;
 
-        for (int rw = 0; rw < bMulRoadAudioes.length; ++rw) {
-            if (bMulRoadAudioes[rw].length != realMixAudio.length) {
-                if (DEBUG) Log.e(TAG, "bMulRoadAudioes[rw].length != realMixAudio.length" + bMulRoadAudioes[rw].length + " : " + realMixAudio.length);
+        for (int rw = 0; rw < audioes.length; ++rw) {
+            if (audioes[rw].length != resultAudio.length) {
                 return null;
             }
         }
 
-        int row = bMulRoadAudioes.length;
-        int coloum = realMixAudio.length / 2;
-        short[][] sMulRoadAudioes = new short[row][coloum];
+        int row = audioes.length;
+        int coloum = resultAudio.length / 2;
+        short[][] sAudioes = new short[row][coloum];
 
         for (int r = 0; r < row; ++r) {
             for (int c = 0; c < coloum; ++c) {
-                sMulRoadAudioes[r][c] = (short) ((bMulRoadAudioes[r][c * 2] & 0xff) | (bMulRoadAudioes[r][c * 2 + 1] & 0xff) << 8);
+                sAudioes[r][c] = (short) ((audioes[r][c * 2] & 0xff) | (audioes[r][c * 2 + 1] & 0xff) << 8);
             }
         }
 
@@ -127,16 +122,16 @@ public class AudioMixer {
             mixVal = 0;
             sr = 0;
             for (; sr < row; ++sr) {
-                mixVal += sMulRoadAudioes[sr][sc];
+                mixVal += sAudioes[sr][sc];
             }
             sMixAudio[sc] = (short) (mixVal / row);
         }
 
         for (sr = 0; sr < coloum; ++sr) {
-            realMixAudio[sr * 2] = (byte) (sMixAudio[sr] & 0x00FF);
-            realMixAudio[sr * 2 + 1] = (byte) ((sMixAudio[sr] & 0xFF00) >> 8);
+            resultAudio[sr * 2] = (byte) (sMixAudio[sr] & 0x00FF);
+            resultAudio[sr * 2 + 1] = (byte) ((sMixAudio[sr] & 0xFF00) >> 8);
         }
 
-        return realMixAudio;
+        return resultAudio;
     }
 }

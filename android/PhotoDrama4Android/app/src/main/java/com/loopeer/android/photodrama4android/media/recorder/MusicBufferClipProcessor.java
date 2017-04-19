@@ -1,13 +1,7 @@
 package com.loopeer.android.photodrama4android.media.recorder;
-
-
-import android.util.Log;
-
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.utils.FileManager;
-
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -19,7 +13,6 @@ public class MusicBufferClipProcessor {
 
     public MusicClip mMusicClip;
     RandomAccessFile mAudioFileStreams;
-
 
     public MusicBufferClipProcessor(MusicClip musicClip) {
         mMusicClip = musicClip;
@@ -36,9 +29,20 @@ public class MusicBufferClipProcessor {
         int dataOffset = AudioBufferTimeParser.getDataOffset((timeOffsetUs - mMusicClip.startTime * 1000) % (mMusicClip.musicSelectedLength * 1000));
         byte[] buffer = new byte[dataLength];
         try {
-//            mAudioFileStreams.seek(dataOffset);
-            if (mAudioFileStreams.read(buffer) != -1) {
+            int length;
+            long pointer = mAudioFileStreams.getFilePointer();
+            long offset = 0, lastLength = 0;
+            if (pointer + dataLength > mAudioFileStreams.length()) {
+                offset = mAudioFileStreams.length() - pointer;
+                lastLength = (pointer + dataLength) % mAudioFileStreams.length();
+            }
+            if ((length = mAudioFileStreams.read(buffer)) != -1) {
                 return buffer;
+            } else {
+                if (length < dataLength) {
+                    mAudioFileStreams.seek(0);
+                    mAudioFileStreams.read(buffer, (int)offset, (int)lastLength);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
