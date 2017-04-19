@@ -106,24 +106,27 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                     mBinding.setSeries(series);
                     if (isFirstLoad) {
                         for (int i = 0; i < series.themes.size(); i++) {
-                            final Theme t = series.themes.get(i);
                             mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
                         }
-                        final int index = series.getSeriesIndex(mTheme) - 1;
-                        final View child = mBinding.layoutEpisode.getChildAt(index);
-                        setSelected(child);
-                        mBinding.scrollViewEpisode.post(
-                            () -> {
-                                if (child != null) {
-                                    mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
-                                }
-                            });
+                        updateSelectedThemeBtn();
                     }
                 }, throwable -> {
                     throwable.printStackTrace();
                     showToast(throwable.toString());
                 }, () -> dismissProgressLoading())
         );
+    }
+
+    private void updateSelectedThemeBtn() {
+        int index = Integer.parseInt(mTheme.episodeNumber) - 1;
+        View child = mBinding.layoutEpisode.getChildAt(index);
+        setSelected(child);
+        mBinding.scrollViewEpisode.post(
+                () -> {
+                    if (child != null) {
+                        mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
+                    }
+                });
     }
 
     private void setupView() {
@@ -145,6 +148,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
             if (!v.isSelected()) {
                 mVideoPlayerManager.pauseVideo();
                 loadDramaSend(theme);
+                mTheme = theme;
+                updateSelectedThemeBtn();
             }
             setSelected(v);
         });
@@ -257,6 +262,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     @Override
     public void onProgressStart() {
         mBinding.btnPausePlayBtn.setSelected(false);
+        hideTool();
     }
 
     public void onPausePlayBtnClick(View view) {
