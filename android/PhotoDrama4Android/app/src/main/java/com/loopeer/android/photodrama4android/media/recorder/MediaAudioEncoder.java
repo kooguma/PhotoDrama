@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.AudioGroup;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
 import java.io.IOException;
@@ -27,11 +28,11 @@ public class MediaAudioEncoder extends MediaEncoder {
 
     private AudioMixerThread mAudioMixerThread = null;
 
-    private AudioGroup mAudioGroup;
+    private Drama mDrama;
 
-    public MediaAudioEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, AudioGroup audioGroup) {
+    public MediaAudioEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, Drama drama) {
         super(muxer, listener);
-        mAudioGroup = audioGroup;
+        mDrama = drama;
     }
 
     @Override
@@ -89,8 +90,18 @@ public class MediaAudioEncoder extends MediaEncoder {
 
         @Override
         public void run() {
+//            mDrama.audioGroup.musicClips.remove(0);
+            //TODO test
+            MusicClip musicClip1 = new MusicClip();
+            musicClip1.startTime = 4000;
+            musicClip1.showTime = 1000 * 10;
+            musicClip1.musicStartOffset = 4000;
+            musicClip1.musicSelectedLength = 1000 * 10;
+            musicClip1.path = "/storage/emulated/0/qqmusic/song/火星电台 - 陆垚知马俐 [mqms2].mp3";
+            mDrama.audioGroup.musicClips.add(musicClip1);
+            //TODO test end
             List<MediaAudioDecoder> mediaAudioDecoders = new ArrayList<>();
-            for (MusicClip musicClip : mAudioGroup.musicClips) {
+            for (MusicClip musicClip : mDrama.audioGroup.musicClips) {
                 MediaAudioDecoder mediaAudioDecoder = new MediaAudioDecoder(musicClip, mAudioMixerThread);
                 if (mediaAudioDecoders.contains(mediaAudioDecoder)) continue;
                 mediaAudioDecoders.add(mediaAudioDecoder);
@@ -115,7 +126,7 @@ public class MediaAudioEncoder extends MediaEncoder {
                     }
                 }
             }
-            new AudioMixer(mAudioGroup.musicClips, (data, length, presentationTimeUs) -> {
+            new AudioMixer(mDrama, (data, length, presentationTimeUs) -> {
                 if (data == null) {
                     encode(null, length, presentationTimeUs + mRecordStartTime);
                     frameAvailableSoon();

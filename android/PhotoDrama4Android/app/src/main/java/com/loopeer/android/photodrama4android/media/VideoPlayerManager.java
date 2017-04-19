@@ -296,7 +296,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         recordStart();
         seekToVideo(0);
         mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
-        startVideo();
+        startVideoOnly();
     }
 
     public void setBitmapReadyListener(BitmapReadyListener bitmapReadyListener) {

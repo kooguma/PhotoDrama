@@ -237,7 +237,7 @@ public class GLRenderWorker implements IRendererWorker {
                 new MediaVideoEncoder(mMuxerWrapper, mMediaEncoderListener, width, height, bitRate);
             }
             if (true) {
-                new MediaAudioEncoder(mMuxerWrapper, mMediaEncoderListener, mDrama.audioGroup);
+                new MediaAudioEncoder(mMuxerWrapper, mMediaEncoderListener, mDrama);
             }
             mMuxerWrapper.prepare();
             mInputWindowSurface = new WindowSurface(mEglCore, mMuxerWrapper.getInputSurface(), true);

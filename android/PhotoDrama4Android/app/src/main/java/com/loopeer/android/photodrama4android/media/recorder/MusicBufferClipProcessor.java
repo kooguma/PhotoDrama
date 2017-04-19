@@ -1,4 +1,6 @@
 package com.loopeer.android.photodrama4android.media.recorder;
+import android.util.Log;
+
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -37,8 +39,11 @@ public class MusicBufferClipProcessor {
                 lastLength = (pointer + dataLength) % mAudioFileStreams.length();
             }
             if ((length = mAudioFileStreams.read(buffer)) != -1) {
+                if (DEBUG) Log.e(TAG, "mAudioFileStreams.read(buffer): " + timeOffsetUs +  " : "  + timeLengthUs);
                 return buffer;
             } else {
+                if (DEBUG) Log.e(TAG, "mAudioFileStreams.read(buffer): " + offset +  " : "  + lastLength + " : " + timeOffsetUs + " : " + timeLengthUs);
+
                 if (length < dataLength) {
                     mAudioFileStreams.seek(0);
                     mAudioFileStreams.read(buffer, (int)offset, (int)lastLength);

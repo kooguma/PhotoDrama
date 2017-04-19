@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.recorder;
 import android.util.Log;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
+import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 
 import java.util.ArrayList;
@@ -17,15 +18,15 @@ public class AudioMixer {
     public List<Integer> mTimeClips = new ArrayList<>();
     public MuxingCallback mMuxingCallback;
     public List<MusicBufferClipProcessor> mMusicBufferClipProcessors = new ArrayList<>();
-
-    public AudioMixer(List<MusicClip> musicClips, MuxingCallback muxingCallback) {
+    public AudioMixer(Drama drama, MuxingCallback muxingCallback) {
         TreeSet<Integer> timeClips = new TreeSet<>();
-        for (MusicClip musicClip : musicClips) {
+        timeClips.add(0);
+        for (MusicClip musicClip : drama.audioGroup.musicClips) {
             timeClips.add(musicClip.startTime * 1000);
             timeClips.add(musicClip.getEndTime() * 1000);
             mMusicBufferClipProcessors.add(new MusicBufferClipProcessor(musicClip));
         }
-
+        timeClips.add(drama.videoGroup.imageClips.get(drama.videoGroup.imageClips.size() - 1).getEndTime() * 1000);
         mTimeClips.addAll(timeClips);
         mMuxingCallback = muxingCallback;
     }
@@ -36,6 +37,9 @@ public class AudioMixer {
         for (int i = 0; i < mTimeClips.size() - 1; i++) {
             int startTime = mTimeClips.get(i);
             int endTime = mTimeClips.get(i + 1);
+            if (i != mTimeClips.size() - 2) {
+                endTime--;
+            }
             processClip(startTime, endTime);
         }
         mMuxingCallback.onMuxData(null, 0, mTimeClips.get(mTimeClips.size() - 1));
@@ -74,9 +78,16 @@ public class AudioMixer {
             for (int i = 0; i < mergeStreamCount; i++) {
                 audioMergeBytes[i] = audioBytes[i];
             }
-            byte[] mixBytes = mixAudioBytes(audioMergeBytes);
+            byte[] mixBytes;
+            if (mergeStreamCount == 0) {
+                int dataLength = AudioBufferTimeParser.getDataOffset(timelength);
+                mixBytes = new byte[dataLength];
+            } else {
+                mixBytes = mixAudioBytes(audioMergeBytes);
+            }
             if (mixBytes != null) {
                 mMuxingCallback.onMuxData(mixBytes, mixBytes.length, timeOffset);
+                if (DEBUG) Log.e(TAG, "mMuxingCallback.onMuxData : " + mixBytes + " : "  + mixBytes.length + " : "  + timeOffset);
             }
             timeOffset += timelength;
             audioBytes[0] = null;
