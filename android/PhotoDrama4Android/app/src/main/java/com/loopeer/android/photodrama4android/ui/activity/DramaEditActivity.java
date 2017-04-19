@@ -50,7 +50,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     private DramaFetchHelper mDramaFetchHelper;
     private ImageClip mSelectedImageClip;
     private ExportLoadingDialog mExportProgressLoading;
-    private boolean mExportProgressShow;
+//    private boolean mExportProgressShow;
     private int mUsedTime;
 
     @Override
@@ -247,35 +247,22 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         mBinding.btnPlay.setVisibility(View.GONE);
     }
 
-
     public void showExportProgress(String message) {
         if (mExportProgressLoading == null) {
             mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
             mExportProgressLoading.setCancelable(false);
-            mExportProgressLoading.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    mExportProgressShow = false;
-                }
-            });
         }
         if (!TextUtils.isEmpty(message)) {
             mExportProgressLoading.setMessage(message);
         } else {
             mExportProgressLoading.setMessage(null);
         }
-        mExportProgressShow = true;
         mExportProgressLoading.show();
-    }
-
-    public boolean isExportProgressShow() {
-        return mExportProgressShow;
     }
 
     public void dismissExportProgressLoading() {
         if (mExportProgressLoading != null && !isFinishing()) {
-            mExportProgressShow = false;
             mExportProgressLoading.dismiss();
         }
     }

@@ -1,8 +1,10 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
+import com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.concurrent.Callable;
@@ -28,11 +31,12 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener {
+public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener {
 
     private ActivityMakeMovieBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
     private Drama mDrama;
+    private ExportLoadingDialog mExportProgressLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
+        mVideoPlayerManager.setRecordingListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
@@ -209,4 +214,43 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
             mVideoPlayerManager.seekToVideo(0);
         }
     }
+
+    @Override
+    public void recordStart() {
+        showExportProgress(getString(R.string.drama_export_message));
+    }
+
+    @Override
+    public void recordChange(int progress) {
+        if (mExportProgressLoading != null) {
+            mExportProgressLoading.setProgress(1f * progress / (mVideoPlayerManager.getSeekbarMaxValue() + 1));
+        }
+    }
+
+    @Override
+    public void recordFinished() {
+        dismissExportProgressLoading();
+        Navigator.startShareActivity(this);
+    }
+
+    public void showExportProgress(String message) {
+        if (mExportProgressLoading == null) {
+            mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
+            mExportProgressLoading.setCanceledOnTouchOutside(false);
+            mExportProgressLoading.setCancelable(false);
+        }
+        if (!TextUtils.isEmpty(message)) {
+            mExportProgressLoading.setMessage(message);
+        } else {
+            mExportProgressLoading.setMessage(null);
+        }
+        mExportProgressLoading.show();
+    }
+
+    public void dismissExportProgressLoading() {
+        if (mExportProgressLoading != null && !isFinishing()) {
+            mExportProgressLoading.dismiss();
+        }
+    }
+
 }
