@@ -16,6 +16,8 @@ public class MusicDelegate implements IMusic {
     private boolean mIsBind = false;
     private Context mContext;
     private Drama mDrama;
+    private boolean mIsStop;
+    private int mUseTime;
 
     private ServiceConnection mConn;
 
@@ -33,10 +35,18 @@ public class MusicDelegate implements IMusic {
                 MusicService.MusicBinder mBinder = (MusicService.MusicBinder) service;
                 mBindService = mBinder.getMusicService(mContext);
                 mBindService.initMusicProcessor(mDrama, listener);
+                mBindService.seekToMusic(mUseTime);
+                if (!mIsStop) mBindService.startMusic();
                 mIsBind = true;
             }
         };
         bingService();
+    }
+
+    private void reConnect(Context context) {
+        if (mBindService != null && !context.equals(mBindService.getMContext())) {
+            mBindService.updateService(context);
+        }
     }
 
     public void bingService() {
@@ -54,36 +64,49 @@ public class MusicDelegate implements IMusic {
 
     public void updateDrama(Drama drama) {
         mDrama = drama;
-        if (mBindService != null)
+        if (isBindServiceAvailable())
             mBindService.updateDrama(mDrama);
     }
 
     @Override
     public void startMusic() {
-        if (mBindService != null) {
+        mIsStop = false;
+        if (isBindServiceAvailable()) {
             mBindService.startMusic();
         }
     }
 
     @Override
     public void seekToMusic(int progress) {
-        if (mBindService != null) {
+        mUseTime = progress;
+        if (isBindServiceAvailable()) {
             mBindService.seekToMusic(progress);
         }
     }
 
     @Override
     public void pauseMusic() {
-        if (mBindService != null) {
+        mIsStop = true;
+        if (isBindServiceAvailable()) {
             mBindService.pauseMusic();
         }
     }
 
+    private boolean isBindServiceAvailable() {
+        return mBindService != null && mContext.equals(mBindService.getMContext());
+    }
+
     @Override
     public void onProgressChange(int time) {
-        if (mBindService != null) {
+        if (isBindServiceAvailable()) {
             mBindService.onProgressChange(time);
         }
+    }
+
+    @Override
+    public void onResume(Context context, int progress) {
+        reConnect(context);
+        seekToMusic(progress);
     }
 
     @Override

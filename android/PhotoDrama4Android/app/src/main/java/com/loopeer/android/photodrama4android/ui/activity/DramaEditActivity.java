@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     private ImageClip mSelectedImageClip;
     private ExportLoadingDialog mExportProgressLoading;
     private boolean mExportProgressShow;
+    private int mUsedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,7 +223,9 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     }
 
     public void onFullBtnClick(View view) {
-        Navigator.startFullLandscapePlayActivity(this, mDrama);
+        Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
+                mVideoPlayerManager.isStop(),
+                mVideoPlayerManager.getUsedTime());
     }
 
     @Override
@@ -298,5 +302,22 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     public void onBackPressed() {
         if (mVideoPlayerManager.isRecording()) return;
         super.onBackPressed();
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == Navigator.REQUEST_FULL_SCREEN) {
+            boolean restart = data.getBooleanExtra(Navigator.EXTRA_IS_TO_START, false);
+            int usedTime = data.getIntExtra(Navigator.EXTRA_USEDTIME, -1);
+            if (usedTime != -1) {
+                mUsedTime = usedTime;
+                if (mVideoPlayerManager != null) {
+                    mVideoPlayerManager.seekToVideo(mUsedTime);
+                    if (restart) {
+                        mVideoPlayerManager.startVideo();
+                    }
+                }
+            }
+        }
     }
 }

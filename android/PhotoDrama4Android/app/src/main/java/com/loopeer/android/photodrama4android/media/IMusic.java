@@ -1,5 +1,7 @@
 package com.loopeer.android.photodrama4android.media;
 
+import android.content.Context;
+
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
 public interface IMusic {
@@ -8,6 +10,7 @@ public interface IMusic {
     void seekToMusic(int progress);
     void pauseMusic();
     void onProgressChange(int progress);
+    void onResume(Context context, int progress);
     void onPause();
     void onDestroy();
 }

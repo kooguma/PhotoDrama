@@ -20,6 +20,7 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
+
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -59,17 +60,17 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
             }
         });
 
-        int usedTime = getIntent().getIntExtra(Navigator.EXTRA_USEDTIME,-1);
-        boolean restart = getIntent().getBooleanExtra(Navigator.EXTRA_IS_TO_START,false);
+        int usedTime = getIntent().getIntExtra(Navigator.EXTRA_USEDTIME, -1);
+        boolean restart = getIntent().getBooleanExtra(Navigator.EXTRA_IS_TO_START, false);
 
-        if(usedTime != -1) {
+        if (usedTime != -1) {
             if (mVideoPlayerManager != null) {
                 mVideoPlayerManager.seekToVideo(usedTime);
                 if (restart) {
                     mVideoPlayerManager.startVideo();
                 }
             }
-        }else {
+        } else {
             mVideoPlayerManager.onRestart();
         }
 
@@ -128,18 +129,19 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
         mVideoPlayerManager.onDestroy();
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         setResultIntent();
         super.onBackPressed();
     }
 
-    private void setResultIntent(){
+    private void setResultIntent() {
         final int usedTime = mVideoPlayerManager.getUsedTime();
         final boolean restart = !mVideoPlayerManager.isStop();
         Intent intent = new Intent();
-        intent.putExtra(Navigator.EXTRA_USEDTIME,usedTime);
-        intent.putExtra(Navigator.EXTRA_IS_TO_START,restart);
-        setResult(RESULT_OK,intent);
+        intent.putExtra(Navigator.EXTRA_USEDTIME, usedTime);
+        intent.putExtra(Navigator.EXTRA_IS_TO_START, restart);
+        setResult(RESULT_OK, intent);
     }
 
 

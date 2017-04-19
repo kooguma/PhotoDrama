@@ -59,6 +59,14 @@ public class MusicService extends Service{
         mMusicProcessor.updateMusicClipPlayer(mContext, drama.audioGroup.musicClips);
     }
 
+    public Context getMContext() {
+        return mContext;
+    }
+
+    public void updateService(Context context) {
+        mContext = context;
+    }
+
     public class MusicBinder extends Binder {
         public MusicService getMusicService(Context context){
             MusicService.this.mContext = context;

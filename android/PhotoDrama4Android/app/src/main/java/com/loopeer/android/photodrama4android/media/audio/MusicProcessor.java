@@ -60,12 +60,19 @@ public class MusicProcessor implements MusicClipPlayer.MusicClipPlayerLister {
             }
         }
 
+        boolean allPlayerPrepared = true;
+        for (Map.Entry<String, MusicClipPlayer> entry : mClipPlayerHashMap.entrySet()) {
+            if (entry.getValue().isNotPrepare()) {
+                allPlayerPrepared = false;
+            }
+        }
+        if (allPlayerPrepared) {
+            notifyPrepareFinished();
+        }
         for (Map.Entry<String, MusicClipPlayer> entry : mClipPlayerHashMap.entrySet()) {
             entry.getValue().preparePlayer();
         }
-        if (clips.isEmpty()) {
-            notifyPrepareFinished();
-        }
+
     }
 
     private void putToPool(List<String> removeIngKeys) {
