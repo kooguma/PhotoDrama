@@ -246,14 +246,6 @@ public abstract class MediaEncoder implements Runnable {
                         throw new RuntimeException("drain:muxer hasn't started");
                     }
                     mBufferInfo.presentationTimeUs = getPTSUs();
-                    if (DEBUG) {
-                        if (this instanceof MediaVideoEncoder) {
-                            Log.e(TAG, "MediaVideoEncoder encode  : " + mBufferInfo.size + " : " + mBufferInfo.presentationTimeUs);
-                        } else {
-                            Log.e(TAG, "Audio encode  : " + mBufferInfo.size + " : " + mBufferInfo.presentationTimeUs);
-
-                        }
-                    }
                     muxer.writeSampleData(mTrackIndex, encodedData, mBufferInfo);
                     prevOutputPTSUs = mBufferInfo.presentationTimeUs;
                 }

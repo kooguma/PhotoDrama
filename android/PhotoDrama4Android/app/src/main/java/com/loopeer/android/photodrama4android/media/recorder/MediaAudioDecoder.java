@@ -49,6 +49,11 @@ public class MediaAudioDecoder extends MediaDecoder {
     }
 
     public void decode() throws IOException {
+        File file = new File(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
+        if (file.exists()) {
+            mCallback.onFinish();
+            return;
+        }
         MediaExtractor extractor = new MediaExtractor();
         extractor.setDataSource(mMusicClip.path);
 
