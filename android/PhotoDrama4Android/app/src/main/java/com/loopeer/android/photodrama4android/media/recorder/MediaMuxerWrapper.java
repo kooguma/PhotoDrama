@@ -112,17 +112,4 @@ public class MediaMuxerWrapper {
         ((MediaVideoEncoder) mVideoEncoder).putTime(useTime);
 		mVideoEncoder.frameAvailableSoon();
 	}
-
-	public long getStartRecordTime() {
-		return ((MediaVideoEncoder) mVideoEncoder).getStartRecordTime();
-	}
-
-	public long getVideoPreTime() {
-		if(mVideoEncoder == null) return 0;
-		return ((MediaVideoEncoder) mVideoEncoder).getPreTime();
-	}
-
-	public void notifyAudio() {
-		((MediaAudioEncoder) mAudioEncoder).notifyAudio();
-	}
 }

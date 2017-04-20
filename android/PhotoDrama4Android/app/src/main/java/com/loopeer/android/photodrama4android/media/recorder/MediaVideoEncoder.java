@@ -71,7 +71,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 
 	@Override
 	protected long getPTSUs() {
-        long result = 0;
+        long result;
         synchronized (mSync) {
             result = mUsedTimes.poll();
         }
@@ -83,23 +83,9 @@ public class MediaVideoEncoder extends MediaEncoder {
 		return result;
 	}
 
-	public long getPreTime() {
-		return prevOutputPTSUs;
-	}
-
-	public long getStartRecordTime() {
-		return time;
-	}
-
     public void putTime(long useTime) {
         synchronized (mSync) {
             mUsedTimes.add(useTime);
         }
     }
-
-	@Override
-	public boolean frameAvailableSoon() {
-		mWeakMuxer.get().notifyAudio();
-		return super.frameAvailableSoon();
-	}
 }

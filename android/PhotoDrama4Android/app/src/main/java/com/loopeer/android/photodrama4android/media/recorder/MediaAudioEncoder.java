@@ -3,7 +3,6 @@ package com.loopeer.android.photodrama4android.media.recorder;
 import android.media.AudioFormat;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
-import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.util.Log;
 import com.loopeer.android.photodrama4android.BuildConfig;
@@ -21,8 +20,6 @@ public class MediaAudioEncoder extends MediaEncoder {
     private static final int SAMPLE_RATE = 44100;
     private static final int BIT_RATE = 128000;
     private static final int CHANNEL_COUNT = 2;
-    private long mRecordStartTime = 0;
-
     private AudioMixerThread mAudioMixerThread = null;
 
     private Drama mDrama;
@@ -62,8 +59,6 @@ public class MediaAudioEncoder extends MediaEncoder {
     @Override
     protected void startRecording() {
         super.startRecording();
-        /*mRecordStartTime = System.nanoTime() / 1000*/;
-
         if (mAudioMixerThread == null) {
             mAudioMixerThread = new AudioMixerThread();
             mAudioMixerThread.start();
@@ -110,22 +105,12 @@ public class MediaAudioEncoder extends MediaEncoder {
                 }
             }
             new AudioMixer(mDrama, (data, length, presentationTimeUs) -> {
-                if (mWeakMuxer.get().getVideoPreTime() < presentationTimeUs + getRecordTime()) {
-                    synchronized (this) {
-                        try {
-                            this.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
                 if (data == null) {
-                    encode(null, length, presentationTimeUs + getRecordTime());
+                    encode(null, length, presentationTimeUs);
                     frameAvailableSoon();
                     return;
                 }
-                encode(data, length, presentationTimeUs + getRecordTime());
+                encode(data, length, presentationTimeUs);
                 frameAvailableSoon();
             }).startMux();
         }
@@ -143,12 +128,6 @@ public class MediaAudioEncoder extends MediaEncoder {
                 mDecodingFileCount = decodeingFileCount;
             }
         }
-
-        public void notifyAudio() {
-            synchronized (this) {
-                this.notify();
-            }
-        }
     }
 
     @Override
@@ -159,18 +138,10 @@ public class MediaAudioEncoder extends MediaEncoder {
         return mBufferInfo.presentationTimeUs;
     }
 
-    public long getRecordTime() {
-        return 1/*mWeakMuxer.get().getStartRecordTime()*/ /*mRecordStartTime*/;
-    }
-
     protected void signalEndOfInputStream() {
         if (DEBUG) Log.d(TAG, "sending EOS to encoder");
         if (!mIsEOS) {
             encode(null, 0, getPTSUs());
         }
-    }
-
-    public void notifyAudio() {
-        mAudioMixerThread.notifyAudio();
     }
 }
