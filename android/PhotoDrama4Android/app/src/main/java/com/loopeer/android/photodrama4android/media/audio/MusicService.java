@@ -12,6 +12,7 @@ public class MusicService extends Service{
     private MusicBinder mBinder;
     private MusicProcessor mMusicProcessor;
     private Context mContext;
+
     public MusicService(){
         mBinder = new MusicBinder();
     }

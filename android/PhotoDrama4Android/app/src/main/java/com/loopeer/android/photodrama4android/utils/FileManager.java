@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.utils;
 
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -14,15 +13,18 @@ import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.MD5Util;
 import com.loopeer.android.photodrama4android.model.Theme;
 
+import com.loopeer.android.photodrama4android.model.Voice;
 import java.io.File;
 import java.io.FileInputStream;
+import zlc.season.rxdownload2.RxDownload;
 
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.EXTERNAL_STORAGE_PERMISSIONS;
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.REQUEST_EXTERNAL_STORAGE_PERMISSION;
 
 public class FileManager {
     private static FileManager instance;
-    private static String photoDramaPath = Environment.getExternalStorageDirectory() + "/photodrama";
+    private static String photoDramaPath = Environment.getExternalStorageDirectory() +
+        "/photodrama";
     private File audioDir;
     private File tempAudioDir;
     private File videoDir;
@@ -65,8 +67,9 @@ public class FileManager {
     }
 
     public static FileManager getInstance() {
-        if (null == instance)
+        if (null == instance) {
             instance = new FileManager();
+        }
         return instance;
     }
 
@@ -136,8 +139,18 @@ public class FileManager {
     }
 
     public String getDecodeAudioFilePath(MusicClip musicClip) {
-        String name = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" + musicClip.musicSelectedLength);
+        String name = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" +
+            musicClip.musicSelectedLength);
         return getTempAudioDir().getPath() + File.separator + name;
+    }
+
+    public static String getAudioPath(Context context, Voice voice) {
+        if (voice == null) return null;
+        File[] file = RxDownload.getInstance(context).getRealFiles(voice.voiceUrl);
+        if (file != null) {
+            return file[0].getAbsolutePath();
+        }
+        return null;
     }
 
     public static void deleteFile(File file) {
@@ -177,12 +190,13 @@ public class FileManager {
 
     public void requestPermission(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             } else {
-                ActivityCompat.requestPermissions(activity, EXTERNAL_STORAGE_PERMISSIONS, REQUEST_EXTERNAL_STORAGE_PERMISSION);
+                ActivityCompat.requestPermissions(activity, EXTERNAL_STORAGE_PERMISSIONS,
+                    REQUEST_EXTERNAL_STORAGE_PERMISSION);
             }
         } else {
             init();

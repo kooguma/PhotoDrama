@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.opengl.GLSurfaceView;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -55,6 +56,17 @@ public class MusicClipView extends View {
     private int mDotX;
     private int mDotY;
 
+    private IndicatorMoveListener mIndicatorMoveListener;
+
+    public void setIndicatorMoveListener(IndicatorMoveListener listener) {
+        this.mIndicatorMoveListener = listener;
+    }
+
+    public interface IndicatorMoveListener {
+        void onLeftIndicatorMove(float position);
+        void onRightIndicatorMove(float position);
+    }
+
     public MusicClipView(Context context) {
         super(context);
     }
@@ -95,11 +107,11 @@ public class MusicClipView extends View {
         }
 
         mIndicatorLeftPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mIndicatorLeftPaint.setColor(Color.BLUE);
+        mIndicatorLeftPaint.setColor(Color.WHITE);
         mIndicatorLeftPaint.setStrokeWidth(2);
 
         mIndicatorRightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mIndicatorRightPaint.setColor(Color.GREEN);
+        mIndicatorRightPaint.setColor(Color.WHITE);
         mIndicatorRightPaint.setStrokeWidth(2);
 
         mIndicatorLeft = new Indicator();
@@ -139,6 +151,7 @@ public class MusicClipView extends View {
         final int action = event.getAction();
         mPosX = event.getX();
         mPosY = event.getY();
+        getParent().requestDisallowInterceptTouchEvent(true);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 // TODO: 2017/3/31 重合的情况
@@ -158,8 +171,17 @@ public class MusicClipView extends View {
                 final int cy = mProgressStartY + mIndicatorLeft.radius * 3;
                 boolean shouldInvalidate = false;
                 if (mIndicatorTouched != null) {
+                    final float position =
+                        (float) (mIndicatorTouched.cx - mIndicatorTouched.radius) / mProgressWidth;
                     if (checkIndicatorPivotX(cx)) {
                         mIndicatorTouched.setPivotX(cx);
+                        if (mIndicatorMoveListener != null) {
+                            if (mIndicatorTouched == mIndicatorLeft) {
+                                mIndicatorMoveListener.onLeftIndicatorMove(position);
+                            } else {
+                                mIndicatorMoveListener.onRightIndicatorMove(position);
+                            }
+                        }
                         shouldInvalidate = true;
                     }
                     if (checkIndicatorPivotY(cy)) {
@@ -208,6 +230,18 @@ public class MusicClipView extends View {
         return cy != mIndicatorTouched.cy;
     }
 
+    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    // private int measureWidth(int widthMeasureSpec) {
+    //
+    // }
+    //
+    // private int measureHeight(int heightMeasureSpec) {
+    //
+    // }
+
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // TODO: 2017/3/30 test
@@ -226,8 +260,8 @@ public class MusicClipView extends View {
 
     private void drawDot(Canvas canvas) {
         // TODO: 2017/3/31
-        //final float scale = (float) mDotProgress / mProgressMax;
-        final float x = mProgressStartX + 0.5f * mProgressWidth;
+        final float scale = (float) mDotProgress / sDefaultMax;
+        final float x = mProgressStartX + scale * mProgressWidth;
         final float y = mProgressStartY;
         canvas.drawPoint(x, y, mDotPaint);
     }
@@ -270,9 +304,21 @@ public class MusicClipView extends View {
         indicator.draw(canvas);
     }
 
-    public void setDotProgress(int dotProgress) {
+    public void setDotProgress(@IntRange(from = 0, to = 100) int dotProgress) {
         mDotProgress = dotProgress;
         postInvalidate();
+    }
+
+    public float getRightIndicatorProgress() {
+        return getIndicatorProgress(mIndicatorRight);
+    }
+
+    public float getLeftIndicatorProgress() {
+        return getIndicatorProgress(mIndicatorLeft);
+    }
+
+    private float getIndicatorProgress(Indicator indicator) {
+        return indicator == null ? 0 : indicator.cx - indicator.radius;
     }
 
     class Indicator {
