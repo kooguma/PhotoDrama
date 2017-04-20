@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.media.recorder;
 
+import android.media.AudioFormat;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
@@ -47,6 +48,7 @@ public class MediaAudioEncoder extends MediaEncoder {
         format.setString(MediaFormat.KEY_MIME, MIME_TYPE);
         format.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
         format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, CHANNEL_COUNT);
+        format.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_STEREO);
         format.setInteger(MediaFormat.KEY_SAMPLE_RATE, SAMPLE_RATE);
         format.setInteger(MediaFormat.KEY_AAC_PROFILE,
                 MediaCodecInfo.CodecProfileLevel.AACObjectLC);
