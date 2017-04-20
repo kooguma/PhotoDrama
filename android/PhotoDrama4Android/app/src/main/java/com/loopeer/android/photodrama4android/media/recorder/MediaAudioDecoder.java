@@ -11,6 +11,7 @@ import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.MD5Util;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,6 +49,10 @@ public class MediaAudioDecoder extends MediaDecoder {
     }
 
     public void decode() throws IOException {
+        File file = new File(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
+        if (file.exists()) {
+            mCallback.onFinish();
+        }
         MediaExtractor extractor = new MediaExtractor();
         extractor.setDataSource(mMusicClip.path);
 

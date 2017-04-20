@@ -6,6 +6,7 @@ import android.media.MediaFormat;
 import android.util.Log;
 import android.view.Surface;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class MediaVideoEncoder extends MediaEncoder {
 	private static final boolean DEBUG = false;	// TODO set false on release
@@ -20,6 +21,8 @@ public class MediaVideoEncoder extends MediaEncoder {
 	private final int mHeight;
 	private final int mBitRate;
     private Surface mInputSurface;
+	private long time = 0;
+    private LinkedList<Long> mUsedTimes = new LinkedList<>();
 
 	public MediaVideoEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, final int width, final int height, final int bitRate) {
 		super(muxer, listener);
@@ -64,5 +67,39 @@ public class MediaVideoEncoder extends MediaEncoder {
 
 	public Surface getInputSurface() {
 		return mInputSurface;
+	}
+
+	@Override
+	protected long getPTSUs() {
+        long result = 0;
+        synchronized (mSync) {
+            result = mUsedTimes.poll();
+        }
+		if (time == 0) {
+			time = result;
+		}
+		if (result < prevOutputPTSUs)
+			result = (prevOutputPTSUs - result) + result;
+		return result;
+	}
+
+	public long getPreTime() {
+		return prevOutputPTSUs;
+	}
+
+	public long getStartRecordTime() {
+		return time;
+	}
+
+    public void putTime(long useTime) {
+        synchronized (mSync) {
+            mUsedTimes.add(useTime);
+        }
+    }
+
+	@Override
+	public boolean frameAvailableSoon() {
+		mWeakMuxer.get().notifyAudio();
+		return super.frameAvailableSoon();
 	}
 }

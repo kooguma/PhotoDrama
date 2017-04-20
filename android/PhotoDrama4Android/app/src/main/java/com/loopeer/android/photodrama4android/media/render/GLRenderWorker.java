@@ -108,7 +108,7 @@ public class GLRenderWorker implements IRendererWorker {
             GlUtil.checkGlError("glBindFramebuffer");
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
             mEglHelperLocal.swapBuffers();
-            mMuxerWrapper.frameVideoAvailableSoon();
+            mMuxerWrapper.frameVideoAvailableSoon(usedTime * 1000);
             mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);

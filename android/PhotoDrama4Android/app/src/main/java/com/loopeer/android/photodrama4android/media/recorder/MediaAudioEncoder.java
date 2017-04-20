@@ -37,18 +37,13 @@ public class MediaAudioEncoder extends MediaEncoder {
         if (DEBUG) Log.v(TAG, "prepare:");
         mTrackIndex = -1;
         mMuxerStarted = mIsEOS = false;
-        final MediaCodecInfo audioCodecInfo = selectAudioCodec(MIME_TYPE);
-        if (audioCodecInfo == null) {
-            Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE);
-            return;
-        }
 
         mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
         MediaFormat format = new MediaFormat();
         format.setString(MediaFormat.KEY_MIME, MIME_TYPE);
         format.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
         format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, CHANNEL_COUNT);
-        format.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_STEREO);
+        format.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_OUT_STEREO);
         format.setInteger(MediaFormat.KEY_SAMPLE_RATE, SAMPLE_RATE);
         format.setInteger(MediaFormat.KEY_AAC_PROFILE,
                 MediaCodecInfo.CodecProfileLevel.AACObjectLC);
@@ -67,7 +62,7 @@ public class MediaAudioEncoder extends MediaEncoder {
     @Override
     protected void startRecording() {
         super.startRecording();
-        mRecordStartTime = System.nanoTime() / 1000;
+        /*mRecordStartTime = System.nanoTime() / 1000*/;
 
         if (mAudioMixerThread == null) {
             mAudioMixerThread = new AudioMixerThread();
@@ -115,12 +110,22 @@ public class MediaAudioEncoder extends MediaEncoder {
                 }
             }
             new AudioMixer(mDrama, (data, length, presentationTimeUs) -> {
+                if (mWeakMuxer.get().getVideoPreTime() < presentationTimeUs + getRecordTime()) {
+                    synchronized (this) {
+                        try {
+                            this.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
                 if (data == null) {
-                    encode(null, length, presentationTimeUs + mRecordStartTime);
+                    encode(null, length, presentationTimeUs + getRecordTime());
                     frameAvailableSoon();
                     return;
                 }
-                encode(data, length, presentationTimeUs + mRecordStartTime);
+                encode(data, length, presentationTimeUs + getRecordTime());
                 frameAvailableSoon();
             }).startMux();
         }
@@ -138,29 +143,12 @@ public class MediaAudioEncoder extends MediaEncoder {
                 mDecodingFileCount = decodeingFileCount;
             }
         }
-    }
 
-    private static final MediaCodecInfo selectAudioCodec(final String mimeType) {
-        MediaCodecInfo result = null;
-        final int numCodecs = MediaCodecList.getCodecCount();
-        LOOP:
-        for (int i = 0; i < numCodecs; i++) {
-            final MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
-            if (!codecInfo.isEncoder()) {
-                continue;
-            }
-            final String[] types = codecInfo.getSupportedTypes();
-            for (int j = 0; j < types.length; j++) {
-                if (DEBUG) Log.i(TAG, "supportedType:" + codecInfo.getName() + ",MIME=" + types[j]);
-                if (types[j].equalsIgnoreCase(mimeType)) {
-                    if (result == null) {
-                        result = codecInfo;
-                        break LOOP;
-                    }
-                }
+        public void notifyAudio() {
+            synchronized (this) {
+                this.notify();
             }
         }
-        return result;
     }
 
     @Override
@@ -171,11 +159,18 @@ public class MediaAudioEncoder extends MediaEncoder {
         return mBufferInfo.presentationTimeUs;
     }
 
+    public long getRecordTime() {
+        return 1/*mWeakMuxer.get().getStartRecordTime()*/ /*mRecordStartTime*/;
+    }
 
     protected void signalEndOfInputStream() {
         if (DEBUG) Log.d(TAG, "sending EOS to encoder");
         if (!mIsEOS) {
             encode(null, 0, getPTSUs());
         }
+    }
+
+    public void notifyAudio() {
+        mAudioMixerThread.notifyAudio();
     }
 }
