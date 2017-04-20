@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -14,8 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-
-import com.laputapp.widget.ProgressLoading;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
@@ -50,7 +47,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     private DramaFetchHelper mDramaFetchHelper;
     private ImageClip mSelectedImageClip;
     private ExportLoadingDialog mExportProgressLoading;
-//    private boolean mExportProgressShow;
     private int mUsedTime;
 
     @Override

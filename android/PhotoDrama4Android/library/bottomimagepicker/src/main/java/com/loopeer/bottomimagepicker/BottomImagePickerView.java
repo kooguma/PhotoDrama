@@ -3,7 +3,6 @@ package com.loopeer.bottomimagepicker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -11,13 +10,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +34,6 @@ public class BottomImagePickerView extends LinearLayout {
     private SlideCustomViewPager mViewPager;
 
     private List<String> mTitles;
-    private List<PickerFragment> mFragments;
-
     private PickerFragmentAdapter mFragmentAdapter;
 
     private LoaderManagerImpl mLoaderManager;
@@ -79,8 +72,6 @@ public class BottomImagePickerView extends LinearLayout {
         mViewPager = (SlideCustomViewPager) view.findViewById(R.id.view_pager);
 
         mTitles = new ArrayList<>();
-        mFragments = new ArrayList<>();
-
         mLoaderManager = new LoaderManagerImpl(this);
         mFragmentAdapter = new PickerFragmentAdapter(getSupportFragmentManager());
 
@@ -134,13 +125,11 @@ public class BottomImagePickerView extends LinearLayout {
 
     public void setData(List<ImageFolder> folders) {
         mTitles.clear();
-        mFragments.clear();
         for (int i = 0; i < folders.size(); i++) {
             ImageFolder folder = folders.get(i);
             mTitles.add(folder.name);
-            mFragments.add(PickerFragment.newInstance(folder.images, mOnImagePickListener));
         }
-        mFragmentAdapter.notifyDataSetChanged();
+        mFragmentAdapter.updateImageFolders(folders);
     }
 
     private LoaderManager getSupportLoaderManager() {
@@ -184,12 +173,21 @@ public class BottomImagePickerView extends LinearLayout {
 
     private class PickerFragmentAdapter extends FragmentStatePagerAdapter {
 
+        private List<ImageFolder> mImageFolders;
+
         public PickerFragmentAdapter(FragmentManager fm) {
             super(fm);
+            mImageFolders = new ArrayList<>();
+        }
+
+        public void updateImageFolders(List<ImageFolder> imageFolders) {
+            mImageFolders.clear();
+            mImageFolders.addAll(imageFolders);
+            notifyDataSetChanged();
         }
 
         @Override public Fragment getItem(int position) {
-            return mFragments == null ? null : mFragments.get(position);
+            return PickerFragment.newInstance(mImageFolders.get(position).images, mOnImagePickListener);
         }
 
         @Override public int getCount() {
