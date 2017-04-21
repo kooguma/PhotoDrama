@@ -167,11 +167,20 @@ public class BottomImagePickerView extends LinearLayout {
             mTabLayout.getHeight() + mIcon.getHeight();
     }
 
+    public SlideCustomViewPager getViewPager() {
+        return mViewPager;
+    }
+
     public ImageView getIconView() {
         return mIcon;
     }
 
-    private class PickerFragmentAdapter extends FragmentStatePagerAdapter {
+
+    public View getCurrentRecyclerView(int position) {
+        return mFragmentAdapter.getFragment(position).getView().findViewById(R.id.recycler_picker);
+    }
+
+    private class PickerFragmentAdapter extends PickerFragmentStatePagerAdapter {
 
         private List<ImageFolder> mImageFolders;
 

@@ -254,8 +254,12 @@ public class PickerBottomBehavior<V extends View> extends CoordinatorLayout.Beha
             mViewDragHelper = ViewDragHelper.create(parent, mDragCallback);
         }
         mViewRef = new WeakReference<>(child);
-        mNestedScrollingChildRef = new WeakReference<>(findScrollingChild(child));
+        if (mNestedScrollingChildRef == null) mNestedScrollingChildRef = new WeakReference<>(findScrollingChild(child));
         return true;
+    }
+
+    public void updateNestScrollChild(View view) {
+        mNestedScrollingChildRef = new WeakReference<>(view);
     }
 
     @Override

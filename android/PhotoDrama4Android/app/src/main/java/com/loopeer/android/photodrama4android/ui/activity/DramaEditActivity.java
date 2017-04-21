@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -153,6 +154,22 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
                         , mSelectedImageClip.path));
                 mBinding.glSurfaceView.getTextureLoader().loadImageTexture(handler);
                 return false;
+            }
+        });
+        mBottomImagePickerView.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                behavior.updateNestScrollChild(mBottomImagePickerView.getCurrentRecyclerView(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
         updateSegmentList();
