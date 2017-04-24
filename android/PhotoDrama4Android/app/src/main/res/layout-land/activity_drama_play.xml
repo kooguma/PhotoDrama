@@ -22,7 +22,7 @@
 
                 <ViewAnimator
                     android:id="@+id/animator"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -44,7 +44,7 @@
                             android:id="@+id/layout_tool_bottom"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/window_background_dark_transparent75"
+                            android:background="@drawable/bg_play_seek"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:paddingBottom="15dp"

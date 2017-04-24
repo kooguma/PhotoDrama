@@ -52,7 +52,7 @@
                             android:id="@+id/layout_tool_bottom"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/window_background_dark_transparent75"
+                            android:background="@drawable/bg_play_seek"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:layout_gravity="bottom"
