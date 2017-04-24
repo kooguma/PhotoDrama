@@ -12,8 +12,6 @@ android {
         versionCode configs.versionCode
         versionName configs.versionName
         manifestPlaceholders = [API_URL: configs.apiUrlDebug]
-        renderscriptTargetApi 24
-        renderscriptSupportModeEnabled true
     }
 
     signingConfigs {
@@ -115,8 +113,7 @@ dependencies {
     //    compile 'com.android.support:multidex:1.0.1'
     compile 'com.qiniu:qiniu-android-sdk:7.3.2'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.2@aar'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    compile 'com.wonderkiln:blurkit:1.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
 
     debugCompile libs.andebug
 
