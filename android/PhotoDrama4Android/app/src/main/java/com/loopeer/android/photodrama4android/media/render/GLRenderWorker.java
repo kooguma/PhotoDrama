@@ -143,11 +143,13 @@ public class GLRenderWorker implements IRendererWorker {
         mIsRecording = true;
     }
 
-    public synchronized void endRecording() {
+    public synchronized String endRecording() {
+        String path = null;
         if (mIsRecording) {
             mIsRecording = false;
-            stopRecording();
+            path = stopRecording();
         }
+        return path;
     }
 
     private void prepareFramebuffer(int width, int height) {
@@ -257,15 +259,17 @@ public class GLRenderWorker implements IRendererWorker {
         }
     };
 
-    private void stopRecording() {
+    private String stopRecording() {
+        String path = null;
         if (mMuxerWrapper != null) {
-            mMuxerWrapper.stopRecording();
+            path = mMuxerWrapper.stopRecording();
             mMuxerWrapper = null;
         }
         if (mInputWindowSurface != null) {
             mInputWindowSurface.release();
             mInputWindowSurface = null;
         }
+        return path;
     }
 
 }

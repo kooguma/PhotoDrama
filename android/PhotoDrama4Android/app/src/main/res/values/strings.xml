@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PhotoDrama</string>
+    <string name="app_name">由我主演</string>
     <string name="label_segment_edit">Segment Edit</string>
     <string name="label_transition_edit">Transition Edit</string>
     <string name="label_subtitle">字幕</string>
@@ -69,10 +69,11 @@
     <string name="share_qq">QQ</string>
     <string name="share_wx">微信</string>
     <string name="share_pyq">朋友圈</string>
+    <string name="share_more">更多</string>
     <string name="share_wb">微博</string>
     <string name="share_qzone">QQ空间</string>
     <string name="share_back">返回首页</string>
-
+    <string name="share_no_activity">你的手机还未安装此应用，请先安装</string>
     <string name="share_to">分享至</string>
 
     <string name="picker_bottom_sheet_behavior">com.loopeer.bottomimagepicker.PickerBottomBehavior</string>
@@ -82,5 +83,7 @@
     <string name="drama_unzip_success">解压成功</string>
     <string name="drama_series_format">%1$02d/%2$02d</string>
     <string name="drama_export_message">正在导出，请耐心等待 ~</string>
+
+    <string name="make_drama_next">即将开放</string>
 
 </resources>

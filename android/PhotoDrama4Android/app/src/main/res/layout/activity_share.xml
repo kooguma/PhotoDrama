@@ -69,27 +69,20 @@
         <TextView
             style="@style/PhotoDramaShareIcon"
             android:text="@string/share_qq"
+            android:onClick="onQQClick"
             android:drawableTop="@drawable/ic_qq"/>
 
         <TextView
             style="@style/PhotoDramaShareIcon"
             android:text="@string/share_wx"
+            android:onClick="onWeichatClick"
             android:drawableTop="@drawable/ic_wx"/>
 
         <TextView
             style="@style/PhotoDramaShareIcon"
-            android:text="@string/share_pyq"
+            android:text="@string/share_more"
+            android:onClick="onMoreClick"
             android:drawableTop="@drawable/ic_pyq"/>
-
-        <TextView
-            style="@style/PhotoDramaShareIcon"
-            android:text="@string/share_wb"
-            android:drawableTop="@drawable/ic_weibo"/>
-
-        <TextView
-            style="@style/PhotoDramaShareIcon"
-            android:text="@string/share_qzone"
-            android:drawableTop="@drawable/ic_qzone"/>
     </LinearLayout>
 
     <Button

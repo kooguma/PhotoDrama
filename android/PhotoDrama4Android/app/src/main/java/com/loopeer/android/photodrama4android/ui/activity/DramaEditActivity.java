@@ -293,9 +293,9 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     }
 
     @Override
-    public void recordFinished() {
+    public void recordFinished(String path) {
         dismissExportProgressLoading();
-        Navigator.startShareActivity(this);
+        Navigator.startShareActivity(this, path);
     }
 
     @Override

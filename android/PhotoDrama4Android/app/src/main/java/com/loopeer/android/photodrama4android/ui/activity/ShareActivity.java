@@ -5,12 +5,15 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.utils.ShareUtils;
 
 public class ShareActivity extends PhotoDramaBaseActivity {
 
+    private String mPath;
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
+        mPath = getIntent().getStringExtra(Navigator.EXTRA_VIDEO_PATH);
     }
 
     @Override protected void onPostCreate(Bundle savedInstanceState) {
@@ -20,5 +23,17 @@ public class ShareActivity extends PhotoDramaBaseActivity {
 
     public void onBackToMain(View view) {
         Navigator.startMainActivity(this);
+    }
+
+    public void onQQClick(View view) {
+        ShareUtils.startShare(this, ShareUtils.SHARE_TYPE_QQ, mPath);
+    }
+
+    public void onWeichatClick(View view) {
+        ShareUtils.startShare(this, ShareUtils.SHARE_TYPE_WEICHAT, mPath);
+    }
+
+    public void onMoreClick(View view) {
+        ShareUtils.startShare(this, null, mPath);
     }
 }

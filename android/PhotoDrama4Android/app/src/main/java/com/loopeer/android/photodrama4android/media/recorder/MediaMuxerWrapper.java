@@ -18,8 +18,10 @@ public class MediaMuxerWrapper {
 	private int mEncoderCount, mStatredCount;
 	private boolean mIsStarted;
 	private MediaEncoder mVideoEncoder, mAudioEncoder;
+	private String mOutPath;
 
 	public MediaMuxerWrapper(String path) throws IOException {
+		mOutPath = path;
 		mMediaMuxer = new MediaMuxer(path,
 				MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
 
@@ -41,13 +43,14 @@ public class MediaMuxerWrapper {
 			mAudioEncoder.startRecording();
 	}
 
-	public void stopRecording() {
+	public String stopRecording() {
 		if (mVideoEncoder != null)
 			mVideoEncoder.stopRecording();
 		mVideoEncoder = null;
 		if (mAudioEncoder != null)
 			mAudioEncoder.stopRecording();
 		mAudioEncoder = null;
+		return mOutPath;
 	}
 
 	public synchronized boolean isStarted() {

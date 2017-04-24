@@ -31,6 +31,7 @@ import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity
 public class Navigator {
 
     public static final String EXTRA_DRAMA = "extra_drama";
+    public static final String EXTRA_VIDEO_PATH = "extra_video_path";
     public static final String EXTRA_TEXT = "extra_text";
     public static final String EXTRA_MUSIC_CLIP = "extra_music_clip";
     public static final String EXTRA_REQUEST_CODE = "extra_request_code";
@@ -167,8 +168,9 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void startShareActivity(Context context) {
+    public static void startShareActivity(Context context, String path) {
         Intent intent = new Intent(context, ShareActivity.class);
+        intent.putExtra(EXTRA_VIDEO_PATH, path);
         context.startActivity(intent);
     }
 
@@ -176,4 +178,5 @@ public class Navigator {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
+
 }

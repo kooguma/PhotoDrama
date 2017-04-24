@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -228,9 +227,9 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     @Override
-    public void recordFinished() {
+    public void recordFinished(String path) {
         dismissExportProgressLoading();
-        Navigator.startShareActivity(this);
+        Navigator.startShareActivity(this, path);
     }
 
     public void showExportProgress(String message) {

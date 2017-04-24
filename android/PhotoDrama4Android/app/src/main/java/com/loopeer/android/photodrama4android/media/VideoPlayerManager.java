@@ -114,8 +114,8 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     private void finishToTime(int finishToTime) {
         if (mIsRecording) {
-            mGLRenderWorker.endRecording();
-            recordFinished();
+            String path = mGLRenderWorker.endRecording();
+            recordFinished(path);
             mIsRecording = false;
         }
         mGLThread.stopUp();
@@ -314,9 +314,9 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
             mRecordingListener.recordChange(progress);
     }
 
-    public void recordFinished() {
+    public void recordFinished(String path) {
         if (mRecordingListener != null && mIsRecording)
-            mRecordingListener.recordFinished();
+            mRecordingListener.recordFinished(path);
     }
 
     public boolean isRecording() {
@@ -338,7 +338,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
         void recordChange(int progress);
 
-        void recordFinished();
+        void recordFinished(String path);
     }
 
     public interface BitmapReadyListener {

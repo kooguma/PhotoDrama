@@ -8,6 +8,9 @@ import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
+import com.loopeer.android.photodrama4android.utils.ShareUtils;
+
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class MainActivity extends PhotoDramaBaseActivity {
 
@@ -32,8 +35,10 @@ public class MainActivity extends PhotoDramaBaseActivity {
       Navigator.startDramaSelectActivity(this);
     }
 
+    //TODO version later
     public void onCreateClick(View view) {
-        Navigator.startImageSelectActivity(this);
+        showToast(R.string.make_drama_next);
+//        Navigator.startImageSelectActivity(this);
     }
 
     public void onSettingClick(View view) {
