@@ -48,6 +48,9 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            manifestPlaceholders = [TD_APP_ID: configs.talkingDataAppIdDebug,]
+
             buildConfigField 'String', 'API_URL', "\"$configs.apiUrlDebug\""
             buildConfigField 'boolean', 'LOG_ON', "true"
 
@@ -58,9 +61,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
+            manifestPlaceholders = [TD_APP_ID: configs.talkingDataAppIdRelease,]
+
             buildConfigField 'String', 'API_URL', "\"$configs.apiUrlRelease\""
             buildConfigField 'boolean', 'LOG_ON', "false"
         }
+    }
+
+    productFlavors.all {
+        flavor -> manifestPlaceholders.put("TD_CHANNEL_ID", name)
     }
 
     productFlavors {

@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.utils.CacheUtils;
 import com.loopeer.android.photodrama4android.utils.Toaster;
 import com.loopeer.formitemview.FormItemView;
@@ -29,6 +30,7 @@ public class SettingActivity extends PhotoDramaBaseActivity {
     }
 
     public void onClearCacheClick(View view) {
+        Analyst.settingCacheClick();
         double cache = (double) CacheUtils.getCacheSize(this) / 1024 / 1024;
         new AlertDialog.Builder(this)
             .setMessage(getString(R.string.setting_is_clear_cache))
@@ -42,10 +44,12 @@ public class SettingActivity extends PhotoDramaBaseActivity {
     }
 
     public void onFeedBackClick(View view) {
+        Analyst.settingSuggestClick();
         Navigator.startFeedbackActivity(this);
     }
 
     public void onAboutClick(View view) {
+        Analyst.settingAboutUsClick();
         Navigator.startAboutActivity(this);
     }
 }

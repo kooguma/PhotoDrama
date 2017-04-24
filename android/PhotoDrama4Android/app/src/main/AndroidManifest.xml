@@ -149,6 +149,23 @@
             android:name=".ui.activity.DramaPlayActivity"
             android:screenOrientation="sensor"
             android:theme="@style/AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen" />
+
+        <!--TalkingData-->
+        <service
+            android:name="com.talkingdata.sdk.TDAntiCheatingService"
+            android:process="com.talkingdata.sdk.TDAntiCheatingService">  <!--用户质量评估Service可以配置在主进程或者单独进程-->
+            <intent-filter>
+                <action android:name="com.talkingdata.sdk.TDAntiCheatingService"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="TD_APP_ID"
+            android:value="${TD_APP_ID}"/>
+
+        <meta-data
+            android:name="TD_CHANNEL_ID"
+            android:value="${TD_CHANNEL_ID}"/>
     </application>
 
 </manifest>

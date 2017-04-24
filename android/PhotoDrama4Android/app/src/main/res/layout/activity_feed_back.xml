@@ -4,14 +4,14 @@
     <data>
 
         <variable
-            type="com.loopeer.android.photodrama4android.model.validator.FeedbackValidator"
-            name="validator"/>
+            name="validator"
+            type="com.loopeer.android.photodrama4android.model.validator.FeedbackValidator"/>
     </data>
 
     <com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:orientation="vertical">
 
         <include
             android:id="@+id/toolbar"
@@ -20,24 +20,25 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_below="@id/toolbar"
+            android:layout_marginTop="@dimen/large_padding"
+            android:background="@color/window_background_white"
+            android:gravity="top|left"
+            android:hint="@string/feedback_hint"
+            android:inputType="text"
             android:paddingLeft="@dimen/medium_padding"
             android:paddingRight="@dimen/medium_padding"
-            android:layout_marginTop="@dimen/large_padding"
             android:paddingTop="@dimen/large_padding"
-            android:layout_below="@id/toolbar"
-            android:background="@color/window_background_white"
-            android:inputType="text"
-            android:hint="@string/feedback_hint"
-            android:text="@={validator.feedback}"
-            android:gravity="top|left"/>
+            android:text="@={validator.feedback}"/>
 
         <Button
             style="@style/PhotoDramaButton.BlackSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/common_commit"
+            android:layout_alignParentBottom="true"
             android:enabled="@{validator.enable}"
-            android:layout_alignParentBottom="true"/>
+            android:onClick="onBtnClick"
+            android:text="@string/common_commit"/>
 
     </com.loopeer.compatinset.InsetRelativeLayout>
 </layout>

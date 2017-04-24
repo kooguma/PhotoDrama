@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.SeriesService;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaDetailBinding;
@@ -84,6 +85,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
 
     private void loadDrama(Theme theme) {
         if (theme == null) return;
+        Analyst.dramaDetailClick(theme.id);
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
             drama -> {

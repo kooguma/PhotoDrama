@@ -16,6 +16,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
@@ -56,6 +57,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drama_edit);
 
         mTheme = (Theme) getIntent().getSerializableExtra(Navigator.EXTRA_THEME);
+        Analyst.dramaUseClick(mTheme.id);
         setupView();
         loadDrama();
     }
@@ -102,6 +104,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
         }
 
         if (item.getItemId() == R.id.menu_export) {
+            Analyst.downloadClick();
             mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);

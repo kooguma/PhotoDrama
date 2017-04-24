@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.CategoryService;
 import com.loopeer.android.photodrama4android.model.Category;
@@ -36,6 +37,23 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
     private void setupView() {
         mTabLayout = (TabLayout) findViewById(R.id.drama_select_tab_select);
         mViewPager = (ViewPager) findViewById(R.id.drama_select_view_pager);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Analyst.dramaCategoryClick(mTitles.get(position).id);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         registerSubscription(
             ResponseObservable.unwrap(this, CategoryService.INSTANCE.categories())

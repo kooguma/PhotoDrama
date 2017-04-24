@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.utils.ShareUtils;
 
 public class ShareActivity extends PhotoDramaBaseActivity {
@@ -22,18 +23,22 @@ public class ShareActivity extends PhotoDramaBaseActivity {
     }
 
     public void onBackToMain(View view) {
+        Analyst.shareBackHomeClick();
         Navigator.startMainActivity(this);
     }
 
     public void onQQClick(View view) {
+        Analyst.shareQQClick();
         ShareUtils.startShare(this, ShareUtils.SHARE_TYPE_QQ, mPath);
     }
 
     public void onWeichatClick(View view) {
+        Analyst.shareWeChatClick();
         ShareUtils.startShare(this, ShareUtils.SHARE_TYPE_WEICHAT, mPath);
     }
 
     public void onMoreClick(View view) {
+        Analyst.shareMoreClick();
         ShareUtils.startShare(this, null, mPath);
     }
 }

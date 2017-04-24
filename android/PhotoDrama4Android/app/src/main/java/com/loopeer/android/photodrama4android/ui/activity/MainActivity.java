@@ -6,6 +6,8 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
+import com.loopeer.android.photodrama4android.utils.AnimationUtils;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 import com.loopeer.android.photodrama4android.utils.ShareUtils;
@@ -32,7 +34,8 @@ public class MainActivity extends PhotoDramaBaseActivity {
     }
 
     public void onActClick(View view) {
-      Navigator.startDramaSelectActivity(this);
+        Analyst.homeDramaClick();
+        Navigator.startDramaSelectActivity(this);
     }
 
     //TODO version later
@@ -42,6 +45,7 @@ public class MainActivity extends PhotoDramaBaseActivity {
     }
 
     public void onSettingClick(View view) {
+        Analyst.homeSettingClick();
         Navigator.startSettingActivity(this);
     }
 }
