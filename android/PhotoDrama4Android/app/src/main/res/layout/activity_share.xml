@@ -82,7 +82,7 @@
             style="@style/PhotoDramaShareIcon"
             android:text="@string/share_more"
             android:onClick="onMoreClick"
-            android:drawableTop="@drawable/ic_pyq"/>
+            android:drawableTop="@drawable/ic_more"/>
     </LinearLayout>
 
     <Button

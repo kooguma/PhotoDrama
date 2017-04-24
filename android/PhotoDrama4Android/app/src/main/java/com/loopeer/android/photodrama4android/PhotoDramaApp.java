@@ -1,5 +1,7 @@
 package com.loopeer.android.photodrama4android;
 
+import com.loopeer.android.photodrama4android.analytics.Analyst;
+import com.loopeer.android.photodrama4android.analytics.TalkingDataAnalyticsImpl;
 import com.loopeer.android.photodrama4android.api.ApiService;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
@@ -19,5 +21,6 @@ public class PhotoDramaApp extends BaseApp {
         RxDownload.getInstance(this)
                 .maxDownloadNumber(2)
                 .maxThread(3);
+        Analyst.init(new TalkingDataAnalyticsImpl(this, true, false));
     }
 }
