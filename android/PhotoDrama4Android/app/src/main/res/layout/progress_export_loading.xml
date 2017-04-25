@@ -13,8 +13,8 @@
         <com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingProgress
             android:id="@+id/progress"
             style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:indeterminate="true" />

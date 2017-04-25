@@ -6,7 +6,7 @@
 
     <color name="export_loading_foreground_progress_color">@color/colorAccent</color>
     <color name="export_loading_background_progress_color">#F2EFEF</color>
-    <dimen name="export_loading_stroke_width">3dp</dimen>
+    <dimen name="export_loading_stroke_width">2dp</dimen>
     <dimen name="export_loading_indicator_radius">4dp</dimen>
     <dimen name="export_loading_progress_sweep_angle">0dp</dimen>
 
