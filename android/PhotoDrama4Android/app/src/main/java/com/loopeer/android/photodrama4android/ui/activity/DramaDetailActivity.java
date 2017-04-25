@@ -108,7 +108,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                     mBinding.setSeries(series);
                     if (isFirstLoad) {
                         for (int i = 0; i < series.themes.size(); i++) {
-                            mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, theme));
+                            mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, series.themes.get(i)));
                         }
                         updateSelectedThemeBtn();
                     }
