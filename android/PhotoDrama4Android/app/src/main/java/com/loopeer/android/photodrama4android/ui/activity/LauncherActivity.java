@@ -21,20 +21,13 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                 .delay(1300, TimeUnit.MILLISECONDS)
                 .doOnNext(aBoolean -> {
                     Navigator.startGuideActivity(LauncherActivity.this);
-
-                   /* if (aBoolean) {
+                    if (aBoolean) {
                         Navigator.startGuideActivity(LauncherActivity.this);
                     } else {
                         Navigator.startMainActivity(LauncherActivity.this);
-                    }*/
+                    }
                     finish();
                 }).subscribe();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private boolean isFirstLaunch() {

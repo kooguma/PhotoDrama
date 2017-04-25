@@ -1,25 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppWindowAnimationStyle"
-        parent="android:Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in</item>
-        <item name="android:activityOpenExitAnimation">@null</item>
-        <item name="android:activityCloseEnterAnimation">@null</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out</item>
+           parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
     </style>
 
     <style name="Animation.Activity.BottomSlide"
-        parent="android:Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_bottom</item>
-        <item name="android:activityOpenExitAnimation">@android:anim/fade_out</item>
-        <item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_bottom</item>
+           parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+    <style name="Animation.Activity.Alpha"
+           parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
     <style name="Toolbar"
-        parent="@style/Widget.AppCompat.Toolbar">
+           parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:elevation"
-            tools:targetApi="lollipop">@dimen/elevation
+              tools:targetApi="lollipop">@dimen/elevation
         </item>
         <item name="elevation">@dimen/elevation</item>
         <item name="android:layout_width">match_parent</item>
@@ -29,13 +31,13 @@
     </style>
 
     <style name="TextAppearance.Widget.PhotoDrama.Toolbar.Title"
-        parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+           parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
     <style name="TextAppearance.PhotoDrama.Toolbar"
-        parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+           parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/text_size_larger</item>
         <item name="android:textColor">@color/text_color_primary</item>
     </style>
@@ -46,7 +48,7 @@
     </style>
 
     <style name="TabLayoutTextAppearance"
-        parent="@android:style/TextAppearance.Widget.TabWidget">
+           parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:textSize">15sp</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -61,7 +63,7 @@
     </style>
 
     <style name="PhotoDramaButton"
-        parent="Base.Widget.AppCompat.Button.Borderless">
+           parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="background">@android:color/black</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_large</item>

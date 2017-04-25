@@ -53,16 +53,6 @@ public class GuideActivity extends PhotoDramaBaseActivity implements ViewPager.O
     }
 
     private void initIndicator() {
-       /* mPageIndicator = new PageIndicator(GuideActivity.this);
-        mPageIndicator.setIndicatorMargin(
-                getResources().getDimensionPixelSize(R.dimen.xsmall_padding));
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-        layoutParams.bottomMargin = DeviceScreenUtils.dp2px(50, this);
-        mBinding.container.addView(mPageIndicator, layoutParams);
-        mPageIndicator.updateCount(pics.length);*/
         mBinding.viewIndicator.updateCount(pics.length);
         mBinding.viewIndicator.setIndicatorMargin(
                 getResources().getDimensionPixelSize(R.dimen.xsmall_padding));

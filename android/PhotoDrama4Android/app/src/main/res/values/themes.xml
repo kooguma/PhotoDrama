@@ -46,8 +46,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar"
-        parent="AppTheme">
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -56,10 +55,6 @@
         parent="AppTheme.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
-
-    <!--<style name="AppTheme.NoActionBar.Main">-->
-        <!--<item name="android:windowBackground">@drawable/bg_login</item>-->
-    <!--</style>-->
 
     <style name="AppTheme.NoActionBar.TranslucentBg.BottomSlide.Fullscreen"
         parent="AppTheme.NoActionBar">
@@ -102,11 +97,17 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="AppTheme.Main" parent="AppTheme.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.Alpha</item>
+    </style>
+
     <style name="AppTheme.Guide" parent="AppTheme.NoActionBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.Alpha</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.Alpha</item>
         <item name="android:windowBackground">@drawable/ic_launcher2</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
