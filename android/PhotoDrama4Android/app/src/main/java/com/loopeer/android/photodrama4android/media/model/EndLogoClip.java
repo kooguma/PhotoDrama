@@ -12,7 +12,7 @@ public class EndLogoClip extends Clip {
     public int logoRes = R.drawable.ic_drama_end_logo;
     public int textRes = R.drawable.ic_drama_end_text;
 
-    public float animationFactor = 0.7f;
+    public float animationFactor = 0.5f;
 
     public float getDegree(int useTime) {
         float progress = getProgress(useTime);

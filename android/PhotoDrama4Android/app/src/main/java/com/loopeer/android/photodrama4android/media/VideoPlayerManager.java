@@ -304,8 +304,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         mIsRecording = true;
         recordStart();
         seekToVideo(0);
-        //TODO
-//        mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
+        mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
         startVideoOnly();
     }
 

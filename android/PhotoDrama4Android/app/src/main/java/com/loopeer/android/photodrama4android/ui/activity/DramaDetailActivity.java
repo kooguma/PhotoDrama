@@ -91,12 +91,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mDramaFetchHelper.getDrama(theme,
             drama -> {
                 BitmapFactory.getInstance().clear();
-
-                //TODO
-                EndLogoClip clip = new EndLogoClip();
-                clip.startTime = drama.getShowTimeTotal() + 1;
-                drama.videoGroup.endLogoClip = clip;
-
                 mVideoPlayerManager.updateDrama(drama);
                 mVideoPlayerManager.seekToVideo(mUsedTime);
                 mVideoPlayerManager.startVideo();
