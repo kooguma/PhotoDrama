@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ public class PickerFragment extends Fragment {
     private ImageAdapter.OnImagePickListener mOnImagePickListener;
     private List<Image> mImages;
     private int mUnit;
+    private WindowManager mWindowManager;
 
     public static PickerFragment newInstance(List<Image> images, ImageAdapter.OnImagePickListener listener) {
         PickerFragment fragment = new PickerFragment();
@@ -49,8 +49,8 @@ public class PickerFragment extends Fragment {
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        mUnit = getUnitSize(wm);
+        mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        mUnit = getUnitSize(mWindowManager);
         mImageAdapter = new ImageAdapter(mImages, mUnit * IMAGE_SIZE_UNIT);
         mImageAdapter.setOnImagePickListener(mOnImagePickListener);
     }
@@ -65,13 +65,14 @@ public class PickerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_picker);
-        mRecyclerView.setAdapter(mImageAdapter);
-        //weak reference
+        mRecyclerView.setPadding(13, 0, 13, 0);
         mRecyclerView.setLayoutManager(
             new GridLayoutManager(getContext(), 5, GridLayoutManager.VERTICAL, false));
         mRecyclerView.addItemDecoration(
-            new GridLayoutItemDecoration(mUnit * DECORATION_SIZE_UNIT, IMAGE_COUNT));
-        mRecyclerView.setPadding(mUnit * DECORATION_SIZE_UNIT, 0, 0, mUnit * DECORATION_SIZE_UNIT);
+            new GridLayoutItemDecoration(getSpacing(mWindowManager)));
+        //weak reference
+        mRecyclerView.setAdapter(mImageAdapter);
+
     }
 
     @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -90,7 +91,17 @@ public class PickerFragment extends Fragment {
     public static int getUnitSize(WindowManager wm) {
         Display display = wm.getDefaultDisplay();
         int screenWidth = display.getWidth();
-        return screenWidth / (DECORATION_COUNT + IMAGE_COUNT * IMAGE_SIZE_UNIT);
+        return screenWidth /
+            (DECORATION_COUNT * DECORATION_SIZE_UNIT + IMAGE_COUNT * IMAGE_SIZE_UNIT);
+    }
+
+    private int getSpacing(WindowManager wm) {
+        Display display = wm.getDefaultDisplay();
+        int screenWidth = display.getWidth();
+        final int gridCount = IMAGE_COUNT;
+        final int gridSize = mUnit * IMAGE_SIZE_UNIT;
+        final int totalSpacing = screenWidth - gridCount * gridSize;
+        return totalSpacing / (gridCount * 2 + 2);
     }
 
 }
