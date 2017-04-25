@@ -18,6 +18,12 @@ public class PhotoDramaBaseActivity extends BaseActivity {
     private Toolbar mToolbar;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setSwipeBackEnable(true);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         try {

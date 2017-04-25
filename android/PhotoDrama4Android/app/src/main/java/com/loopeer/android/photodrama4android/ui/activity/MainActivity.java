@@ -19,6 +19,7 @@ public class MainActivity extends PhotoDramaBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setSwipeBackEnable(false);
         setContentView(R.layout.activity_main);
         PermissionUtils.checkStoragePermission(this);
     }
