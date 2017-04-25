@@ -85,6 +85,9 @@
     <string name="drama_series_format">%1$02d/%2$02d</string>
     <string name="drama_export_message">正在导出，请耐心等待 ~</string>
 
+    <!-- guide -->
+    <string name="guide_btn_text">立即体验</string>
+
     <string name="make_drama_next">即将开放</string>
 
 </resources>

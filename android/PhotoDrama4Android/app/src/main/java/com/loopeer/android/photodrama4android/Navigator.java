@@ -15,6 +15,7 @@ import com.loopeer.android.photodrama4android.ui.activity.DramaPlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FeedbackActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
+import com.loopeer.android.photodrama4android.ui.activity.GuideActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MainActivity;
@@ -179,4 +180,8 @@ public class Navigator {
         context.startActivity(intent);
     }
 
+    public static void startGuideActivity(Context context) {
+        Intent intent = new Intent(context, GuideActivity.class);
+        context.startActivity(intent);
+    }
 }

@@ -101,4 +101,13 @@
         <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
+    <style name="AppTheme.Guide" parent="AppTheme.NoActionBar.Fullscreen">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/ic_launcher2</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
 </resources>

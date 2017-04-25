@@ -21,13 +21,7 @@
 
         <activity
             android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:launchMode="singleTask"/>
         <activity
             android:name=".ui.activity.MakeMovieActivity"
             android:screenOrientation="portrait"
@@ -149,6 +143,22 @@
             android:name=".ui.activity.DramaPlayActivity"
             android:screenOrientation="sensor"
             android:theme="@style/AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen" />
+        <activity
+            android:name=".ui.activity.LauncherActivity"
+            android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.GuideActivity"
+            android:theme="@style/AppTheme.Guide">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.LauncherActivity"/>
+        </activity>
 
         <!--TalkingData-->
         <service
