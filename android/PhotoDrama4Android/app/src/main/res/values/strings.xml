@@ -54,6 +54,7 @@
 
     <!--feedback-->
     <string name="feedback_hint">提出您的意见或建议，我们会努力做得更好哦 ~</string>
+    <string name="feedback_success">感谢您的反馈</string>
 
     <!--setting-->
     <string name="setting_feedback">意见反馈</string>

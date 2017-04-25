@@ -11,6 +11,6 @@ import retrofit2.http.GET;
 public interface CategoryService {
     CategoryService INSTANCE = ApiService.getRetrofit().create(CategoryService.class);
 
-    @GET("/api/v1/categories")
+    @GET("categories")
     Flowable<BaseResponse<List<Category>>> categories();
 }

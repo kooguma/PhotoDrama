@@ -12,6 +12,6 @@ import retrofit2.http.Query;
 public interface SeriesService {
     SeriesService INSTANCE = ApiService.getRetrofit().create(SeriesService.class);
 
-    @GET("/api/v1/series/detail")
+    @GET("series/detail")
     Flowable<BaseResponse<Series>> detail(@Query("series_id") String seriesId);
 }

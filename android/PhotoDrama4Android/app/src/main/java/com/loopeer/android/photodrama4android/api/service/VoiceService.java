@@ -12,7 +12,7 @@ public interface VoiceService {
 
     VoiceService INSTANCE = ApiService.getRetrofit().create(VoiceService.class);
 
-    @GET("/api/v1/voices")
+    @GET("voices")
     Flowable<BaseResponse<List<Voice>>> voices(@Query("type") String type);
 
 }

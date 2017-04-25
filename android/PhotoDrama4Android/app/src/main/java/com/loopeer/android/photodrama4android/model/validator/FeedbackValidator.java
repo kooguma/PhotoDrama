@@ -23,8 +23,8 @@ public class FeedbackValidator extends ObservableValidator {
         return !TextUtils.isEmpty(feedback);
     }
 
-    @Override public boolean isEdited() {
+    @Override
+    public boolean isValidated() {
         return !TextUtils.isEmpty(feedback);
     }
-
 }

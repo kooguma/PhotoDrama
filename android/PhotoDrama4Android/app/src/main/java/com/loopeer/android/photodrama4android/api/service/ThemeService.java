@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 public interface ThemeService {
     ThemeService INSTANCE = ApiService.getRetrofit().create(ThemeService.class);
 
-    @GET("/api/v1/themes/list")
+    @GET("themes/list")
     Flowable<BaseResponse<List<Theme>>> list(@Query("category_id") String categoryId);
 
 }
