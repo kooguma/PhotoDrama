@@ -20,7 +20,6 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
         Flowable.just(isFirstLaunch())
                 .delay(1300, TimeUnit.MILLISECONDS)
                 .doOnNext(aBoolean -> {
-                    Navigator.startGuideActivity(LauncherActivity.this);
                     if (aBoolean) {
                         Navigator.startGuideActivity(LauncherActivity.this);
                     } else {
