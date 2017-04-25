@@ -1,45 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="com.loopeer.android.photodrama4android.BuildConfig"/>
     </data>
 
-    <com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.loopeer.compatinset.InsetRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/window_background_white"
         android:orientation="vertical">
 
-        <include layout="@layout/view_toolbar"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <ImageView
+            <include layout="@layout/view_toolbar"/>
+
+        </LinearLayout>
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginTop="110dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="top|center"
-            android:src="@mipmap/ic_launcher_round"
-            android:contentDescription="@string/label_image"/>
+            android:layout_marginTop="110dp"
+            android:contentDescription="@string/label_image"
+            app:placeholderImage="@mipmap/ic_launcher"
+            app:placeholderImageScaleType="fitXY"
+            app:roundedCornerRadius="24dp"
+            app:roundingBorderColor="@color/divider"
+            app:roundingBorderWidth="1dp"/>
 
         <Button
-            style="@style/PhotoDramaText.Primary"
             android:id="@+id/txtRate"
-            android:onClick="onRateClick"
-            android:background="?selectableItemBackground"
-            android:layout_marginBottom="100dp"
+            style="@style/PhotoDramaText.Primary"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:background="?selectableItemBackground"
+            android:onClick="onRateClick"
             android:text="@string/about_rank_us"/>
 
         <TextView
             style="@style/PhotoDramaText.Secondary"
-            android:layout_gravity="bottom|center"
             android:layout_above="@id/txtRate"
             android:layout_centerHorizontal="true"
-            android:text="@{@string/about_version_format(BuildConfig.VERSION_NAME)}"
-            android:layout_marginBottom="36dp"/>
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="36dp"
+            android:text="@{@string/about_version_format(BuildConfig.VERSION_NAME)}"/>
 
     </com.loopeer.compatinset.InsetRelativeLayout>
 </layout>

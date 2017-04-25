@@ -48,7 +48,7 @@
 
     <!--about us-->
     <string name="label_image">图标</string>
-    <string name="about_version_format">v%s</string>
+    <string name="about_version_format">V%s</string>
     <string name="about_rank_us">好评鼓励</string>
     <string name="about_rank_no_app">还没有安装应用市场</string>
 

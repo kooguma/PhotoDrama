@@ -19,9 +19,9 @@
     <style name="Toolbar"
         parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:elevation"
-            tools:targetApi="lollipop">0dp
+            tools:targetApi="lollipop">@dimen/elevation
         </item>
-        <item name="elevation">0dp</item>
+        <item name="elevation">@dimen/elevation</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?actionBarSize</item>
         <item name="android:background">@android:color/white</item>
