@@ -128,6 +128,16 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
+
+    <style name="PhotoDramaText.Tertiary.Small">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PhotoDramaText.Tertiary.Normal">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
     <style name="PhotoDramaShareIcon" parent="PhotoDramaText.Secondary.Small">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

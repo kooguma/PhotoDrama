@@ -193,6 +193,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mToolShow = false;
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, 0,
             mBinding.layoutToolBottom.getHeight()).start();
+        ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, 0, -mBinding.layoutToolTop.getHeight()).start();
     }
 
     private void showAllBar() {
@@ -200,6 +201,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mToolShow = true;
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y,
             mBinding.layoutToolBottom.getHeight(), 0).start();
+        ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, -mBinding.layoutToolTop.getHeight(), 0).start();
     }
 
     public void onEditClick(View view) {
