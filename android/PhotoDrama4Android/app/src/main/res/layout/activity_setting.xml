@@ -34,6 +34,20 @@
             android:layout_height="@dimen/divider"
             android:background="@color/divider"/>
 
+
+        <com.loopeer.formitemview.FormTextItem
+            style="@style/PhotoDramaFormItem"
+            app:imageRightVisible="gone"
+            android:onClick="onRankClick"
+            app:contentGravity="right"
+            app:contentTextColor="@color/text_color_tertiary"
+            app:descText="@string/setting_rank"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider"
+            android:background="@color/divider"/>
+
         <com.loopeer.formitemview.FormTextItem
             android:id="@+id/item_cache"
             style="@style/PhotoDramaFormItem"

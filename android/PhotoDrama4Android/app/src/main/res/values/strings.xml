@@ -49,8 +49,6 @@
     <!--about us-->
     <string name="label_image">图标</string>
     <string name="about_version_format">V%s</string>
-    <string name="about_rank_us">好评鼓励</string>
-    <string name="about_rank_no_app">还没有安装应用市场</string>
 
     <!--feedback-->
     <string name="feedback_hint">提出您的意见或建议，我们会努力做得更好哦 ~</string>
@@ -59,11 +57,13 @@
     <!--setting-->
     <string name="setting_feedback">意见反馈</string>
     <string name="setting_clear_cache">清除缓存</string>
+    <string name="setting_rank">好评鼓励</string>
+    <string name="setting_rank_no_app">还没有安装应用市场</string>
     <string name="setting_about_us">关于我们</string>
     <string name="setting_login_out">退出登录</string>
     <string name="setting_is_clear_cache">是否清除缓存？</string>
     <string name="settings_cache_size_format">%.1fMB</string>
-    <string name="settings_clear_cache_success">缓存已清楚</string>
+    <string name="settings_clear_cache_success">缓存已清除</string>
 
     <!--share-->
     <string name="share_export_success">导出成功，已保存至手机相册</string>

@@ -8,20 +8,18 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
-import android.util.Log;
-import android.view.View;
+import android.support.v4.content.ContextCompat;
 
-import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
+import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
-import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
 
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
 import static android.opengl.GLES20.GL_LINEAR;
@@ -38,7 +36,7 @@ import static android.opengl.GLUtils.texImage2D;
 import static android.opengl.Matrix.setIdentityM;
 import static com.loopeer.android.photodrama4android.media.Constants.BYTES_PER_FLOAT;
 
-public class ImageClipDrawer extends ClipDrawer{
+public class EndLogoClipDrawer extends ClipDrawer{
 
     private static final String TAG = "ImageClipDrawer";
 
@@ -49,9 +47,9 @@ public class ImageClipDrawer extends ClipDrawer{
 
     private Context mContext;
 
-    private Bitmap mBitmap;
-    public ImageInfo mImageInfo;
-    public ImageClip mImageClip;
+    private Bitmap mLogoBitmap;
+    private Bitmap mTextBitmap;
+    public EndLogoClip mEndLogoClip;
 
     private ImageClipShaderProgram textureProgram;
     private final float[] modelMatrix = new float[16];
@@ -64,10 +62,14 @@ public class ImageClipDrawer extends ClipDrawer{
 
     private float mViewScaleFactor;
 
-    public ImageClipDrawer(MovieMakerGLSurfaceView view, ImageClip imageClip) {
+    private final float SCREEN_IMAGE_LOGO_WIDTH_FACTOR = 148f / 1334f;
+    private final float SCREEN_IMAGE_LOGO_TOP_FACTOR = 234f / 750f;
+    private final float SCREEN_IMAGE_TEXT_TOP_FACTOR = 440f / 750f;
+
+    public EndLogoClipDrawer(MovieMakerGLSurfaceView view, EndLogoClip endLogoClip) {
         super(view);
         mContext = view.getContext();
-        mImageClip = imageClip;
+        mEndLogoClip = endLogoClip;
 
         textureProgram = (ImageClipShaderProgram) ShaderProgramCache
                 .getInstance()
@@ -77,24 +79,30 @@ public class ImageClipDrawer extends ClipDrawer{
     public void preLoadTexture(MovieMakerGLSurfaceView glView) {
         HandlerWrapper handler = new HandlerWrapper(
                 Looper.getMainLooper(),
-                HandlerWrapper.TYPE_LOAD_IMAGE
-                , mImageClip.path
+                HandlerWrapper.TYPE_LOAD_IMAGE_RES
+                , mEndLogoClip.logoRes
                 , t -> {
-                    checkBitmapReady();
-                    VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext, mImageClip.path);
-                });
+            checkLogoBitmapReady();
+        });
         glView.getTextureLoader().loadImageTexture(handler);
+        HandlerWrapper handler2 = new HandlerWrapper(
+                Looper.getMainLooper(),
+                HandlerWrapper.TYPE_LOAD_IMAGE_RES
+                , mEndLogoClip.textRes
+                , t -> {
+            checkTextBitmapReady();
+        });
+        glView.getTextureLoader().loadImageTexture(handler2);
     }
 
-    public void checkBitmapReady() {
-        mBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mImageClip.path);
-        if (mBitmap == null) return;
-        mImageInfo = new ImageInfo(-1, mBitmap.getWidth(), mBitmap.getHeight());
-        if (1f * mBitmap.getWidth() / mBitmap.getHeight() > 1f * mViewWidth / mViewHeight) {
-            mViewScaleFactor = 1f * mViewWidth / mBitmap.getWidth();
-        } else {
-            mViewScaleFactor = 1f * mViewHeight / mBitmap.getHeight();
-        }
+    public void checkLogoBitmapReady() {
+        mLogoBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(String.valueOf(mEndLogoClip.logoRes));
+        if (mLogoBitmap == null) return;
+        mViewScaleFactor = SCREEN_IMAGE_LOGO_WIDTH_FACTOR * mViewWidth / mLogoBitmap.getWidth();
+    }
+
+    public void checkTextBitmapReady() {
+        mTextBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(String.valueOf(mEndLogoClip.textRes));
     }
 
     private void bindData() {
@@ -116,19 +124,26 @@ public class ImageClipDrawer extends ClipDrawer{
     }
 
     private void getTexture(long usedTime) {
-        Matrix matrix = new Matrix();
-        matrix.postScale(mViewScaleFactor, mViewScaleFactor);
-        matrix.postTranslate(-1f * mViewScaleFactor * mBitmap.getWidth() / 2, -1f * mViewScaleFactor * mBitmap.getHeight() / 2);
-        matrix.postScale(mImageClip.getScaleFactor(usedTime)
-                , mImageClip.getScaleFactor(usedTime));
-        matrix.postTranslate(mViewWidth / 2, mViewHeight / 2);
-        matrix.postTranslate(mImageClip.getTransX(usedTime) * mViewWidth, mImageClip.getTransY(usedTime) * mViewHeight);
+        Matrix matrixLogo = new Matrix();
+        matrixLogo.postScale(mViewScaleFactor, mViewScaleFactor);
+        matrixLogo.postTranslate(mViewWidth / 2 - mViewScaleFactor * mLogoBitmap.getWidth() / 2, mViewHeight * SCREEN_IMAGE_LOGO_TOP_FACTOR);
+        matrixLogo.postRotate(mEndLogoClip.getDegree((int) usedTime), mViewWidth / 2, mViewHeight * SCREEN_IMAGE_LOGO_TOP_FACTOR + mLogoBitmap.getHeight() * mViewScaleFactor / 2);
+
+        Matrix matrixText = new Matrix();
+        matrixText.postScale(mViewScaleFactor, mViewScaleFactor);
+        matrixText.postTranslate(mViewWidth / 2 - mViewScaleFactor * mTextBitmap.getWidth() / 2, mViewHeight * SCREEN_IMAGE_TEXT_TOP_FACTOR);
 
         Bitmap localBitmap = Bitmap.createBitmap(mViewWidth, mViewHeight, Bitmap.Config.ARGB_8888);
         Canvas localCanvas = new Canvas(localBitmap);
-        Paint localPaint = new Paint();
-        localPaint.setFilterBitmap(true);
-        localCanvas.drawBitmap(mBitmap, matrix, localPaint);
+        Paint logoPaint = new Paint();
+        Paint textPaint = new Paint();
+
+        textPaint.setAlpha(mEndLogoClip.getAlpha((int) usedTime));
+        localCanvas.drawColor(ContextCompat.getColor(mGLSurfaceView.getContext(), android.R.color.white));
+        logoPaint.setFilterBitmap(true);
+        textPaint.setFilterBitmap(true);
+        localCanvas.drawBitmap(mLogoBitmap, matrixLogo, logoPaint);
+        localCanvas.drawBitmap(mTextBitmap, matrixText, textPaint);
         if (mCanvasTextureId[0] != -1) {
             GLES20.glDeleteTextures(1, mCanvasTextureId, 0);
         }
@@ -140,12 +155,6 @@ public class ImageClipDrawer extends ClipDrawer{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         texImage2D(GL_TEXTURE_2D, 0, 6408, localBitmap, 0);
         localBitmap.recycle();
-        if (usedTime > mImageClip.getEndTime()) {
-            TextureIdCache.getInstance().addIdToCache(mImageClip.getEndTime() + 1, mCanvasTextureId[0]);
-        }
-        if (usedTime < mImageClip.startTime) {
-            TextureIdCache.getInstance().addIdToCache(mImageClip.startTime - 1, mCanvasTextureId[0]);
-        }
     }
 
     private void updateViewMatrices(long usedTime) {
@@ -155,14 +164,12 @@ public class ImageClipDrawer extends ClipDrawer{
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {
-        if (mBitmap == null || mBitmap.isRecycled()) {
+        if (mLogoBitmap == null || mLogoBitmap.isRecycled() || mTextBitmap == null || mTextBitmap.isRecycled()) {
             preLoadTexture(mGLSurfaceView);
             return;
         }
-        if (mImageInfo == null) return;
-        if (usedTime < mImageClip.startWithPreTransitionTime || (mImageClip.endWithNextTransitionTime > 0 && usedTime > mImageClip.endWithNextTransitionTime)) return;
+        if (usedTime < mEndLogoClip.startTime || usedTime > mEndLogoClip.getEndTime()) return;
         updateViewMatrices(usedTime);
-        if (usedTime < mImageClip.startTime || usedTime > mImageClip.getEndTime()) return;
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);
         bindData();

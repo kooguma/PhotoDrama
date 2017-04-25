@@ -19,6 +19,7 @@ public class VideoClipProcessor {
     private ArrayList<ImageClipDrawer> mImageClipDrawers;
     private ArrayList<TransitionDrawer> mTransitionDrawers;
     private ArrayList<SubtitleClipDrawer> mSubtitleClipDrawers;
+    private EndLogoClipDrawer mEndLogoClipDrawer;
     private VideoGroup mVideoGroup;
     private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
 
@@ -35,6 +36,7 @@ public class VideoClipProcessor {
         updateImageClipRenders();
         updateTransitionClipRenders();
         updateSubtitleClipRenders();
+        updateEndLogoClipRenders();
     }
 
     private void setData(VideoGroup videoGroup) {
@@ -81,6 +83,14 @@ public class VideoClipProcessor {
         }
     }
 
+    private void updateEndLogoClipRenders() {
+        if (mVideoGroup.endLogoClip != null) {
+            mEndLogoClipDrawer = new EndLogoClipDrawer(mMovieMakerGLSurfaceView, mVideoGroup.endLogoClip);
+        } else {
+            mEndLogoClipDrawer = null;
+        }
+    }
+
     public void drawFrame(long usedTime, float[] pMatrix) {
         for (ClipDrawer render : mImageClipDrawers) {
             render.drawFrame(usedTime, pMatrix);
@@ -92,6 +102,10 @@ public class VideoClipProcessor {
 
         for (ClipDrawer render : mSubtitleClipDrawers) {
             render.drawFrame(usedTime, pMatrix);
+        }
+
+        if (mEndLogoClipDrawer != null) {
+            mEndLogoClipDrawer.drawFrame(usedTime, pMatrix);
         }
     }
 }

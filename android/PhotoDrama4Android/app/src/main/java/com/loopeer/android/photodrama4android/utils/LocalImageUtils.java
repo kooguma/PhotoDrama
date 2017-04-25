@@ -124,6 +124,38 @@ public class LocalImageUtils {
         return bm;
     }
 
+    public static Bitmap imageZoomByScreen(Context context, int imageRes) {
+        Bitmap bm;
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        //这个isjustdecodebounds很重要
+        opt.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), imageRes, opt);
+        //获取到这个图片的原始宽度和高度
+        int picWidth = opt.outWidth;
+        int picHeight = opt.outHeight;
+
+        //获取屏的宽度和高度
+        int screenWidth = DisplayUtils.getScreenWidth(context);
+        int screenHeight = DisplayUtils.getScreenHeight(context);
+
+        //根据屏的大小和图片大小计算出缩放比例
+        if (picWidth > picHeight) {
+            if (picWidth > screenWidth) {
+                opt.inDensity = picWidth;
+                opt.inTargetDensity = screenWidth;
+            }
+        } else {
+            if (picHeight > screenHeight) {
+                opt.inDensity = picHeight;
+                opt.inTargetDensity = screenHeight;
+            }
+        }
+        //这次再真正地生成一个有像素的，经过缩放了的bitmap
+        opt.inJustDecodeBounds = false;
+        bm = BitmapFactory.decodeResource(context.getResources(), imageRes, opt);
+        return bm;
+    }
+
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                              int reqWidth, int reqHeight) {
         // Raw height and width of image

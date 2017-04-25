@@ -6,6 +6,7 @@ import android.content.Context;
 import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
 import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -44,13 +45,13 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     private void updateTime(Drama drama) {
         mMaxTime = drama.getShowTimeTotal();
+        if (drama.videoGroup.endLogoClip != null) mMaxTime += drama.videoGroup.endLogoClip.showTime;
         setSeekBarMaxValue(mMaxTime);
         if (mSeekWrapper != null) mSeekWrapper.setMax(mMaxTime);
         mStartTime = 0;
         mFinishAtTime = mStartTime;
         mEndTime = mMaxTime;
         mGLThread.updateTime(mStartTime, mEndTime);
-
         onProgressInit(mStartTime, mSeekbarMaxValue);
     }
 
@@ -114,6 +115,8 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     private void finishToTime(int finishToTime) {
         if (mIsRecording) {
+            mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
+            updateDrama(mGLRenderWorker.getDrama());
             String path = mGLRenderWorker.endRecording();
             recordFinished(path);
             mIsRecording = false;
@@ -293,10 +296,16 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     public void startRecording() {
+        Drama drama = mGLRenderWorker.getDrama();
+        EndLogoClip clip = new EndLogoClip();
+        clip.startTime = drama.getShowTimeTotal() + 1;
+        drama.videoGroup.endLogoClip = clip;
+        updateDrama(drama);
         mIsRecording = true;
         recordStart();
         seekToVideo(0);
-        mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
+        //TODO
+//        mGLRenderWorker.startRecording(FileManager.getInstance().createNewVideoFile());
         startVideoOnly();
     }
 

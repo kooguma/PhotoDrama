@@ -10,6 +10,7 @@ public class HandlerWrapper<W, T> extends Handler {
 
     public static final int TYPE_LOAD_IMAGE = 0;
     public static final int TYPE_LOAD_SUBTITLE = 1;
+    public static final int TYPE_LOAD_IMAGE_RES = 2;
 
     private String key;
     private Callback<T> callback;

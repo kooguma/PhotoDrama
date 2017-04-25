@@ -72,6 +72,7 @@ public class TextureLoader extends Thread {
 
             handleImageTexture();
             handleSubtitleTexture();
+            handleImageResTexture();
         }
     }
 
@@ -89,7 +90,6 @@ public class TextureLoader extends Thread {
         if (mHandlerWrappers.isEmpty()) return;
         HandlerWrapper<String, ImageInfo> handlerWrapper = mHandlerWrappers.get(0);
         if (handlerWrapper != null && handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE) {
-//            ImageInfo imageInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
             ImageInfo imageInfo = null;
             if (BitmapFactory.getInstance().getBitmapFromMemCache(handlerWrapper.getData()) != null) {
                 returnImageInfo(handlerWrapper, imageInfo);
@@ -99,13 +99,28 @@ public class TextureLoader extends Thread {
             final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, handlerWrapper.getData());
             BitmapFactory.getInstance().addBitmapToCache(handlerWrapper.getData(), bitmap);
             returnImageInfo(handlerWrapper, imageInfo);
-//            ImageTextureCache.getDefault().putImageInfo(handlerWrapper.getKey(), imageInfo);
             mHandlerWrappers.remove(handlerWrapper);
         }
-
     }
 
-    private void returnImageInfo(HandlerWrapper<String, ImageInfo> handlerWrapper, ImageInfo imageInfo) {
+    private void handleImageResTexture() {
+        if (mHandlerWrappers.isEmpty()) return;
+        HandlerWrapper<Integer, ImageInfo> handlerWrapper = mHandlerWrappers.get(0);
+        if (handlerWrapper != null && handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE_RES) {
+            ImageInfo imageInfo = null;
+            if (BitmapFactory.getInstance().getBitmapFromMemCache(String.valueOf(handlerWrapper.getData())) != null) {
+                returnImageInfo(handlerWrapper, imageInfo);
+                mHandlerWrappers.remove(handlerWrapper);
+                return;
+            }
+            final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, handlerWrapper.getData());
+            BitmapFactory.getInstance().addBitmapToCache(String.valueOf(handlerWrapper.getData()), bitmap);
+            returnImageInfo(handlerWrapper, imageInfo);
+            mHandlerWrappers.remove(handlerWrapper);
+        }
+    }
+
+    private void returnImageInfo(HandlerWrapper<?, ImageInfo> handlerWrapper, ImageInfo imageInfo) {
         Message msg = new Message();
         Bundle b = new Bundle();
         b.putSerializable(handlerWrapper.getKey(), imageInfo);
@@ -122,11 +137,6 @@ public class TextureLoader extends Thread {
     }
 
     public synchronized void loadImageTexture(HandlerWrapper<String, ImageInfo> imageInfoHandlerWrapper) {
-       /* ImageInfo imageInfo;
-        if ((imageInfo = ImageTextureCache.getDefault().getImageInfo(imageInfoHandlerWrapper.getKey())) != null) {
-            returnImageInfo(imageInfoHandlerWrapper, imageInfo);
-            return;
-        }*/
         mHandlerWrappers.add(imageInfoHandlerWrapper);
         if (isAlive())
             notify();

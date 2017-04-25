@@ -21,6 +21,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
@@ -90,6 +91,12 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mDramaFetchHelper.getDrama(theme,
             drama -> {
                 BitmapFactory.getInstance().clear();
+
+                //TODO
+                EndLogoClip clip = new EndLogoClip();
+                clip.startTime = drama.getShowTimeTotal() + 1;
+                drama.videoGroup.endLogoClip = clip;
+
                 mVideoPlayerManager.updateDrama(drama);
                 mVideoPlayerManager.seekToVideo(mUsedTime);
                 mVideoPlayerManager.startVideo();
