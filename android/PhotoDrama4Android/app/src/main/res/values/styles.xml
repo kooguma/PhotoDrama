@@ -52,7 +52,7 @@
     </style>
 
     <style name="Toolbar.Dark">
-        <item name="android:background">@color/window_background_dark</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
         <item name="titleTextAppearance">@style/TextAppearance.PhotoDrama.Toolbar.Dark</item>
     </style>
 
