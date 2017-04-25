@@ -52,6 +52,7 @@ android {
             manifestPlaceholders = [TD_APP_ID: configs.talkingDataAppIdDebug,]
 
             buildConfigField 'String', 'API_URL', "\"$configs.apiUrlDebug\""
+            buildConfigField 'String', "API_KEY", "\"$configs.apiKeyDebug\""
             buildConfigField 'boolean', 'LOG_ON', "true"
 
         }
@@ -64,6 +65,7 @@ android {
             manifestPlaceholders = [TD_APP_ID: configs.talkingDataAppIdRelease,]
 
             buildConfigField 'String', 'API_URL', "\"$configs.apiUrlRelease\""
+            buildConfigField 'String', "API_KEY", "\"$configs.apiKeyRelease\""
             buildConfigField 'boolean', 'LOG_ON', "false"
         }
     }

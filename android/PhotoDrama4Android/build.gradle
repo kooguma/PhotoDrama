@@ -35,6 +35,8 @@ ext {
             qqAppId          : '1105954399',
             talkingDataAppIdDebug   : '62F8BA3BFFBD436AB534A4D07BC4D6AB',
             talkingDataAppIdRelease : 'D4BD55F1DED546069359686A4CD6C3D2',
+            apiKeyDebug      : 'u0Zj8pqfmW37w4bvAWLcSpJxxaIHImVk',
+            apiKeyRelease    : 'u0Zj8pqfmW37w4bvAWLcSpJxxaIHImVk',
     ]
 
     supportLibraryVersion = '25.2.0'
