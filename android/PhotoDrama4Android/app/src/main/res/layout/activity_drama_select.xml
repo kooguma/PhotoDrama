@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TabLayout
+        <android.support.design.widget.CustomTabLayout
             android:id="@+id/drama_select_tab_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,7 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.CustomTabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DramaSelectActivity extends PhotoDramaBaseActivity {
 
-    private TabLayout mTabLayout;
+    private CustomTabLayout mCustomTabLayout;
     private ViewPager mViewPager;
     private DramaSelectFragment[] mFragments;
     private List<Category> mTitles = new ArrayList<>();
@@ -35,7 +35,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
     }
 
     private void setupView() {
-        mTabLayout = (TabLayout) findViewById(R.id.drama_select_tab_select);
+        mCustomTabLayout = (CustomTabLayout) findViewById(R.id.drama_select_tab_select);
         mViewPager = (ViewPager) findViewById(R.id.drama_select_view_pager);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -60,7 +60,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
                 .doOnTerminate(() -> {
                     mViewPager.setAdapter(
                         new DramaSelectViewPager(getSupportFragmentManager()));
-                    mTabLayout.setupWithViewPager(mViewPager);
+                    mCustomTabLayout.setupWithViewPager(mViewPager);
                 })
                 .subscribe(categories -> {
                     if (categories != null && !categories.isEmpty()) {
@@ -70,7 +70,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
                         for (int i = 0; i < mTitles.size(); i++) {
                             final String title = mTitles.get(i).name;
                             final String id = mTitles.get(i).id;
-                            mTabLayout.addTab(mTabLayout.newTab().setText(title));
+                            mCustomTabLayout.addTab(mCustomTabLayout.newTab().setText(title));
                             mFragments[i] = DramaSelectFragment.newDramaSelectFragment(id);
                         }
                     }
