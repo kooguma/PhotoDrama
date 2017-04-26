@@ -133,7 +133,9 @@ public class MediaAudioEncoder extends MediaEncoder {
     @Override
     protected long getPTSUs() {
         if (prevOutputPTSUs > mBufferInfo.presentationTimeUs) {
-            return prevOutputPTSUs;
+            return prevOutputPTSUs + 1;
+        } else if (prevOutputPTSUs == mBufferInfo.presentationTimeUs) {
+            return prevOutputPTSUs + 1;
         }
         return mBufferInfo.presentationTimeUs;
     }
