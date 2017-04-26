@@ -156,7 +156,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
                     .bitmapLoadReady(DramaEditActivity.this
                         , mSelectedImageClip.path));
                 mBinding.glSurfaceView.getTextureLoader().loadImageTexture(handler);
-                return false;
+                return true;
             }
         });
         mBottomImagePickerView.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

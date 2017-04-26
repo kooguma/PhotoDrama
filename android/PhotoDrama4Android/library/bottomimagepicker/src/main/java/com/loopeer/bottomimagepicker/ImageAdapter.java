@@ -57,7 +57,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
 
     @Override public void onBindViewHolder(ImageHolder holder, int position) {
         Image image = mImages.get(position);
-        //holder.mImageView.setSelected(mSelectedArray.get(position));
+        holder.mImageView.setSelected(mSelectedArray.get(position));
         holder.bind(image);
     }
 
@@ -92,8 +92,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
                 @Override public void onClick(View v) {
                     if (mOnImagePickListener != null) {
                         if (mOnImagePickListener.onImagePick(uri)) {
-                            // mSelectedArray.put(getLayoutPosition(), true);
-                            // notifyItemChanged(getLayoutPosition());
+                            mSelectedArray.put(getLayoutPosition(), true);
+                            notifyItemChanged(getLayoutPosition());
                         }
                     }
                 }
