@@ -63,7 +63,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
                 VideoPlayManagerContainer.getDefault().subtitleLoadReady(mContext);
             }
         });
-        glView.getTextureLoader().loadImageTexture(handler);
+        glView.getTextTextureLoader().loadSubtitleTexture(handler);
     }
 
     private void bindData() {

@@ -28,6 +28,7 @@ import static android.opengl.EGLExt.EGL_OPENGL_ES3_BIT_KHR;
 public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
     private TextureLoader mTextureLoader;
+    private TextTextureLoader mTextTextureLoader;
     protected float mRatioX;
     protected float mRatioY;
 
@@ -88,6 +89,10 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
                 mTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
                 updateContext(egl, renderContext, display, eglConfig);
                 if (!mTextureLoader.isAlive()) mTextureLoader.start();
+
+                mTextTextureLoader = new TextTextureLoader();
+                mTextTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
+                if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
                 return renderContext;
             }
         });
@@ -129,10 +134,15 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mTextureLoader != null) mTextureLoader.finish();
+        if (mTextTextureLoader != null) mTextTextureLoader.finish();
     }
 
     public TextureLoader getTextureLoader() {
         return mTextureLoader;
+    }
+
+    public TextTextureLoader getTextTextureLoader() {
+        return mTextTextureLoader;
     }
 
     private EGLConfig getConfig(EGL10 egl, EGLDisplay display, int flags, int version) {
