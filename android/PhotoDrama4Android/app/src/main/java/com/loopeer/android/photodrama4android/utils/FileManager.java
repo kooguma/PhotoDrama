@@ -3,7 +3,9 @@ package com.loopeer.android.photodrama4android.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +19,8 @@ import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.model.Voice;
 import java.io.File;
 import java.io.FileInputStream;
+
+import retrofit2.http.Field;
 import zlc.season.rxdownload2.RxDownload;
 
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.EXTERNAL_STORAGE_PERMISSIONS;
@@ -207,5 +211,18 @@ public class FileManager {
     public static boolean hasExternalStoragePermission(Context context) {
         int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSIONS[0]);
         return perm == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void scanIntoMediaStore(Context context, String filePath) {
+        if (!checkFile(filePath))
+            return;
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(new File(filePath)));
+        context.sendBroadcast(intent);
+    }
+
+    private static boolean checkFile(String filePath) {
+        File file = new File(filePath);
+        return file.exists();
     }
 }

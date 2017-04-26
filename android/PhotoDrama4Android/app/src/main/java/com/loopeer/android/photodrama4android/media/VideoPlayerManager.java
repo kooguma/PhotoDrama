@@ -11,6 +11,8 @@ import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 
+import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoMediaStore;
+
 public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife, MusicProcessor.ProcessorPrepareListener {
 
     private SeekWrapper mSeekWrapper;
@@ -113,13 +115,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     private void finishToTime(int finishToTime) {
-        if (mIsRecording) {
-            mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
-            updateDrama(mGLRenderWorker.getDrama());
-            String path = mGLRenderWorker.endRecording();
-            recordFinished(path);
-            mIsRecording = false;
-        }
+        endRecording();
         mGLThread.stopUp();
         mGLThread.setManual(true);
         mGLThread.setManualUpSeekBar(finishToTime);
@@ -129,6 +125,17 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         mIMusic.pauseMusic();
         onProgressChange(finishToTime);
         onProgressStop();
+    }
+
+    private void endRecording() {
+        if (mIsRecording) {
+            mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
+            updateDrama(mGLRenderWorker.getDrama());
+            String path = mGLRenderWorker.endRecording();
+            scanIntoMediaStore(mContext, path);
+            recordFinished(path);
+            mIsRecording = false;
+        }
     }
 
     public int getSeekbarMaxValue() {
