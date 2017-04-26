@@ -26,11 +26,11 @@ ext {
             buildToolsVersion: '25.0.2',
             minSdkVersion    : 18,
             targetSdkVersion : 24,
-            versionCode      : 6,
+            versionCode      : 7,
             versionName      : '1.0.0',
-//            apiUrlDebug      : 'http://drama.17chuang.cc/api/v1/',
+            apiUrlDebug      : 'http://drama.17chuang.cc/api/v1/',
 
-            apiUrlDebug    : 'http://v.17chuang.cc//api/v1/',
+//            apiUrlDebug    : 'http://v.17chuang.cc//api/v1/',
 
             apiUrlRelease    : 'http://v.17chuang.cc//api/v1/',
             wechatAppId      : 'wxf18e5caaf4b28c2b',
@@ -38,9 +38,9 @@ ext {
             qqAppId          : '1105954399',
             talkingDataAppIdDebug   : '62F8BA3BFFBD436AB534A4D07BC4D6AB',
             talkingDataAppIdRelease : 'D4BD55F1DED546069359686A4CD6C3D2',
-//            apiKeyDebug      : 'u0Zj8pqfmW37w4bvAWLcSpJxxaIHImVk',
+            apiKeyDebug      : 'u0Zj8pqfmW37w4bvAWLcSpJxxaIHImVk',
 
-            apiKeyDebug      : '6uNFBnPGJYBPTTwNCgA5Eahnd5cSg7B9',
+//            apiKeyDebug      : '6uNFBnPGJYBPTTwNCgA5Eahnd5cSg7B9',
 
             apiKeyRelease    : '6uNFBnPGJYBPTTwNCgA5Eahnd5cSg7B9',
     ]
