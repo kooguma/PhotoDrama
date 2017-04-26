@@ -34,7 +34,7 @@ public class FileManager {
     public final String videoDirPath = "/video/";
     public final String dramaDirPath = "/drama/";
     private String audioPath = photoDramaPath + audioDirPath;
-    private String videoPath = photoDramaPath + videoDirPath;
+    private String videoPath = Environment.getExternalStorageDirectory() + "/DCIM/Camera/";
     private String dramaPath = photoDramaPath + dramaDirPath;
     private String tempAudioPath = photoDramaPath + tempAudioDirPath;
 

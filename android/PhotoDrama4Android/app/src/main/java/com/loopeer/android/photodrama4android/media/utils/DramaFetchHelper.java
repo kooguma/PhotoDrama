@@ -27,7 +27,7 @@ public class DramaFetchHelper {
     }
 
     public void getDrama(Theme theme, Consumer<Drama> consumer, Consumer<Throwable> throwableConsumer, Action completeAction) {
-        Drama cacheDrama = DramaCache.getInstance().getDrama(theme.id);
+        /*Drama cacheDrama = DramaCache.getInstance().getDrama(theme.id);
         if (cacheDrama != null) {
             try {
                 preLoadDramaImage(cacheDrama);
@@ -37,7 +37,7 @@ public class DramaFetchHelper {
                 e.printStackTrace();
             }
             return;
-        }
+        }*/
         File file = FileManager.getInstance().getDramaPackage(theme);
         unSubscribe();
 
