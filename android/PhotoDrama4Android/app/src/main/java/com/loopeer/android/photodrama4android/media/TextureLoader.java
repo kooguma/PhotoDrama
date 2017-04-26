@@ -119,7 +119,7 @@ public class TextureLoader extends Thread {
 
     public synchronized void loadImageTexture(HandlerWrapper<String, ImageInfo> imageInfoHandlerWrapper) {
         ImageInfo imageInfo = null;
-        if (BitmapFactory.getInstance().contains(imageInfoHandlerWrapper.getData())) {
+        if (BitmapFactory.getInstance().contains(String.valueOf(imageInfoHandlerWrapper.getData()))) {
             returnImageInfo(imageInfoHandlerWrapper, imageInfo);
             return;
         }
