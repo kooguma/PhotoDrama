@@ -299,6 +299,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     public void startRecording() {
+        pauseVideo();
         if (!isMoveReadyOk()) return;
         Drama drama = mGLRenderWorker.getDrama();
         EndLogoClip clip = new EndLogoClip();

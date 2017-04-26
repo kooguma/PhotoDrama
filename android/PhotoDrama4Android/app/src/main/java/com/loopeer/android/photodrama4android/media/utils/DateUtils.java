@@ -13,4 +13,8 @@ public class DateUtils {
     public static String getCurrentTimeString() {
         return formatDate(System.currentTimeMillis(), "yyyyMMdd_HH_mm");
     }
+
+    public static String getCurrentTimeVideoString() {
+        return "VID_" + formatDate(System.currentTimeMillis(), "yyyyMMdd_HHmmss");
+    }
 }

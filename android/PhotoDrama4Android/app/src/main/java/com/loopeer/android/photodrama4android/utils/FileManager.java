@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import com.loopeer.android.photodrama4android.media.utils.DateUtils;
 import com.loopeer.android.photodrama4android.media.utils.MD5Util;
 import com.loopeer.android.photodrama4android.model.Theme;
 
@@ -135,7 +136,7 @@ public class FileManager {
     }
 
     public String createNewVideoFile() {
-        return getVideoDir().getPath() + File.separator + System.currentTimeMillis() + ".mp4";
+        return getVideoDir().getPath() + File.separator + DateUtils.getCurrentTimeVideoString() + ".mp4";
     }
 
     public String getDecodeAudioFilePath(MusicClip musicClip) {
