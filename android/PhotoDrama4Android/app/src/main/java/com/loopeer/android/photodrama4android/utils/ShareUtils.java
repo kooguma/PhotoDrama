@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
@@ -51,9 +52,14 @@ public class ShareUtils {
     }
 
     private static Uri getFileUri(Context context, String filePath) {
-        Uri uri = FileProvider.getUriForFile(context,
-                BuildConfig.APPLICATION_ID + ".provider",
-                new File(filePath));
+        Uri uri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            uri = FileProvider.getUriForFile(context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    new File(filePath));
+        } else{
+            uri = Uri.fromFile(new File(filePath));
+        }
         return uri;
     }
 

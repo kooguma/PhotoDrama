@@ -80,7 +80,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 			result = 0;
 		}
 		if (result < prevOutputPTSUs)
-			result = (prevOutputPTSUs - result) + result;
+			result = prevOutputPTSUs;
 		return result;
 	}
 
