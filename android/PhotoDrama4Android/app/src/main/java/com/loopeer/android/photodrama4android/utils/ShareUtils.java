@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.R;
 
 import java.io.File;
@@ -33,7 +35,7 @@ public class ShareUtils {
         if (!resInfo.isEmpty()) {
             for (ResolveInfo info : resInfo) {
                 if (info.activityInfo.name.contains(type)) {
-                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+                    share.putExtra(Intent.EXTRA_STREAM, getFileUri(context, filePath));
                     share.setPackage(info.activityInfo.packageName);
                     share.setClassName(info.activityInfo.packageName, info.activityInfo.name);
                     found = true;
@@ -48,10 +50,17 @@ public class ShareUtils {
         }
     }
 
+    private static Uri getFileUri(Context context, String filePath) {
+        Uri uri = FileProvider.getUriForFile(context,
+                BuildConfig.APPLICATION_ID + ".provider",
+                new File(filePath));
+        return uri;
+    }
+
     private static void startShareMore(Context context, String filePath) {
         Intent share = new Intent(android.content.Intent.ACTION_SEND);
         share.setType("video/*");
-        share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+        share.putExtra(Intent.EXTRA_STREAM, getFileUri(context, filePath));
         context.startActivity(share);
     }
 }

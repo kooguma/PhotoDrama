@@ -31,7 +31,7 @@ public class VideoClipProcessor {
         ShaderProgramCache.getInstance().init(mMovieMakerGLSurfaceView.getContext());
     }
 
-    public void updateData(VideoGroup videoGroup) {
+    public synchronized void updateData(VideoGroup videoGroup) {
         setData(videoGroup);
         updateImageClipRenders();
         updateTransitionClipRenders();
@@ -91,7 +91,7 @@ public class VideoClipProcessor {
         }
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix) {
+    public synchronized void drawFrame(long usedTime, float[] pMatrix) {
         for (ClipDrawer render : mImageClipDrawers) {
             render.drawFrame(usedTime, pMatrix);
         }

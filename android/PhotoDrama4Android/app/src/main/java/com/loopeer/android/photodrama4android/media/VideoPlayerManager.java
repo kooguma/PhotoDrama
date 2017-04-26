@@ -283,11 +283,15 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     private void checkSourceReadyToStart() {
-        if (mGLThread.isStop()
+        if (isMoveReadyOk())
+            requestRender();
+    }
+
+    public boolean isMoveReadyOk() {
+        return mGLThread != null && mGLThread.isStop()
                 && isMusicPrepared
                 && isImagePrepared
-                && isSubtitlePrepared)
-            requestRender();
+                && isSubtitlePrepared;
     }
 
     public int getMaxTime() {
@@ -295,6 +299,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     public void startRecording() {
+        if (!isMoveReadyOk()) return;
         Drama drama = mGLRenderWorker.getDrama();
         EndLogoClip clip = new EndLogoClip();
         clip.startTime = drama.getShowTimeTotal() + 1;
