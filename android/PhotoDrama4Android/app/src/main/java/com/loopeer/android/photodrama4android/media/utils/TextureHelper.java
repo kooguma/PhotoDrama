@@ -127,7 +127,7 @@ public class TextureHelper {
         float textSize = 1f * subtitleInfo.width / 20;
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
-        textPaint.setShadowLayer(2f, 1f, 1f, ContextCompat.getColor(context, android.R.color.black));
+        textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
         textPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
         float y = subtitleInfo.height - fontMetrics.descent - textMarginBottom;
