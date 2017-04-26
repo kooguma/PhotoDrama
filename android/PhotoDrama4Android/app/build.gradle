@@ -81,6 +81,8 @@ android {
             minSdkVersion 21
         }
         loopeer {}
+
+        yingyongbao{}
     }
 
     dataBinding {
