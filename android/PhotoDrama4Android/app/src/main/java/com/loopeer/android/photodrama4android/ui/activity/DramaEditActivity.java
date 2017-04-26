@@ -232,7 +232,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
         mDramaFetchHelper.unSubscribe();
-        BitmapFactory.getInstance().clear();
     }
 
     @Override

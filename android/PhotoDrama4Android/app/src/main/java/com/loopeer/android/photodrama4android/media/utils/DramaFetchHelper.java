@@ -67,7 +67,7 @@ public class DramaFetchHelper {
     }
 
     private void preLoadDramaImage(Drama drama) {
-        BitmapFactory.getInstance().clear();
+        BitmapFactory.getInstance().clear(drama);
         if (drama.videoGroup.imageClips.size() > 0)
             BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(0).path);
         if (drama.videoGroup.imageClips.size() > 1)

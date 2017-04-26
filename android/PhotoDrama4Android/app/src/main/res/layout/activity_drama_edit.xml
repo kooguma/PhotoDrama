@@ -49,7 +49,7 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_play_green_large"/>
 
-                    <android.support.v7.widget.AppCompatImageButton
+                    <ImageView
                         style="?actionButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

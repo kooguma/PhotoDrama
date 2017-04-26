@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -47,22 +47,20 @@
                             app:screenRatioY="@integer/gl_screen_y"/>
 
 
-                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        <LinearLayout
+                            xmlns:android="http://schemas.android.com/apk/res/android"
                             xmlns:tools="http://schemas.android.com/tools"
                             android:id="@+id/layout_tool_bottom"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
                             android:background="@drawable/bg_play_seek"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:layout_gravity="bottom"
-                            android:paddingBottom="8dp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:paddingTop="8dp">
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/btn_pause_play_btn"
+                                style="?actionButtonStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:onClick="onPausePlayBtnClick"
@@ -95,13 +93,13 @@
                                 tools:text="13:00"/>
 
 
-                            <android.support.v7.widget.AppCompatImageButton
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_marginLeft="8dp"
-                                android:onClick="onFullBtnClick"
-                                android:background="?selectableItemBackgroundBorderless"
+                            <ImageView
+                                style="?actionButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|right"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:onClick="onFullBtnClick"
                                 android:src="@drawable/ic_full"/>
 
                         </LinearLayout>
@@ -126,33 +124,33 @@
                     android:paddingBottom="20dp">
 
                     <TextView
-                        style="@style/PhotoDramaText.Primary.larger"
                         android:id="@+id/txt_drama_name"
-                        android:layout_marginTop="@dimen/large_padding"
+                        style="@style/PhotoDramaText.Primary.larger"
                         android:layout_marginLeft="@dimen/medium_padding"
+                        android:layout_marginTop="@dimen/large_padding"
                         android:text="@{series.name}"/>
 
                     <Button
-                        style="@style/PhotoDramaButton.Black.DramaSelect"
                         android:id="@+id/btn_use_drama"
-                        android:layout_below="@id/txt_drama_name"
+                        style="@style/PhotoDramaButton.Black.DramaSelect"
                         android:layout_alignParentRight="true"
+                        android:layout_below="@id/txt_drama_name"
+                        android:layout_marginRight="@dimen/medium_padding"
                         android:layout_marginTop="@dimen/medium_padding"
-                        android:text="@string/drama_use"
                         android:onClick="onEditClick"
-                        android:layout_marginRight="@dimen/medium_padding"/>
+                        android:text="@string/drama_use"/>
 
                     <TextView
-                        style="@style/PhotoDramaText.Tertiary.Small"
                         android:id="@+id/txt_people"
+                        style="@style/PhotoDramaText.Tertiary.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/txt_drama_name"
-                        android:drawablePadding="@dimen/small_padding"
-                        android:layout_marginTop="@dimen/xxlarge_padding"
-                        android:layout_marginLeft="@dimen/medium_padding"
-                        android:drawableLeft="@drawable/ic_people"
                         android:layout_alignBaseline="@id/btn_use_drama"
+                        android:layout_below="@id/txt_drama_name"
+                        android:layout_marginLeft="@dimen/medium_padding"
+                        android:layout_marginTop="@dimen/xxlarge_padding"
+                        android:drawableLeft="@drawable/ic_people"
+                        android:drawablePadding="@dimen/small_padding"
                         android:text="@{@string/drama_people_format(theme.usedCount)}"/>
 
                     <TextView
@@ -160,9 +158,9 @@
                         style="@style/PhotoDramaText.Tertiary.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/btn_use_drama"
                         android:layout_marginLeft="@dimen/xxlarge_padding"
                         android:layout_toRightOf="@id/txt_people"
-                        android:layout_alignBaseline="@id/btn_use_drama"
                         android:text="@{@string/drama_author_format(series.author)}"/>
                 </RelativeLayout>
 
@@ -175,34 +173,34 @@
                     android:id="@+id/layout_episode_indicator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="14dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="22dp"
                     android:paddingLeft="@dimen/medium_padding"
                     android:paddingRight="@dimen/medium_padding"
-                    android:gravity="center"
-                    android:paddingBottom="22dp"
-                    android:orientation="horizontal">
+                    android:paddingTop="14dp">
 
                     <TextView
-                        style="@style/PhotoDramaText.Primary.larger"
                         android:id="@+id/txt_episode"
+                        style="@style/PhotoDramaText.Primary.larger"
                         android:text="@string/drama_episode"/>
 
                     <TextView
                         style="@style/PhotoDramaText.Tertiary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{series.formatSeriesIndex(context,theme)}"
-                        android:gravity="right"/>
+                        android:gravity="right"
+                        android:text="@{series.formatSeriesIndex(context,theme)}"/>
                 </LinearLayout>
 
                 <HorizontalScrollView
                     android:id="@+id/scroll_view_episode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="22dp"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
-                    android:scrollbars="none"
-                    android:paddingBottom="22dp">
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/layout_episode"
@@ -220,27 +218,27 @@
                 <TextView
                     style="@style/PhotoDramaText.Primary"
                     android:layout_width="match_parent"
-                    android:paddingTop="14dp"
                     android:paddingLeft="@dimen/medium_padding"
+                    android:paddingTop="14dp"
                     android:text="@string/drama_brief"/>
 
                 <TextView
                     style="@style/PhotoDramaText.Tertiary.Normal"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/medium_padding"
-                    android:paddingLeft="@dimen/large_padding"
-                    android:lineSpacingExtra="@dimen/xsmall_padding"
                     android:gravity="left"
+                    android:lineSpacingExtra="@dimen/xsmall_padding"
                     android:paddingBottom="40dp"
+                    android:paddingLeft="@dimen/large_padding"
                     android:paddingRight="@dimen/large_padding"
+                    android:paddingTop="@dimen/medium_padding"
                     android:text="@{theme.description}"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_tool_top"
                 android:layout_width="match_parent"
-                android:background="@drawable/bg_play_seek_top"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_play_seek_top"
                 android:orientation="vertical">
 
                 <com.loopeer.compatinset.SingleInsetHolderView
@@ -253,10 +251,10 @@
                     android:id="@+id/btn_close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="?actionBarSize"
-                    android:background="?selectableItemBackgroundBorderless"
                     android:layout_gravity="top|left"
                     android:layout_marginLeft="@dimen/large_padding"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:minHeight="?actionBarSize"
                     android:onClick="onCloseClick"
                     android:src="@drawable/ic_back_white"/>
             </LinearLayout>

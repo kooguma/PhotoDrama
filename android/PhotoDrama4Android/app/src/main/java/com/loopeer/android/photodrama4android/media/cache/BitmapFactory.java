@@ -5,9 +5,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BitmapFactory {
@@ -94,6 +98,26 @@ public class BitmapFactory {
             entry.getValue().recycle();
         }
         mMemoryCache.clear();
+    }
+
+    public void clear(Drama drama) {
+        List<String> removingKeys = new ArrayList<>();
+        for (Map.Entry<String, Bitmap> entry : mMemoryCache.entrySet()) {
+            boolean contain = false;
+            for (ImageClip imageClip : drama.videoGroup.imageClips) {
+                if (imageClip.path.equals(entry.getKey())) {
+                    contain = true;
+                    break;
+                }
+            }
+            if (!contain) {
+                entry.getValue().recycle();
+                removingKeys.add(entry.getKey());
+            }
+        }
+        for (int i = 0; i < removingKeys.size(); i++) {
+            mMemoryCache.remove(removingKeys.get(i));
+        }
     }
 
 }
