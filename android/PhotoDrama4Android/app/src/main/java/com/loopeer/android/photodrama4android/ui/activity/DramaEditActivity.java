@@ -85,6 +85,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     private void updateDrama(Drama drama) {
         mDrama = drama;
         mVideoPlayerManager.updateDrama(mDrama);
+        mVideoPlayerManager.seekToVideo(mUsedTime);
         mEditDramaSegmentAdapter.updateData(mDrama.videoGroup.imageClips);
     }
 

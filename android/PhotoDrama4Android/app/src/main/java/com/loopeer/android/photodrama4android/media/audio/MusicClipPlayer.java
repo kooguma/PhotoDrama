@@ -30,6 +30,7 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     private MusicClipPlayerLister mMusicClipPlayerLister;
     private boolean mIsPause;
     private @MediaPreparedState int mPreparedState;
+    private int mPrepareSeekProgress;
     
     public MusicClipPlayer(Context context, MusicClip clip, MusicClipPlayerLister listener) {
         mMusicClip = clip;
@@ -76,6 +77,8 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     public void seekToMusic(int progress) {
         if (mMediaPlayer != null && isPrepared()) {
             mMediaPlayer.seekTo(mMusicClip.getSeekTime(progress));
+        } else {
+            mPrepareSeekProgress = progress;
         }
     }
 
@@ -121,6 +124,7 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     public void onPrepared(MediaPlayer mp) {
         mPreparedState = PREPARED_STATE_ED;
         mMediaPlayer.start();
+        seekToMusic(mPrepareSeekProgress);
         mMediaPlayer.pause();
         mMusicClipPlayerLister.onMusicClipPlayerPrepared(mMusicClip.getKey());
     }
