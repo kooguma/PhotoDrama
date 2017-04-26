@@ -45,7 +45,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     private void updateTime(Drama drama) {
         mMaxTime = drama.getShowTimeTotal();
-        if (drama.videoGroup.endLogoClip != null) mMaxTime += drama.videoGroup.endLogoClip.showTime;
         setSeekBarMaxValue(mMaxTime);
         if (mSeekWrapper != null) mSeekWrapper.setMax(mMaxTime);
         mStartTime = 0;

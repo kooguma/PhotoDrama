@@ -32,7 +32,9 @@ public class Drama extends BaseModel {
     public int getShowTimeTotal() {
         if (videoGroup.imageClips.isEmpty()) return 0;
         ImageClip imageClip = videoGroup.imageClips.get(videoGroup.imageClips.size() - 1);
-        return imageClip.getEndTime();
+        int result = imageClip.getEndTime();
+        if (videoGroup.endLogoClip != null) result += videoGroup.endLogoClip.showTime;
+        return result;
     }
 
     public XmlDrama toXml() {

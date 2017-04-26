@@ -28,7 +28,7 @@ public class AudioMixer {
             timeClips.add(musicClip.getEndTime() * 1000);
             mMusicBufferClipProcessors.add(new MusicBufferClipProcessor(musicClip));
         }
-        timeClips.add(drama.videoGroup.imageClips.get(drama.videoGroup.imageClips.size() - 1).getEndTime() * 1000);
+        timeClips.add(drama.getShowTimeTotal() * 1000);
         mTimeClips.addAll(timeClips);
         mMuxingCallback = muxingCallback;
     }
