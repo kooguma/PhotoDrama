@@ -3,6 +3,7 @@ package com.loopeer.bottomimagepicker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -40,6 +41,7 @@ public class BottomImagePickerView extends LinearLayout {
 
     private ImageAdapter.OnImagePickListener mOnImagePickListener;
 
+    private String mPath;
     private int mCurTabIndex = -1;
 
     public void setOnImagePickListener(ImageAdapter.OnImagePickListener listener) {
@@ -175,9 +177,13 @@ public class BottomImagePickerView extends LinearLayout {
         return mIcon;
     }
 
-
     public View getCurrentRecyclerView(int position) {
         return mFragmentAdapter.getFragment(position).getView().findViewById(R.id.recycler_picker);
+    }
+
+    public void updateSelectedImage(String path) {
+        PickerFragment fragment = (PickerFragment) mFragmentAdapter.getFragment(mCurTabIndex);
+        fragment.updateSelectedImage(path);
     }
 
     private class PickerFragmentAdapter extends PickerFragmentStatePagerAdapter {

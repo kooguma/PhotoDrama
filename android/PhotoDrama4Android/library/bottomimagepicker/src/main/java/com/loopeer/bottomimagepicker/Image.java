@@ -15,6 +15,7 @@ public class Image implements Parcelable {
         this.time = time;
     }
 
+
     public Image(String photoTakeurl) {
         url = photoTakeurl;
     }
@@ -44,8 +45,7 @@ public class Image implements Parcelable {
 
         Image image = (Image) o;
 
-        if (url != null ? !url.equals(image.url) : image.url != null) return false;
-        return !(name != null ? !name.equals(image.name) : image.name != null);
+        return !(url != null ? !url.equals(image.url) : image.url != null);
 
     }
 

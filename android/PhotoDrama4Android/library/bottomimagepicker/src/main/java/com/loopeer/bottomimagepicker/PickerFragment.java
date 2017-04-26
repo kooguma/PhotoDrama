@@ -1,12 +1,14 @@
 package com.loopeer.bottomimagepicker;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import java.util.List;
 public class PickerFragment extends Fragment {
 
     private static final String IMAGE_LIST = "image_list";
+    private static final String IMAGE_SELECTED_POSITION = "image_selected_position";
     private static final String IMAGE_LISTENER = "image_listener";
 
     public static final int IMAGE_SIZE_UNIT = 10;
@@ -29,6 +32,7 @@ public class PickerFragment extends Fragment {
     private ImageAdapter mImageAdapter;
     private ImageAdapter.OnImagePickListener mOnImagePickListener;
     private List<Image> mImages;
+    private String mPath;
     private int mUnit;
     private WindowManager mWindowManager;
 
@@ -79,13 +83,16 @@ public class PickerFragment extends Fragment {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             mImages = savedInstanceState.getParcelableArrayList(IMAGE_LIST);
+            mPath = savedInstanceState.getString(IMAGE_SELECTED_POSITION);
             mImageAdapter.setImages(mImages);
+            mImageAdapter.updateSelectedImage(mPath);
         }
     }
 
     @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(IMAGE_LIST, (ArrayList<? extends Parcelable>) mImages);
+        outState.putString(IMAGE_SELECTED_POSITION, mPath);
     }
 
     public static int getUnitSize(WindowManager wm) {
@@ -102,6 +109,11 @@ public class PickerFragment extends Fragment {
         final int gridSize = mUnit * IMAGE_SIZE_UNIT;
         final int totalSpacing = screenWidth - gridCount * gridSize;
         return totalSpacing / (gridCount * 2 + 2);
+    }
+
+    public void updateSelectedImage(String path) {
+        mImageAdapter.updateSelectedImage(path);
+        this.mPath = path;
     }
 
 }

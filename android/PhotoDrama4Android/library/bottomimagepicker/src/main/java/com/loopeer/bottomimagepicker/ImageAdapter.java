@@ -24,8 +24,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     private List<Image> mImages;
     private int mImageSize;
     private OnImagePickListener mOnImagePickListener;
-    //保存选中状态
-    private SparseBooleanArray mSelectedArray;
+    private int mSelectedPosition = -1;
+
+    public void updateSelectedImage(String path) {
+        Image image = new Image(path);
+        mSelectedPosition = mImages.indexOf(image);
+        notifyDataSetChanged();
+    }
 
     public interface OnImagePickListener extends Serializable {
         boolean onImagePick(Uri uri);
@@ -43,7 +48,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     public ImageAdapter(List<Image> images, int imageSize) {
         mImages = images;
         mImageSize = imageSize;
-        mSelectedArray = new SparseBooleanArray(9);
     }
 
     @Override public ImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,7 +61,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
 
     @Override public void onBindViewHolder(ImageHolder holder, int position) {
         Image image = mImages.get(position);
-        holder.mImageView.setSelected(mSelectedArray.get(position));
+        holder.mImageView.setSelected(mSelectedPosition == position);
         holder.bind(image);
     }
 
@@ -92,8 +96,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
                 @Override public void onClick(View v) {
                     if (mOnImagePickListener != null) {
                         if (mOnImagePickListener.onImagePick(uri)) {
-                            mSelectedArray.put(getLayoutPosition(), true);
-                            notifyItemChanged(getLayoutPosition());
+                            mSelectedPosition = getLayoutPosition();
+                            notifyDataSetChanged();
                         }
                     }
                 }

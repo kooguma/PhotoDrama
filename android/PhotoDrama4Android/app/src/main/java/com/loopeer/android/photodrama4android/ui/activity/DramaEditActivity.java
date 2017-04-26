@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import com.facebook.common.util.UriUtil;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -33,10 +34,14 @@ import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
+import java.io.File;
 
-public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener
-        , VideoPlayerManager.BitmapReadyListener, VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener {
-
+public class DramaEditActivity extends PhotoDramaBaseActivity
+    implements EditDramaSegmentAdapter.OnSelectedListener
+    ,
+    VideoPlayerManager.BitmapReadyListener,
+    VideoPlayerManager.ProgressChangeListener,
+    VideoPlayerManager.RecordingListener {
 
     private ActivityDramaEditBinding mBinding;
     private ImageView mIcon;
@@ -159,22 +164,24 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
                 return true;
             }
         });
-        mBottomImagePickerView.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        mBottomImagePickerView.getViewPager()
+            .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
+                }
 
-            @Override
-            public void onPageSelected(int position) {
-                behavior.updateNestScrollChild(mBottomImagePickerView.getCurrentRecyclerView(position));
-            }
+                @Override
+                public void onPageSelected(int position) {
+                    behavior.updateNestScrollChild(
+                        mBottomImagePickerView.getCurrentRecyclerView(position));
+                }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-            }
-        });
+                }
+            });
         updateSegmentList();
 
         mBinding.glSurfaceView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -231,6 +238,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     public void onImageSelected(ImageClip imageClip) {
         mSelectedImageClip = imageClip;
         mVideoPlayerManager.seekToVideo(mSelectedImageClip.startTime);
+        mBottomImagePickerView.updateSelectedImage(mSelectedImageClip.path);
     }
 
     @Override
@@ -240,8 +248,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
 
     public void onFullBtnClick(View view) {
         Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
-                mVideoPlayerManager.isStop(),
-                mVideoPlayerManager.getUsedTime());
+            mVideoPlayerManager.isStop(),
+            mVideoPlayerManager.getUsedTime());
     }
 
     @Override
@@ -265,7 +273,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
 
     public void showExportProgress(String message) {
         if (mExportProgressLoading == null) {
-            mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
+            mExportProgressLoading = new ExportLoadingDialog(this,
+                R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
             mExportProgressLoading.setCancelable(false);
         }
@@ -292,7 +301,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity implements EditDra
     @Override
     public void recordChange(int progress) {
         if (mExportProgressLoading != null) {
-            mExportProgressLoading.setProgress(1f * progress / (mVideoPlayerManager.getSeekbarMaxValue() + 1));
+            mExportProgressLoading.setProgress(
+                1f * progress / (mVideoPlayerManager.getSeekbarMaxValue() + 1));
         }
     }
 
