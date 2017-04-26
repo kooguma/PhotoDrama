@@ -30,8 +30,7 @@ public class DramaFetchHelper {
         Drama cacheDrama = DramaCache.getInstance().getDrama(theme.id);
         if (cacheDrama != null) {
             try {
-                BitmapFactory.getInstance().clear();
-                BitmapFactory.getInstance().getBitmapFromMemCache(cacheDrama.videoGroup.imageClips.get(0).path);
+                preLoadDramaImage(cacheDrama);
                 consumer.accept(cacheDrama);
                 completeAction.run();
             } catch (Exception e) {
@@ -56,8 +55,7 @@ public class DramaFetchHelper {
         } else {
             mDisposable = Flowable.fromCallable(() -> {
                 Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
-                BitmapFactory.getInstance().clear();
-                BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(0).path);
+                preLoadDramaImage(drama);
                 return drama;
             })
                     .subscribeOn(Schedulers.io())
@@ -68,14 +66,21 @@ public class DramaFetchHelper {
         }
     }
 
+    private void preLoadDramaImage(Drama drama) {
+        BitmapFactory.getInstance().clear();
+        if (drama.videoGroup.imageClips.size() > 0)
+            BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(0).path);
+        if (drama.videoGroup.imageClips.size() > 1)
+            BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(1).path);
+    }
+
     private void unZipDrama(String zipPath, Theme theme, Consumer<Drama> consumer, Consumer throwableConsumer, Action completeAction) {
         File file = FileManager.getInstance().createDramaPackage(theme);
         mDisposable = Flowable.fromCallable(() -> {
             ZipUtil.unpack(new File(zipPath), file);
             Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
             FileManager.deleteFile(new File(zipPath));
-            BitmapFactory.getInstance().clear();
-            BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(0).path);
+            preLoadDramaImage(drama);
             return drama;
         })
                 .subscribeOn(Schedulers.io())
