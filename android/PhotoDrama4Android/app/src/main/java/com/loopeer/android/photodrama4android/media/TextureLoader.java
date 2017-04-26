@@ -71,18 +71,7 @@ public class TextureLoader extends Thread {
             }
 
             handleImageTexture();
-            handleSubtitleTexture();
             handleImageResTexture();
-        }
-    }
-
-    private void handleSubtitleTexture() {
-        if (mHandlerWrappers.isEmpty()) return;
-        HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper = mHandlerWrappers.get(0);
-        if (handlerWrapper != null && handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_SUBTITLE) {
-            SubtitleInfo subtitleInfo = TextureHelper.loadTexture(mContext, handlerWrapper.getData());
-            returnSubtitleInfo(handlerWrapper, subtitleInfo);
-            mHandlerWrappers.remove(handlerWrapper);
         }
     }
 
@@ -128,22 +117,13 @@ public class TextureLoader extends Thread {
         handlerWrapper.sendMessage(msg);
     }
 
-    private void returnSubtitleInfo(HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper, SubtitleInfo subtitleInfo) {
-        Message msg = new Message();
-        Bundle b = new Bundle();
-        b.putSerializable(handlerWrapper.getKey(), subtitleInfo);
-        msg.setData(b);
-        handlerWrapper.sendMessage(msg);
-    }
-
     public synchronized void loadImageTexture(HandlerWrapper<String, ImageInfo> imageInfoHandlerWrapper) {
+        ImageInfo imageInfo = null;
+        if (BitmapFactory.getInstance().getBitmapFromMemCache(imageInfoHandlerWrapper.getData()) != null) {
+            returnImageInfo(imageInfoHandlerWrapper, imageInfo);
+            return;
+        }
         mHandlerWrappers.add(imageInfoHandlerWrapper);
-        if (isAlive())
-            notify();
-    }
-
-    public synchronized void loadSubtitleTexture(HandlerWrapper<SubtitleInfo, SubtitleInfo> handlerWrapper) {
-        mHandlerWrappers.add(handlerWrapper);
         if (isAlive())
             notify();
     }

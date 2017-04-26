@@ -6,8 +6,6 @@ import android.content.res.TypedArray;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.R;
@@ -28,7 +26,7 @@ import static android.opengl.EGLExt.EGL_OPENGL_ES3_BIT_KHR;
 public class MovieMakerGLSurfaceView extends GLSurfaceView {
 
     private TextureLoader mTextureLoader;
-    private TextTextureLoader mTextTextureLoader;
+    private SubtitleTextureLoader mTextTextureLoader;
     protected float mRatioX;
     protected float mRatioY;
 
@@ -90,7 +88,7 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
                 updateContext(egl, renderContext, display, eglConfig);
                 if (!mTextureLoader.isAlive()) mTextureLoader.start();
 
-                mTextTextureLoader = new TextTextureLoader();
+                mTextTextureLoader = new SubtitleTextureLoader();
                 mTextTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
                 if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
                 return renderContext;
@@ -141,7 +139,7 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
         return mTextureLoader;
     }
 
-    public TextTextureLoader getTextTextureLoader() {
+    public SubtitleTextureLoader getTextTextureLoader() {
         return mTextTextureLoader;
     }
 

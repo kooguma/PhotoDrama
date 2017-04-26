@@ -1,6 +1,8 @@
 package com.loopeer.android.photodrama4android.media.utils;
 
 import android.content.Context;
+
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.DramaCache;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.model.Theme;
@@ -28,6 +30,8 @@ public class DramaFetchHelper {
         Drama cacheDrama = DramaCache.getInstance().getDrama(theme.id);
         if (cacheDrama != null) {
             try {
+                BitmapFactory.getInstance().clear();
+                BitmapFactory.getInstance().getBitmapFromMemCache(cacheDrama.videoGroup.imageClips.get(0).path);
                 consumer.accept(cacheDrama);
                 completeAction.run();
             } catch (Exception e) {
@@ -52,6 +56,8 @@ public class DramaFetchHelper {
         } else {
             mDisposable = Flowable.fromCallable(() -> {
                 Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
+                BitmapFactory.getInstance().clear();
+                BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(0).path);
                 return drama;
             })
                     .subscribeOn(Schedulers.io())
@@ -68,6 +74,8 @@ public class DramaFetchHelper {
             ZipUtil.unpack(new File(zipPath), file);
             Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
             FileManager.deleteFile(new File(zipPath));
+            BitmapFactory.getInstance().clear();
+            BitmapFactory.getInstance().getBitmapFromMemCache(drama.videoGroup.imageClips.get(0).path);
             return drama;
         })
                 .subscribeOn(Schedulers.io())

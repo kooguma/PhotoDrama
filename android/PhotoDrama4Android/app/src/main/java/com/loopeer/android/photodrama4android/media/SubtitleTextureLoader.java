@@ -21,7 +21,7 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
-public class TextTextureLoader extends Thread {
+public class SubtitleTextureLoader extends Thread {
 
     private EGLContext textureContext;
     private EGL10 egl;
@@ -33,11 +33,11 @@ public class TextTextureLoader extends Thread {
 
     public List<HandlerWrapper> mHandlerWrappers = new ArrayList<>();
 
-    public TextTextureLoader() {
+    public SubtitleTextureLoader() {
     }
 
-    public TextTextureLoader(EGL10 egl, EGLContext renderContext, EGLDisplay display,
-                             EGLConfig eglConfig, Context androidContext) {
+    public SubtitleTextureLoader(EGL10 egl, EGLContext renderContext, EGLDisplay display,
+                                 EGLConfig eglConfig, Context androidContext) {
         //update(egl, renderContext, display, eglConfig, androidContext,);
     }
 

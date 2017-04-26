@@ -90,7 +90,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.getDrama(theme,
             drama -> {
-                BitmapFactory.getInstance().clear();
                 mVideoPlayerManager.updateDrama(drama);
                 mVideoPlayerManager.seekToVideo(mUsedTime);
                 mVideoPlayerManager.startVideo();
@@ -149,6 +148,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         button.setText(getString(R.string.drama_index_format, index));
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
+                mUsedTime = 0;
                 mVideoPlayerManager.pauseVideo();
                 loadDramaSend(theme);
                 mTheme = theme;
