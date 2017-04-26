@@ -182,7 +182,9 @@ public class BottomImagePickerView extends LinearLayout {
     }
 
     public void updateSelectedImage(String path) {
+        if (mCurTabIndex == -1) return;
         PickerFragment fragment = (PickerFragment) mFragmentAdapter.getFragment(mCurTabIndex);
+        if (fragment == null) return;
         fragment.updateSelectedImage(path);
     }
 

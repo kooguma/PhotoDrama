@@ -32,6 +32,7 @@ public abstract class PickerFragmentStatePagerAdapter extends PagerAdapter {
     public abstract Fragment getItem(int position);
 
     public Fragment getFragment(int position) {
+        if (mFragments.size() - 1 < position) return null;
         return mFragments.get(position);
     }
 

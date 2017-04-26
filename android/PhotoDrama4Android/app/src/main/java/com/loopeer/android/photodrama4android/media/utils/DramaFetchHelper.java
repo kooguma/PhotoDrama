@@ -61,7 +61,7 @@ public class DramaFetchHelper {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .filter(drama -> drama != null)
-                    .doOnNext(drama -> DramaCache.getInstance().putDrama(theme.id, drama))
+//                    .doOnNext(drama -> DramaCache.getInstance().putDrama(theme.id, drama))
                     .subscribe(consumer, throwableConsumer, completeAction);
         }
     }
@@ -86,7 +86,7 @@ public class DramaFetchHelper {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(drama -> drama != null)
-                .doOnNext(drama -> DramaCache.getInstance().putDrama(theme.id, drama))
+//                .doOnNext(drama -> DramaCache.getInstance().putDrama(theme.id, drama))
                 .subscribe(consumer, throwableConsumer, completeAction);
     }
 
