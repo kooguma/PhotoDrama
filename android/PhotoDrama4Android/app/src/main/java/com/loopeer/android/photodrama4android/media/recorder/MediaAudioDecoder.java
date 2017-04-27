@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static android.media.MediaExtractor.SEEK_TO_CLOSEST_SYNC;
+import static android.media.MediaExtractor.SEEK_TO_PREVIOUS_SYNC;
 
 public class MediaAudioDecoder extends MediaDecoder {
 
@@ -84,12 +85,12 @@ public class MediaAudioDecoder extends MediaDecoder {
         FileOutputStream fosDecoder = new FileOutputStream(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
+        boolean isArriveSelectedEnd = false;
         try {
-            extractor.seekTo(mMusicClip.getSelectStartUs(), SEEK_TO_CLOSEST_SYNC);
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "extractor extract time : " + mMusicClip.getSelectStartUs() + " : " + mMusicClip.getSelectEndUs());
-            }
+            extractor.seekTo(mMusicClip.getSelectStartUs(), SEEK_TO_PREVIOUS_SYNC);
+
             while (!sawOutputEOS) {
+                isArriveSelectedEnd = extractor.getSampleTime() > mMusicClip.getSelectEndUs();
                 if (!sawInputEOS) {
                     int inputBufIndex = codec.dequeueInputBuffer(TIMEOUT_USEC);
                     if (inputBufIndex >= 0) {
@@ -98,7 +99,7 @@ public class MediaAudioDecoder extends MediaDecoder {
                         if (sampleSize < 0) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                        } else if (extractor.getSampleTime() > mMusicClip.getSelectEndUs()) {
+                        } else if (isArriveSelectedEnd) {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                         } else {

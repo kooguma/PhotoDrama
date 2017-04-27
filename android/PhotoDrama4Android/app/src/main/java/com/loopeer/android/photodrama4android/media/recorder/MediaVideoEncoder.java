@@ -79,8 +79,8 @@ public class MediaVideoEncoder extends MediaEncoder {
 			time = result;
 			result = 0;
 		}
-		if (result < prevOutputPTSUs)
-			result = prevOutputPTSUs;
+		if (result < prevOutputPTSUs || result == prevOutputPTSUs)
+			result = prevOutputPTSUs + 1;
 		return result;
 	}
 

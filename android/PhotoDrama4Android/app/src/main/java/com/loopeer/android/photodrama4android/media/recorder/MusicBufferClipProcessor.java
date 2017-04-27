@@ -25,16 +25,17 @@ public class MusicBufferClipProcessor {
         }
     }
 
-    public byte[] read(long timeOffsetUs, long timeLengthUs) {
+    public byte[] read(long timeOffsetUs, long timeLengthUs, int bufferSize) {
         if (timeOffsetUs < mMusicClip.startTime * 1000 || timeOffsetUs > mMusicClip.getEndTime() * 1000) return null;
         int dataLength = AudioBufferTimeParser.getDataOffset(timeLengthUs);
         int dataOffset = AudioBufferTimeParser.getDataOffset((timeOffsetUs - mMusicClip.startTime * 1000) % (mMusicClip.musicSelectedLength * 1000));
-        byte[] buffer = new byte[dataLength];
+        byte[] buffer = new byte[bufferSize];
         try {
             int length;
             long pointer = mAudioFileStreams.getFilePointer();
             long offset = 0, lastLength = 0;
             if (pointer + dataLength > mAudioFileStreams.length()) {
+                if (mMusicClip.showTime <= mMusicClip.musicSelectedLength) return null;
                 offset = mAudioFileStreams.length() - pointer;
                 lastLength = (pointer + dataLength) % mAudioFileStreams.length();
             }

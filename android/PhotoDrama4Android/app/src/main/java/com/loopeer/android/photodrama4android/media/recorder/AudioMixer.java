@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import static com.loopeer.android.photodrama4android.media.recorder.AudioBufferTimeParser.BUFFER_SIZE;
+
 public class AudioMixer {
     private static final String TAG = "AudioMixer";
     private static final boolean DEBUG = BuildConfig.DEBUG;
@@ -59,7 +61,7 @@ public class AudioMixer {
             int mergeStreamCount = 0;
             for (MusicBufferClipProcessor processor :
                     mMusicBufferClipProcessors) {
-                byte[] data = processor.read(timeOffset, timelength);
+                byte[] data = processor.read(timeOffset, timelength, BUFFER_SIZE);
                 float volume = processor.getVolume(timeOffset, timelength);
                 if (data != null) {
                     if (audioBytes[0] == null) {
@@ -89,8 +91,7 @@ public class AudioMixer {
             }
             byte[] mixBytes;
             if (mergeStreamCount == 0) {
-                int dataLength = AudioBufferTimeParser.getDataOffset(timelength);
-                mixBytes = new byte[dataLength];
+                mixBytes = new byte[BUFFER_SIZE];
             } else {
                 mixBytes = mixAudioBytes(audioMergeBytes, volumes);
             }
@@ -142,9 +143,9 @@ public class AudioMixer {
             sr = 0;
             for (; sr < row; ++sr) {
                 int v = sAudioes[sr][sc];
-                mixVal += (int)(VOLUME_ADJUST_PARAM * volumes[sr] * v);
+                mixVal += (int)(VOLUME_ADJUST_PARAM * volumes[sr] * v / MULTI_CHANNEL_COUNT);
             }
-            sMixAudio[sc] = (short) (mixVal / MULTI_CHANNEL_COUNT);
+            sMixAudio[sc] = (short) mixVal;
         }
 
         for (sr = 0; sr < coloum; ++sr) {

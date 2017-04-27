@@ -78,6 +78,7 @@ public class MediaAudioEncoder extends MediaEncoder {
 
         @Override
         public void run() {
+
             List<MediaAudioDecoder> mediaAudioDecoders = new ArrayList<>();
             for (MusicClip musicClip : mDrama.audioGroup.musicClips) {
                 MediaAudioDecoder mediaAudioDecoder = new MediaAudioDecoder(musicClip, mAudioMixerThread);
@@ -90,7 +91,6 @@ public class MediaAudioEncoder extends MediaEncoder {
                 mediaAudioDecoder.startDecode();
             }
             frameAvailableSoon();
-
             while (true) {
                 synchronized (mSync) {
                     if (mDecodingFileCount > 0) {
@@ -133,9 +133,9 @@ public class MediaAudioEncoder extends MediaEncoder {
     @Override
     protected long getPTSUs() {
         if (prevOutputPTSUs > mBufferInfo.presentationTimeUs) {
-            return prevOutputPTSUs + 1;
+            return prevOutputPTSUs + 2;
         } else if (prevOutputPTSUs == mBufferInfo.presentationTimeUs) {
-            return prevOutputPTSUs + 1;
+            return prevOutputPTSUs + 2;
         }
         return mBufferInfo.presentationTimeUs;
     }
