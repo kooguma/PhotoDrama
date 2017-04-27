@@ -2,7 +2,9 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.IPlayerLife;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
 import com.loopeer.android.photodrama4android.media.SeekChangeListener;
@@ -14,6 +16,8 @@ import static android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY;
 
 public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IPlayerLife {
 
+    private static final String TAG = "GLThreadRender";
+
     protected GLSurfaceView mGLSurfaceView;
     protected Context mContext;
     protected boolean mIsStop;
@@ -24,6 +28,8 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     protected boolean mIsFinish;
     protected boolean mIsBackGround;
     protected SeekChangeListener mSeekChangeListener;
+    public static final int RECORDFPS = 29;
+    private boolean mIsRecording = false;
 
     public GLThreadRender(Context context, GLSurfaceView gLSurfaceView, IRendererWorker iRendererWorker) {
         mGLSurfaceView = gLSurfaceView;
@@ -79,9 +85,12 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
                     long startTime = System.currentTimeMillis();
                     mGLSurfaceView.requestRender();
                     this.wait();
-                    Thread.sleep(Math.max(0, 30 - (System.currentTimeMillis() - startTime)));//睡眠
+                    if (BuildConfig.DEBUG) {
+                        Log.e(TAG, "sleep Time " + (1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));
+                    }
+                    if (!mIsRecording) Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
                     if (!mIsBackGround)
-                        mUsedTime = mUsedTime + System.currentTimeMillis() - startTime;
+                        mUsedTime = mUsedTime + (mIsRecording ? 1000 / RECORDFPS : System.currentTimeMillis() - startTime);
                     else
                         mIsBackGround = false;
                     if (mSeekChangeListener != null) {
@@ -193,5 +202,7 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         this.mIsBackGround = isBackGround;
     }
 
-
+    public void setRecording(boolean recording) {
+        mIsRecording = recording;
+    }
 }

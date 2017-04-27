@@ -129,6 +129,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
 
     private void endRecording() {
         if (mIsRecording) {
+            mGLThread.setRecording(false);
             mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
             updateDrama(mGLRenderWorker.getDrama());
             String path = mGLRenderWorker.endRecording();
@@ -308,6 +309,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     public void startRecording() {
         pauseVideo();
         if (!isMoveReadyOk()) return;
+        mGLThread.setRecording(true);
         Drama drama = mGLRenderWorker.getDrama();
         EndLogoClip clip = new EndLogoClip();
         clip.startTime = drama.getShowTimeTotal() + 1;

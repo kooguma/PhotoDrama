@@ -75,10 +75,10 @@ public class MediaVideoEncoder extends MediaEncoder {
         synchronized (mSync) {
             result = mUsedTimes.poll();
         }
-		if (time == 0 && result != 0) {
+		/*if (time == 0 && result != 0) {
 			time = result;
 			result = 0;
-		}
+		}*/
 		if (result < prevOutputPTSUs || result == prevOutputPTSUs)
 			result = prevOutputPTSUs + 1;
 		return result;
