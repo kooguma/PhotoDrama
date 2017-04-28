@@ -12,7 +12,7 @@
 
     </data>
 
-    <com.loopeer.compatinset.InsetLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/window_background_gray"
@@ -67,5 +67,5 @@
             android:onClick="onAboutClick"
             app:descText="@string/setting_about_us"/>
 
-    </com.loopeer.compatinset.InsetLinearLayout>
+    </LinearLayout>
 </layout>

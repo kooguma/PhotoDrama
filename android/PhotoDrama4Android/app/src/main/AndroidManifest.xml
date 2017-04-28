@@ -23,6 +23,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:theme="@style/AppTheme.Main"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
         <activity
             android:name=".ui.activity.MakeMovieActivity"
@@ -81,7 +82,7 @@
             android:name=".ui.activity.MusicSelectActivity"
             android:label="@string/label_music_select"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -147,7 +148,8 @@
             android:theme="@style/AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen" />
         <activity
             android:name=".ui.activity.LauncherActivity"
-            android:theme="@style/AppTheme.Launcher">
+            android:theme="@style/AppTheme.Launcher"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -156,7 +158,8 @@
         </activity>
         <activity
             android:name=".ui.activity.GuideActivity"
-            android:theme="@style/AppTheme.Guide">
+            android:theme="@style/AppTheme.Guide"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.LauncherActivity"/>

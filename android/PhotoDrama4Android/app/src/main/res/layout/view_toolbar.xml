@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+       xmlns:tools="http://schemas.android.com/tools"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.loopeer.compatinset.SingleInsetHolderView
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="@bool/fits_system_windows"
+        app:insetStatusBarColor="@color/inset_statusbar_color"/>
 
     <android.support.v7.widget.Toolbar
         style="@style/Toolbar"

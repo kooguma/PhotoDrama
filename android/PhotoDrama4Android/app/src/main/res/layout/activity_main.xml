@@ -1,36 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_login"
     android:orientation="vertical"
-    android:fitsSystemWindows="@bool/fits_system_windows"
     tools:context=".ui.activity.MainActivity">
+
+    <com.loopeer.compatinset.SingleInsetHolderView
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="@bool/fits_system_windows"
+        app:insetStatusBarColor="@color/inset_statusbar_color"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/status_bar"
         android:layout_marginRight="@dimen/large_padding"
         android:layout_marginTop="@dimen/xxlarger_padding"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:onClick="onSettingClick"
         android:src="@drawable/ic_main_setting"/>
 
     <Button
-        style="@style/PhotoDramaButton.Black.Main"
         android:id="@+id/btn_act"
-        android:text="@string/main_act"
+        style="@style/PhotoDramaButton.Black.Main"
         android:layout_marginBottom="106dp"
-        android:onClick="onActClick"/>
+        android:onClick="onActClick"
+        android:text="@string/main_act"/>
 
     <Button
         style="@style/PhotoDramaButton.Black.Main"
-        android:text="@string/main_create"
         android:layout_marginBottom="45dp"
-        android:onClick="onCreateClick"/>
+        android:onClick="onCreateClick"
+        android:text="@string/main_create"/>
 
-</com.loopeer.compatinset.InsetRelativeLayout>
+</RelativeLayout>

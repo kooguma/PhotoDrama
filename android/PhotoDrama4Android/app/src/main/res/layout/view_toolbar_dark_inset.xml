@@ -6,7 +6,7 @@
     <com.loopeer.compatinset.SingleInsetHolderView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:insetStatusBarColor="@color/colorPrimary"
+        app:insetStatusBarColor="@color/inset_statusbar_color"
         android:fitsSystemWindows="@bool/fits_system_windows"/>
 
     <android.support.v7.widget.Toolbar

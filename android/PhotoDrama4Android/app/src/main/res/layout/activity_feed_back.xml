@@ -8,19 +8,27 @@
             type="com.loopeer.android.photodrama4android.model.validator.FeedbackValidator"/>
     </data>
 
-    <com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:orientation="vertical">
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/view_toolbar"/>
+        <LinearLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/view_toolbar"/>
+        </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/toolbar_container"
             android:layout_marginTop="@dimen/large_padding"
             android:background="@color/window_background_white"
             android:gravity="top|left"
@@ -36,10 +44,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="center"
             android:enabled="@{validator.enable}"
+            android:gravity="center"
             android:onClick="onBtnClick"
             android:text="@string/common_commit"/>
 
-    </com.loopeer.compatinset.InsetRelativeLayout>
+    </RelativeLayout>
 </layout>
