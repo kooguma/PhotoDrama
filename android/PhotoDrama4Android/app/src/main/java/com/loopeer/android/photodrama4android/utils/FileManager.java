@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.DateUtils;
@@ -27,6 +29,7 @@ import static com.loopeer.android.photodrama4android.utils.PermissionUtils.EXTER
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.REQUEST_EXTERNAL_STORAGE_PERMISSION;
 
 public class FileManager {
+    public final boolean DEBUG = BuildConfig.DEBUG;
     private static FileManager instance;
     private static String photoDramaPath = Environment.getExternalStorageDirectory() +
         "/photodrama";
@@ -50,12 +53,15 @@ public class FileManager {
     public void init() {
         if (hasSDCard() && hasExternalStoragePermission(PhotoDramaApp.getAppContext())) {
             audioDir = createFilePath(audioPath);
-            videoDir = createFilePath(videoPath);
-            dramaDir = createFilePath(dramaPath);
+            if (DEBUG) {
+                dramaDir = createFilePath(dramaPath);
+            } else {
+                dramaDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
+            }
             tempAudioDir = createFilePath(tempAudioPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
-            videoDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + videoDirPath);
+            dramaDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
             tempAudioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + tempAudioPath);
         }
     }
@@ -115,7 +121,9 @@ public class FileManager {
     }
 
     public String getDramaPackageName(Theme theme) {
-        return "drama_" + theme.id;
+        String zipName = getDramaZipName(theme);
+        String[] zipNames = zipName.split("\\.");
+        return zipNames[0];
     }
 
     public String getDramaZipPath(Theme theme) {
@@ -124,6 +132,13 @@ public class FileManager {
     }
 
     public String getDramaZipName(Theme theme) {
+        if (theme.zipLink == null) return getDefaultDramaZipName(theme);
+        String[] paths = theme.zipLink.split("/");
+        return paths[paths.length - 1];
+    }
+
+    @NonNull
+    private String getDefaultDramaZipName(Theme theme) {
         return "drama_" + theme.id + ".zip";
     }
 
