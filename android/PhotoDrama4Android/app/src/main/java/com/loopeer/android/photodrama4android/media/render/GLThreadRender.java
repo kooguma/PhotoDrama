@@ -18,6 +18,8 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
 
     private static final String TAG = "GLThreadRender";
 
+    public static final boolean DEBUG = BuildConfig.DEBUG && false;
+
     protected GLSurfaceView mGLSurfaceView;
     protected Context mContext;
     protected boolean mIsStop;
@@ -85,7 +87,7 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
                     long startTime = System.currentTimeMillis();
                     mGLSurfaceView.requestRender();
                     this.wait();
-                    if (BuildConfig.DEBUG) {
+                    if (DEBUG) {
                         Log.e(TAG, "sleep Time " + (1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));
                     }
                     if (!mIsRecording) Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠

@@ -111,8 +111,11 @@ public class MediaMuxerWrapper {
 		return ((MediaVideoEncoder) mVideoEncoder).getInputSurface();
 	}
 
-	public void frameVideoAvailableSoon(long useTime) {
-        ((MediaVideoEncoder) mVideoEncoder).putTime(useTime);
+	public void frameVideoAvailableSoon() {
 		mVideoEncoder.frameAvailableSoon();
+	}
+
+	public void setPresentationTimeUs(long l) {
+		((MediaVideoEncoder) mVideoEncoder).putTime(l);
 	}
 }

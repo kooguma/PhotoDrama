@@ -6,6 +6,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -33,6 +34,7 @@ import static android.opengl.Matrix.setIdentityM;
 
 public class GLRenderWorker implements IRendererWorker {
 
+    public static final boolean DEBUG = BuildConfig.DEBUG && true;
     private static final String TAG = "GLRenderWorker";
 
     private Drama mDrama;
@@ -99,6 +101,8 @@ public class GLRenderWorker implements IRendererWorker {
             setIdentityM(projectionMatrix, 0);
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
         } else {
+            if (DEBUG) Log.e(TAG, "mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);  " + usedTime * 1000);
+            mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFramebuffer);
             GlUtil.checkGlError("glBindFramebuffer");
             glClear(GL_COLOR_BUFFER_BIT);
@@ -108,7 +112,7 @@ public class GLRenderWorker implements IRendererWorker {
             GlUtil.checkGlError("glBindFramebuffer");
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
             mEglHelperLocal.swapBuffers();
-            mMuxerWrapper.frameVideoAvailableSoon(usedTime * 1000);
+            mMuxerWrapper.frameVideoAvailableSoon();
             mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
