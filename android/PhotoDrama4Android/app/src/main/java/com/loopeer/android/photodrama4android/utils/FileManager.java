@@ -53,6 +53,7 @@ public class FileManager {
     public void init() {
         if (hasSDCard() && hasExternalStoragePermission(PhotoDramaApp.getAppContext())) {
             audioDir = createFilePath(audioPath);
+            videoDir = createFilePath(videoPath);
             if (DEBUG) {
                 dramaDir = createFilePath(dramaPath);
             } else {
@@ -61,6 +62,7 @@ public class FileManager {
             tempAudioDir = createFilePath(tempAudioPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
+            videoDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + videoDirPath);
             dramaDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
             tempAudioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + tempAudioPath);
         }

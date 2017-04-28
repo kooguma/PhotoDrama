@@ -152,6 +152,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         mBottomImagePickerView.setOnImagePickListener(new ImageAdapter.OnImagePickListener() {
             @Override
             public boolean onImagePick(Uri uri) {
+                if (mSelectedImageClip == null) return true;
                 BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
                 mSelectedImageClip.path = uri.getPath();
                 HandlerWrapper handler = new HandlerWrapper(
