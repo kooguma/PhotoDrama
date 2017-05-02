@@ -106,11 +106,14 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
             ResponseObservable.unwrap(SeriesService.INSTANCE.detail(theme.seriesId))
                 .subscribe(series -> {
                     mBinding.setSeries(series);
-                    if (isFirstLoad) {
+                    if (isFirstLoad && series.themesCount > 1) {
+                        mBinding.containerEpisode.setVisibility(View.VISIBLE);
                         for (int i = 0; i < series.themes.size(); i++) {
                             mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, series.themes.get(i)));
                         }
                         updateSelectedThemeBtn();
+                    } else {
+                        mBinding.containerEpisode.setVisibility(View.GONE);
                     }
                 }, throwable -> {
                     throwable.printStackTrace();
