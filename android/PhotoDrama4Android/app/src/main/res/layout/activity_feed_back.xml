@@ -39,15 +39,5 @@
             android:paddingTop="@dimen/large_padding"
             android:text="@={validator.feedback}"/>
 
-        <Button
-            style="@style/PhotoDramaButton.BlackSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:enabled="@{validator.enable}"
-            android:gravity="center"
-            android:onClick="onBtnClick"
-            android:text="@string/common_commit"/>
-
     </RelativeLayout>
 </layout>
