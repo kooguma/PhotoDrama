@@ -29,17 +29,26 @@ public class EditDramaSegmentAdapter extends BaseFooterAdapter<ImageClip> {
         super.updateData(data);
     }
 
+    public void selectedNext() {
+        int index = getDatas().indexOf(mSelectedImageClip);
+        if (index != getDatas().size() - 1) {
+            selectedItem(getDatas().get(index + 1));
+        }
+    }
+
+    private void selectedItem(ImageClip imageClip) {
+        mSelectedImageClip = imageClip;
+        mOnSelectedListener.onImageSelected(mSelectedImageClip);
+        notifyDataSetChanged();
+    }
+
     @Override
     public void bindItem(ImageClip imageClip, int position, RecyclerView.ViewHolder viewHolder) {
         ListItemDramaEditSegmentBinding binding = (ListItemDramaEditSegmentBinding) ((DataBindingViewHolder) viewHolder).binding;
         binding.img.setLocalUrl(imageClip.path);
         binding.getRoot().setSelected(mSelectedImageClip.equals(imageClip));
         binding.img.setClickable(false);
-        binding.getRoot().setOnClickListener(v -> {
-            mSelectedImageClip = imageClip;
-            mOnSelectedListener.onImageSelected(mSelectedImageClip);
-            notifyDataSetChanged();
-        });
+        binding.getRoot().setOnClickListener(v -> selectedItem(imageClip));
         binding.executePendingBindings();
     }
 

@@ -163,6 +163,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
                     .bitmapLoadReady(DramaEditActivity.this
                         , mSelectedImageClip.path));
                 mBinding.glSurfaceView.getTextureLoader().loadImageTexture(handler);
+                mEditDramaSegmentAdapter.selectedNext();
                 return true;
             }
         });
