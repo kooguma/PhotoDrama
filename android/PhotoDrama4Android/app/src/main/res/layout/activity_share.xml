@@ -5,15 +5,21 @@
     android:background="@color/window_background_white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/view_toolbar"/>
+    <LinearLayout
+        android:id="@+id/container_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/view_toolbar"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/img_export"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@+id/container_toolbar"
         android:layout_marginTop="45dp"
         android:src="@drawable/ic_export_success"
         android:layout_centerInParent="true"/>

@@ -22,7 +22,7 @@
     <!--drama select-->
     <string name="drama_select">选择故事</string>
     <string name="drama_use">使用故事</string>
-    <string name="drama_people_format">%s人</string>
+    <string name="drama_people_format">%s人使用</string>
     <string name="drama_author_format">作者：%s</string>
     <string name="drama_episode">剧集</string>
     <string name="drama_brief">简介</string>

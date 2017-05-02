@@ -26,8 +26,7 @@ public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
                 = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
 
         binding.setTheme(theme);
-        binding.imageDrama.setOnClickListener(v -> Navigator.startDramaPlayActivity(getContext(), theme));
-        binding.layoutBottom.setOnClickListener(v -> Navigator.startDramaDetailActivity(getContext(), theme));
+        binding.container.setOnClickListener(v -> Navigator.startDramaDetailActivity(getContext(), theme));
         binding.btnUseDrama.setOnClickListener(l -> Navigator.startDramaEditActivity(getContext(), theme));
         binding.executePendingBindings();
     }
