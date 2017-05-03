@@ -29,9 +29,6 @@ ext {
             versionCode      : 12,
             versionName      : '1.0.0',
             apiUrlDebug      : 'http://drama.17chuang.cc/api/v1/',
-
-//            apiUrlDebug    : 'http://v.17chuang.cc//api/v1/',
-
             apiUrlRelease    : 'http://v.17chuang.cc//api/v1/',
             wechatAppId      : 'wxf18e5caaf4b28c2b',
             wechatAppSecret  : '86e0ddbaa09d16e5de96bbac6b6dc18f',
@@ -39,9 +36,6 @@ ext {
             talkingDataAppIdDebug   : '62F8BA3BFFBD436AB534A4D07BC4D6AB',
             talkingDataAppIdRelease : 'D4BD55F1DED546069359686A4CD6C3D2',
             apiKeyDebug      : 'u0Zj8pqfmW37w4bvAWLcSpJxxaIHImVk',
-
-//            apiKeyDebug      : '6uNFBnPGJYBPTTwNCgA5Eahnd5cSg7B9',
-
             apiKeyRelease    : '6uNFBnPGJYBPTTwNCgA5Eahnd5cSg7B9',
     ]
 

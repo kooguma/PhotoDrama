@@ -1,25 +1,33 @@
-package com.loopeer.android.photodrama4android.media.audio;
+package com.loopeer.android.photodrama4android.media.audio.player;
 
 import android.media.AudioTrack;
 import android.util.Log;
-import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
-import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class AudioPlayer {
     private static final String TAG = "AudioPlayer";
+    private final static int BUFFER_SIZE = 4096;
 
     private AudioTrack mAudioTrack;                          // AudioTrack
     private AudioParams mAudioParams;                          // Attributes
 
     private byte[] mBytes;                                   // 音频数据
     private int mPrimePlaySize = 0;                          // 较优播放块大小
-    private int mPlayOffset = 0;                             // 当前播放位置
+    private int mPlayOffset = 0;                             // 当前播放位置  需要根据时间计算？
 
     private boolean mThreadExitFlag;                         // 线程退出标志
     private WorkThread mWorkThread;                          // 工作线程
 
-    private int mTotalTime;                                  // 总时间
+    private int mTotalTime;
+
+    private MusicClip mClip;
 
     private AudioTrack.OnPlaybackPositionUpdateListener mPlaybackPositionUpdateListener;
 
@@ -32,16 +40,15 @@ public class AudioPlayer {
         this.mAudioParams = attributes;
     }
 
-    public void setDataSource(byte[] bytes) {
-        this.mBytes = bytes;
+    public void setMusicClips(MusicClip clip) throws IOException {
+        mClip = clip;
     }
 
-    /*public void setDataSource(String path) throws IOException {
+    private byte[] getAudioBytes(String path) throws IOException {
         File file = new File(path);
-        FileInputStream inputStream = new FileInputStream(file);
-        mBytes = new byte[(int) file.length()];
-        inputStream.read(mBytes);
-    }*/
+        FileInputStream is = new FileInputStream(file);
+        return inputStreamToByte(is);
+    }
 
     public void setPlaybackPositionUpdateListener(AudioTrack.OnPlaybackPositionUpdateListener listener) {
         this.mPlaybackPositionUpdateListener = listener;
@@ -68,7 +75,6 @@ public class AudioPlayer {
 
         Log.e(TAG, "primePlaySize = " + mPrimePlaySize);
 
-        //
         mTotalTime = mBytes.length / mAudioParams.mParams.mFrequency / 4;
 
         mAudioTrack = new AudioTrack(
@@ -85,13 +91,15 @@ public class AudioPlayer {
 
         mAudioTrack.setPlaybackPositionUpdateListener(mPlaybackPositionUpdateListener);
 
-        //seekwrapper
+        //seekWrapper
     }
 
     public void seekTo(int time) {
         mAudioTrack.pause();
+        //thread wait ?
+
         float p = time / mTotalTime;
-        mPlayOffset = (int) (p * mBytes.length);
+        //mPlayOffset = (int) (p * mBytes.length);
         mAudioTrack.play();
     }
 
@@ -118,7 +126,7 @@ public class AudioPlayer {
         }
     }
 
-    public long getTotalTime() {
+    public int getTotalTime() {
         return mTotalTime;
     }
 
@@ -148,7 +156,8 @@ public class AudioPlayer {
             while (!mThreadExitFlag) {
                 try {
 
-                    int size = mAudioTrack.write(mBytes, mPlayOffset, mPrimePlaySize);
+                    int size = mAudioTrack.write(mBytes, mPlayOffset,
+                        mPrimePlaySize);
                     mPlayOffset += mPrimePlaySize;
                     Log.e(TAG, "run playOffset = " + mPlayOffset);
                 } catch (Exception e) {
@@ -168,6 +177,16 @@ public class AudioPlayer {
             Log.e(TAG, "PlayAudioThread complete...");
 
         }
+    }
+
+    private byte[] inputStreamToByte(InputStream in) throws IOException {
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        byte[] data = new byte[BUFFER_SIZE];
+        int count = -1;
+        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
+            outStream.write(data, 0, count);
+        }
+        return outStream.toByteArray();
     }
 
 }

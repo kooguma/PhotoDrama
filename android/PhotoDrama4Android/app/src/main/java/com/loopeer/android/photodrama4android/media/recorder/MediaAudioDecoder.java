@@ -26,7 +26,7 @@ public class MediaAudioDecoder extends MediaDecoder {
     private MusicClip mMusicClip;
     public String mTempOutPath;
 
-    MediaAudioDecoder(MusicClip musicClip, DecodeProgressCallback callback) {
+    public MediaAudioDecoder(MusicClip musicClip, DecodeProgressCallback callback) {
         super(callback);
         mMusicClip = musicClip;
         mTempOutPath = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" + musicClip.musicSelectedLength);
@@ -50,15 +50,18 @@ public class MediaAudioDecoder extends MediaDecoder {
     }
 
     public void decode() throws IOException {
+        //MusicClip file
         File file = new File(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         if (file.exists()) {
             mCallback.onFinish();
             return;
         }
+        //
         MediaExtractor extractor = new MediaExtractor();
         extractor.setDataSource(mMusicClip.path);
 
         MediaFormat mediaFormat = null;
+        //trackCount 轨道数
         for (int i = 0; i < extractor.getTrackCount(); i++) {
             MediaFormat format = extractor.getTrackFormat(i);
             String mime = format.getString(MediaFormat.KEY_MIME);
@@ -82,6 +85,7 @@ public class MediaAudioDecoder extends MediaDecoder {
         ByteBuffer[] codecOutputBuffers = codec.getOutputBuffers();
 
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+        //out put pcm file
         FileOutputStream fosDecoder = new FileOutputStream(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
@@ -105,7 +109,7 @@ public class MediaAudioDecoder extends MediaDecoder {
                         } else {
                             long presentationTimeUs = extractor.getSampleTime();
                             codec.queueInputBuffer(inputBufIndex, 0, sampleSize, presentationTimeUs, 0);
-                            extractor.advance();
+                            extractor.advance();// 移动到下一帧
                         }
                     }
                 }

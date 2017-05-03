@@ -17,6 +17,7 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
     private final static int PREPARED_STATE_NO = 0; 
     private final static int PREPARED_STATE_ING = 1;
     private final static int PREPARED_STATE_ED = 2;
+
     @IntDef({
             PREPARED_STATE_NO,
             PREPARED_STATE_ING,

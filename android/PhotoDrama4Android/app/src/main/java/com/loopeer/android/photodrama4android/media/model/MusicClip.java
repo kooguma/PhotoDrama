@@ -56,7 +56,7 @@ public class MusicClip extends Clip {
     @Override
     public String toString() {
         return "MusicClip{" +
-                "path='" + path + '\'' +
+                "  path='" + path + '\'' +
                 ", startTime=" + startTime +
                 ", showTime=" + showTime +
                 ", musicStartOffset=" + musicStartOffset +

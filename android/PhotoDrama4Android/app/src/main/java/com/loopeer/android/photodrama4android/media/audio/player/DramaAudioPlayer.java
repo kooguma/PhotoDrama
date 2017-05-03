@@ -1,15 +1,10 @@
-package com.loopeer.android.photodrama4android.media.audio;
+package com.loopeer.android.photodrama4android.media.audio.player;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import com.loopeer.android.photodrama4android.R;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class DramaAudioPlayer {
-
-    private final static int BUFFER_SIZE = 4096;
 
     private static final String TAG = "DramaAudioPlayer";
 
@@ -24,71 +19,79 @@ public class DramaAudioPlayer {
 
     //三个音轨
     private AudioPlayer mBGMPlayer; //背景音乐
-    private AudioPlayer mTalkingPlayer; //人声
+    private AudioPlayer mRecordPlayer; //人声
     private AudioPlayer mEffectPlayer; //音效
 
     private Context mContext;
 
     public DramaAudioPlayer(Context context) {
         mContext = context;
-
         mBGMPlayer = new AudioPlayer();
-        mTalkingPlayer = new AudioPlayer();
+        mRecordPlayer = new AudioPlayer();
         mEffectPlayer = new AudioPlayer();
-
-        try {
-            mBGMPlayer.setDataSource(getPCMData(R.raw.music1));
-            mTalkingPlayer.setDataSource(getPCMData(R.raw.music2));
-            mEffectPlayer.setDataSource(getPCMData(R.raw.music3));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
-    public void prepare(){
+    // public void setBGMDataSource(String path) throws IOException {
+    //     mBGMPlayer.setDataSource(path);
+    // }
+    //
+    // public void setRecordDataSource(String path) throws IOException {
+    //     mRecordPlayer.setDataSource(path);
+    //
+    // }
+    //
+    // public void setEffectPlayer(String path) throws IOException {
+    //     mEffectPlayer.setDataSource(path);
+    //
+    // }
+
+    public int getTotalTime() {
+        if (mBGMPlayer == null || mRecordPlayer == null || mEffectPlayer == null) {
+            return 0;
+        } else {
+            final int max1 = Math.max(mBGMPlayer.getTotalTime(), mRecordPlayer.getTotalTime());
+            final int max2 = Math.max(max1, mEffectPlayer.getTotalTime());
+            return Math.max(max1, max2);
+        }
+    }
+
+    public void seekTo(int time) {
+        mBGMPlayer.seekTo(time);
+        mRecordPlayer.seekTo(time);
+        mEffectPlayer.seekTo(time);
+    }
+
+    /**
+     * must be called after setDataSource
+     */
+    public void prepare() {
         mBGMPlayer.prepare();
-        mTalkingPlayer.prepare();
+        mRecordPlayer.prepare();
         mEffectPlayer.prepare();
     }
 
-    public void play(){
+    public void play() {
         mBGMPlayer.play();
-        mTalkingPlayer.play();
+        mRecordPlayer.play();
         mEffectPlayer.play();
     }
 
-    public void pause(){
+    public void pause() {
         mBGMPlayer.pause();
-        mTalkingPlayer.pause();
+        mRecordPlayer.pause();
         mEffectPlayer.pause();
     }
 
-    public void stop(){
+    public void stop() {
         mBGMPlayer.stop();
-        mTalkingPlayer.stop();
+        mRecordPlayer.stop();
         mEffectPlayer.stop();
     }
 
-    public void release(){
+    public void release() {
         mBGMPlayer.release();
-        mTalkingPlayer.release();
+        mRecordPlayer.release();
         mEffectPlayer.release();
-    }
-
-    private byte[] getPCMData(int resId) throws IOException {
-        InputStream is = mContext.getResources().openRawResource(resId);
-        return inputStreamToByte(is);
-    }
-
-    private static byte[] inputStreamToByte(InputStream in) throws IOException {
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[BUFFER_SIZE];
-        int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
-            outStream.write(data, 0, count);
-        }
-        return outStream.toByteArray();
     }
 
     //解码

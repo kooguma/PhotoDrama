@@ -1,4 +1,4 @@
-package com.loopeer.android.photodrama4android.media.audio;
+package com.loopeer.android.photodrama4android.media.audio.player;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
