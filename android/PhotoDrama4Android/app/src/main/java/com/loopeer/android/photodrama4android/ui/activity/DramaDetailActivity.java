@@ -87,7 +87,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     private void loadDrama(Theme theme) {
         if (theme == null) return;
         Analyst.dramaDetailClick(theme.id);
-        mDramaFetchHelper = new DramaFetchHelper(this);
+        if (mDramaFetchHelper == null) mDramaFetchHelper = new DramaFetchHelper(this);
+        mDramaFetchHelper.checkSubscribe();
         mDramaFetchHelper.getDrama(theme,
             drama -> {
                 mVideoPlayerManager.updateDrama(drama);

@@ -45,7 +45,10 @@ public class DramaFetchHelper {
             String zipPath = FileManager.getInstance().getDramaZipPath(theme);
             String name = FileManager.getInstance().getDramaZipName(theme);
             File zipFilePath = FileManager.getInstance().getDramaDir();
-
+            File zipFile = new File(zipPath);
+            if (zipFile.exists()) {
+                FileManager.deleteFile(zipFile);
+            }
             mDisposable = RxDownload.getInstance(mContext)
                     .download(theme.zipLink, name, zipFilePath.getAbsolutePath())
                     .subscribeOn(Schedulers.io())
@@ -91,6 +94,12 @@ public class DramaFetchHelper {
     }
 
     public void unSubscribe() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
+    }
+
+    public void checkSubscribe() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
         }

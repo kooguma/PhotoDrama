@@ -41,7 +41,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 		MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, mWidth, mHeight);
 		format.setInteger(MediaFormat.KEY_COLOR_FORMAT,
 				MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-		format.setInteger(MediaFormat.KEY_BIT_RATE, mBitRate);
+		format.setInteger(MediaFormat.KEY_BIT_RATE, mBitRate);//码率(kbps)=文件大小(字节)X8 /时间(秒)/1000
 		format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
 		format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, IFRAME_INTERVAL);
 		mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);

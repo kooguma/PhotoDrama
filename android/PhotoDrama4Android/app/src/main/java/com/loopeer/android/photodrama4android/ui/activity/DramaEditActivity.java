@@ -70,7 +70,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     private void loadDrama() {
         if (mTheme == null) return;
         mLoader.showProgress();
-        mDramaFetchHelper = new DramaFetchHelper(this);
+        if (mDramaFetchHelper == null) mDramaFetchHelper = new DramaFetchHelper(this);
+        mDramaFetchHelper.checkSubscribe();
         mDramaFetchHelper.getDrama(mTheme,
             drama -> {
                 updateDrama(drama);
