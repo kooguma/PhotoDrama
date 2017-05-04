@@ -38,6 +38,10 @@ import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLUtils.texImage2D;
 
 public class TextureHelper {
+    private static final float TEXTMARGINBOTTOM = 20;//TODO test value
+    private static final float TEXT_LINE_PADDING = 6;//TODO test value
+    private static final float TEXT_MARGIN_HORIZONTAL = 20 * 3;//TODO test value
+
     private static final String TAG = "TextureHelper";
 
     public static int loadTexture(Context context, int resourceId) {
@@ -119,7 +123,7 @@ public class TextureHelper {
     }
 
     public static SubtitleInfo loadTexture(Context context, SubtitleInfo subtitleInfo) {
-        float textMarginBottom = 20;//TODO test value
+
         Bitmap bitmap = Bitmap.createBitmap(subtitleInfo.width, subtitleInfo.height, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
@@ -129,11 +133,8 @@ public class TextureHelper {
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
         textPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
-        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-        float y = subtitleInfo.height - fontMetrics.descent - textMarginBottom;
-        float textWidth = textPaint.measureText(subtitleInfo.content);
-        float x = subtitleInfo.width / 2 - textWidth / 2;
-        canvas.drawText(subtitleInfo.content, x, y, textPaint);
+
+        drawText(subtitleInfo, canvas, textPaint);
 
         int textureObjectIds[] = {0};
         glGenTextures(1, textureObjectIds, 0);
@@ -146,5 +147,34 @@ public class TextureHelper {
         bitmap.recycle();
         subtitleInfo.textureObjectId = textureObjectIds[0];
         return subtitleInfo;
+    }
+
+    private static void drawText(SubtitleInfo subtitleInfo, Canvas canvas, Paint textPaint) {
+        float textWidth = textPaint.measureText(subtitleInfo.content);
+        if (textWidth + TEXT_MARGIN_HORIZONTAL * 2 > subtitleInfo.width) {
+            float textSingleWidth = textPaint.measureText("我");
+            int maxText = (int)((subtitleInfo.width - TEXT_MARGIN_HORIZONTAL * 2) / textSingleWidth);
+            int line = subtitleInfo.content.length() / maxText + (subtitleInfo.content.length() % maxText == 0 ? 0 : 1);
+
+            for (int i = 0; i < line; i++) {
+                String s;
+                if (i == line - 1) {
+                    s = subtitleInfo.content.substring(maxText * i, subtitleInfo.content.length());
+                } else {
+                    s = subtitleInfo.content.substring(maxText * i, maxText * (i + 1));
+                }
+                float drawTextWidth = textPaint.measureText(s);
+                Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+                float height = fontMetrics.bottom - fontMetrics.ascent;
+                float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM - (line - i - 1) * height - (line - i - 1) * TEXT_LINE_PADDING;
+                float x = subtitleInfo.width / 2 - drawTextWidth / 2;
+                canvas.drawText(s, x, y, textPaint);
+            }
+            return;
+        }
+        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+        float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM;
+        float x = subtitleInfo.width / 2 - textWidth / 2;
+        canvas.drawText(subtitleInfo.content, x, y, textPaint);
     }
 }
