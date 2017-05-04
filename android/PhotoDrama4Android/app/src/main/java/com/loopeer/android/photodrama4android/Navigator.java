@@ -131,6 +131,15 @@ public class Navigator {
         activity.startActivityForResult(intent,REQUEST_FULL_SCREEN);
     }
 
+    public static void startFullLandscapePlayActivityForResult(Activity activity, Drama drama,boolean isStop,int usedTime, Theme theme) {
+        Intent intent = new Intent(activity, FullLandscapePlayActivity.class);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        intent.putExtra(EXTRA_USEDTIME,usedTime);
+        intent.putExtra(EXTRA_IS_TO_START,!isStop);
+        intent.putExtra(EXTRA_THEME, theme);
+        activity.startActivityForResult(intent,REQUEST_FULL_SCREEN);
+    }
+
     public static void startDramaSelectActivity(Context context) {
         Intent intent = new Intent(context, DramaSelectActivity.class);
         context.startActivity(intent);

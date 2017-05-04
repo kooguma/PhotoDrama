@@ -18,6 +18,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
+import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 
@@ -33,6 +34,7 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
     private ActivityFullLandscapePlayBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
     private Drama mDrama;
+    private Theme mTheme;
     private Subject mHideToolSubject = PublishSubject.create();
     private boolean mToolShow = true;
 
@@ -45,6 +47,7 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
         imagePipeline.clearCaches();
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
+        mTheme = (Theme) getIntent().getSerializableExtra(Navigator.EXTRA_THEME);
 
         mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -92,6 +95,9 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
+        if (mTheme != null) {
+            getSupportActionBar().setTitle(mTheme.name);
+        }
     }
 
     @Override

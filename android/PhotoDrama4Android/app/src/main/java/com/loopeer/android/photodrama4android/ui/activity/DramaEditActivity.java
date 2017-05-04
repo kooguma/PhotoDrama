@@ -251,7 +251,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     public void onFullBtnClick(View view) {
         Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
             mVideoPlayerManager.isStop(),
-            mVideoPlayerManager.getUsedTime());
+            mVideoPlayerManager.getUsedTime(),
+                mTheme);
     }
 
     @Override

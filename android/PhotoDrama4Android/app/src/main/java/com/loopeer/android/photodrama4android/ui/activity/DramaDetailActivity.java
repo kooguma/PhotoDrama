@@ -289,7 +289,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     public void onFullBtnClick(View view) {
         Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
             mVideoPlayerManager.isStop(),
-            mVideoPlayerManager.getUsedTime());
+            mVideoPlayerManager.getUsedTime(),
+                mTheme);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
