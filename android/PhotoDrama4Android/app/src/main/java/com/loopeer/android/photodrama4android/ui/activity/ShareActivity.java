@@ -24,7 +24,7 @@ public class ShareActivity extends PhotoDramaBaseActivity {
 
     public void onBackToMain(View view) {
         Analyst.shareBackHomeClick();
-        Navigator.startMainActivity(this);
+        Navigator.startDramaSelectActivity(this);
     }
 
     public void onQQClick(View view) {

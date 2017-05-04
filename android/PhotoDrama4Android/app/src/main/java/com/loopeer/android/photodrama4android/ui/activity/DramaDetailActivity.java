@@ -68,7 +68,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                 .doOnNext(o -> hideAllBar())
                 .subscribe()
         );
-        hideTool();
         loadDramaSend(mTheme);
     }
 
@@ -80,6 +79,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     }
 
     private void loadDramaSend(Theme theme) {
+        showToolbar();
         mLoader.showProgress();
         mLoadSubject.onNext(theme);
     }
@@ -198,6 +198,12 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, 0,
             mBinding.layoutToolBottom.getHeight()).start();
         ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, 0, -mBinding.layoutToolTop.getHeight()).start();
+    }
+
+    private void showToolbar() {
+        if (mBinding.layoutToolTop.getTranslationY() < 0 ) {
+            ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, -mBinding.layoutToolTop.getHeight(), 0).start();
+        }
     }
 
     private void showAllBar() {

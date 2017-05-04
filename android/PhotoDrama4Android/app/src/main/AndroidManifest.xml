@@ -92,6 +92,7 @@
         <activity
             android:name=".ui.activity.DramaSelectActivity"
             android:label="@string/label_drama_select"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
