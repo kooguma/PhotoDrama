@@ -38,9 +38,10 @@ import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLUtils.texImage2D;
 
 public class TextureHelper {
-    private static final float TEXTMARGINBOTTOM = 20;//TODO test value
+    private static final float TEXTMARGINBOTTOM = 40;//TODO test value
     private static final float TEXT_LINE_PADDING = 6;//TODO test value
     private static final float TEXT_MARGIN_HORIZONTAL = 20 * 3;//TODO test value
+    private static final float LINE_MAX_TEXT_NUM = 26;//TODO test value
 
     private static final String TAG = "TextureHelper";
 
@@ -128,7 +129,7 @@ public class TextureHelper {
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
         Paint textPaint = new Paint();
-        float textSize = 1f * subtitleInfo.width / 20;
+        float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
