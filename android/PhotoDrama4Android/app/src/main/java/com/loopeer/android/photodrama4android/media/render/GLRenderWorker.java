@@ -214,7 +214,7 @@ public class GLRenderWorker implements IRendererWorker {
 
     private void startEncoder(String fileName) {
         Log.d(TAG, "starting to record");
-        final int BIT_RATE = 4000000;   // 4Mbps
+        final int BIT_RATE = 1000000;   // 4Mbps
         final int VIDEO_WIDTH = 1280;
         final int VIDEO_HEIGHT = 720;
         int windowWidth = mMovieMakerGLSurfaceView.getWidth();
