@@ -57,6 +57,6 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
 
     @Override
     public Flowable<BaseResponse<List<Theme>>> requestData(String page, String pageSize) {
-        return ThemeService.INSTANCE.list(mCategoryId);
+        return ThemeService.INSTANCE.list(mCategoryId, page, pageSize);
     }
 }
