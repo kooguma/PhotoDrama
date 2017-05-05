@@ -1,19 +1,16 @@
 package com.loopeer.android.photodrama4android.media.audio.player;
 
+import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
-import com.loopeer.android.photodrama4android.media.SeekWrapper;
-import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 public class AudioPlayer {
     private static final String TAG = "AudioPlayer";
-    private final static int BUFFER_SIZE = 4096;
 
     private AudioTrack mAudioTrack;                          // AudioTrack
     private AudioParams mAudioParams;                          // Attributes
@@ -27,11 +24,7 @@ public class AudioPlayer {
 
     private int mTotalTime;
 
-    private MusicClip mClip;
-
     private AudioTrack.OnPlaybackPositionUpdateListener mPlaybackPositionUpdateListener;
-
-    private SeekWrapper mSeekWrapper;
 
     public AudioPlayer() {
     }
@@ -40,15 +33,15 @@ public class AudioPlayer {
         this.mAudioParams = attributes;
     }
 
-    public void setMusicClips(MusicClip clip) throws IOException {
-        mClip = clip;
+    public void setDataSource(byte[] bytes) throws IOException {
+        mBytes = bytes;
     }
 
-    private byte[] getAudioBytes(String path) throws IOException {
-        File file = new File(path);
-        FileInputStream is = new FileInputStream(file);
-        return inputStreamToByte(is);
-    }
+    // private byte[] getAudioBytes(String path) throws IOException {
+    //     File file = new File(path);
+    //     FileInputStream is = new FileInputStream(file);
+    //     return inputStreamToByte(is);
+    // }
 
     public void setPlaybackPositionUpdateListener(AudioTrack.OnPlaybackPositionUpdateListener listener) {
         this.mPlaybackPositionUpdateListener = listener;
@@ -77,6 +70,8 @@ public class AudioPlayer {
 
         mTotalTime = mBytes.length / mAudioParams.mParams.mFrequency / 4;
 
+        Log.e(TAG, "total time = " + mTotalTime);
+
         mAudioTrack = new AudioTrack(
             mAudioParams.mParams.mSteamType,
             mAudioParams.mParams.mFrequency,
@@ -94,12 +89,22 @@ public class AudioPlayer {
         //seekWrapper
     }
 
+    public void reset() {
+        mThreadExitFlag = false;
+        mBytes = null;
+        mTotalTime = 0;
+        mPlayOffset = 0;
+        mPrimePlaySize = 0;
+    }
+
+    public boolean isPlaying() {
+        return !mThreadExitFlag;
+    }
+
     public void seekTo(int time) {
         mAudioTrack.pause();
-        //thread wait ?
-
         float p = time / mTotalTime;
-        //mPlayOffset = (int) (p * mBytes.length);
+        mPlayOffset = (int) (p * mBytes.length);
         mAudioTrack.play();
     }
 
@@ -151,42 +156,53 @@ public class AudioPlayer {
 
         @Override public void run() {
 
-            mAudioTrack.play();
+            if (mAudioTrack != null) {
 
-            while (!mThreadExitFlag) {
-                try {
+                mAudioTrack.play();
 
-                    int size = mAudioTrack.write(mBytes, mPlayOffset,
-                        mPrimePlaySize);
-                    mPlayOffset += mPrimePlaySize;
-                    Log.e(TAG, "run playOffset = " + mPlayOffset);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    break;
+                Log.e(TAG,"AudioTrack.play()");
+
+                while (!mThreadExitFlag) {
+                    try {
+
+                        int ret = mAudioTrack.write(mBytes, mPlayOffset,
+                            mPrimePlaySize);
+
+                        mPlayOffset += mPrimePlaySize;
+
+                        Log.e(TAG, "run playOffset = " + mPlayOffset);
+
+                        switch (ret) {
+                            case AudioTrack.ERROR_INVALID_OPERATION:
+                                Log.w(TAG, "play fail: ERROR_INVALID_OPERATION");
+                            case AudioTrack.ERROR_BAD_VALUE:
+                                Log.w(TAG, "play fail: ERROR_BAD_VALUE");
+                            case AudioManager.ERROR_DEAD_OBJECT:
+                                Log.w(TAG, "play fail: ERROR_DEAD_OBJECT");
+                            default:
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.w(TAG, "play fail: " + e.getMessage());
+                        break;
+                    }
+
+                    if (mPlayOffset >= mBytes.length) {
+                        mThreadExitFlag = true;
+                    } else {
+                        mThreadExitFlag = false;
+                    }
                 }
 
-                if (mPlayOffset >= mBytes.length) {
-                    mThreadExitFlag = true;
-                } else {
-                    mThreadExitFlag = false;
-                }
+                mAudioTrack.stop();
+
+                Log.e(TAG, "PlayAudioThread complete...");
+
             }
-
-            mAudioTrack.stop();
-
-            Log.e(TAG, "PlayAudioThread complete...");
-
         }
     }
 
-    private byte[] inputStreamToByte(InputStream in) throws IOException {
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[BUFFER_SIZE];
-        int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
-            outStream.write(data, 0, count);
-        }
-        return outStream.toByteArray();
-    }
+
 
 }

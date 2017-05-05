@@ -4,25 +4,25 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import com.loopeer.andebug.LogEntry;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityTestAudioPlayerBinding;
-import com.loopeer.android.photodrama4android.media.audio.player.DramaAudioPlayer;
+import com.loopeer.android.photodrama4android.media.audio.player.AudioProcessor;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.recorder.MediaAudioDecoder;
 import com.loopeer.android.photodrama4android.media.recorder.MediaDecoder;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
-import com.loopeer.android.photodrama4android.utils.FileManager;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
     private final static int BUFFER_SIZE = 4096;
 
-    private DramaAudioPlayer mDramaAudioPlayer;
+    private AudioProcessor mAudioProcessor;
 
     private ActivityTestAudioPlayerBinding mBinding;
 
@@ -31,6 +31,8 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
     private long mStart1;
     private long mDuration1;
 
+    private boolean isPrepared;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_test_audio_player);
@@ -38,42 +40,46 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
     }
 
     private void setupAudioPlayers() {
-        mDramaAudioPlayer = new DramaAudioPlayer(this);
+        mAudioProcessor = new AudioProcessor(this);
+        mAudioProcessor.setProcessorPrepareListener(
+            new AudioProcessor.AudioProcessorPrepareListener() {
+                @Override public void onProcessorPrepared() {
+                    Log.e("TAG","processor prepared !");
+                    isPrepared = true;
+                }
+            });
 
-        File file = new File("/storage/emulated/0/photodrama/drama/drama_322");
-        if (file.exists()) {
-            Flowable.fromCallable(() -> ZipUtils.xmlToDrama(file.getAbsolutePath()))
-                .doOnNext(drama -> {
-                    if (drama != null && drama.audioGroup != null) {
-                        List<MusicClip> clips = drama.audioGroup.getBgmClips();
-                        Log.e("TAG", "size = " + clips.size());
-                        MusicClip clip1 = clips.get(0);
-                        MediaAudioDecoder decoder1 = new MediaAudioDecoder(clip1,
+        File file = new File("/storage/emulated/0/photodrama/drama/drama_320");
+
+        Flowable.fromCallable(() -> ZipUtils.xmlToDrama(file.getAbsolutePath()))
+            .doOnNext(drama -> {
+                if (drama != null && drama.audioGroup != null) {
+                    List<MusicClip> clips = drama.audioGroup.musicClips;
+                    Log.e("TAG", "clip size = " + clips.size());
+                    List<MediaAudioDecoder> decoders = new ArrayList<>();
+                    for (MusicClip clip : clips) {
+                        MediaAudioDecoder decoder = new MediaAudioDecoder(clip,
                             new MediaDecoder.DecodeProgressCallback() {
                                 @Override public void onFinish() {
-                                    Log.e("TAG", "decoder1 finish");
-                                    String path = FileManager.getInstance()
-                                        .getDecodeAudioFilePath(clip1);
-                                    Log.e("TAG", "path = " + path);
-                                    try {
-                                        mDramaAudioPlayer.setBGMDataSource(path);
-                                        mDramaAudioPlayer.setRecordDataSource(path);
-                                        mDramaAudioPlayer.setEffectPlayer(path);
-                                        mDramaAudioPlayer.prepare();
-                                    Log.e("TAG","total time = " + mDramaAudioPlayer.getTotalTime());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    Log.e("TAG","clip key = " + clip.getKey());
+                                    mAudioProcessor.addClip(clip);
                                 }
                             });
-
-                        decoder1.decode();
+                        decoders.add(decoder);
                     }
-                })
-                .subscribeOn(Schedulers.io())
-                .subscribe();
 
-        }
+                    for (MediaAudioDecoder decoder : decoders) {
+                        decoder.decode();
+                    }
+
+                    mAudioProcessor.prepareMusic();
+
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .subscribe();
+
+    }
         /*        mAudioPlayer1 = new AudioPlayer();
         mAudioPlayer2 = new AudioPlayer();
 
@@ -112,18 +118,24 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
         //set total time
         mBinding.txt1Start.setText("00:00");
         mBinding.txt1End.setText("-" + hms);*/
-    }
+    //}
 
     public void musicPlay(View view) {
-        mDramaAudioPlayer.play();
+        if (isPrepared) {
+            mAudioProcessor.startMusic();
+        }
     }
 
     public void musicPause(View view) {
-        mDramaAudioPlayer.pause();
+        if (isPrepared) {
+            mAudioProcessor.pauseMusic();
+        }
     }
 
     public void musicSeekTo(View view) {
-        mDramaAudioPlayer.seekTo(2);
+        if (isPrepared) {
+            mAudioProcessor.seekToMusic(3);
+        }
     }
 
 }
