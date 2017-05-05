@@ -110,7 +110,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                     if (isFirstLoad && series.themesCount > 1) {
                         mBinding.containerEpisode.setVisibility(View.VISIBLE);
                         for (int i = 0; i < series.themes.size(); i++) {
-                            mBinding.layoutEpisode.addView(generaEpisodeButton(i + 1, series.themes.get(i)));
+                            mBinding.layoutEpisode.addView(generaEpisodeButton(series.themes.get(i)));
                         }
                         updateSelectedThemeBtn();
                     } else {
@@ -146,10 +146,11 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mVideoPlayerManager.setProgressChangeListener(this);
     }
 
-    private Button generaEpisodeButton(int index, final Theme theme) {
+    private Button generaEpisodeButton(final Theme theme) {
         Button button = (Button) LayoutInflater.from(this)
             .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
-        button.setText(getString(R.string.drama_index_format, index));
+
+        button.setText(getString(R.string.drama_index_format, Integer.valueOf(theme.episodeNumber)));
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
                 mUsedTime = 0;

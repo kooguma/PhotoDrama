@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.media.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.DramaCache;
@@ -18,6 +19,8 @@ import io.reactivex.schedulers.Schedulers;
 import zlc.season.rxdownload2.RxDownload;
 
 public class DramaFetchHelper {
+    private static final String TAG = "DramaFetchHelper";
+
     private Disposable mDisposable;
 
     private Context mContext;
@@ -49,12 +52,17 @@ public class DramaFetchHelper {
             if (zipFile.exists()) {
                 FileManager.deleteFile(zipFile);
             }
+//            long startTime = System.currentTimeMillis();
             mDisposable = RxDownload.getInstance(mContext)
                     .download(theme.zipLink, name, zipFilePath.getAbsolutePath())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(status -> {
-                    }, throwableConsumer, () -> unZipDrama(zipPath, theme, consumer, throwableConsumer, completeAction));
+                    }, throwableConsumer, () -> {
+//                        long endTime = System.currentTimeMillis();
+//                        Log.e(TAG, "drama download : " + (endTime - startTime));
+                        unZipDrama(zipPath, theme, consumer, throwableConsumer, completeAction);
+                    });
         } else {
             mDisposable = Flowable.fromCallable(() -> {
                 Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
@@ -80,10 +88,15 @@ public class DramaFetchHelper {
     private void unZipDrama(String zipPath, Theme theme, Consumer<Drama> consumer, Consumer throwableConsumer, Action completeAction) {
         File file = FileManager.getInstance().createDramaPackage(theme);
         mDisposable = Flowable.fromCallable(() -> {
+//            long startTime = System.currentTimeMillis();
             ZipUtil.unpack(new File(zipPath), file);
             Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
+//            long endTime = System.currentTimeMillis();
+//            Log.e(TAG, "drama unPack : " + (endTime - startTime));
             FileManager.deleteFile(new File(zipPath));
             preLoadDramaImage(drama);
+//            long endPreTime = System.currentTimeMillis();
+//            Log.e(TAG, "drama endPreTime : " + (endPreTime - endTime));
             return drama;
         })
                 .subscribeOn(Schedulers.io())
