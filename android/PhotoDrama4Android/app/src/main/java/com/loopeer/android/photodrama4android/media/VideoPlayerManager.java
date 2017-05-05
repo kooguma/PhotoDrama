@@ -1,10 +1,11 @@
 package com.loopeer.android.photodrama4android.media;
 
-
 import android.content.Context;
 
 import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
 import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
+import com.loopeer.android.photodrama4android.media.audio.player.AudioDelegate;
+import com.loopeer.android.photodrama4android.media.audio.player.AudioProcessor;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
@@ -13,7 +14,9 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 
 import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoMediaStore;
 
-public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife, MusicProcessor.ProcessorPrepareListener {
+public class VideoPlayerManager
+    implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
+    AudioProcessor.AudioProcessorPrepareListener {
 
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
@@ -39,7 +42,7 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         mSeekWrapper = seekWrapper;
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
-        mIMusic = new MusicDelegate(mContext, drama, this);
+        mIMusic = new AudioDelegate(mContext, drama, this);
 
         updateTime(drama);
         init();
@@ -212,23 +215,27 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     private void onProgressInit(int progress, int maxValue) {
-        if (mProgressChangeListener != null)
+        if (mProgressChangeListener != null) {
             mProgressChangeListener.onProgressInit(progress, maxValue);
+        }
     }
 
     private void onProgressStop() {
-        if (mProgressChangeListener != null)
+        if (mProgressChangeListener != null) {
             mProgressChangeListener.onProgressStop();
+        }
     }
 
     private void onProgressChange(int progress) {
-        if (mProgressChangeListener != null)
+        if (mProgressChangeListener != null) {
             mProgressChangeListener.onProgressChange(progress);
+        }
     }
 
     private void onProgressStart() {
-        if (mProgressChangeListener != null)
+        if (mProgressChangeListener != null) {
             mProgressChangeListener.onProgressStart();
+        }
     }
 
     public Drama getDrama() {
@@ -265,12 +272,6 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
         mIsStopTouchToRestart = stopTouchToRestart;
     }
 
-    @Override
-    public void musicPrepareFinished() {
-        isMusicPrepared = true;
-        checkSourceReadyToStart();
-    }
-
     public void bitmapLoadReady(String path) {
         isImagePrepared = true;
         if (mBitmapReadyListener != null) mBitmapReadyListener.bitmapReady(path);
@@ -291,15 +292,16 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     private void checkSourceReadyToStart() {
-        if (isMoveReadyOk())
+        if (isMoveReadyOk()) {
             requestRender();
+        }
     }
 
     public boolean isMoveReadyOk() {
         return mGLThread != null && mGLThread.isStop()
-                && isMusicPrepared
-                && isImagePrepared
-                && isSubtitlePrepared;
+            && isMusicPrepared
+            && isImagePrepared
+            && isSubtitlePrepared;
     }
 
     public int getMaxTime() {
@@ -327,22 +329,30 @@ public class VideoPlayerManager implements OnSeekProgressChangeListener, SeekCha
     }
 
     public void recordStart() {
-        if (mRecordingListener != null && mIsRecording)
+        if (mRecordingListener != null && mIsRecording) {
             mRecordingListener.recordStart();
+        }
     }
 
     public void recordChange(int progress) {
-        if (mRecordingListener != null && mIsRecording)
+        if (mRecordingListener != null && mIsRecording) {
             mRecordingListener.recordChange(progress);
+        }
     }
 
     public void recordFinished(String path) {
-        if (mRecordingListener != null && mIsRecording)
+        if (mRecordingListener != null && mIsRecording) {
             mRecordingListener.recordFinished(path);
+        }
     }
 
     public boolean isRecording() {
         return mIsRecording;
+    }
+
+    @Override public void onProcessorPrepared() {
+        isMusicPrepared = true;
+        checkSourceReadyToStart();
     }
 
     public interface ProgressChangeListener {

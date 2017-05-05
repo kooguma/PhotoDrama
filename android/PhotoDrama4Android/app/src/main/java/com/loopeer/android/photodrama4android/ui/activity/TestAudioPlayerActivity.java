@@ -72,8 +72,6 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
                         decoder.decode();
                     }
 
-                    mAudioProcessor.prepareMusic();
-
                 }
             })
             .subscribeOn(Schedulers.io())

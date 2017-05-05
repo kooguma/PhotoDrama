@@ -128,7 +128,20 @@ public class AudioClipPlayer {
 
     public void onProgressChange(int usedTime) {
         if(checkPlayerNotNull()){
-            mAudioPlayer.seekTo(usedTime);
+            if (usedTime < mMusicClip.startTime || usedTime > mMusicClip.getEndTime()) {
+                if (mAudioPlayer.isPlaying()) {
+                    if (mAudioPlayer != null && isPrepared()) {
+                        mAudioPlayer.pause();
+                    }
+                }
+            } else {
+                if (!mAudioPlayer.isPlaying() && !isPause()) {
+                    seekTo(usedTime);
+                    if (mAudioPlayer != null && isPrepared()) {
+                        mAudioPlayer.play();
+                    }
+                }
+            }
         }
     }
 

@@ -29,6 +29,7 @@ public class AudioProcessor implements AudioClipPlayer.AudioClipPrepareListener 
             for (MusicClip clip : clips) {
                 AudioClipPlayer player = new AudioClipPlayer(clip, this);
                 mAudioPlayerPool.add(player);
+                player.prepare();
             }
         }
     }
@@ -37,14 +38,13 @@ public class AudioProcessor implements AudioClipPlayer.AudioClipPrepareListener 
         if (mAudioPlayerPool != null) {
             AudioClipPlayer player = new AudioClipPlayer(clip, this);
             mAudioPlayerPool.add(player);
+            player.prepare();
         }
     }
 
-    public void prepareMusic() {
+    public void onProgressChange(int usedTime) {
         for (AudioClipPlayer player : mAudioPlayerPool) {
-            if(!player.isPrepared()) {
-                player.prepare();
-            }
+            player.onProgressChange(usedTime);
         }
     }
 
@@ -66,82 +66,13 @@ public class AudioProcessor implements AudioClipPlayer.AudioClipPrepareListener 
         }
     }
 
-    // public AudioClipPlayer getAudioPlayerFromPool(Context context, MusicClip clip) {
-    //     if (mAudioPlayerPool.isEmpty()) {
-    //         return new AudioClipPlayer(clip, this);
-    //     } else {
-    //         AudioClipPlayer player = mAudioPlayerPool.remove(0);
-    //         player.update(clip, this);
-    //         return player;
-    //     }
-    // }
-
-    // public void putAudioPlayerToPool(AudioClipPlayer player) {
-    //     mAudioPlayerPool.add(player);
-    // }
-
-    // public void updateAudioClipPlayer(Context context, List<MusicClip> clips) {
-    //     List<String> removeIngKeys = new ArrayList<>();
-    //
-    //     for (Map.Entry<String, AudioClipPlayer> entry : mPlayerHashMap.entrySet()) {
-    //         if (clipRemovedFromList(entry.getKey(), clips)) {
-    //             removeIngKeys.add(entry.getKey());
-    //         }
-    //     }
-    //
-    //     putToPool(removeIngKeys);
-    //     removeIngKeys.clear();
-    //
-    //     for (MusicClip clip : clips) {
-    //         if (clip.isCreateIng() || TextUtils.isEmpty(clip.path)) continue;
-    //         if (!mPlayerHashMap.containsKey(clip.getKey())) {
-    //             AudioClipPlayer clipPlayer = getAudioPlayerFromPool(context, clip);
-    //             mHasNotPrepareClipKeys.add(clip.getKey());
-    //             mPlayerHashMap.put(clip.getKey(), clipPlayer);
-    //         }
-    //     }
-    //
-    //     boolean allPlayerPrepared = true;
-    //
-    //     for (Map.Entry<String, AudioClipPlayer> entry : mPlayerHashMap.entrySet()) {
-    //         if (!entry.getValue().isPrepared()) {
-    //             allPlayerPrepared = false;
-    //         }
-    //     }
-    //
-    //     if (allPlayerPrepared) {
-    //         notifyPrepareFinished();
-    //     }
-    //
-    //     for (Map.Entry<String, AudioClipPlayer> entry : mPlayerHashMap.entrySet()) {
-    //         entry.getValue().prepare();
-    //     }
-    // }
-    //
-    // private void putToPool(List<String> removeIngKeys) {
-    //     for (String key : removeIngKeys) {
-    //         AudioClipPlayer player = mPlayerHashMap.remove(key);
-    //         putAudioPlayerToPool(player);
-    //     }
-    // }
-    //
-    // private boolean clipRemovedFromList(String key, List<MusicClip> clips) {
-    //     for (MusicClip clip : clips) {
-    //         if (clip.getKey().equals(key)) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    private void notifyPrepareFinished() {
-        if (mProcessorPrepareListener != null) {
-            mProcessorPrepareListener.onProcessorPrepared();
+    public void releasePlayer() {
+        for (AudioClipPlayer player : mAudioPlayerPool) {
+            player.release();
         }
     }
 
     @Override public void onAudioClipPrepared(String key) {
-        Log.e(TAG,"KEY = " + key);
         boolean isProcessorPrepared = true;
         for (AudioClipPlayer player : mAudioPlayerPool) {
             if (!player.isPrepared()) {
@@ -153,6 +84,7 @@ public class AudioProcessor implements AudioClipPlayer.AudioClipPrepareListener 
             mProcessorPrepareListener.onProcessorPrepared();
         }
     }
+
 
     public interface AudioProcessorPrepareListener {
         void onProcessorPrepared();
