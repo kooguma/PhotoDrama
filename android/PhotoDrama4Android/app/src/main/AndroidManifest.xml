@@ -59,6 +59,8 @@
 
         <service android:name=".media.audio.MusicService"/>
 
+        <service android:name=".media.audio.player.AudioService" />
+
         <activity
             android:name=".ui.activity.RecordMusicActivity"
             android:label="@string/label_record_audio"
@@ -162,6 +164,7 @@
             android:name=".ui.activity.GuideActivity"
             android:theme="@style/AppTheme.Guide"
             android:screenOrientation="portrait">
+            android:theme="@style/AppTheme.Guide">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.LauncherActivity"/>
@@ -170,13 +173,7 @@
         <activity
             android:name=".ui.activity.TestAudioPlayerActivity"
             android:label="AudioPlayer测试"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme"/>
 
         <!--TalkingData-->
         <service

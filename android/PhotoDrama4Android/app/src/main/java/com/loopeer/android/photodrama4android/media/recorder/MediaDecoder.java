@@ -16,4 +16,8 @@ public abstract class MediaDecoder implements Runnable{
     public interface DecodeProgressCallback {
         void onFinish();
     }
+
+    public void setCallback(DecodeProgressCallback callback) {
+        this.mCallback = callback;
+    }
 }

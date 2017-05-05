@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import android.util.Log;
 import com.loopeer.android.photodrama4android.media.IMusic;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
@@ -32,6 +33,7 @@ public class MusicDelegate implements IMusic {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
+                Log.e("TAG","onServiceConnected");
                 MusicService.MusicBinder mBinder = (MusicService.MusicBinder) service;
                 mBindService = mBinder.getMusicService(mContext);
                 mBindService.initMusicProcessor(mDrama, listener);

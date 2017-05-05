@@ -19,12 +19,13 @@ public class AudioPlayer {
     private int mPrimePlaySize = 0;                          // 较优播放块大小
     private int mPlayOffset = 0;                             // 当前播放位置  需要根据时间计算？
 
-    private boolean mThreadExitFlag;                         // 线程退出标志
+    private boolean mThreadExitFlag;                          // 线程退出标志
     private WorkThread mWorkThread;                          // 工作线程
 
     private int mTotalTime;
 
     private AudioTrack.OnPlaybackPositionUpdateListener mPlaybackPositionUpdateListener;
+    private boolean playing;
 
     public AudioPlayer() {
     }
@@ -68,9 +69,13 @@ public class AudioPlayer {
 
         Log.e(TAG, "primePlaySize = " + mPrimePlaySize);
 
-        mTotalTime = mBytes.length / mAudioParams.mParams.mFrequency / 4;
+        mTotalTime = (int) (mBytes.length / mAudioParams.mParams.mFrequency / 4.0f * 1000);
+
+        Log.e(TAG, "bytes length  = " + mBytes.length);
 
         Log.e(TAG, "total time = " + mTotalTime);
+
+        mThreadExitFlag = true;
 
         mAudioTrack = new AudioTrack(
             mAudioParams.mParams.mSteamType,
@@ -86,7 +91,6 @@ public class AudioPlayer {
 
         mAudioTrack.setPlaybackPositionUpdateListener(mPlaybackPositionUpdateListener);
 
-        //seekWrapper
     }
 
     public void reset() {
@@ -97,14 +101,16 @@ public class AudioPlayer {
         mPrimePlaySize = 0;
     }
 
-    public boolean isPlaying() {
-        return !mThreadExitFlag;
-    }
-
     public void seekTo(int time) {
         mAudioTrack.pause();
-        float p = time / mTotalTime;
-        mPlayOffset = (int) (p * mBytes.length);
+        if (mTotalTime != 0) {
+            float p =  time * 1.0f / mTotalTime ;
+            Log.e(TAG, "p =" + p);
+            mPlayOffset = (int) (p * mBytes.length);
+            Log.e(TAG, "play offset =" + mPlayOffset);
+        } else {
+            mPlayOffset = 0;
+        }
         mAudioTrack.play();
     }
 
@@ -114,13 +120,17 @@ public class AudioPlayer {
     }
 
     public void pause() {
-        mAudioTrack.pause();
-        stopWorkThread();
+        if (mAudioTrack != null) {
+            mAudioTrack.pause();
+            stopWorkThread();
+        }
     }
 
     public void stop() {
-        mAudioTrack.stop();
-        stopWorkThread();
+        if (mAudioTrack != null) {
+            mAudioTrack.stop();
+            stopWorkThread();
+        }
     }
 
     public void release() {
@@ -150,6 +160,10 @@ public class AudioPlayer {
         }
     }
 
+    public boolean isPlaying() {
+        return !mThreadExitFlag;
+    }
+
     class WorkThread extends Thread {
 
         private static final String TAG = "PlayAudioThread";
@@ -159,8 +173,6 @@ public class AudioPlayer {
             if (mAudioTrack != null) {
 
                 mAudioTrack.play();
-
-                Log.e(TAG,"AudioTrack.play()");
 
                 while (!mThreadExitFlag) {
                     try {
@@ -202,7 +214,5 @@ public class AudioPlayer {
             }
         }
     }
-
-
 
 }

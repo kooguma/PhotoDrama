@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 import com.loopeer.android.photodrama4android.media.IMusic;
 import com.loopeer.android.photodrama4android.media.audio.MusicService;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -47,7 +48,7 @@ public class AudioDelegate implements IMusic {
     }
 
     public void bingService() {
-        Intent intent = new Intent(mContext, MusicService.class);
+        Intent intent = new Intent(mContext, AudioService.class);
         mContext.bindService(intent, mConn, Context.BIND_AUTO_CREATE);
     }
 

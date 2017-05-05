@@ -16,7 +16,7 @@ import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoM
 
 public class VideoPlayerManager
     implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
-    AudioProcessor.AudioProcessorPrepareListener {
+    AudioProcessor.AudioProcessorPrepareListener, MusicProcessor.ProcessorPrepareListener {
 
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
@@ -42,8 +42,9 @@ public class VideoPlayerManager
         mSeekWrapper = seekWrapper;
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
-        mIMusic = new AudioDelegate(mContext, drama, this);
 
+        mIMusic = new AudioDelegate(mContext, drama, this);
+        //mIMusic = new MusicDelegate(mContext,drama,this);
         updateTime(drama);
         init();
     }
@@ -351,6 +352,11 @@ public class VideoPlayerManager
     }
 
     @Override public void onProcessorPrepared() {
+        isMusicPrepared = true;
+        checkSourceReadyToStart();
+    }
+
+    @Override public void musicPrepareFinished() {
         isMusicPrepared = true;
         checkSourceReadyToStart();
     }

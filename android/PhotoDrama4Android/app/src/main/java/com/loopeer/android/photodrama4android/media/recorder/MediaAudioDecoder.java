@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.media.recorder;
 
-
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -9,6 +8,7 @@ import android.util.Log;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.MD5Util;
+import com.loopeer.android.photodrama4android.utils.CacheUtils;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 
 import java.io.File;
@@ -29,7 +29,13 @@ public class MediaAudioDecoder extends MediaDecoder {
     public MediaAudioDecoder(MusicClip musicClip, DecodeProgressCallback callback) {
         super(callback);
         mMusicClip = musicClip;
-        mTempOutPath = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" + musicClip.musicSelectedLength);
+        mTempOutPath = MD5Util.getMD5Str(musicClip.path + "_" + musicClip.musicStartOffset + "_" +
+            musicClip.musicSelectedLength);
+    }
+
+    public void updateDecoder(MusicClip clip, DecodeProgressCallback callback) {
+        mMusicClip = clip;
+        setCallback(callback);
     }
 
     @Override
@@ -53,7 +59,9 @@ public class MediaAudioDecoder extends MediaDecoder {
         //MusicClip file
         File file = new File(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         if (file.exists()) {
-            mCallback.onFinish();
+            if (mCallback != null) {
+                mCallback.onFinish();
+            }
             return;
         }
         //
@@ -86,13 +94,17 @@ public class MediaAudioDecoder extends MediaDecoder {
 
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
         //out put pcm file
-        FileOutputStream fosDecoder = new FileOutputStream(FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
+        FileOutputStream fosDecoder = new FileOutputStream(
+            FileManager.getInstance().getDecodeAudioFilePath(mMusicClip));
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
         boolean isArriveSelectedEnd = false;
         try {
             extractor.seekTo(mMusicClip.getSelectStartUs(), SEEK_TO_PREVIOUS_SYNC);
-
+            if (BuildConfig.DEBUG) {
+                Log.e(TAG, "extractor extract time : " + mMusicClip.getSelectStartUs() + " : " +
+                    mMusicClip.getSelectEndUs());
+            }
             while (!sawOutputEOS) {
                 isArriveSelectedEnd = extractor.getSampleTime() > mMusicClip.getSelectEndUs();
                 if (!sawInputEOS) {
@@ -104,11 +116,16 @@ public class MediaAudioDecoder extends MediaDecoder {
                             sawInputEOS = true;
                             codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                         } else if (isArriveSelectedEnd) {
+                            codec.queueInputBuffer(inputBufIndex, 0, 0, 0,
+                                MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                        } else if (extractor.getSampleTime() > mMusicClip.getSelectEndUs()) {
                             sawInputEOS = true;
-                            codec.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                            codec.queueInputBuffer(inputBufIndex, 0, 0, 0,
+                                MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                         } else {
                             long presentationTimeUs = extractor.getSampleTime();
-                            codec.queueInputBuffer(inputBufIndex, 0, sampleSize, presentationTimeUs, 0);
+                            codec.queueInputBuffer(inputBufIndex, 0, sampleSize, presentationTimeUs,
+                                0);
                             extractor.advance();// 移动到下一帧
                         }
                     }
@@ -135,7 +152,9 @@ public class MediaAudioDecoder extends MediaDecoder {
 
                     if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                         sawOutputEOS = true;
-                        mCallback.onFinish();
+                        if (mCallback != null) {
+                            mCallback.onFinish();
+                        }
                     }
 
                 } else if (res == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {

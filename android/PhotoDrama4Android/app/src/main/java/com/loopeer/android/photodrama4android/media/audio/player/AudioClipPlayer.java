@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import com.loopeer.android.photodrama4android.media.recorder.MediaAudioDecoder;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,6 +39,7 @@ public class AudioClipPlayer {
 
     private MusicClip mMusicClip;
     private AudioPlayer mAudioPlayer;
+    private MediaAudioDecoder mDecoder;
 
     public AudioClipPlayer() {
         this(null, null);
@@ -47,6 +49,7 @@ public class AudioClipPlayer {
         mMusicClip = clip;
         mAudioClipPrepareListener = listener;
         mAudioPlayer = new AudioPlayer();
+        mDecoder = new MediaAudioDecoder(mMusicClip, null);
     }
 
     public void update(MusicClip clip, AudioClipPrepareListener listener) {
@@ -127,17 +130,25 @@ public class AudioClipPlayer {
     }
 
     public void onProgressChange(int usedTime) {
-        if(checkPlayerNotNull()){
+        if (checkPlayerNotNull()) {
+            Log.e(TAG, "onProgressChange used time = " + usedTime);
             if (usedTime < mMusicClip.startTime || usedTime > mMusicClip.getEndTime()) {
+                Log.e(TAG, "1");
                 if (mAudioPlayer.isPlaying()) {
+                    Log.e(TAG, "2");
                     if (mAudioPlayer != null && isPrepared()) {
+                        Log.e(TAG, "3");
                         mAudioPlayer.pause();
                     }
                 }
             } else {
-                if (!mAudioPlayer.isPlaying() && !isPause()) {
+                Log.e(TAG,"key = " + mMusicClip.getKey());
+                Log.e(TAG, "4" + " isPlaying = " + mAudioPlayer.isPlaying() + " isPause = " + isPause());
+                if (!mAudioPlayer.isPlaying()  && !isPause()) {
+                    Log.e(TAG, "5");
                     seekTo(usedTime);
-                    if (mAudioPlayer != null && isPrepared()) {
+                    if (mAudioPlayer!= null && isPrepared()) {
+                        Log.e(TAG, "6");
                         mAudioPlayer.play();
                     }
                 }
@@ -158,17 +169,19 @@ public class AudioClipPlayer {
     class FileLoadTask extends AsyncTask<String, Void, byte[]> {
         private final static int BUFFER_SIZE = 4096;
 
-        private AudioClipPlayer mPlayer;
-
         @Override protected byte[] doInBackground(String... params) {
             byte[] bytes = null;
             File file = new File(params[0]);
+            mDecoder.updateDecoder(mMusicClip, null);
             try {
+                //decode
+                mDecoder.decode();
                 InputStream is = new FileInputStream(file);
                 bytes = inputStreamToByte(is);
             } catch (IOException e) {
                 e.printStackTrace();
                 mState = State.UNPREPARED;
+                Log.e(TAG, "file load failed : " + e.getMessage());
             }
             return bytes;
         }
@@ -191,6 +204,7 @@ public class AudioClipPlayer {
             } catch (IOException e) {
                 e.printStackTrace();
                 mState = State.UNPREPARED;
+                Log.e(TAG, "file load failed : " + e.getMessage());
             }
         }
 

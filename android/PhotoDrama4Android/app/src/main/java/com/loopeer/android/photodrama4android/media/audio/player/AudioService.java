@@ -14,7 +14,7 @@ public class AudioService extends Service {
     private Context mContext;
 
     public AudioService() {
-        mBinder = new AudioService.AudioBinder();
+        mBinder = new AudioBinder();
     }
 
     public void initAudioProcessor(Drama drama, AudioProcessor.AudioProcessorPrepareListener listener) {
