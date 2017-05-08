@@ -227,7 +227,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     @Override
     protected void onPause() {
         super.onPause();
-
         mVideoPlayerManager.onPause();
     }
 

@@ -2,6 +2,8 @@ package com.loopeer.android.photodrama4android.media.audio.player;
 
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.opengl.GLSurfaceView;
+import android.text.TextUtils;
 import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -9,8 +11,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.media.AudioTrack.PLAYSTATE_PAUSED;
+import static android.media.AudioTrack.PLAYSTATE_PLAYING;
+import static android.media.AudioTrack.PLAYSTATE_STOPPED;
+import static android.media.AudioTrack.STATE_INITIALIZED;
+
 public class AudioPlayer {
     private static final String TAG = "AudioPlayer";
+
+    public static class State {
+        public static final int UNPREPARED = 0x00001; //未就绪
+        public static final int PREPARED = 0x00010; //已经就绪
+        public static final int PLAYING = 0x00100; //播放中
+        public static final int PAUSE = 0x01000; //暂停
+        public static final int STOP = 0x10000; //暂停
+    }
+
+    private int mState; // maintain the state ourselves , do not use the state of AudioTrack
 
     private AudioTrack mAudioTrack;                          // AudioTrack
     private AudioParams mAudioParams;                          // Attributes
@@ -25,9 +42,9 @@ public class AudioPlayer {
     private int mTotalTime;
 
     private AudioTrack.OnPlaybackPositionUpdateListener mPlaybackPositionUpdateListener;
-    private boolean playing;
 
     public AudioPlayer() {
+        reset();
     }
 
     public void setAttributes(AudioParams attributes) {
@@ -37,12 +54,6 @@ public class AudioPlayer {
     public void setDataSource(byte[] bytes) throws IOException {
         mBytes = bytes;
     }
-
-    // private byte[] getAudioBytes(String path) throws IOException {
-    //     File file = new File(path);
-    //     FileInputStream is = new FileInputStream(file);
-    //     return inputStreamToByte(is);
-    // }
 
     public void setPlaybackPositionUpdateListener(AudioTrack.OnPlaybackPositionUpdateListener listener) {
         this.mPlaybackPositionUpdateListener = listener;
@@ -65,7 +76,7 @@ public class AudioPlayer {
             mAudioParams.mParams.mChannel,
             mAudioParams.mParams.mSampleBit);
 
-        mPrimePlaySize = minBufSize * 2;
+        mPrimePlaySize = minBufSize;
 
         Log.e(TAG, "primePlaySize = " + mPrimePlaySize);
 
@@ -91,43 +102,83 @@ public class AudioPlayer {
 
         mAudioTrack.setPlaybackPositionUpdateListener(mPlaybackPositionUpdateListener);
 
+        mState = State.PREPARED;
+    }
+
+    public boolean isPrepared() {
+        return mAudioTrack != null && mState == State.PREPARED;
+    }
+
+    public boolean isPlaying() {
+        return mAudioTrack != null && mState == State.PLAYING;
+    }
+
+    public boolean isPause() {
+        return mAudioTrack != null && mState == State.PAUSE;
+    }
+
+    public boolean isStop() {
+        return mAudioTrack != null && mState == State.STOP;
     }
 
     public void reset() {
         mThreadExitFlag = false;
+        mState = State.UNPREPARED;
         mBytes = null;
         mTotalTime = 0;
         mPlayOffset = 0;
         mPrimePlaySize = 0;
     }
 
-    public void seekTo(int time) {
-        mAudioTrack.pause();
-        if (mTotalTime != 0) {
-            float p =  time * 1.0f / mTotalTime ;
-            Log.e(TAG, "p =" + p);
-            mPlayOffset = (int) (p * mBytes.length);
-            Log.e(TAG, "play offset =" + mPlayOffset);
-        } else {
-            mPlayOffset = 0;
+    public synchronized void seekTo(int time) {
+        Log.e(TAG, "seek to " + " time = " + time);
+        if (mAudioTrack != null) {
+            mAudioTrack.pause();
+            if (mTotalTime != 0) {
+                float p = time * 1.0f / mTotalTime;
+                mPlayOffset = (int) (p * mBytes.length);
+                //猜想：mPlayoffset 必须是 minBufSize 的整数倍
+                mPlayOffset = (mPlayOffset / mPrimePlaySize) * mPrimePlaySize;
+            } else {
+                mPlayOffset = 0;
+            }
+            mAudioTrack.play();
         }
-        mAudioTrack.play();
     }
 
     public void play() {
-        mPlayOffset = 0;
-        startWorkThread();
+        if (mAudioTrack != null) {
+            if ((mState & (State.PREPARED | State.STOP)) > 0) {
+                Log.e(TAG, "1");
+                mPlayOffset = 0;
+                mState = State.PLAYING;
+                mAudioTrack.play();
+                startWorkThread();
+            } else if ((mState & (State.PAUSE | State.PLAYING)) > 0) {
+                Log.e(TAG, "2");
+                mState = State.PLAYING;
+                mAudioTrack.play();
+                if (mWorkThread != null && mWorkThread.isAlive()) {
+                    synchronized (mWorkThread) {
+                        mWorkThread.notify();
+                    }
+                }
+            } else {
+                throw new IllegalStateException("current state : " + mState);
+            }
+        }
     }
 
     public void pause() {
         if (mAudioTrack != null) {
+            mState = State.PAUSE;
             mAudioTrack.pause();
-            stopWorkThread();
         }
     }
 
     public void stop() {
         if (mAudioTrack != null) {
+            mState = State.STOP;
             mAudioTrack.stop();
             stopWorkThread();
         }
@@ -138,6 +189,7 @@ public class AudioPlayer {
             mAudioTrack.stop();
             mAudioTrack.release();
             mAudioTrack = null;
+            stopWorkThread();
         }
     }
 
@@ -160,10 +212,6 @@ public class AudioPlayer {
         }
     }
 
-    public boolean isPlaying() {
-        return !mThreadExitFlag;
-    }
-
     class WorkThread extends Thread {
 
         private static final String TAG = "PlayAudioThread";
@@ -172,45 +220,51 @@ public class AudioPlayer {
 
             if (mAudioTrack != null) {
 
-                mAudioTrack.play();
-
                 while (!mThreadExitFlag) {
-                    try {
+                    synchronized (this) {
+                        try {
 
-                        int ret = mAudioTrack.write(mBytes, mPlayOffset,
-                            mPrimePlaySize);
+                            Log.e(TAG, "isPlaying = " + isPlaying());
 
-                        mPlayOffset += mPrimePlaySize;
+                            if (!isPlaying()) {
+                                this.wait();
+                            }
 
-                        Log.e(TAG, "run playOffset = " + mPlayOffset);
+                            int ret = mAudioTrack.write(mBytes, mPlayOffset,
+                                mPrimePlaySize);
 
-                        switch (ret) {
-                            case AudioTrack.ERROR_INVALID_OPERATION:
-                                Log.w(TAG, "play fail: ERROR_INVALID_OPERATION");
-                            case AudioTrack.ERROR_BAD_VALUE:
-                                Log.w(TAG, "play fail: ERROR_BAD_VALUE");
-                            case AudioManager.ERROR_DEAD_OBJECT:
-                                Log.w(TAG, "play fail: ERROR_DEAD_OBJECT");
-                            default:
+                            mPlayOffset += mPrimePlaySize;
+
+                            Log.e(TAG, "run playOffset = " + mPlayOffset);
+
+                            switch (ret) {
+                                case AudioTrack.ERROR_INVALID_OPERATION:
+                                    Log.e(TAG, "play fail: ERROR_INVALID_OPERATION");
+                                case AudioTrack.ERROR_BAD_VALUE:
+                                    Log.e(TAG, "play fail: ERROR_BAD_VALUE");
+                                case AudioManager.ERROR_DEAD_OBJECT:
+                                    Log.e(TAG, "play fail: ERROR_DEAD_OBJECT");
+                                default:
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.w(TAG, "play fail: " + e.getMessage());
+                            break;
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.w(TAG, "play fail: " + e.getMessage());
-                        break;
-                    }
-
-                    if (mPlayOffset >= mBytes.length) {
-                        mThreadExitFlag = true;
-                    } else {
-                        mThreadExitFlag = false;
+                        if (mPlayOffset >= mBytes.length) {
+                            mThreadExitFlag = true;
+                        } else {
+                            mThreadExitFlag = false;
+                        }
                     }
                 }
 
                 mAudioTrack.stop();
+                mState = AudioPlayer.State.STOP;
 
                 Log.e(TAG, "PlayAudioThread complete...");
-
             }
         }
     }

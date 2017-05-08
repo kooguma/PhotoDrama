@@ -28,7 +28,7 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
 
     SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
 
-    private long mStart1;
+    private long mStart1 = 3000;
     private long mDuration1;
 
     private boolean isPrepared;
@@ -49,7 +49,7 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
                 }
             });
 
-        File file = new File("/storage/emulated/0/photodrama/drama/drama_320");
+        File file = new File("/storage/emulated/0/photodrama/drama/drama_322");
 
         Flowable.fromCallable(() -> ZipUtils.xmlToDrama(file.getAbsolutePath()))
             .doOnNext(drama -> {
@@ -132,7 +132,16 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
 
     public void musicSeekTo(View view) {
         if (isPrepared) {
-            mAudioProcessor.seekToMusic(3);
+            //primePlaySize = 14176
+            //bytes length = 6000640
+            //total time = 34000
+            //1000 bad
+            //2000 good
+            //3000 good
+            //4000 bad  0.11764706  748485 ;0.11764706 720133;0.11764706 720133
+            //5000 bad  0.14705883 910799 ; 0.14705883  896623 ; 0.14705883 896623;
+            //6000 good p1 = 0.1764706 f1 = 1058936 ; p2 = 0.1764706 f2 = 1058936 ; p3 = 0.1764706 f3 = 1073112;
+            mAudioProcessor.seekToMusic(4000);
         }
     }
 

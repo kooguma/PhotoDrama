@@ -17,20 +17,16 @@ public class AudioClipPlayer {
 
     private static final String TAG = "AudioClipPlayer";
 
-    public static class State {
-        public static final int UNPREPARED = 0x00001; //未就绪
-        public static final int PREPARED = 0x00010; //已经就绪
-        public static final int PLAYING = 0x00100; //播放中
-        public static final int PAUSE = 0x01000; //暂停
-        public static final int STOP = 0x10000; //
-    }
-
     private AudioClipPrepareListener mAudioClipPrepareListener;
 
-    private int mState;
+    private boolean isPrepared = false;
 
     public void setAudioPrepareListener(AudioClipPrepareListener listener) {
         this.mAudioClipPrepareListener = listener;
+    }
+
+    public boolean isPrepared() {
+        return isPrepared && mAudioPlayer != null && mAudioPlayer.isPrepared();
     }
 
     public interface AudioClipPrepareListener {
@@ -76,48 +72,26 @@ public class AudioClipPlayer {
         }
     }
 
-    public boolean isPrepared() {
-        return mState == State.PREPARED;
-    }
-
-    public boolean isPlaying() {
-        return mState == State.PLAYING;
-    }
-
-    public boolean isPause() {
-        return mState == State.PAUSE;
-    }
-
-    public boolean isStop() {
-        return mState == State.STOP;
-    }
-
     public void prepare() {
         if (checkPlayerNotNull()) {
-            checkState(State.UNPREPARED);
             loadClip();
         }
     }
 
     public void play() {
         if (checkPlayerNotNull()) {
-            checkState(State.PLAYING | State.PREPARED | State.PAUSE);
-            mState = State.PLAYING;
             mAudioPlayer.play();
         }
     }
 
     public void pause() {
         if (checkPlayerNotNull()) {
-            checkState(State.PAUSE | State.PREPARED | State.PLAYING);
-            mState = State.PAUSE;
             mAudioPlayer.pause();
         }
     }
 
     public void stop() {
         if (checkPlayerNotNull()) {
-            mState = State.STOP;
             mAudioPlayer.stop();
         }
     }
@@ -125,7 +99,6 @@ public class AudioClipPlayer {
     public void release() {
         if (checkPlayerNotNull()) {
             mAudioPlayer.release();
-            mState = State.UNPREPARED;
         }
     }
 
@@ -142,12 +115,13 @@ public class AudioClipPlayer {
                     }
                 }
             } else {
-                Log.e(TAG,"key = " + mMusicClip.getKey());
-                Log.e(TAG, "4" + " isPlaying = " + mAudioPlayer.isPlaying() + " isPause = " + isPause());
-                if (!mAudioPlayer.isPlaying()  && !isPause()) {
+                Log.e(TAG, "key = " + mMusicClip.getKey());
+                Log.e(TAG, "4" + " isPlaying = " + mAudioPlayer.isPlaying() + " isPause = " +
+                    mAudioPlayer.isPause());
+                if (!mAudioPlayer.isPlaying() && !mAudioPlayer.isPause()) {
                     Log.e(TAG, "5");
                     seekTo(usedTime);
-                    if (mAudioPlayer!= null && isPrepared()) {
+                    if (mAudioPlayer != null && isPrepared()) {
                         Log.e(TAG, "6");
                         mAudioPlayer.play();
                     }
@@ -160,19 +134,16 @@ public class AudioClipPlayer {
         return mAudioPlayer != null;
     }
 
-    private void checkState(int stateExpected) {
-        // if ((mState & stateExpected) > 0) {
-        //     throw new IllegalStateException("current state: " + mState);
-        // }
-    }
-
     class FileLoadTask extends AsyncTask<String, Void, byte[]> {
         private final static int BUFFER_SIZE = 4096;
+
+        private long start = 0 ;
 
         @Override protected byte[] doInBackground(String... params) {
             byte[] bytes = null;
             File file = new File(params[0]);
             mDecoder.updateDecoder(mMusicClip, null);
+            start = System.currentTimeMillis();
             try {
                 //decode
                 mDecoder.decode();
@@ -180,15 +151,16 @@ public class AudioClipPlayer {
                 bytes = inputStreamToByte(is);
             } catch (IOException e) {
                 e.printStackTrace();
-                mState = State.UNPREPARED;
+                isPrepared = false;
                 Log.e(TAG, "file load failed : " + e.getMessage());
             }
+            Log.e(TAG,"time use = " +  (System.currentTimeMillis() - start));
             return bytes;
         }
 
         @Override protected void onPostExecute(byte[] bytes) {
             try {
-                mState = State.PREPARED;
+                isPrepared = true;
                 mAudioPlayer.setDataSource(bytes);
                 mAudioPlayer.prepare();
                 if (mAudioClipPrepareListener != null) {
@@ -203,7 +175,7 @@ public class AudioClipPlayer {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                mState = State.UNPREPARED;
+                isPrepared = false;
                 Log.e(TAG, "file load failed : " + e.getMessage());
             }
         }
