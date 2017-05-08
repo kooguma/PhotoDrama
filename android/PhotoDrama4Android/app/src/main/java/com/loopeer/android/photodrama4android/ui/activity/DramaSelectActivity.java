@@ -20,8 +20,8 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
 
     private CustomTabLayout mCustomTabLayout;
     private ViewPager mViewPager;
-    private DramaSelectFragment[] mFragments;
     private List<Category> mTitles = new ArrayList<>();
+    private DramaSelectViewPager mDramaSelectViewPager;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +55,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
             }
         });
 
+        mDramaSelectViewPager = new DramaSelectViewPager(getSupportFragmentManager());
         registerSubscription(
             ResponseObservable.unwrap(CategoryService.INSTANCE.categories())
                 .doOnTerminate(() -> {
@@ -66,13 +67,11 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
                     if (categories != null && !categories.isEmpty()) {
                         mTitles.clear();
                         mTitles.addAll(categories);
-                        mFragments = new DramaSelectFragment[categories.size()];
                         for (int i = 0; i < mTitles.size(); i++) {
                             final String title = mTitles.get(i).name;
-                            final String id = mTitles.get(i).id;
                             mCustomTabLayout.addTab(mCustomTabLayout.newTab().setText(title));
-                            mFragments[i] = DramaSelectFragment.newDramaSelectFragment(id);
                         }
+                        mDramaSelectViewPager.notifyDataSetChanged();
                     }
                 },throwable -> Toaster.showToast("error : " + throwable.getMessage()))
         );
@@ -86,7 +85,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
         }
 
         @Override public Fragment getItem(int position) {
-            return mFragments[position];
+            return DramaSelectFragment.newDramaSelectFragment(mTitles.get(position).id);
         }
 
         @Override public CharSequence getPageTitle(int position) {

@@ -21,7 +21,7 @@ public class ResponseObservable {
     }
 
 
-    public static <T> Flowable<T> unwrap(Flowable<BaseResponse<T>> observable) {
+    public static <T> Flowable<T> unwrap(Flowable<? extends BaseResponse<T>> observable) {
         return observable
                 .filter(tResponse -> {
                     if (!tResponse.isSuccessed()) {
@@ -35,7 +35,7 @@ public class ResponseObservable {
                 .map(tResponse -> tResponse.mData);
     }
 
-    public static <T> Flowable<T> unwrap(BaseActivity activity, Flowable<BaseResponse<T>> observable) {
+    public static <T> Flowable<T> unwrap(BaseActivity activity, Flowable<? extends BaseResponse<T>> observable) {
         return observable
                 .filter(tResponse -> {
                     if (!tResponse.isSuccessed()) {
@@ -52,7 +52,7 @@ public class ResponseObservable {
     }
 
 
-    public static <T> Flowable<T> unwrapWithoutResponseFilter(Flowable<BaseResponse<T>> observable) {
+    public static <T> Flowable<T> unwrapWithoutResponseFilter(Flowable<? extends BaseResponse<T>> observable) {
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(throwable -> {

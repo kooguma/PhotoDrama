@@ -1,8 +1,10 @@
 package com.loopeer.android.photodrama4android.api;
 
 import android.content.Context;
+
+import com.laputapp.api.calladapter.LoopeerCallAdapterFactory;
 import com.loopeer.android.photodrama4android.BuildConfig;
-import com.loopeer.android.photodrama4android.api.calladapter.RxJava2CallAdapterFactory;
+import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.utils.gson.GsonHelper;
 import java.io.File;
 import okhttp3.Cache;
@@ -24,16 +26,7 @@ public class ApiService {
         sRetrofit = new Retrofit.Builder()
                 .client(buildOkHttpClient(context))
                 .addConverterFactory(GsonConverterFactory.create(GsonHelper.getDefault()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(API_URL)
-                .build();
-    }
-
-    public static Retrofit getStringRetrofit(Context context) {
-        context = context.getApplicationContext();
-        return new Retrofit.Builder()
-                .client(buildOkHttpClient(context))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(LoopeerCallAdapterFactory.create(LocalCallAdapter.class, PhotoDramaApp.getAppContext()))
                 .baseUrl(API_URL)
                 .build();
     }
