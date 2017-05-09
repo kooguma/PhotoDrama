@@ -10,6 +10,11 @@
         <attr name="screenRatioY"/>
     </declare-styleable>
 
+    <declare-styleable name="MovieMakerTextureView">
+        <attr name="screenRatioX"/>
+        <attr name="screenRatioY"/>
+    </declare-styleable>
+
     <declare-styleable name="TextProgressBar">
         <attr name="screenRatioX"/>
         <attr name="screenRatioY"/>

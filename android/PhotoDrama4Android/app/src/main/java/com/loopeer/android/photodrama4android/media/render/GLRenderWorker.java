@@ -5,10 +5,10 @@ import android.graphics.Rect;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
+import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.recorder.MediaAudioEncoder;
 import com.loopeer.android.photodrama4android.media.recorder.MediaEncoder;
@@ -23,7 +23,6 @@ import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
 import java.io.IOException;
 
-import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
@@ -41,27 +40,27 @@ public class GLRenderWorker implements IRendererWorker {
     private Context mContext;
     private VideoClipProcessor mImageClipProcessor;
     private final float[] projectionMatrix = new float[16];
-    private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
+    private TextureView mTextureView;
     private boolean mIsRecording;
-    private EglHelperLocal mEglHelperLocal;
+//    private EglHelperLocal mEglHelperLocal;
 
     private final float[] mIdentityMatrix;
-    private EglCore mEglCore;
 
     // Used for off-screen rendering.
     private int mOffscreenTexture;
     private int mFramebuffer;
     private int mDepthBuffer;
     private FullFrameRect mFullScreen;
+    private EglCore mEglCore;
 
     // Used for recording.
     private WindowSurface mInputWindowSurface;
     private MediaMuxerWrapper mMuxerWrapper;
     private Rect mVideoRect;
 
-    public GLRenderWorker(Context context, Drama drama, MovieMakerGLSurfaceView view) {
+    public GLRenderWorker(Context context, Drama drama, TextureView view) {
         mContext = context;
-        mMovieMakerGLSurfaceView = view;
+        mTextureView = view;
         mDrama = drama;
         mIdentityMatrix = new float[16];
         Matrix.setIdentityM(mIdentityMatrix, 0);
@@ -73,13 +72,14 @@ public class GLRenderWorker implements IRendererWorker {
     }
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    public void onSurfaceCreated(WindowSurface windowSurface, EglCore eglCore) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        mImageClipProcessor = new VideoClipProcessor(mMovieMakerGLSurfaceView);
+        mImageClipProcessor = new VideoClipProcessor(mTextureView);
         mImageClipProcessor.updateData(mDrama.videoGroup);
-        mEglHelperLocal = mMovieMakerGLSurfaceView.getEglHelperLocal();
-        mEglHelperLocal.makeCurrent();
-        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, mEglHelperLocal.mEglConfig, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
+//        mEglHelperLocal = mTextureView.getEglHelperLocal();
+        windowSurface.makeCurrent();
+        mEglCore = eglCore;
+//        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, mEglHelperLocal.mEglConfig, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
         mFullScreen = new FullFrameRect(
                 new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
@@ -87,14 +87,14 @@ public class GLRenderWorker implements IRendererWorker {
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(WindowSurface windowSurface, int width, int height) {
         prepareFramebuffer(width, height);
         glViewport(0, 0, width, height);
     }
 
     @Override
-    public void drawFrame(Context context, GL10 gl, long usedTime) {
-        glViewport(0, 0, mMovieMakerGLSurfaceView.getWidth(), mMovieMakerGLSurfaceView.getHeight());
+    public void drawFrame(Context context, WindowSurface windowSurface, long usedTime) {
+        glViewport(0, 0, windowSurface.getWidth(), windowSurface.getHeight());
 
         if (!mIsRecording) {
             glClear(GL_COLOR_BUFFER_BIT);
@@ -111,7 +111,7 @@ public class GLRenderWorker implements IRendererWorker {
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
             GlUtil.checkGlError("glBindFramebuffer");
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
-            mEglHelperLocal.swapBuffers();
+            windowSurface.swapBuffers();
             mMuxerWrapper.frameVideoAvailableSoon();
             mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -120,8 +120,8 @@ public class GLRenderWorker implements IRendererWorker {
                     mVideoRect.width(), mVideoRect.height());
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
             mInputWindowSurface.swapBuffers();
-            GLES20.glViewport(0, 0, mEglHelperLocal.getWidth(), mEglHelperLocal.getHeight());
-            mEglHelperLocal.makeCurrent();
+            GLES20.glViewport(0, 0, windowSurface.getWidth(), windowSurface.getHeight());
+            windowSurface.makeCurrent();
         }
     }
 
@@ -217,8 +217,8 @@ public class GLRenderWorker implements IRendererWorker {
         final int BIT_RATE = 1000000;  //码率(kbps)=文件大小(字节)X8 /时间(秒)/1000
         final int VIDEO_WIDTH = 1280;
         final int VIDEO_HEIGHT = 720;
-        int windowWidth = mMovieMakerGLSurfaceView.getWidth();
-        int windowHeight = mMovieMakerGLSurfaceView.getHeight();
+        int windowWidth = mTextureView.getWidth();
+        int windowHeight = mTextureView.getHeight();
         float windowAspect = (float) windowHeight / (float) windowWidth;
         int outWidth, outHeight;
         if (VIDEO_HEIGHT > VIDEO_WIDTH * windowAspect) {

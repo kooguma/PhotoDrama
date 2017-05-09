@@ -49,7 +49,7 @@ public class FullLandscapePlayActivity extends PhotoDramaBaseActivity implements
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         mTheme = (Theme) getIntent().getSerializableExtra(Navigator.EXTRA_THEME);
 
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
+/*        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);*/
         mVideoPlayerManager.setProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);

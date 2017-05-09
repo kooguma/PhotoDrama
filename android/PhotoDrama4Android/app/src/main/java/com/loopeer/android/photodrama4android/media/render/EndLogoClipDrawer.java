@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
@@ -66,7 +67,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
     private final float SCREEN_IMAGE_LOGO_TOP_FACTOR = 234f / 750f;
     private final float SCREEN_IMAGE_TEXT_TOP_FACTOR = 440f / 750f;
 
-    public EndLogoClipDrawer(MovieMakerGLSurfaceView view, EndLogoClip endLogoClip) {
+    public EndLogoClipDrawer(TextureView view, EndLogoClip endLogoClip) {
         super(view);
         mContext = view.getContext();
         mEndLogoClip = endLogoClip;
@@ -76,7 +77,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
                 .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
     }
 
-    public void preLoadTexture(MovieMakerGLSurfaceView glView) {
+    public void preLoadTexture(TextureView glView) {
         HandlerWrapper handler = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE_RES
@@ -84,7 +85,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
                 , t -> {
             checkLogoBitmapReady();
         });
-        glView.getTextureLoader().loadImageTexture(handler);
+//        glView.getTextureLoader().loadImageTexture(handler);
         HandlerWrapper handler2 = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE_RES
@@ -92,7 +93,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
                 , t -> {
             checkTextBitmapReady();
         });
-        glView.getTextureLoader().loadImageTexture(handler2);
+//        glView.getTextureLoader().loadImageTexture(handler2);
     }
 
     public void checkLogoBitmapReady() {

@@ -24,7 +24,7 @@ import static android.opengl.EGL14.EGL_OPENGL_ES2_BIT;
 import static android.opengl.EGLExt.EGL_OPENGL_ES3_BIT_KHR;
 
 public class MovieMakerGLSurfaceView extends GLSurfaceView {
-
+//
     private TextureLoader mTextureLoader;
     private SubtitleTextureLoader mTextTextureLoader;
     protected float mRatioX;
@@ -84,12 +84,12 @@ public class MovieMakerGLSurfaceView extends GLSurfaceView {
                 int[] contextAttributes = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE};
                 EGLContext renderContext = egl.eglCreateContext(display, eglConfig, EGL11.EGL_NO_CONTEXT, contextAttributes);
                 mTextureLoader = new TextureLoader();
-                mTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
+//                mTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
                 updateContext(egl, renderContext, display, eglConfig);
                 if (!mTextureLoader.isAlive()) mTextureLoader.start();
 
                 mTextTextureLoader = new SubtitleTextureLoader();
-                mTextTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
+//                mTextTextureLoader.update(egl, renderContext, display, eglConfig, getContext(),contextAttributes);
                 if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
                 return renderContext;
             }

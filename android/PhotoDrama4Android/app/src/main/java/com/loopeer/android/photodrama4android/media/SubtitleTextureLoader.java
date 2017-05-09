@@ -9,6 +9,7 @@ import android.os.Message;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
+import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
 import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
 
@@ -28,6 +29,7 @@ public class SubtitleTextureLoader extends Thread {
     private EGLConfig eglConfig;
     private EGLDisplay display;
     private Context mContext;
+    private WindowSurface mWindowSurface;
 
     private boolean mIsFinish;
 
@@ -41,24 +43,9 @@ public class SubtitleTextureLoader extends Thread {
         //update(egl, renderContext, display, eglConfig, androidContext,);
     }
 
-    public void update(EGL10 egl, EGLContext renderContext, EGLDisplay display,
-                       EGLConfig eglConfig, Context androidContext,int[] contextAttributes) {
-        this.egl = egl;
-        this.display = display;
-        this.eglConfig = eglConfig;
-        this.mContext = androidContext;
-
-        textureContext = egl.eglCreateContext(display, eglConfig, renderContext, contextAttributes);
-    }
 
     public void run() {
-        int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
-                EGL14.EGL_NO_TEXTURE, EGL14.EGL_TEXTURE_FORMAT, EGL14.EGL_NO_TEXTURE,
-                EGL14.EGL_NONE};
-
-        EGLSurface localSurface = egl.eglCreatePbufferSurface(display, eglConfig, pbufferAttribs);
-
-        egl.eglMakeCurrent(display, localSurface, localSurface, textureContext);
+        mWindowSurface.makeCurrent();
 
         while (!mIsFinish) {
             synchronized (this) {
@@ -101,5 +88,9 @@ public class SubtitleTextureLoader extends Thread {
 
     public void finish() {
         mIsFinish = true;
+    }
+
+    public void update(WindowSurface windowSurface) {
+        mWindowSurface = windowSurface;
     }
 }

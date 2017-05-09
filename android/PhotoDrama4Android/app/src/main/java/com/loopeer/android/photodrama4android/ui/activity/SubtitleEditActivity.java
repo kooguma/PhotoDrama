@@ -37,8 +37,8 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
-                , mBinding.glSurfaceView, mDrama);
+        /*mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
+                , mBinding.glSurfaceView, mDrama);*/
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         updateScrollImageView();

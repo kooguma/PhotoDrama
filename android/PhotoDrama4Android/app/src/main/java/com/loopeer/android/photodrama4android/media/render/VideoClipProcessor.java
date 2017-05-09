@@ -1,9 +1,11 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 
+import android.view.TextureView;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
+import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
@@ -21,18 +23,22 @@ public class VideoClipProcessor {
     private ArrayList<SubtitleClipDrawer> mSubtitleClipDrawers;
     private EndLogoClipDrawer mEndLogoClipDrawer;
     private VideoGroup mVideoGroup;
-    private MovieMakerGLSurfaceView mMovieMakerGLSurfaceView;
+    private MovieMakerTextureView mTextureView;
 
-    public VideoClipProcessor(MovieMakerGLSurfaceView glSurfaceView) {
+    public VideoClipProcessor(TextureView textureView) {
         mImageClipDrawers = new ArrayList<>();
         mTransitionDrawers = new ArrayList<>();
         mSubtitleClipDrawers = new ArrayList<>();
-        mMovieMakerGLSurfaceView = glSurfaceView;
-        ShaderProgramCache.getInstance().init(mMovieMakerGLSurfaceView.getContext());
+        mTextureView = (MovieMakerTextureView)textureView;
+        ShaderProgramCache.getInstance().init(mTextureView.getContext());
     }
 
     public synchronized void updateData(VideoGroup videoGroup) {
         setData(videoGroup);
+        notifyData();
+    }
+
+    public void notifyData() {
         updateImageClipRenders();
         updateTransitionClipRenders();
         updateSubtitleClipRenders();
@@ -47,8 +53,8 @@ public class VideoClipProcessor {
         mImageClipDrawers.clear();
         for (int i = 0; i < mVideoGroup.imageClips.size(); i++) {
             ImageClip imageClip = mVideoGroup.imageClips.get(i);
-            ImageClipDrawer imageClipRender = new ImageClipDrawer(mMovieMakerGLSurfaceView, imageClip);
-            imageClipRender.preLoadTexture(mMovieMakerGLSurfaceView);
+            ImageClipDrawer imageClipRender = new ImageClipDrawer(mTextureView, imageClip);
+            if (mTextureView.getTextureLoader() != null) imageClipRender.preLoadTexture(mTextureView);
             mImageClipDrawers.add(imageClipRender);
         }
     }
@@ -57,12 +63,12 @@ public class VideoClipProcessor {
         mSubtitleClipDrawers.clear();
         for (int i = 0; i < mVideoGroup.subtitleClips.size(); i++) {
             SubtitleClip subtitleClip = mVideoGroup.subtitleClips.get(i);
-            SubtitleClipDrawer subtitleClipDrawer = new SubtitleClipDrawer(mMovieMakerGLSurfaceView, subtitleClip);
-            subtitleClipDrawer.preLoadTexture(mMovieMakerGLSurfaceView);
+            SubtitleClipDrawer subtitleClipDrawer = new SubtitleClipDrawer(mTextureView, subtitleClip);
+            if (mTextureView.getTextureLoader() != null) subtitleClipDrawer.preLoadTexture(mTextureView);
             mSubtitleClipDrawers.add(subtitleClipDrawer);
         }
         if (mVideoGroup.subtitleClips.isEmpty()) {
-            VideoPlayManagerContainer.getDefault().subtitleLoadReady(mMovieMakerGLSurfaceView.getContext());
+            VideoPlayManagerContainer.getDefault().subtitleLoadReady(mTextureView.getContext());
         }
     }
 
@@ -75,7 +81,7 @@ public class VideoClipProcessor {
                 Constructor<TransitionDrawer> constructor = transitionClip.transitionType.getDrawerClass()
                         .getConstructor(MovieMakerGLSurfaceView.class,
                         TransitionClip.class);
-                TransitionDrawer drawer = constructor.newInstance(mMovieMakerGLSurfaceView, transitionClip);
+                TransitionDrawer drawer = constructor.newInstance(mTextureView, transitionClip);
                 mTransitionDrawers.add(drawer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -85,7 +91,7 @@ public class VideoClipProcessor {
 
     private void updateEndLogoClipRenders() {
         if (mVideoGroup.endLogoClip != null) {
-            mEndLogoClipDrawer = new EndLogoClipDrawer(mMovieMakerGLSurfaceView, mVideoGroup.endLogoClip);
+            mEndLogoClipDrawer = new EndLogoClipDrawer(mTextureView, mVideoGroup.endLogoClip);
         } else {
             mEndLogoClipDrawer = null;
         }

@@ -1,26 +1,25 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
-import android.opengl.GLSurfaceView;
+import android.graphics.SurfaceTexture;
 import android.util.Log;
+import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.IPlayerLife;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
+import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.SeekChangeListener;
+import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
+import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-import static android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY;
-
-public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IPlayerLife {
+public class GLThreadRender extends Thread implements IPlayerLife, TextureView.SurfaceTextureListener {
 
     private static final String TAG = "GLThreadRender";
 
     public static final boolean DEBUG = BuildConfig.DEBUG && false;
 
-    protected GLSurfaceView mGLSurfaceView;
+    protected MovieMakerTextureView mTextureView;
     protected Context mContext;
     protected boolean mIsStop;
     protected IRendererWorker mIRendererWorker;
@@ -32,12 +31,18 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     protected SeekChangeListener mSeekChangeListener;
     public static final int RECORDFPS = 29;
     private boolean mIsRecording = false;
+    private Object mLock = new Object();        // guards mSurfaceTexture, mDone
+    private SurfaceTexture mSurfaceTexture;
+    private EglCore mEglCore;
+    private WindowSurface mWindowSurface;
 
-    public GLThreadRender(Context context, GLSurfaceView gLSurfaceView, IRendererWorker iRendererWorker) {
-        mGLSurfaceView = gLSurfaceView;
-        mGLSurfaceView.setEGLContextClientVersion(2);
+    public GLThreadRender(Context context, TextureView textureView, IRendererWorker iRendererWorker) {
+        mTextureView = (MovieMakerTextureView) textureView;
+        mTextureView.setSurfaceTextureListener(this);
+
+        /*mGLSurfaceView.setEGLContextClientVersion(2);
         mGLSurfaceView.setRenderer(this);
-        mGLSurfaceView.setRenderMode(RENDERMODE_WHEN_DIRTY);
+        mGLSurfaceView.setRenderMode(RENDERMODE_WHEN_DIRTY);*/
         mContext = context;
         mIRendererWorker = iRendererWorker;
         mIsManual = false;
@@ -70,10 +75,25 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     public void run() {
         synchronized (this) {
             while (!mIsFinish) {
+                // Latch the SurfaceTexture when it becomes available.  We have to wait for
+                // the TextureView to create it.
+                synchronized (mLock) {
+                    while (!mIsFinish && mSurfaceTexture == null) {
+                        try {
+                            mLock.wait();
+                        } catch (InterruptedException ie) {
+                            throw new RuntimeException(ie);     // not expected
+                        }
+                    }
+                    if (mIsFinish) {
+                        break;
+                    }
+                }
+
                 try {
                     if (mUsedTime >= mSumTime) {
                         if (mSeekChangeListener != null) {
-                            mGLSurfaceView.post(new Runnable() {
+                            mTextureView.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     mSeekChangeListener.actionFinish();
@@ -85,18 +105,20 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
                     if (mIsStop)
                         this.wait();
                     long startTime = System.currentTimeMillis();
-                    mGLSurfaceView.requestRender();
+                    /*mGLSurfaceView.requestRender();*/
+                    doRender();
                     this.wait();
                     if (DEBUG) {
                         Log.e(TAG, "sleep Time " + (1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));
                     }
-                    if (!mIsRecording) Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
+                    if (!mIsRecording)
+                        Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
                     if (!mIsBackGround)
                         mUsedTime = mUsedTime + (mIsRecording ? 1000 / RECORDFPS : System.currentTimeMillis() - startTime);
                     else
                         mIsBackGround = false;
                     if (mSeekChangeListener != null) {
-                        mGLSurfaceView.post((new Runnable() {
+                        mTextureView.post((new Runnable() {
                             @Override
                             public void run() {
                                 mSeekChangeListener.seekChange(mUsedTime);
@@ -111,29 +133,26 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         }
     }
 
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mIRendererWorker.onSurfaceCreated(gl, config);
+    public void onSurfaceCreated(WindowSurface windowSurface, EglCore eglCore) {
+        mIRendererWorker.onSurfaceCreated(windowSurface, eglCore);
         if (!this.isAlive()) {
             this.start();
         }
 
     }
 
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        mIRendererWorker.onSurfaceChanged(gl, width, height);
+    public void onSurfaceChanged(WindowSurface windowSurface, int width, int height) {
+        mIRendererWorker.onSurfaceChanged(windowSurface, width, height);
     }
 
-    @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame(WindowSurface windowSurface) {
         if (!mIsManual) {
             synchronized (this) {
-                mIRendererWorker.drawFrame(mContext, gl, mUsedTime);
+                mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
                 this.notify();
             }
         } else {
-            mIRendererWorker.drawFrame(mContext, gl, mUsedTime);
+            mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
         }
     }
 
@@ -141,17 +160,23 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         if (!mIsManual)
             return;
         this.mUsedTime = usedTime;
-        mGLSurfaceView.requestRender();
+//        mGLSurfaceView.requestRender();
+        doRender();
+    }
+
+    public void doRender() {
+        if (mWindowSurface == null) return;
+        onDrawFrame(mWindowSurface);
     }
 
     @Override
     public void onPause() {
-        mGLSurfaceView.onPause();
+//        mGLSurfaceView.onPause();
     }
 
     @Override
     public void onResume() {
-        mGLSurfaceView.onResume();
+//        mGLSurfaceView.onResume();
     }
 
     @Override
@@ -168,7 +193,7 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
     public void onDestroy() {
         mIsFinish = true;
         mIsStop = true;
-        mGLSurfaceView = null;
+        mTextureView = null;
     }
 
     public void updateTime(long start, long end) {
@@ -188,12 +213,17 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
         stopUp();
         setManual(true);
         this.mUsedTime = usedTime;
-        mGLSurfaceView.requestRender();
+//        mGLSurfaceView.requestRender();
+        doRender();
+
     }
 
     public void requestRender() {
         setManual(true);
-        mGLSurfaceView.requestRender();
+        doRender();
+
+//        mGLSurfaceView.requestRender();
+
     }
 
     public void setManual(boolean isManual) {
@@ -206,5 +236,38 @@ public class GLThreadRender extends Thread implements GLSurfaceView.Renderer, IP
 
     public void setRecording(boolean recording) {
         mIsRecording = recording;
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        if (DEBUG) Log.e(TAG, "onSurfaceTextureAvailable(" + width + "x" + height + ")");
+
+        synchronized (mLock) {
+            mSurfaceTexture = surface;
+            mEglCore = new EglCore(null, EglCore.FLAG_TRY_GLES3);
+            mWindowSurface = new WindowSurface(mEglCore, mSurfaceTexture);
+            mWindowSurface.makeCurrent();
+            onSurfaceCreated(mWindowSurface, mEglCore);
+            onSurfaceChanged(mWindowSurface, mWindowSurface.getWidth(), mWindowSurface.getHeight());
+            mTextureView.updateLoader(mWindowSurface, mEglCore);
+            mLock.notify();
+        }
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        if (DEBUG) Log.e(TAG, "onSurfaceTextureSizeChanged(" + width + "x" + height + ")");
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (DEBUG) Log.e(TAG, "onSurfaceTextureDestroyed");
+
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        if (DEBUG) Log.e(TAG, "onSurfaceTextureUpdated");
     }
 }

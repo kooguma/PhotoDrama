@@ -9,11 +9,13 @@ import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
+import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
@@ -64,7 +66,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     private float mViewScaleFactor;
 
-    public ImageClipDrawer(MovieMakerGLSurfaceView view, ImageClip imageClip) {
+    public ImageClipDrawer(TextureView view, ImageClip imageClip) {
         super(view);
         mContext = view.getContext();
         mImageClip = imageClip;
@@ -79,7 +81,7 @@ public class ImageClipDrawer extends ClipDrawer{
         }
     }
 
-    public void preLoadTexture(MovieMakerGLSurfaceView glView) {
+    public void preLoadTexture(MovieMakerTextureView glView) {
         HandlerWrapper handler = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE

@@ -119,8 +119,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
-        mVideoPlayerManager = new VideoPlayerManager(null,
-            mBinding.glSurfaceView, new Drama());
+        /*mVideoPlayerManager = new VideoPlayerManager(null,
+            mBinding.glSurfaceView, new Drama());*/
         mVideoPlayerManager.setBitmapReadyListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);

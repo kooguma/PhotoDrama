@@ -17,6 +17,8 @@
 package com.loopeer.android.photodrama4android.media.recorder.gles;
 
 import android.graphics.Bitmap;
+import android.opengl.EGL14;
+import android.opengl.EGLSurface;
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -26,9 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLSurface;
 
 /**
  * Common base class for EGL surfaces.
@@ -41,7 +40,7 @@ public class EglSurfaceBase {
     // EglCore object we're associated with.  It may be associated with multiple surfaces.
     protected EglCore mEglCore;
 
-    private EGLSurface mEGLSurface = EGL10.EGL_NO_SURFACE;
+    private EGLSurface mEGLSurface = EGL14.EGL_NO_SURFACE;
     private int mWidth = -1;
     private int mHeight = -1;
 
@@ -55,22 +54,22 @@ public class EglSurfaceBase {
      * @param surface May be a Surface or SurfaceTexture.
      */
     public void createWindowSurface(Object surface) {
-        if (mEGLSurface != EGL10.EGL_NO_SURFACE) {
+        if (mEGLSurface != EGL14.EGL_NO_SURFACE) {
             throw new IllegalStateException("surface already created");
         }
         mEGLSurface = mEglCore.createWindowSurface(surface);
 
         // Don't cache width/height here, because the size of the underlying surface can change
         // out from under us (see e.g. HardwareScalerActivity).
-        //mWidth = mEglCore.querySurface(mEGLSurface, EGL10.EGL_WIDTH);
-        //mHeight = mEglCore.querySurface(mEGLSurface, EGL10.EGL_HEIGHT);
+        //mWidth = mEglCore.querySurface(mEGLSurface, EGL14.EGL_WIDTH);
+        //mHeight = mEglCore.querySurface(mEGLSurface, EGL14.EGL_HEIGHT);
     }
 
     /**
      * Creates an off-screen surface.
      */
     public void createOffscreenSurface(int width, int height) {
-        if (mEGLSurface != EGL10.EGL_NO_SURFACE) {
+        if (mEGLSurface != EGL14.EGL_NO_SURFACE) {
             throw new IllegalStateException("surface already created");
         }
         mEGLSurface = mEglCore.createOffscreenSurface(width, height);
@@ -87,7 +86,7 @@ public class EglSurfaceBase {
      */
     public int getWidth() {
         if (mWidth < 0) {
-            return mEglCore.querySurface(mEGLSurface, EGL10.EGL_WIDTH);
+            return mEglCore.querySurface(mEGLSurface, EGL14.EGL_WIDTH);
         } else {
             return mWidth;
         }
@@ -98,7 +97,7 @@ public class EglSurfaceBase {
      */
     public int getHeight() {
         if (mHeight < 0) {
-            return mEglCore.querySurface(mEGLSurface, EGL10.EGL_HEIGHT);
+            return mEglCore.querySurface(mEGLSurface, EGL14.EGL_HEIGHT);
         } else {
             return mHeight;
         }
@@ -109,7 +108,7 @@ public class EglSurfaceBase {
      */
     public void releaseEglSurface() {
         mEglCore.releaseSurface(mEGLSurface);
-        mEGLSurface = EGL10.EGL_NO_SURFACE;
+        mEGLSurface = EGL14.EGL_NO_SURFACE;
         mWidth = mHeight = -1;
     }
 

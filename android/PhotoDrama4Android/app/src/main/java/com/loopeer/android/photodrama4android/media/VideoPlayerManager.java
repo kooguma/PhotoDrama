@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
+import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
@@ -38,7 +39,7 @@ public class VideoPlayerManager
     private boolean mIsRecording;
     private BitmapReadyListener mBitmapReadyListener;
 
-    public VideoPlayerManager(SeekWrapper seekWrapper, MovieMakerGLSurfaceView glSurfaceView, Drama drama) {
+    public VideoPlayerManager(SeekWrapper seekWrapper, TextureView glSurfaceView, Drama drama) {
         mContext = glSurfaceView.getContext();
         mSeekWrapper = seekWrapper;
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);

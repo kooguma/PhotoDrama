@@ -2,14 +2,14 @@ package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
+import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
+import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
 public interface IRendererWorker {
 
-    void onSurfaceCreated(GL10 gl, EGLConfig config);
+    void onSurfaceCreated(WindowSurface windowSurface, EglCore eglCore);
 
-    void onSurfaceChanged(GL10 gl, int width, int height);
+    void onSurfaceChanged(WindowSurface windowSurface, int width, int height);
 
-    void drawFrame(Context context, GL10 gl, long usedTime);
+    void drawFrame(Context context, WindowSurface windowSurface, long usedTime);
 }

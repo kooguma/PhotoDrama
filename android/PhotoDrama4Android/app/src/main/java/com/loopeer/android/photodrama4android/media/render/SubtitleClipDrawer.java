@@ -3,10 +3,12 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
 import android.os.Looper;
+import android.view.TextureView;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
+import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
@@ -42,7 +44,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
     private int mHorizontalBlockNum = 1;
     private int mVerticalBlockNum = 1;
 
-    public SubtitleClipDrawer(MovieMakerGLSurfaceView view, SubtitleClip subtitleClip) {
+    public SubtitleClipDrawer(TextureView view, SubtitleClip subtitleClip) {
         super(view);
         mContext = view.getContext();
         mSubtitleClip = subtitleClip;
@@ -51,7 +53,7 @@ public class SubtitleClipDrawer extends ClipDrawer{
                 .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
     }
 
-    public void preLoadTexture(MovieMakerGLSurfaceView glView) {
+    public void preLoadTexture(MovieMakerTextureView glView) {
         HandlerWrapper handler = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_SUBTITLE

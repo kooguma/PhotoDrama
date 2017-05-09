@@ -4,6 +4,7 @@ package com.loopeer.android.photodrama4android.media.render;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
+import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.media.programs.FadeShaderProgram;
@@ -25,7 +26,7 @@ public class FadeDrawer extends TransitionDrawer{
 
     private FadeShaderProgram textureProgram;
 
-    public FadeDrawer(MovieMakerGLSurfaceView view, TransitionClip transitionClip) {
+    public FadeDrawer(MovieMakerTextureView view, TransitionClip transitionClip) {
         super(view, transitionClip);
         textureProgram = (FadeShaderProgram) ShaderProgramCache
                 .getInstance()
