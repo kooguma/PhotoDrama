@@ -126,6 +126,7 @@ public class VideoClipProcessor {
         mTextTextureLoader = new SubtitleTextureLoader(mTextureView.getContext());
         mTextTextureLoader.update(windowSurface, eglCore);
         if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
+        if (mVideoGroup != null) notifyData();
     }
 
     public TextureLoader getTextureLoader() {
