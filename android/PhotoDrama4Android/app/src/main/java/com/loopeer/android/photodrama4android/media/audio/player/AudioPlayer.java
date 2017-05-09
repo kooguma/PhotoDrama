@@ -5,6 +5,7 @@ import android.media.AudioTrack;
 import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.LogPrinter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -106,7 +107,7 @@ public class AudioPlayer {
     }
 
     public boolean isPrepared() {
-        return mAudioTrack != null && mState == State.PREPARED;
+        return mAudioTrack != null && mBytes != null && mBytes.length != 0;
     }
 
     public boolean isPlaying() {
@@ -147,18 +148,20 @@ public class AudioPlayer {
     }
 
     public void play() {
+        Log.e(TAG, "play : state = " + mState);
         if (mAudioTrack != null) {
-            if ((mState & (State.PREPARED | State.STOP)) > 0) {
+            if (checkState(State.PREPARED | State.STOP)) {
                 Log.e(TAG, "1");
                 mPlayOffset = 0;
                 mState = State.PLAYING;
                 mAudioTrack.play();
                 startWorkThread();
-            } else if ((mState & (State.PAUSE | State.PLAYING)) > 0) {
+            } else if (checkState(State.PLAYING | State.PAUSE)) {
                 Log.e(TAG, "2");
                 mState = State.PLAYING;
                 mAudioTrack.play();
                 if (mWorkThread != null && mWorkThread.isAlive()) {
+                    Log.e(TAG, "2.1");
                     synchronized (mWorkThread) {
                         mWorkThread.notify();
                     }
@@ -212,12 +215,17 @@ public class AudioPlayer {
         }
     }
 
+    private boolean checkState(int stateExpected) {
+        return (mState & (stateExpected)) > 0;
+    }
+
     class WorkThread extends Thread {
 
         private static final String TAG = "PlayAudioThread";
 
         @Override public void run() {
 
+            Log.e(TAG, "mAudioTrack = null" + (mAudioTrack == null));
             if (mAudioTrack != null) {
 
                 while (!mThreadExitFlag) {
@@ -253,16 +261,13 @@ public class AudioPlayer {
                             break;
                         }
 
-                        if (mPlayOffset >= mBytes.length) {
-                            mThreadExitFlag = true;
-                        } else {
-                            mThreadExitFlag = false;
-                        }
                     }
                 }
 
-                mAudioTrack.stop();
                 mState = AudioPlayer.State.STOP;
+
+                mAudioTrack.stop();
+
 
                 Log.e(TAG, "PlayAudioThread complete...");
             }
