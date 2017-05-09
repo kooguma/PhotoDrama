@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.TextureView;
 import android.view.View;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
@@ -12,7 +13,7 @@ import static android.view.MotionEvent.INVALID_POINTER_ID;
 public class GLTouchListener implements View.OnTouchListener{
 
     private ScaleGestureDetector mScaleDetector;
-    private GLSurfaceView mGLSurfaceView;
+    private TextureView mGLSurfaceView;
     private float mScaleFactor = 1.f;
     public float mPosY;
     public float mPosX;
@@ -22,7 +23,7 @@ public class GLTouchListener implements View.OnTouchListener{
 
     private ScaleMoveListener mScaleMoveListener;
 
-    public GLTouchListener(GLSurfaceView glSurfaceView) {
+    public GLTouchListener(TextureView glSurfaceView) {
         mGLSurfaceView = glSurfaceView;
         mScaleDetector = new ScaleGestureDetector(mGLSurfaceView.getContext(), new ScaleListener());
     }

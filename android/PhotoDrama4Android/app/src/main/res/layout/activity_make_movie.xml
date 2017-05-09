@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context="com.loopeer.android.moviemaker.ui.activity.MakeMovieActivity">
 
-        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
             android:id="@+id/gl_surface_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

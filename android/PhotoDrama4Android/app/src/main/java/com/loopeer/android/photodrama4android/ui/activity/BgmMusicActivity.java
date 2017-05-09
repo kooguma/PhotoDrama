@@ -38,8 +38,8 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bgm_music);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
-        /*mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
-                , mBinding.glSurfaceView, mDrama);*/
+        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
+                , mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         updateScrollImageView();

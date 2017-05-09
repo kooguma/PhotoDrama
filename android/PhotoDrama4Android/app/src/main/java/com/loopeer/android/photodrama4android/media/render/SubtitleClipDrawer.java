@@ -4,10 +4,7 @@ package com.loopeer.android.photodrama4android.media.render;
 import android.content.Context;
 import android.os.Looper;
 import android.view.TextureView;
-import android.view.View;
-
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.SubtitleTextureLoader;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;

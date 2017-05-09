@@ -8,13 +8,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
-import android.util.Log;
 import android.view.TextureView;
-import android.view.View;
 
-import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.TextureLoader;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
@@ -24,7 +20,6 @@ import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
-import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
 
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
 import static android.opengl.GLES20.GL_LINEAR;
@@ -166,7 +161,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mBitmap == null || mBitmap.isRecycled()) {
-            preLoadTexture(mGLSurfaceView, mTextureLoader);
+            preLoadTexture(mMovieMakerTextureView, mTextureLoader);
             return;
         }
         if (mImageInfo == null) return;

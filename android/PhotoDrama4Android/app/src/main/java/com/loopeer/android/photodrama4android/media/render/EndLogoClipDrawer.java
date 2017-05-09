@@ -12,14 +12,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
-import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
-import com.loopeer.android.photodrama4android.media.cache.TextureIdCache;
 import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
-import com.loopeer.android.photodrama4android.media.model.ImageClip;
-import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
 
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
@@ -140,7 +135,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
         Paint textPaint = new Paint();
 
         textPaint.setAlpha(mEndLogoClip.getAlpha((int) usedTime));
-        localCanvas.drawColor(ContextCompat.getColor(mGLSurfaceView.getContext(), android.R.color.white));
+        localCanvas.drawColor(ContextCompat.getColor(mMovieMakerTextureView.getContext(), android.R.color.white));
         logoPaint.setFilterBitmap(true);
         textPaint.setFilterBitmap(true);
         localCanvas.drawBitmap(mLogoBitmap, matrixLogo, logoPaint);
@@ -166,7 +161,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
 
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mLogoBitmap == null || mLogoBitmap.isRecycled() || mTextBitmap == null || mTextBitmap.isRecycled()) {
-            preLoadTexture(mGLSurfaceView);
+            preLoadTexture(mMovieMakerTextureView);
             return;
         }
         if (usedTime < mEndLogoClip.startTime || usedTime > mEndLogoClip.getEndTime()) return;

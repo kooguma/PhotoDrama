@@ -277,4 +277,7 @@ public class GLRenderWorker implements IRendererWorker {
         return path;
     }
 
+    public TextureLoader getTextureLoader() {
+        return mImageClipProcessor.getTextureLoader();
+    }
 }

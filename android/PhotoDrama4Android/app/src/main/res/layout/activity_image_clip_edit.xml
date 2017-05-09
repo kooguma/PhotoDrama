@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context="com.loopeer.android.moviemaker.ui.activity.ImageSegmentEditActivity">
 
-        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
+        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
             android:id="@+id/gl_surface_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -45,17 +45,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5"/>
 
-        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-            android:id="@+id/gl_segment_start"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="24dp"
-            android:visibility="gone"
-            app:layout_constraintRight_toLeftOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
-
-
         <Button
             android:id="@+id/text_start"
             android:layout_width="100dp"
@@ -83,16 +72,6 @@
             app:layout_constraintLeft_toRightOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
 
-
-        <com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView
-            android:id="@+id/gl_segment_left"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="24dp"
-            android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
     </android.support.constraint.ConstraintLayout>
 
 </layout>

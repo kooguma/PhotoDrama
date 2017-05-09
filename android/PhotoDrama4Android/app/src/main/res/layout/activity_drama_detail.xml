@@ -46,7 +46,6 @@
                             app:screenRatioX="@integer/gl_screen_x"
                             app:screenRatioY="@integer/gl_screen_y"/>
 
-
                         <LinearLayout
                             xmlns:android="http://schemas.android.com/apk/res/android"
                             xmlns:tools="http://schemas.android.com/tools"

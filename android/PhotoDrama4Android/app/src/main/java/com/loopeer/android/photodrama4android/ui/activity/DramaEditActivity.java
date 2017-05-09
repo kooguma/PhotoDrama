@@ -119,8 +119,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
-        /*mVideoPlayerManager = new VideoPlayerManager(null,
-            mBinding.glSurfaceView, new Drama());*/
+        mVideoPlayerManager = new VideoPlayerManager(null,
+            mBinding.glSurfaceView, new Drama());
         mVideoPlayerManager.setBitmapReadyListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -150,23 +150,20 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
                 mIcon.setRotation(degrees);
             }
         });
-        mBottomImagePickerView.setOnImagePickListener(new ImageAdapter.OnImagePickListener() {
-            @Override
-            public boolean onImagePick(Uri uri) {
-                if (mSelectedImageClip == null) return true;
-                BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
-                mSelectedImageClip.path = uri.getPath();
-                HandlerWrapper handler = new HandlerWrapper(
-                    Looper.getMainLooper(),
-                    HandlerWrapper.TYPE_LOAD_IMAGE
-                    , mSelectedImageClip.path
-                    , t -> VideoPlayManagerContainer.getDefault()
-                    .bitmapLoadReady(DramaEditActivity.this
-                        , mSelectedImageClip.path));
-                mBinding.glSurfaceView.getTextureLoader().loadImageTexture(handler);
-                mEditDramaSegmentAdapter.selectedNext();
-                return true;
-            }
+        mBottomImagePickerView.setOnImagePickListener((ImageAdapter.OnImagePickListener) uri -> {
+            if (mSelectedImageClip == null) return true;
+            BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
+            mSelectedImageClip.path = uri.getPath();
+            HandlerWrapper handler = new HandlerWrapper(
+                Looper.getMainLooper(),
+                HandlerWrapper.TYPE_LOAD_IMAGE
+                , mSelectedImageClip.path
+                , t -> VideoPlayManagerContainer.getDefault()
+                .bitmapLoadReady(DramaEditActivity.this
+                    , mSelectedImageClip.path));
+            mVideoPlayerManager.getTextureLoader().loadImageTexture(handler);
+            mEditDramaSegmentAdapter.selectedNext();
+            return true;
         });
         mBottomImagePickerView.getViewPager()
             .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

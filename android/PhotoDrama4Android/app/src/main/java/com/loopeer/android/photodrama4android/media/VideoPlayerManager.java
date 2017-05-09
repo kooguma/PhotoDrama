@@ -17,8 +17,8 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoMediaStore;
 
 public class VideoPlayerManager
-    implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
-    AudioProcessor.AudioProcessorPrepareListener, MusicProcessor.ProcessorPrepareListener {
+        implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
+        AudioProcessor.AudioProcessorPrepareListener, MusicProcessor.ProcessorPrepareListener {
 
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
@@ -45,10 +45,10 @@ public class VideoPlayerManager
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
 
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             mIMusic = new AudioDelegate(mContext, drama, this);
-        }else {
-            mIMusic = new MusicDelegate(mContext,drama,this);
+        } else {
+            mIMusic = new MusicDelegate(mContext, drama, this);
         }
 
         updateTime(drama);
@@ -306,9 +306,9 @@ public class VideoPlayerManager
 
     public boolean isMoveReadyOk() {
         return mGLThread != null && mGLThread.isStop()
-            && isMusicPrepared
-            && isImagePrepared
-            && isSubtitlePrepared;
+                && isMusicPrepared
+                && isImagePrepared
+                && isSubtitlePrepared;
     }
 
     public int getMaxTime() {
@@ -357,14 +357,20 @@ public class VideoPlayerManager
         return mIsRecording;
     }
 
-    @Override public void onProcessorPrepared() {
+    @Override
+    public void onProcessorPrepared() {
         isMusicPrepared = true;
         checkSourceReadyToStart();
     }
 
-    @Override public void musicPrepareFinished() {
+    @Override
+    public void musicPrepareFinished() {
         isMusicPrepared = true;
         checkSourceReadyToStart();
+    }
+
+    public TextureLoader getTextureLoader() {
+        return mGLRenderWorker.getTextureLoader();
     }
 
     public interface ProgressChangeListener {

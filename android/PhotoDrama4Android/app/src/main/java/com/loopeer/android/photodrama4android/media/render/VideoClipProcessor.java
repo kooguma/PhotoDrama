@@ -2,9 +2,6 @@ package com.loopeer.android.photodrama4android.media.render;
 
 
 import android.view.TextureView;
-import android.view.View;
-
-import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
 import com.loopeer.android.photodrama4android.media.SubtitleTextureLoader;
 import com.loopeer.android.photodrama4android.media.TextureLoader;
@@ -28,8 +25,6 @@ public class VideoClipProcessor {
     private EndLogoClipDrawer mEndLogoClipDrawer;
     private VideoGroup mVideoGroup;
     private MovieMakerTextureView mTextureView;
-
-
     private TextureLoader mTextureLoader;
     private SubtitleTextureLoader mTextTextureLoader;
 
@@ -87,7 +82,7 @@ public class VideoClipProcessor {
             if (transitionClip.showTime == 0) continue;
             try {
                 Constructor<TransitionDrawer> constructor = transitionClip.transitionType.getDrawerClass()
-                        .getConstructor(MovieMakerGLSurfaceView.class,
+                        .getConstructor(MovieMakerTextureView.class,
                         TransitionClip.class);
                 TransitionDrawer drawer = constructor.newInstance(mTextureView, transitionClip);
                 mTransitionDrawers.add(drawer);
@@ -124,9 +119,6 @@ public class VideoClipProcessor {
     }
 
     public void updateSurfaceAndSubtitle(WindowSurface windowSurface, EglCore eglCore) {
-        /*mWindowSurface = windowSurface;
-        mEglCore = eglCore;*/
-
         mTextureLoader = new TextureLoader(mTextureView.getContext());
         mTextureLoader.update(windowSurface, eglCore);
         if (!mTextureLoader.isAlive()) mTextureLoader.start();
@@ -134,5 +126,9 @@ public class VideoClipProcessor {
         mTextTextureLoader = new SubtitleTextureLoader(mTextureView.getContext());
         mTextTextureLoader.update(windowSurface, eglCore);
         if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
+    }
+
+    public TextureLoader getTextureLoader() {
+        return mTextureLoader;
     }
 }

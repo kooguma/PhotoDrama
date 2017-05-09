@@ -149,12 +149,12 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureView.S
 
     @Override
     public void onPause() {
-//        mGLSurfaceView.onPause();
+//        mMovieMakerTextureView.onPause();
     }
 
     @Override
     public void onResume() {
-//        mGLSurfaceView.onResume();
+//        mMovieMakerTextureView.onResume();
     }
 
     @Override
