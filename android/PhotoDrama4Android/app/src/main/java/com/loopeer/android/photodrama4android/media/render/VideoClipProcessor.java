@@ -6,12 +6,16 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
+import com.loopeer.android.photodrama4android.media.SubtitleTextureLoader;
+import com.loopeer.android.photodrama4android.media.TextureLoader;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.media.model.VideoGroup;
+import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
+import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -24,6 +28,10 @@ public class VideoClipProcessor {
     private EndLogoClipDrawer mEndLogoClipDrawer;
     private VideoGroup mVideoGroup;
     private MovieMakerTextureView mTextureView;
+
+
+    private TextureLoader mTextureLoader;
+    private SubtitleTextureLoader mTextTextureLoader;
 
     public VideoClipProcessor(TextureView textureView) {
         mImageClipDrawers = new ArrayList<>();
@@ -54,7 +62,7 @@ public class VideoClipProcessor {
         for (int i = 0; i < mVideoGroup.imageClips.size(); i++) {
             ImageClip imageClip = mVideoGroup.imageClips.get(i);
             ImageClipDrawer imageClipRender = new ImageClipDrawer(mTextureView, imageClip);
-            if (mTextureView.getTextureLoader() != null) imageClipRender.preLoadTexture(mTextureView);
+            if (mTextureLoader != null) imageClipRender.preLoadTexture(mTextureView, mTextureLoader);
             mImageClipDrawers.add(imageClipRender);
         }
     }
@@ -64,7 +72,7 @@ public class VideoClipProcessor {
         for (int i = 0; i < mVideoGroup.subtitleClips.size(); i++) {
             SubtitleClip subtitleClip = mVideoGroup.subtitleClips.get(i);
             SubtitleClipDrawer subtitleClipDrawer = new SubtitleClipDrawer(mTextureView, subtitleClip);
-            if (mTextureView.getTextureLoader() != null) subtitleClipDrawer.preLoadTexture(mTextureView);
+            if (mTextTextureLoader != null) subtitleClipDrawer.preLoadTexture(mTextureView, mTextTextureLoader);
             mSubtitleClipDrawers.add(subtitleClipDrawer);
         }
         if (mVideoGroup.subtitleClips.isEmpty()) {
@@ -113,5 +121,18 @@ public class VideoClipProcessor {
         if (mEndLogoClipDrawer != null) {
             mEndLogoClipDrawer.drawFrame(usedTime, pMatrix);
         }
+    }
+
+    public void updateSurfaceAndSubtitle(WindowSurface windowSurface, EglCore eglCore) {
+        /*mWindowSurface = windowSurface;
+        mEglCore = eglCore;*/
+
+        mTextureLoader = new TextureLoader(mTextureView.getContext());
+        mTextureLoader.update(windowSurface, eglCore);
+        if (!mTextureLoader.isAlive()) mTextureLoader.start();
+
+        mTextTextureLoader = new SubtitleTextureLoader(mTextureView.getContext());
+        mTextTextureLoader.update(windowSurface, eglCore);
+        if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
     }
 }

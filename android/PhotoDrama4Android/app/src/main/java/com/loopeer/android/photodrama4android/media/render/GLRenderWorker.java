@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -9,6 +10,8 @@ import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
+import com.loopeer.android.photodrama4android.media.SubtitleTextureLoader;
+import com.loopeer.android.photodrama4android.media.TextureLoader;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.recorder.MediaAudioEncoder;
 import com.loopeer.android.photodrama4android.media.recorder.MediaEncoder;
@@ -37,12 +40,10 @@ public class GLRenderWorker implements IRendererWorker {
     private static final String TAG = "GLRenderWorker";
 
     private Drama mDrama;
-    private Context mContext;
     private VideoClipProcessor mImageClipProcessor;
     private final float[] projectionMatrix = new float[16];
     private TextureView mTextureView;
     private boolean mIsRecording;
-//    private EglHelperLocal mEglHelperLocal;
 
     private final float[] mIdentityMatrix;
 
@@ -59,7 +60,6 @@ public class GLRenderWorker implements IRendererWorker {
     private Rect mVideoRect;
 
     public GLRenderWorker(Context context, Drama drama, TextureView view) {
-        mContext = context;
         mTextureView = view;
         mDrama = drama;
         mIdentityMatrix = new float[16];
@@ -73,13 +73,13 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void onSurfaceCreated(WindowSurface windowSurface, EglCore eglCore) {
+
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         mImageClipProcessor = new VideoClipProcessor(mTextureView);
+        mImageClipProcessor.updateSurfaceAndSubtitle(windowSurface, eglCore);
         mImageClipProcessor.updateData(mDrama.videoGroup);
-//        mEglHelperLocal = mTextureView.getEglHelperLocal();
         windowSurface.makeCurrent();
         mEglCore = eglCore;
-//        mEglCore = new EglCore(mEglHelperLocal.mEgl, mEglHelperLocal.mEglContext, mEglHelperLocal.mEglConfig, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
         mFullScreen = new FullFrameRect(
                 new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
@@ -100,6 +100,7 @@ public class GLRenderWorker implements IRendererWorker {
             glClear(GL_COLOR_BUFFER_BIT);
             setIdentityM(projectionMatrix, 0);
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
+            windowSurface.swapBuffers();
         } else {
             if (DEBUG) Log.e(TAG, "mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);  " + usedTime * 1000);
             mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);

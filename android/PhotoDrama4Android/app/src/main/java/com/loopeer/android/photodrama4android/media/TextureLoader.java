@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.EGL14;
+import android.opengl.EGLContext;
 import android.opengl.EGLSurface;
 import android.os.Bundle;
 import android.os.Message;
@@ -35,6 +36,8 @@ public class TextureLoader extends Thread {
     }
 
     public void run() {
+        EGLContext textureContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
+
         int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
                 EGL14.EGL_NO_TEXTURE, EGL14.EGL_TEXTURE_FORMAT, EGL14.EGL_NO_TEXTURE,
                 EGL14.EGL_NONE};
@@ -45,7 +48,7 @@ public class TextureLoader extends Thread {
 
 //        mWindowSurface.makeCurrent();
 
-        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, mEglCore.mEGLContext)) {
+        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, textureContext)) {
             throw new RuntimeException("eglMakeCurrent failed");
         }
 

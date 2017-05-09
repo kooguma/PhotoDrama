@@ -135,6 +135,23 @@ public final class EglCore {
         Log.d(TAG, "EGLContext created, client version " + values[0]);
     }
 
+    public int[] getAttribList() {
+        int[] attrib2_list = {
+                EGL14.EGL_CONTEXT_CLIENT_VERSION, 2,
+                EGL14.EGL_NONE
+        };
+        int[] attrib3_list = {
+                EGL14.EGL_CONTEXT_CLIENT_VERSION, 3,
+                EGL14.EGL_NONE
+        };
+        if (mGlVersion == 2) {
+            return attrib3_list;
+        } else if (mGlVersion == 3){
+            return attrib2_list;
+        }
+        return attrib2_list;
+    }
+
     /**
      * Finds a suitable EGLConfig.
      *

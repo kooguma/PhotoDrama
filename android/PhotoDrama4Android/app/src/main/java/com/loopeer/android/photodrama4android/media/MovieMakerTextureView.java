@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.opengl.EGL14;
 import android.opengl.EGLContext;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.TextureView;
 import android.view.ViewGroup;
@@ -14,9 +15,6 @@ import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
 public class MovieMakerTextureView extends TextureView {
-
-    private TextureLoader mTextureLoader;
-    private SubtitleTextureLoader mTextTextureLoader;
     protected float mRatioX;
     protected float mRatioY;
 
@@ -28,6 +26,7 @@ public class MovieMakerTextureView extends TextureView {
         super(context, attrs);
 
         getAttrs(context, attrs, 0);
+        setOpaque(false);
     }
 
     private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -50,28 +49,6 @@ public class MovieMakerTextureView extends TextureView {
             heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (1f * childWidthSize * mRatioY / mRatioX), MeasureSpec.EXACTLY);
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-    }
-
-    public void updateLoader(WindowSurface windowSurface, EglCore eglCore) {
-        final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
-        int[] contextAttributes = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE};
-        EGLContext renderContext = eglCore.mEGLContext;
-
-        mTextureLoader = new TextureLoader(getContext());
-        mTextureLoader.update(windowSurface, eglCore);
-        if (!mTextureLoader.isAlive()) mTextureLoader.start();
-
-        mTextTextureLoader = new SubtitleTextureLoader(getContext());
-        mTextTextureLoader.update(windowSurface, eglCore);
-        if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
-    }
-
-    public TextureLoader getTextureLoader() {
-        return mTextureLoader;
-    }
-
-    public SubtitleTextureLoader getTextTextureLoader() {
-        return mTextTextureLoader;
     }
 
 }

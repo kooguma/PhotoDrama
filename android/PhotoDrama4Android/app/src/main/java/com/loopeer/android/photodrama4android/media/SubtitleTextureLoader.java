@@ -1,27 +1,20 @@
 package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.opengl.EGL14;
+import android.opengl.EGLContext;
 import android.opengl.EGLSurface;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
-
-import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
-import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
-import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubtitleTextureLoader extends Thread {
 
-    private WindowSurface mWindowSurface;
     private EglCore mEglCore;
     private Context mContext;
     private boolean mIsFinish;
@@ -32,21 +25,19 @@ public class SubtitleTextureLoader extends Thread {
     }
 
     public SubtitleTextureLoader(Context context) {
-
+        mContext = context;
     }
 
     public void run() {
+        EGLContext textureContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
+
         int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
                 EGL14.EGL_NO_TEXTURE, EGL14.EGL_TEXTURE_FORMAT, EGL14.EGL_NO_TEXTURE,
                 EGL14.EGL_NONE};
 
         EGLSurface localSurface = EGL14.eglCreatePbufferSurface(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, pbufferAttribs, 0);
 
-//        egl.eglMakeCurrent(display, localSurface, localSurface, textureContext);
-
-//        mWindowSurface.makeCurrent();
-
-        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, mEglCore.mEGLContext)) {
+        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, textureContext)) {
             throw new RuntimeException("eglMakeCurrent failed");
         }
         while (!mIsFinish) {
@@ -93,7 +84,6 @@ public class SubtitleTextureLoader extends Thread {
     }
 
     public void update(WindowSurface windowSurface, EglCore eglCore) {
-        mWindowSurface = windowSurface;
         mEglCore = eglCore;
     }
 }

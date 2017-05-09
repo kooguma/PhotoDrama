@@ -16,6 +16,7 @@ import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
 import com.loopeer.android.photodrama4android.media.MovieMakerGLSurfaceView;
 import com.loopeer.android.photodrama4android.media.MovieMakerTextureView;
+import com.loopeer.android.photodrama4android.media.TextureLoader;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
@@ -65,6 +66,7 @@ public class ImageClipDrawer extends ClipDrawer{
     private int mVerticalBlockNum = 1;
 
     private float mViewScaleFactor;
+    private TextureLoader mTextureLoader;
 
     public ImageClipDrawer(TextureView view, ImageClip imageClip) {
         super(view);
@@ -81,7 +83,8 @@ public class ImageClipDrawer extends ClipDrawer{
         }
     }
 
-    public void preLoadTexture(MovieMakerTextureView glView) {
+    public void preLoadTexture(MovieMakerTextureView glView, TextureLoader textureLoader) {
+        mTextureLoader = textureLoader;
         HandlerWrapper handler = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE
@@ -90,7 +93,7 @@ public class ImageClipDrawer extends ClipDrawer{
                     checkBitmapReady();
                     VideoPlayManagerContainer.getDefault().bitmapLoadReady(mContext, mImageClip.path);
                 });
-        glView.getTextureLoader().loadImageTexture(handler);
+        textureLoader.loadImageTexture(handler);
     }
 
     public void checkBitmapReady() {
@@ -163,7 +166,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mBitmap == null || mBitmap.isRecycled()) {
-            preLoadTexture(mGLSurfaceView);
+            preLoadTexture(mGLSurfaceView, mTextureLoader);
             return;
         }
         if (mImageInfo == null) return;
