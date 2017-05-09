@@ -8,7 +8,10 @@ import com.loopeer.android.photodrama4android.model.Theme;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ThemeService {
@@ -19,6 +22,12 @@ public interface ThemeService {
             @Query("category_id") String categoryId,
             @Query("page") String page,
             @Query("page_size") String pageSize
+    );
+
+    @FormUrlEncoded
+    @POST("themes/share")
+    Flowable<BaseResponse<Void>> share(
+            @Field("theme_id") String themeId
     );
 
 }

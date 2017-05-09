@@ -314,7 +314,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     public void recordFinished(String path) {
         mBinding.viewCover.setVisibility(View.GONE);
         dismissExportProgressLoading();
-        Navigator.startShareActivity(this, path);
+        Navigator.startShareActivity(this, path, mTheme);
     }
 
     @Override

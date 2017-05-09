@@ -184,6 +184,13 @@ public class Navigator {
         context.startActivity(intent);
     }
 
+    public static void startShareActivity(Context context, String path, Theme theme) {
+        Intent intent = new Intent(context, ShareActivity.class);
+        intent.putExtra(EXTRA_VIDEO_PATH, path);
+        intent.putExtra(EXTRA_THEME, theme);
+        context.startActivity(intent);
+    }
+
     public static void startMainActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
