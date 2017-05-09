@@ -37,7 +37,6 @@ public class AudioClipPlayer {
 
     private MusicClip mMusicClip;
     private AudioPlayer mAudioPlayer;
-    private MediaAudioDecoder mDecoder;
 
     public AudioClipPlayer() {
         this(null, null);
@@ -47,7 +46,6 @@ public class AudioClipPlayer {
         mMusicClip = clip;
         mAudioClipPrepareListener = listener;
         mAudioPlayer = new AudioPlayer();
-        mDecoder = new MediaAudioDecoder(mMusicClip, null);
     }
 
     public void update(MusicClip clip, AudioClipPrepareListener listener) {
@@ -144,11 +142,8 @@ public class AudioClipPlayer {
         @Override protected byte[] doInBackground(String... params) {
             byte[] bytes = null;
             File file = new File(params[0]);
-            mDecoder.updateDecoder(mMusicClip, null);
             start = System.currentTimeMillis();
             try {
-                //decode
-                mDecoder.decode();
                 InputStream is = new FileInputStream(file);
                 bytes = inputStreamToByte(is);
             } catch (IOException e) {
