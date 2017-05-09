@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
 
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.audio.MusicDelegate;
 import com.loopeer.android.photodrama4android.media.audio.MusicProcessor;
 import com.loopeer.android.photodrama4android.media.audio.player.AudioDelegate;
@@ -43,8 +44,12 @@ public class VideoPlayerManager
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
 
-        mIMusic = new AudioDelegate(mContext, drama, this);
-        //mIMusic = new MusicDelegate(mContext,drama,this);
+        if(BuildConfig.DEBUG) {
+            mIMusic = new AudioDelegate(mContext, drama, this);
+        }else {
+            mIMusic = new MusicDelegate(mContext,drama,this);
+        }
+
         updateTime(drama);
         init();
     }

@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.media.utils;
 
 import android.content.Context;
 import android.util.Log;
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
@@ -54,26 +55,28 @@ public class DramaFetchHelper {
             if (zipFile.exists()) {
                 FileManager.deleteFile(zipFile);
             }
-//            long startTime = System.currentTimeMillis();
+            long startTime = System.currentTimeMillis();
             mDisposable = RxDownload.getInstance(mContext)
 
-                    .download(theme.zipLink, name, zipFilePath.getAbsolutePath())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(status -> {
-                    }, throwableConsumer, () -> {
-//                        long endTime = System.currentTimeMillis();
-//                        Log.e(TAG, "drama download : " + (endTime - startTime));
-                        unZipDrama(zipPath, theme, consumer, throwableConsumer, completeAction);
-                    });
+                .download(theme.zipLink, name, zipFilePath.getAbsolutePath())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> {
+                }, throwableConsumer, () -> {
+                    Log.e(TAG, "drama download 耗时: " + (System.currentTimeMillis() - startTime));
+                    unZipDrama(zipPath, theme, consumer, throwableConsumer, completeAction);
+                });
 
         } else {
             mDisposable = Flowable.fromCallable(() -> {
-                long start = System.currentTimeMillis();
+                long start1 = System.currentTimeMillis();
                 Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
                 preLoadDramaImage(drama);
+                Log.e(TAG,
+                    "xmlToDrama & preLoadDramaImage 耗时：" + (System.currentTimeMillis() - start1));
+                long start2 = System.currentTimeMillis();
                 decodeMusicClips(drama);
-                Log.e(TAG, "解压／预读取图片/解码读取音乐 共耗时：" + (System.currentTimeMillis() - start));
+                Log.e(TAG, "decodeMusicClips 耗时：" + (System.currentTimeMillis() - start2));
                 return drama;
             })
                 .subscribeOn(Schedulers.io())
@@ -98,30 +101,37 @@ public class DramaFetchHelper {
 
     // TODO: 2017/5/9  优化多线程解码
     public void decodeMusicClips(Drama drama) throws IOException {
-        if (drama == null) return;
-        if (drama.audioGroup == null) return;
-        if (drama.audioGroup.musicClips == null || drama.audioGroup.musicClips.size() == 0) return;
-        MediaAudioDecoder decoder = null;
-        for (MusicClip clip : drama.audioGroup.musicClips) {
-            if (decoder == null) {
-                decoder = new MediaAudioDecoder(clip, null);
-            } else {
-                decoder.updateDecoder(clip, null);
+        if(BuildConfig.DEBUG) {
+            if (drama == null) return;
+            if (drama.audioGroup == null) return;
+            if (drama.audioGroup.musicClips == null || drama.audioGroup.musicClips.size() == 0)
+                return;
+            MediaAudioDecoder decoder = null;
+            for (MusicClip clip : drama.audioGroup.musicClips) {
+                if (decoder == null) {
+                    decoder = new MediaAudioDecoder(clip, null);
+                } else {
+                    decoder.updateDecoder(clip, null);
+                }
+                decoder.decode();
             }
-            decoder.decode();
         }
     }
 
     private void unZipDrama(String zipPath, Theme theme, Consumer<Drama> consumer, Consumer throwableConsumer, Action completeAction) {
         File file = FileManager.getInstance().createDramaPackage(theme);
         mDisposable = Flowable.fromCallable(() -> {
-            long start = System.currentTimeMillis();
+            long start1 = System.currentTimeMillis();
             ZipUtil.unpack(new File(zipPath), file);
             Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
             FileManager.deleteFile(new File(zipPath));
+            Log.e(TAG, "unpack & xmlToDrama & delete 耗时：" + (System.currentTimeMillis() - start1));
+            long start2 = System.currentTimeMillis();
             preLoadDramaImage(drama);
+            Log.e(TAG, "preLoadDramaImage 耗时：" + (System.currentTimeMillis() - start2));
+            long start3 = System.currentTimeMillis();
             decodeMusicClips(drama);
-            Log.e(TAG, "解压／预读取图片/解码读取音乐 共耗时：" + (System.currentTimeMillis() - start));
+            Log.e(TAG, "decodeMusicClips 耗时：" + (System.currentTimeMillis() - start3));
             return drama;
         })
             .subscribeOn(Schedulers.io())
