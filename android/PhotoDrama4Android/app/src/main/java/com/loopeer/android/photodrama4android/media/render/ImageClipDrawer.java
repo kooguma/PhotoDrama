@@ -39,8 +39,8 @@ import static android.opengl.Matrix.setIdentityM;
 import static com.loopeer.android.photodrama4android.media.Constants.BYTES_PER_FLOAT;
 
 public class ImageClipDrawer extends ClipDrawer{
-
     private static final String TAG = "ImageClipDrawer";
+    private static final int MAX_VIEW_WITH = 1080;
 
     private static final int POSITION_COMPONENT_COUNT = 2;
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
@@ -72,6 +72,11 @@ public class ImageClipDrawer extends ClipDrawer{
         textureProgram = (ImageClipShaderProgram) ShaderProgramCache
                 .getInstance()
                 .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
+
+        if (mViewWidth > MAX_VIEW_WITH) {
+            mViewHeight = MAX_VIEW_WITH * mViewHeight / mViewWidth;
+            mViewWidth = MAX_VIEW_WITH;
+        }
     }
 
     public void preLoadTexture(MovieMakerGLSurfaceView glView) {
