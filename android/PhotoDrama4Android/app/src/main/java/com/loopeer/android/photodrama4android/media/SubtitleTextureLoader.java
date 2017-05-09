@@ -3,12 +3,15 @@ package com.loopeer.android.photodrama4android.media;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.EGL14;
+import android.opengl.EGLSurface;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
+import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
 import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
@@ -16,21 +19,11 @@ import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
-
 public class SubtitleTextureLoader extends Thread {
 
-    private EGLContext textureContext;
-    private EGL10 egl;
-    private EGLConfig eglConfig;
-    private EGLDisplay display;
-    private Context mContext;
     private WindowSurface mWindowSurface;
-
+    private EglCore mEglCore;
+    private Context mContext;
     private boolean mIsFinish;
 
     public List<HandlerWrapper> mHandlerWrappers = new ArrayList<>();
@@ -38,15 +31,24 @@ public class SubtitleTextureLoader extends Thread {
     public SubtitleTextureLoader() {
     }
 
-    public SubtitleTextureLoader(EGL10 egl, EGLContext renderContext, EGLDisplay display,
-                                 EGLConfig eglConfig, Context androidContext) {
-        //update(egl, renderContext, display, eglConfig, androidContext,);
+    public SubtitleTextureLoader(Context context) {
+
     }
 
-
     public void run() {
-        mWindowSurface.makeCurrent();
+        int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
+                EGL14.EGL_NO_TEXTURE, EGL14.EGL_TEXTURE_FORMAT, EGL14.EGL_NO_TEXTURE,
+                EGL14.EGL_NONE};
 
+        EGLSurface localSurface = EGL14.eglCreatePbufferSurface(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, pbufferAttribs, 0);
+
+//        egl.eglMakeCurrent(display, localSurface, localSurface, textureContext);
+
+//        mWindowSurface.makeCurrent();
+
+        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, mEglCore.mEGLContext)) {
+            throw new RuntimeException("eglMakeCurrent failed");
+        }
         while (!mIsFinish) {
             synchronized (this) {
                 try {
@@ -90,7 +92,8 @@ public class SubtitleTextureLoader extends Thread {
         mIsFinish = true;
     }
 
-    public void update(WindowSurface windowSurface) {
+    public void update(WindowSurface windowSurface, EglCore eglCore) {
         mWindowSurface = windowSurface;
+        mEglCore = eglCore;
     }
 }

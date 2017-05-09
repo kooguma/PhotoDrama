@@ -57,12 +57,12 @@ public class MovieMakerTextureView extends TextureView {
         int[] contextAttributes = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE};
         EGLContext renderContext = eglCore.mEGLContext;
 
-        mTextureLoader = new TextureLoader();
-        mTextureLoader.update(windowSurface);
+        mTextureLoader = new TextureLoader(getContext());
+        mTextureLoader.update(windowSurface, eglCore);
         if (!mTextureLoader.isAlive()) mTextureLoader.start();
 
-        mTextTextureLoader = new SubtitleTextureLoader();
-        mTextTextureLoader.update(windowSurface);
+        mTextTextureLoader = new SubtitleTextureLoader(getContext());
+        mTextTextureLoader.update(windowSurface, eglCore);
         if (!mTextTextureLoader.isAlive()) mTextTextureLoader.start();
     }
 
