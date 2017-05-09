@@ -39,9 +39,6 @@ public class ApiService {
             logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             httpClient.addInterceptor(logInterceptor);
         }
-        File cacheDir = new File(context.getCacheDir(), "http");
-        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-        httpClient.cache(cache);
         return httpClient.build();
     }
 
