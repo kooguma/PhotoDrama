@@ -6,6 +6,8 @@ import android.opengl.EGLContext;
 import android.opengl.EGLSurface;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
+
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
@@ -15,7 +17,10 @@ import java.util.List;
 
 public class SubtitleTextureLoader extends Thread {
 
+    private static final String TAG = "SubtitleTextureLoader";
+
     private EglCore mEglCore;
+    private WindowSurface mWindowSurface;
     private Context mContext;
     private boolean mIsFinish;
 
@@ -29,6 +34,7 @@ public class SubtitleTextureLoader extends Thread {
     }
 
     public void run() {
+
         EGLContext textureContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
 
         int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
@@ -85,5 +91,6 @@ public class SubtitleTextureLoader extends Thread {
 
     public void update(WindowSurface windowSurface, EglCore eglCore) {
         mEglCore = eglCore;
+        mWindowSurface = windowSurface;
     }
 }

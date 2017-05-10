@@ -7,6 +7,7 @@ import android.opengl.EGLContext;
 import android.opengl.EGLSurface;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class TextureLoader extends Thread {
 
+    private static final String TAG = "TextureLoader";
     private Context mContext;
     private WindowSurface mWindowSurface;
     private EglCore mEglCore;
@@ -44,10 +46,6 @@ public class TextureLoader extends Thread {
 
         EGLSurface localSurface = EGL14.eglCreatePbufferSurface(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, pbufferAttribs, 0);
 
-//        egl.eglMakeCurrent(display, localSurface, localSurface, textureContext);
-
-//        mWindowSurface.makeCurrent();
-
         if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, textureContext)) {
             throw new RuntimeException("eglMakeCurrent failed");
         }
@@ -64,6 +62,13 @@ public class TextureLoader extends Thread {
 
             handleImageTexture();
             handleImageResTexture();
+        }
+    }
+
+    private void checkEglError(String msg) {
+        int error;
+        if ((error = EGL14.eglGetError()) != EGL14.EGL_SUCCESS) {
+            throw new RuntimeException(msg + ": EGL error: 0x" + Integer.toHexString(error));
         }
     }
 
