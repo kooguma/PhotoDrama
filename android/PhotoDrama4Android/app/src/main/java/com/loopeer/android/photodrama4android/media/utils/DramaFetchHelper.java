@@ -11,20 +11,25 @@ import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.concurrent.Callable;
 import org.zeroturnaround.zip.ZipUtil;
 import zlc.season.rxdownload2.RxDownload;
 
 public class DramaFetchHelper {
 
     private static final String TAG = "DramaFetchHelper";
+
+    private final static int BUFFER_SIZE = 4096;
 
     private Disposable mDisposable;
 
@@ -59,7 +64,6 @@ public class DramaFetchHelper {
             }
             long startTime = System.currentTimeMillis();
             mDisposable = RxDownload.getInstance(mContext)
-
                 .download(theme.zipLink, name, zipFilePath.getAbsolutePath())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,19 +77,20 @@ public class DramaFetchHelper {
             mDisposable = Flowable.fromCallable(() -> {
                 long start1 = System.currentTimeMillis();
                 Drama drama = ZipUtils.xmlToDrama(file.getAbsolutePath());
-                preLoadDramaImage(drama);
-                Log.e(TAG,
-                    "xmlToDrama & preLoadDramaImage 耗时：" + (System.currentTimeMillis() - start1));
+                Log.e(TAG, "file exists xmlToDrama 耗时：" + (System.currentTimeMillis() - start1));
                 long start2 = System.currentTimeMillis();
-                decodeMusicClips(drama);
-                Log.e(TAG, "decodeMusicClips 耗时：" + (System.currentTimeMillis() - start2));
-                return drama;
+                return Flowable.zip(createDramaFlowables(drama), new Function<Object[], Drama>() {
+                    @Override public Drama apply(@NonNull Object[] objects) throws Exception {
+                        Log.e(TAG, "preLoadDramaImage & decodeMusicClips 耗时：" +
+                            (System.currentTimeMillis() - start2));
+                        return drama;
+                    }
+                })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(consumer, throwableConsumer, completeAction);
+
             })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(drama -> drama != null)
-                //                    .doOnNext(drama -> DramaCache.getInstance().putDrama(theme.id, drama))
-                .subscribe(consumer, throwableConsumer, completeAction);
+                .subscribe();
         }
     }
 
@@ -101,13 +106,13 @@ public class DramaFetchHelper {
         }
     }
 
-    // TODO: 2017/5/9  优化多线程解码
-    public void decodeMusicClips(Drama drama) throws IOException {
-        if(BuildConfig.DEBUG) {
+    private void decodeMusicClips(Drama drama) throws IOException {
+        if (BuildConfig.DEBUG) {
             if (drama == null) return;
             if (drama.audioGroup == null) return;
-            if (drama.audioGroup.musicClips == null || drama.audioGroup.musicClips.size() == 0)
+            if (drama.audioGroup.musicClips == null || drama.audioGroup.musicClips.size() == 0) {
                 return;
+            }
             MediaAudioDecoder decoder = null;
             for (MusicClip clip : drama.audioGroup.musicClips) {
                 if (decoder == null) {
@@ -115,9 +120,51 @@ public class DramaFetchHelper {
                 } else {
                     decoder.updateDecoder(clip, null);
                 }
+                long start = System.currentTimeMillis();
                 decoder.decode();
+                Log.e(TAG, "decode time = " + (System.currentTimeMillis() - start));
             }
         }
+    }
+
+    private List<Flowable<Drama>> createDramaFlowables(Drama drama) {
+        List<Flowable<Drama>> flows = new ArrayList<>();
+        flows.add(createImagePreLoadFlowable(drama));
+        flows.addAll(createMusicDecodeFlowables(drama));
+        return flows;
+    }
+
+    private Flowable<Drama> createImagePreLoadFlowable(Drama drama) {
+        return Flowable.fromCallable(new Callable<Drama>() {
+            @Override public Drama call() throws Exception {
+                preLoadDramaImage(drama);
+                return drama;
+            }
+        })
+            .subscribeOn(Schedulers.newThread());
+    }
+
+    private List<Flowable<Drama>> createMusicDecodeFlowables(Drama drama) {
+        if (drama == null) return null;
+        if (drama.audioGroup == null) return null;
+        if (drama.audioGroup.musicClips == null) return null;
+        if (drama.audioGroup.musicClips.size() == 0) return null;
+        final List<Flowable<Drama>> flows = new ArrayList<>();
+        for (MusicClip clip : drama.audioGroup.musicClips) {
+            Flowable<Drama> flowable = Flowable.fromCallable(new Callable<Drama>() {
+                @Override public Drama call() throws Exception {
+                    long start = System.currentTimeMillis();
+                    MediaAudioDecoder decoder = new MediaAudioDecoder(clip,null);
+                    decoder.decode();
+                    Log.e(TAG,"key = " + FileManager.getInstance().getDecodeAudioFilePath(clip));
+                    Log.e(TAG, "decode time = " + (System.currentTimeMillis() - start));
+                    return drama;
+                }
+            })
+                .subscribeOn(Schedulers.newThread());
+            flows.add(flowable);
+        }
+        return flows;
     }
 
     private void unZipDrama(String zipPath, Theme theme, Consumer<Drama> consumer, Consumer throwableConsumer, Action completeAction) {
@@ -130,17 +177,19 @@ public class DramaFetchHelper {
             Log.e(TAG, "unpack & xmlToDrama & delete 耗时：" + (System.currentTimeMillis() - start1));
             long start2 = System.currentTimeMillis();
             preLoadDramaImage(drama);
-            Log.e(TAG, "preLoadDramaImage 耗时：" + (System.currentTimeMillis() - start2));
-            long start3 = System.currentTimeMillis();
-            decodeMusicClips(drama);
-            Log.e(TAG, "decodeMusicClips 耗时：" + (System.currentTimeMillis() - start3));
-            return drama;
+            return Flowable.zip(createDramaFlowables(drama), new Function<Object[], Drama>() {
+                @Override public Drama apply(@NonNull Object[] objects) throws Exception {
+                    Log.e(TAG, "preLoadDramaImage & decodeMusicClips 耗时：" +
+                        (System.currentTimeMillis() - start2));
+                    return drama;
+                }
+            })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer,throwableConsumer,completeAction);
+
         })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(drama -> drama != null)
-            //                .doOnNext(drama -> DramaCache.getInstance().putDrama(theme.id, drama))
-            .subscribe(consumer, throwableConsumer, completeAction);
+            .subscribe();
     }
 
     public void unSubscribe() {

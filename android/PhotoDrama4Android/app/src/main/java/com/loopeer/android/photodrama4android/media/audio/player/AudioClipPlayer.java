@@ -4,14 +4,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
-import com.loopeer.android.photodrama4android.media.recorder.MediaAudioDecoder;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.Executor;
 
 // a wrapper of AudioPlayer
 public class AudioClipPlayer {
@@ -27,7 +25,8 @@ public class AudioClipPlayer {
     }
 
     public boolean isPrepared() {
-        Log.e(TAG,"isPrepared = " + isPrepared + " audio player is prepared = " + mAudioPlayer.isPrepared());
+        Log.e(TAG, "isPrepared = " + isPrepared + " audio player is prepared = " +
+            mAudioPlayer.isPrepared());
         return isPrepared && mAudioPlayer != null && mAudioPlayer.isPrepared();
     }
 
@@ -62,7 +61,7 @@ public class AudioClipPlayer {
             FileLoadTask task = new FileLoadTask();
             String path = FileManager.getInstance().getDecodeAudioFilePath(mMusicClip);
             Log.e(TAG, "decode audio file path = " + path);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,path);
+            task.execute(path);
         }
     }
 
@@ -108,7 +107,9 @@ public class AudioClipPlayer {
             if (usedTime < mMusicClip.startTime || usedTime > mMusicClip.getEndTime()) {
                 Log.e(TAG, "1");
                 if (mAudioPlayer.isPlaying()) {
-                    Log.e(TAG, "2" + "audio player is null " + (mAudioPlayer == null) + " isPrepared = " + isPrepared());
+                    Log.e(TAG,
+                        "2" + "audio player is null " + (mAudioPlayer == null) + " isPrepared = " +
+                            isPrepared());
                     if (mAudioPlayer != null && isPrepared()) {
                         Log.e(TAG, "3");
                         mAudioPlayer.pause();
@@ -138,6 +139,8 @@ public class AudioClipPlayer {
         private final static int BUFFER_SIZE = 4096;
 
         private long start = 0;
+
+        private static final String TAG = "AsyncTask";
 
         @Override protected byte[] doInBackground(String... params) {
             byte[] bytes = null;

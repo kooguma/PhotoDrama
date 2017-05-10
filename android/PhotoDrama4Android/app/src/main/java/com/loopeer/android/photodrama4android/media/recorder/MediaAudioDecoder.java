@@ -26,6 +26,10 @@ public class MediaAudioDecoder extends MediaDecoder {
     private MusicClip mMusicClip;
     public String mTempOutPath;
 
+    public MediaAudioDecoder(DecodeProgressCallback callback) {
+        super(callback);
+    }
+
     public MediaAudioDecoder(MusicClip musicClip, DecodeProgressCallback callback) {
         super(callback);
         mMusicClip = musicClip;
