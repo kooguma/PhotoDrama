@@ -78,7 +78,6 @@ public class GLRenderWorker implements IRendererWorker {
         mImageClipProcessor = new VideoClipProcessor(mTextureView);
         mImageClipProcessor.updateSurfaceAndSubtitle(windowSurface, eglCore);
         mImageClipProcessor.updateData(mDrama.videoGroup);
-        windowSurface.makeCurrent();
         mEglCore = eglCore;
         mFullScreen = new FullFrameRect(
                 new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
@@ -279,5 +278,10 @@ public class GLRenderWorker implements IRendererWorker {
 
     public TextureLoader getTextureLoader() {
         return mImageClipProcessor.getTextureLoader();
+    }
+
+
+    public void onDestroy() {
+        if (mImageClipProcessor != null) mImageClipProcessor.onDestroy();
     }
 }

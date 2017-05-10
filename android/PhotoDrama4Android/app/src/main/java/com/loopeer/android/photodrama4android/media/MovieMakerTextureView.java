@@ -70,4 +70,8 @@ public class MovieMakerTextureView extends TextureView {
     public void onResume() {
 
     }
+
+    public void onDestroy() {
+        mTextureRenderer.finish();
+    }
 }

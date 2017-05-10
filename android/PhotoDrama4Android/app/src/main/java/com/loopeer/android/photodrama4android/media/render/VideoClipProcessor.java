@@ -132,4 +132,9 @@ public class VideoClipProcessor {
     public TextureLoader getTextureLoader() {
         return mTextureLoader;
     }
+
+    public void onDestroy() {
+        mTextureLoader = null;
+        mTextTextureLoader = null;
+    }
 }
