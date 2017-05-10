@@ -9,9 +9,11 @@ import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
+import com.loopeer.android.photodrama4android.media.TextureLoader;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
@@ -62,6 +64,8 @@ public class EndLogoClipDrawer extends ClipDrawer{
     private final float SCREEN_IMAGE_LOGO_TOP_FACTOR = 234f / 750f;
     private final float SCREEN_IMAGE_TEXT_TOP_FACTOR = 440f / 750f;
 
+    private TextureLoader mTextureLoader;
+
     public EndLogoClipDrawer(TextureView view, EndLogoClip endLogoClip) {
         super(view);
         mContext = view.getContext();
@@ -72,7 +76,8 @@ public class EndLogoClipDrawer extends ClipDrawer{
                 .getTextureId(ShaderProgramCache.NORMAL_IMAGE_PROGRAM_KEY);
     }
 
-    public void preLoadTexture(TextureView glView) {
+    public void preLoadTexture(TextureView glView, TextureLoader textureLoader) {
+        mTextureLoader = textureLoader;
         HandlerWrapper handler = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE_RES
@@ -80,7 +85,7 @@ public class EndLogoClipDrawer extends ClipDrawer{
                 , t -> {
             checkLogoBitmapReady();
         });
-//        glView.getTextureLoader().loadImageTexture(handler);
+        mTextureLoader.loadImageTexture(handler);
         HandlerWrapper handler2 = new HandlerWrapper(
                 Looper.getMainLooper(),
                 HandlerWrapper.TYPE_LOAD_IMAGE_RES
@@ -88,12 +93,13 @@ public class EndLogoClipDrawer extends ClipDrawer{
                 , t -> {
             checkTextBitmapReady();
         });
-//        glView.getTextureLoader().loadImageTexture(handler2);
+        mTextureLoader.loadImageTexture(handler2);
     }
 
     public void checkLogoBitmapReady() {
         mLogoBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(String.valueOf(mEndLogoClip.logoRes));
         if (mLogoBitmap == null) return;
+        Log.e(TAG, mLogoBitmap.getWidth() + " logo ");
         mViewScaleFactor = SCREEN_IMAGE_LOGO_WIDTH_FACTOR * mViewWidth / mLogoBitmap.getWidth();
     }
 
@@ -160,11 +166,12 @@ public class EndLogoClipDrawer extends ClipDrawer{
     }
 
     public void drawFrame(long usedTime, float[] pMatrix) {
+        if (usedTime < mEndLogoClip.startTime || usedTime > mEndLogoClip.getEndTime()) return;
         if (mLogoBitmap == null || mLogoBitmap.isRecycled() || mTextBitmap == null || mTextBitmap.isRecycled()) {
-            preLoadTexture(mMovieMakerTextureView);
+            preLoadTexture(mMovieMakerTextureView, mTextureLoader);
             return;
         }
-        if (usedTime < mEndLogoClip.startTime || usedTime > mEndLogoClip.getEndTime()) return;
+        Log.e(TAG, mCanvasTextureId[0] + " logo drawFrame");
         updateViewMatrices(usedTime);
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);

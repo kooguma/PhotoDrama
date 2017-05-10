@@ -95,6 +95,7 @@ public class VideoClipProcessor {
     private void updateEndLogoClipRenders() {
         if (mVideoGroup.endLogoClip != null) {
             mEndLogoClipDrawer = new EndLogoClipDrawer(mTextureView, mVideoGroup.endLogoClip);
+            mEndLogoClipDrawer.preLoadTexture(mTextureView, mTextureLoader);
         } else {
             mEndLogoClipDrawer = null;
         }

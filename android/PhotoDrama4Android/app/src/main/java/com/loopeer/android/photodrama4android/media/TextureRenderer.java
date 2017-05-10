@@ -16,7 +16,6 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
     private Object mLock = new Object();
-    private Object mLockRender = new Object();
     private SurfaceTexture mSurfaceTexture;
     private EglCore mEglCore;
     private boolean mDone;
@@ -40,9 +39,6 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
             while (!mDone && mSurfaceTexture == null) {
                 try {
                     mLock.wait();
-                    if (DEBUG) {
-                        Log.e(TAG, "mEglCore = new EglCore");
-                    }
                     if (mSurfaceTexture != null) {
                         mEglCore = new EglCore(null, EglCore.FLAG_RECORDABLE | EglCore.FLAG_TRY_GLES3);
                         mWindowSurface = new WindowSurface(mEglCore, mSurfaceTexture);
@@ -53,57 +49,34 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
                     throw new RuntimeException(ie);     // not expected
                 }
             }
-            Log.e(TAG, "out while (!mDone && mSurfaceTexture == null) ");
-
-        /*    if (mDone) {
-                break;
-            }*/
         }
 
-        while (!mDone) {
+        synchronized (mLock) {
+            while (!mDone) {
+                if (mSizeChanged) {
+                    mRenderer.onSurfaceChanged(mWindowSurface, mWindowSurface.getWidth(), mWindowSurface.getHeight());
+                    mSizeChanged = false;
+                }
+                if (mRequestRender) {
+                    mRenderer.onDrawFrame(mWindowSurface);
+                    mRequestRender = false;
+                }
 
-            if (DEBUG) {
-                Log.e(TAG, "mSizeChanged : mRequestRender  " + mSizeChanged + " : " + mRequestRender);
-            }
-            if (mSizeChanged) {
-                mRenderer.onSurfaceChanged(mWindowSurface, mWindowSurface.getWidth(), mWindowSurface.getHeight());
-                mSizeChanged = false;
-            }
-            if (DEBUG) {
-                Log.e(TAG, "mRenderer is request" + mRequestRender);
-            }
-            if (mRequestRender) {
-                mRenderer.onDrawFrame(mWindowSurface);
-                mRequestRender = false;
-            }
-
-            synchronized (mLock) {
                 try {
-                    if (DEBUG) {
-                        Log.e(TAG, "mLock.wait() wait");
-                    }
                     mLock.wait();
-                    if (DEBUG) {
-                        Log.e(TAG, "mLock.wait() start");
-                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         if (mWindowSurface != null) mWindowSurface.release();
         if (mEglCore != null) mEglCore.release();
         if (mSurfaceTexture != null) mSurfaceTexture.release();
     }
 
     public void requestRender() {
-        if (DEBUG) {
-            Log.e(TAG, "requestRender");
-        }
         synchronized (mLock) {
-            if (DEBUG) {
-                Log.e(TAG, "notifyAll");
-            }
             mRequestRender = true;
             mLock.notifyAll();
         }
@@ -119,10 +92,6 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
 
     public void finish() {
         synchronized (mLock) {
-
-            if (DEBUG) {
-                Log.e(TAG, "mDone  true");
-            }
             mDone = true;
             mLock.notify();
         }
