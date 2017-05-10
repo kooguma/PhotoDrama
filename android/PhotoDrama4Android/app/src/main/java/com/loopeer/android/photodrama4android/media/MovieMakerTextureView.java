@@ -17,6 +17,7 @@ import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 public class MovieMakerTextureView extends TextureView {
     protected float mRatioX;
     protected float mRatioY;
+    private TextureRenderer mTextureRenderer;
 
     public MovieMakerTextureView(Context context) {
         super(context);
@@ -27,6 +28,9 @@ public class MovieMakerTextureView extends TextureView {
 
         getAttrs(context, attrs, 0);
         setOpaque(false);
+        mTextureRenderer = new TextureRenderer();
+        mTextureRenderer.start();
+        setSurfaceTextureListener(mTextureRenderer);
     }
 
     private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -51,4 +55,19 @@ public class MovieMakerTextureView extends TextureView {
         }
     }
 
+    public void setRenderer(TextureRenderer.Renderer renderer) {
+        mTextureRenderer.setRenderer(renderer);
+    }
+
+    public void requestRender() {
+        mTextureRenderer.requestRender();
+    }
+
+    public void onPause() {
+
+    }
+
+    public void onResume() {
+
+    }
 }

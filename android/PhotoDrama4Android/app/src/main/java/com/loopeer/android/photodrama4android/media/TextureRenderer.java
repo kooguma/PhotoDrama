@@ -30,18 +30,16 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     @Override
     public void run() {
         while (true) {
-            SurfaceTexture surfaceTexture = null;
-
-            // Latch the SurfaceTexture when it becomes available.  We have to wait for
-            // the TextureView to create it.
             synchronized (mLock) {
-                while (!mDone && (surfaceTexture = mSurfaceTexture) == null) {
+                while (!mDone && mSurfaceTexture == null) {
                     try {
                         mLock.wait();
-                        mEglCore = new EglCore(null, EglCore.FLAG_TRY_GLES3);
-                        mWindowSurface = new WindowSurface(mEglCore, mSurfaceTexture);
-                        mWindowSurface.makeCurrent();
-                        mRenderer.onSurfaceCreated(mWindowSurface, mEglCore);
+                        if (mSurfaceTexture != null) {
+                            mEglCore = new EglCore(null, EglCore.FLAG_TRY_GLES3);
+                            mWindowSurface = new WindowSurface(mEglCore, mSurfaceTexture);
+                            mWindowSurface.makeCurrent();
+                            mRenderer.onSurfaceCreated(mWindowSurface, mEglCore);
+                        }
                     } catch (InterruptedException ie) {
                         throw new RuntimeException(ie);     // not expected
                     }
@@ -50,6 +48,7 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
                     break;
                 }
             }
+
             mRenderer.onDrawFrame(mWindowSurface);
 
             synchronized (mLock) {
