@@ -88,11 +88,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                     this.wait();
 
                     if (DEBUG) {
-                        Log.e(TAG, "this.wait(); start");
-                    }
-
-                    if (DEBUG) {
-//                        Log.e(TAG, "sleep Time " + (1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));
+                        Log.e(TAG, "sleep Time " + (1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));
                     }
                     if (!mIsRecording)
                         Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
@@ -204,16 +200,8 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
             synchronized (this) {
                 mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
                 this.notify();
-
-                if (DEBUG) {
-                    Log.e(TAG, "onDrawFrame notify");
-                }
             }
         } else {
-
-            if (DEBUG) {
-                Log.e(TAG, "onDrawFrame mIsManual : " + mIsManual);
-            }
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
         }
     }
