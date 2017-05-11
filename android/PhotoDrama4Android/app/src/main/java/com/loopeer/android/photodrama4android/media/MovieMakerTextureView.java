@@ -26,7 +26,6 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
     protected float mRatioY;
     private TextureRenderer mTextureRenderer;
     private TextureRenderer.Renderer mRenderer;
-    private SurfaceTexture mSurfaceTexture;
     private int mSurfaceWidth;
     private int mSurfaceHeight;
 
@@ -85,16 +84,15 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
         mTextureRenderer.start();
         mTextureRenderer.waitUntilReady();
         mTextureRenderer.setRenderer(mRenderer);
-        if (mSurfaceTexture != null) {
-            mTextureRenderer.getHandler().sendSurfaceAvailable(mSurfaceTexture, mSurfaceWidth, mSurfaceHeight);
+        if (getSurfaceTexture() != null) {
+            mTextureRenderer.getHandler().sendSurfaceAvailable(getSurfaceTexture(), mSurfaceWidth, mSurfaceHeight);
         }
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        mSurfaceTexture = surface;
         if (mTextureRenderer != null) {
-            mTextureRenderer.getHandler().sendSurfaceAvailable(mSurfaceTexture, mSurfaceWidth, mSurfaceHeight);
+            mTextureRenderer.getHandler().sendSurfaceAvailable(surface, mSurfaceWidth, mSurfaceHeight);
             mSurfaceWidth = width;
             mSurfaceHeight = height;
         }
