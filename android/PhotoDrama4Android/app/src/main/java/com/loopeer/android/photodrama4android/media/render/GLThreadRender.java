@@ -51,9 +51,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void stopUp() {
-        synchronized (mLock) {
-            mIsStop = true;
-        }
+        mIsStop = true;
     }
 
     public boolean isStop() {
@@ -61,9 +59,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void startUp() {
-        synchronized (mLock) {
-            mIsStop = false;
-        }
+        mIsStop = false;
         checkToStart();
     }
 
@@ -74,12 +70,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                 try {
                     if (mUsedTime >= mSumTime) {
                         if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
-                            mMovieMakerTextureView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mSeekChangeListener.actionFinish();
-                                }
-                            });
+                            mMovieMakerTextureView.post(() -> mSeekChangeListener.actionFinish());
                         }
                         mLock.wait();
                     }
@@ -96,12 +87,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                     else
                         mIsBackGround = false;
                     if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
-                        mMovieMakerTextureView.post((new Runnable() {
-                            @Override
-                            public void run() {
-                                mSeekChangeListener.seekChange(mUsedTime);
-                            }
-                        }));
+                        mMovieMakerTextureView.post((() -> mSeekChangeListener.seekChange(mUsedTime)));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -205,8 +191,8 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     @Override
     public void onDrawFrame(WindowSurface windowSurface) {
         if (!mIsManual) {
+            mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
             synchronized (mLock) {
-                mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
                 mLock.notify();
             }
         } else {

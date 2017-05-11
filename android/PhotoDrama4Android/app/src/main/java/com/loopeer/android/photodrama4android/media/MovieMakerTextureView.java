@@ -114,7 +114,7 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
         if (mTextureRenderer != null) {
             mTextureRenderer.getHandler().sendSurfaceDestroyed();
         }
-        return false;
+        return true;
     }
 
     @Override
