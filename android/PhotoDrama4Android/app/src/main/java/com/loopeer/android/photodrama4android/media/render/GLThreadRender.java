@@ -75,7 +75,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
             while (!mIsFinish) {
                 try {
                     if (mUsedTime >= mSumTime) {
-                        if (mSeekChangeListener != null) {
+                        if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
                             mMovieMakerTextureView.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -97,7 +97,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                         mUsedTime = mUsedTime + (mIsRecording ? 1000 / RECORDFPS : System.currentTimeMillis() - startTime);
                     else
                         mIsBackGround = false;
-                    if (mSeekChangeListener != null) {
+                    if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
                         mMovieMakerTextureView.post((new Runnable() {
                             @Override
                             public void run() {
