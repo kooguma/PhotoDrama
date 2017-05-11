@@ -116,7 +116,13 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         if (!mIsManual)
             return;
         this.mUsedTime = usedTime;
-        mMovieMakerTextureView.requestRender();
+//        mMovieMakerTextureView.requestRender();
+        mMovieMakerTextureView.post(new Runnable() {
+            @Override
+            public void run() {
+                mMovieMakerTextureView.requestRender();
+            }
+        });
     }
 
     @Override
@@ -164,12 +170,24 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         stopUp();
         setManual(true);
         this.mUsedTime = usedTime;
-        mMovieMakerTextureView.requestRender();
+        mMovieMakerTextureView.post(new Runnable() {
+            @Override
+            public void run() {
+                mMovieMakerTextureView.requestRender();
+            }
+        });
+//        mMovieMakerTextureView.requestRender();
     }
 
     public void requestRender() {
         setManual(true);
-        mMovieMakerTextureView.requestRender();
+//        mMovieMakerTextureView.requestRender();
+        mMovieMakerTextureView.post(new Runnable() {
+            @Override
+            public void run() {
+                mMovieMakerTextureView.requestRender();
+            }
+        });
     }
 
     public void setManual(boolean isManual) {

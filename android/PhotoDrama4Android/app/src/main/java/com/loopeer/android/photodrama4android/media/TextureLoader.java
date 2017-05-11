@@ -25,6 +25,7 @@ public class TextureLoader extends Thread {
     private Context mContext;
     private WindowSurface mWindowSurface;
     private EglCore mEglCore;
+    private EGLContext mEGLContext;
 
     private boolean mIsFinish;
 
@@ -38,18 +39,10 @@ public class TextureLoader extends Thread {
     }
 
     public void run() {
-        EGLContext textureContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
 
-        int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
-                EGL14.EGL_NO_TEXTURE, EGL14.EGL_TEXTURE_FORMAT, EGL14.EGL_NO_TEXTURE,
-                EGL14.EGL_NONE};
-
-        EGLSurface localSurface = EGL14.eglCreatePbufferSurface(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, pbufferAttribs, 0);
-
-        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, textureContext)) {
-            throw new RuntimeException("eglMakeCurrent failed");
-        }
-
+        EglCore eglCore = new EglCore(mEglCore.mEGLContext, EglCore.FLAG_TRY_GLES3);
+        EGLSurface eglSurface = eglCore.createOffscreenSurface(1, 1);
+        eglCore.makeCurrent(eglSurface);
         while (!mIsFinish) {
             synchronized (this) {
                 try {
@@ -132,5 +125,7 @@ public class TextureLoader extends Thread {
     public void update(WindowSurface windowSurface, EglCore eglCore) {
         mWindowSurface = windowSurface;
         mEglCore = eglCore;
+        mEGLContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
+
     }
 }

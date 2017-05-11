@@ -15,6 +15,8 @@ import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.loopeer.android.photodrama4android.media.recorder.gles.EglCore.checkEglError;
+
 public class SubtitleTextureLoader extends Thread {
 
     private static final String TAG = "SubtitleTextureLoader";
@@ -23,6 +25,7 @@ public class SubtitleTextureLoader extends Thread {
     private WindowSurface mWindowSurface;
     private Context mContext;
     private boolean mIsFinish;
+    private EGLContext mEGLContext;
 
     public List<HandlerWrapper> mHandlerWrappers = new ArrayList<>();
 
@@ -35,17 +38,9 @@ public class SubtitleTextureLoader extends Thread {
 
     public void run() {
 
-        EGLContext textureContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
-
-        int pbufferAttribs[] = {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_TEXTURE_TARGET,
-                EGL14.EGL_NO_TEXTURE, EGL14.EGL_TEXTURE_FORMAT, EGL14.EGL_NO_TEXTURE,
-                EGL14.EGL_NONE};
-
-        EGLSurface localSurface = EGL14.eglCreatePbufferSurface(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, pbufferAttribs, 0);
-
-        if (!EGL14.eglMakeCurrent(mEglCore.mEGLDisplay, localSurface, localSurface, textureContext)) {
-            throw new RuntimeException("eglMakeCurrent failed");
-        }
+        EglCore eglCore = new EglCore(mEglCore.mEGLContext, EglCore.FLAG_TRY_GLES3);
+        EGLSurface eglSurface = eglCore.createOffscreenSurface(1, 1);
+        eglCore.makeCurrent(eglSurface);
         while (!mIsFinish) {
             synchronized (this) {
                 try {
@@ -92,5 +87,7 @@ public class SubtitleTextureLoader extends Thread {
     public void update(WindowSurface windowSurface, EglCore eglCore) {
         mEglCore = eglCore;
         mWindowSurface = windowSurface;
+        mEGLContext = EGL14.eglCreateContext(mEglCore.mEGLDisplay, mEglCore.mEGLConfig, mEglCore.mEGLContext, mEglCore.getAttribList(), 0);
+
     }
 }

@@ -380,7 +380,7 @@ public final class EglCore {
     /**
      * Checks for EGL errors.  Throws an exception if an error has been raised.
      */
-    private void checkEglError(String msg) {
+    public static void checkEglError(String msg) {
         int error;
         if ((error = EGL14.eglGetError()) != EGL14.EGL_SUCCESS) {
             throw new RuntimeException(msg + ": EGL error: 0x" + Integer.toHexString(error));

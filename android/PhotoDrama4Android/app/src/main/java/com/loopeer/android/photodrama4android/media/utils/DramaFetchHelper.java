@@ -17,6 +17,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.zeroturnaround.zip.ZipUtil;
 import zlc.season.rxdownload2.RxDownload;
 
@@ -101,6 +103,7 @@ public class DramaFetchHelper {
 
     // TODO: 2017/5/9  优化多线程解码
     public void decodeMusicClips(Drama drama) throws IOException {
+        drama.audioGroup.musicClips = new ArrayList<>();
         if(BuildConfig.DEBUG) {
             if (drama == null) return;
             if (drama.audioGroup == null) return;
