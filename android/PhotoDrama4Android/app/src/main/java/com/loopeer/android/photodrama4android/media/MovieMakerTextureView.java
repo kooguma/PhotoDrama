@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLContext;
 import android.support.v4.content.ContextCompat;
@@ -15,10 +16,14 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
-public class MovieMakerTextureView extends TextureView {
+public class MovieMakerTextureView extends TextureView implements TextureView.SurfaceTextureListener {
     protected float mRatioX;
     protected float mRatioY;
     private TextureRenderer mTextureRenderer;
+    private TextureRenderer.Renderer mRenderer;
+    private SurfaceTexture mSurfaceTexture;
+    private int mSurfaceWidth;
+    private int mSurfaceHeight;
 
     public MovieMakerTextureView(Context context) {
         super(context);
@@ -29,10 +34,7 @@ public class MovieMakerTextureView extends TextureView {
 
         getAttrs(context, attrs, 0);
         setOpaque(false);
-        mTextureRenderer = new TextureRenderer();
-        mTextureRenderer.start();
-        mTextureRenderer.waitUntilReady();
-        setSurfaceTextureListener(mTextureRenderer);
+        setSurfaceTextureListener(this);
     }
 
     private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -58,22 +60,66 @@ public class MovieMakerTextureView extends TextureView {
     }
 
     public void setRenderer(TextureRenderer.Renderer renderer) {
-        mTextureRenderer.setRenderer(renderer);
+        mRenderer = renderer;
     }
 
     public void requestRender() {
-        mTextureRenderer.requestRender();
+        if (mTextureRenderer != null) {
+            mTextureRenderer.requestRender();
+        }
     }
 
     public void onPause() {
-
+        TextureRenderer.RenderHandler rh = mTextureRenderer.getHandler();
+        rh.sendShutdown();
+        try {
+            mTextureRenderer.join();
+        } catch (InterruptedException ie) {
+            throw new RuntimeException("join was interrupted", ie);
+        }
+        mTextureRenderer = null;
     }
 
     public void onResume() {
+        mTextureRenderer = new TextureRenderer();
+        mTextureRenderer.start();
+        mTextureRenderer.waitUntilReady();
+        mTextureRenderer.setRenderer(mRenderer);
 
+        if (mSurfaceTexture != null) {
+            mTextureRenderer.getHandler().sendSurfaceAvailable(mSurfaceTexture, mSurfaceWidth, mSurfaceHeight);
+        }
     }
 
-    public void onDestroy() {
-        mTextureRenderer.finish();
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        mSurfaceTexture = surface;
+        if (mTextureRenderer != null) {
+            mTextureRenderer.getHandler().sendSurfaceAvailable(mSurfaceTexture, mSurfaceWidth, mSurfaceHeight);
+            mSurfaceWidth = width;
+            mSurfaceHeight = height;
+        }
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        if (mTextureRenderer != null) {
+            mTextureRenderer.getHandler().sendSurfaceChanged(width, height);
+            mSurfaceWidth = width;
+            mSurfaceHeight = height;
+        }
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (mTextureRenderer != null) {
+            mTextureRenderer.getHandler().sendSurfaceDestroyed();
+        }
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
     }
 }

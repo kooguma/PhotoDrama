@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class TextureRenderer extends Thread implements TextureView.SurfaceTextureListener {
+public class TextureRenderer extends Thread{
     private static final String TAG = "TextureRenderer";
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
@@ -79,30 +79,6 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
         mHandler.sendRedraw();
     }
 
-    public void finish() {
-        mHandler.sendShutdown();
-    }
-
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture st, int width, int height) {
-        mHandler.sendSurfaceAvailable(st, width, height);
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture st, int width, int height) {
-        mHandler.sendSurfaceChanged(width, height);
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture st) {
-        mHandler.sendSurfaceDestroyed();
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture st) {
-    }
-
     private void draw() {
         if (mWindowSurface == null) return;
         mRenderer.onDrawFrame(mWindowSurface);
@@ -113,7 +89,7 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     }
 
     private void shutdown() {
-        releaseGl();
+        Looper.myLooper().quit();
     }
 
     private void surfaceDestroyed() {
@@ -142,7 +118,7 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
         void onDrawFrame(WindowSurface windowSurface);
     }
 
-    private static class RenderHandler extends Handler {
+    public static class RenderHandler extends Handler {
         private static final int MSG_SURFACE_AVAILABLE = 0;
         private static final int MSG_SURFACE_CHANGED = 1;
         private static final int MSG_SURFACE_DESTROYED = 2;

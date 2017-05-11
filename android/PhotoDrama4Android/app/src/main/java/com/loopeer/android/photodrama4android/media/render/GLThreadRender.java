@@ -142,7 +142,6 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     public void onDestroy() {
         mIsFinish = true;
         mIsStop = true;
-        mMovieMakerTextureView.onDestroy();
         mMovieMakerTextureView = null;
     }
 
