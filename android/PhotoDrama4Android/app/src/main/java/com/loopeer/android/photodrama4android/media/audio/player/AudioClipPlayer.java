@@ -25,8 +25,6 @@ public class AudioClipPlayer {
     }
 
     public boolean isPrepared() {
-        Log.e(TAG, "isPrepared = " + isPrepared + " audio player is prepared = " +
-            mAudioPlayer.isPrepared());
         return isPrepared && mAudioPlayer != null && mAudioPlayer.isPrepared();
     }
 
@@ -102,30 +100,15 @@ public class AudioClipPlayer {
     }
 
     public void onProgressChange(int usedTime) {
+        //滑动进度条的时候不会回调
+        Log.e(TAG, "onProgressChange begin");
         if (checkPlayerNotNull()) {
             Log.e(TAG, "onProgressChange used time = " + usedTime);
             if (usedTime < mMusicClip.startTime || usedTime > mMusicClip.getEndTime()) {
-                Log.e(TAG, "1");
-                if (mAudioPlayer.isPlaying()) {
-                    Log.e(TAG,
-                        "2" + "audio player is null " + (mAudioPlayer == null) + " isPrepared = " +
-                            isPrepared());
-                    if (mAudioPlayer != null && isPrepared()) {
-                        Log.e(TAG, "3");
-                        mAudioPlayer.pause();
-                    }
-                }
+                mAudioPlayer.pause();
             } else {
-                Log.e(TAG, "key = " + mMusicClip.getKey());
-                Log.e(TAG, "4" + " isPlaying = " + mAudioPlayer.isPlaying() + " isPause = " +
-                    mAudioPlayer.isPause());
-                if (!mAudioPlayer.isPlaying() && !mAudioPlayer.isPause()) {
-                    Log.e(TAG, "5");
-                    seekTo(usedTime);
-                    if (mAudioPlayer != null && isPrepared()) {
-                        Log.e(TAG, "6");
-                        mAudioPlayer.play();
-                    }
+                if (mAudioPlayer.isPrepared()) {
+                    mAudioPlayer.play();
                 }
             }
         }
@@ -168,7 +151,8 @@ public class AudioClipPlayer {
                 }
                 if (BuildConfig.DEBUG) {
                     if (bytes != null) {
-                        Log.e(TAG, "file load finish: " + " bytes.length = " + bytes.length);
+                        Log.e("tag", "file load finish: " + " bytes.length = " + bytes.length +
+                            "time stamp : " + System.currentTimeMillis());
                     } else {
                         Log.e(TAG, "file load finish: bytes = null");
                     }

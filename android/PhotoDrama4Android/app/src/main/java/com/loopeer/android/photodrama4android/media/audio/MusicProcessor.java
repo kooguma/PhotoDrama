@@ -44,13 +44,16 @@ public class MusicProcessor implements MusicClipPlayer.MusicClipPlayerLister {
 
     public void updateMusicClipPlayer(Context context, List<MusicClip> clips) {
         List<String> removeIngKeys = new ArrayList<>();
+
         for (Map.Entry<String, MusicClipPlayer> entry : mClipPlayerHashMap.entrySet()) {
             if (clipRemovedFromList(entry.getKey(), clips)) {
                 removeIngKeys.add(entry.getKey());
             }
         }
+
         putToPool(removeIngKeys);
         removeIngKeys.clear();
+
         for (MusicClip clip: clips) {
             if (clip.isCreateIng() || TextUtils.isEmpty(clip.path)) continue;
             if (!mClipPlayerHashMap.containsKey(clip.getKey())) {

@@ -9,6 +9,7 @@ public interface IMusic {
     void startMusic();
     void seekToMusic(int progress);
     void pauseMusic();
+    void stopMusic();
     void onProgressChange(int progress);
     void onResume(Context context, int progress);
     void onPause();

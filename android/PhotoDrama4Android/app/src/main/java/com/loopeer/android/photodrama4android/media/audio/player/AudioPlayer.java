@@ -21,11 +21,11 @@ public class AudioPlayer {
     private static final String TAG = "AudioPlayer";
 
     public static class State {
-        public static final int UNPREPARED = 0x00001; //未就绪
-        public static final int PREPARED = 0x00010; //已经就绪
-        public static final int PLAYING = 0x00100; //播放中
-        public static final int PAUSE = 0x01000; //暂停
-        public static final int STOP = 0x10000; //暂停
+        public static final int UNPREPARED = 0x00001; //未就绪 1
+        public static final int PREPARED = 0x00010; //已经就绪 16
+        public static final int PLAYING = 0x00100; //播放中 256
+        public static final int PAUSE = 0x01000; //暂停 4096
+        public static final int STOP = 0x10000; //暂停 65536
     }
 
     private int mState; // maintain the state ourselves , do not use the state of AudioTrack
@@ -106,8 +106,16 @@ public class AudioPlayer {
         mState = State.PREPARED;
     }
 
+    public int getState() {
+        return mState;
+    }
+
     public boolean isPrepared() {
-        return mAudioTrack != null && mBytes != null && mBytes.length != 0;
+        return mAudioTrack != null && mState == State.PREPARED;
+    }
+
+    public boolean isDataReady() {
+        return mBytes != null && mBytes.length != 0;
     }
 
     public boolean isPlaying() {
@@ -133,7 +141,7 @@ public class AudioPlayer {
 
     public synchronized void seekTo(int time) {
         Log.e(TAG, "seek to " + " time = " + time);
-        if (mAudioTrack != null) {
+        if (mAudioTrack != null && !isAudioTrackUninitialized()) {
             mAudioTrack.pause();
             if (mTotalTime != 0) {
                 float p = time * 1.0f / mTotalTime;
@@ -148,14 +156,27 @@ public class AudioPlayer {
     }
 
     public void play() {
-        Log.e(TAG, "play : state = " + mState);
-        if (mAudioTrack != null) {
+        if (mAudioTrack != null && !isAudioTrackUninitialized()) {
             if (checkState(State.PREPARED | State.STOP)) {
                 Log.e(TAG, "1");
                 mPlayOffset = 0;
                 mState = State.PLAYING;
                 mAudioTrack.play();
-                startWorkThread();
+                if (mWorkThread != null) {
+                    if (mWorkThread.isAlive()) {
+                        Log.e(TAG, "1.1");
+                        synchronized (mWorkThread) {
+                            mWorkThread.notify();
+                        }
+                    } else {
+                        Log.e(TAG, "1.2");
+                        Log.e(TAG, "play offset = " + mPlayOffset);
+                        mThreadExitFlag = false;
+                        mWorkThread.start();
+                    }
+                } else {
+                    startWorkThread();
+                }
             } else if (checkState(State.PLAYING | State.PAUSE)) {
                 Log.e(TAG, "2");
                 mState = State.PLAYING;
@@ -173,23 +194,26 @@ public class AudioPlayer {
     }
 
     public void pause() {
-        if (mAudioTrack != null) {
+        if (mAudioTrack != null && !isAudioTrackUninitialized()) {
             mState = State.PAUSE;
             mAudioTrack.pause();
         }
     }
 
     public void stop() {
-        if (mAudioTrack != null) {
+        if (mAudioTrack != null && !isAudioTrackUninitialized()) {
             mState = State.STOP;
             mAudioTrack.stop();
-            stopWorkThread();
+            mThreadExitFlag = true;
+            mTotalTime = 0;
+            mPlayOffset = 0;
+            mPrimePlaySize = 0;
+            mBytes = null;
         }
     }
 
     public void release() {
         if (mAudioTrack != null) {
-            mAudioTrack.stop();
             mAudioTrack.release();
             mAudioTrack = null;
             stopWorkThread();
@@ -215,6 +239,10 @@ public class AudioPlayer {
         }
     }
 
+    private boolean isAudioTrackUninitialized() {
+        return mAudioTrack.getState() == AudioTrack.STATE_UNINITIALIZED;
+    }
+
     private boolean checkState(int stateExpected) {
         return (mState & (stateExpected)) > 0;
     }
@@ -226,6 +254,7 @@ public class AudioPlayer {
         @Override public void run() {
 
             Log.e(TAG, "mAudioTrack = null" + (mAudioTrack == null));
+
             if (mAudioTrack != null) {
 
                 while (!mThreadExitFlag) {
@@ -267,7 +296,6 @@ public class AudioPlayer {
                 mState = AudioPlayer.State.STOP;
 
                 mAudioTrack.stop();
-
 
                 Log.e(TAG, "PlayAudioThread complete...");
             }

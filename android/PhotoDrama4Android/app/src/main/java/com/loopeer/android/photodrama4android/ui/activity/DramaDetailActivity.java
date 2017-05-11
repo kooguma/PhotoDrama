@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -25,6 +26,8 @@ import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -149,10 +152,11 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
             .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
 
         button.setText(getString(R.string.drama_index_format, Integer.valueOf(theme.episodeNumber)));
+
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
                 mUsedTime = 0;
-                mVideoPlayerManager.pauseVideo();
+                mVideoPlayerManager.stopVideo();
                 loadDramaSend(theme);
                 mTheme = theme;
                 updateSelectedThemeBtn();

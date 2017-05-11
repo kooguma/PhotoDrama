@@ -62,7 +62,7 @@ public class TestAudioPlayerActivity extends PhotoDramaBaseActivity {
                             new MediaDecoder.DecodeProgressCallback() {
                                 @Override public void onFinish() {
                                     Log.e("TAG","clip key = " + clip.getKey());
-                                    mAudioProcessor.addClip(clip);
+                                    //mAudioProcessor.addClip(clip);
                                 }
                             });
                         decoders.add(decoder);

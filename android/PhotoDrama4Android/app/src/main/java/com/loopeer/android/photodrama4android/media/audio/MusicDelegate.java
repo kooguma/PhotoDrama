@@ -94,6 +94,10 @@ public class MusicDelegate implements IMusic {
         }
     }
 
+    @Override public void stopMusic() {
+
+    }
+
     private boolean isBindServiceAvailable() {
         return mBindService != null && mContext.equals(mBindService.getMContext());
     }

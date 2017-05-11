@@ -22,7 +22,7 @@ public class AudioService extends Service {
             mAudioProcessor = new AudioProcessor(mContext);
         }
         mAudioProcessor.setProcessorPrepareListener(listener);
-        mAudioProcessor.addClips(drama.audioGroup.musicClips);
+        mAudioProcessor.updateAudioClipPlayer(mContext,drama.audioGroup.musicClips);
     }
 
     public void startMusic() {
@@ -31,6 +31,10 @@ public class AudioService extends Service {
 
     public void pauseMusic() {
         mAudioProcessor.pauseMusic();
+    }
+
+    public void stopMusic(){
+        mAudioProcessor.stopMusic();
     }
 
     public void seekToMusic(int progress) {
@@ -57,7 +61,7 @@ public class AudioService extends Service {
     }
 
     public void updateDrama(Drama drama) {
-        mAudioProcessor.addClips(drama.audioGroup.musicClips);
+        mAudioProcessor.updateAudioClipPlayer(mContext,drama.audioGroup.musicClips);
     }
 
     public Context getContext() {

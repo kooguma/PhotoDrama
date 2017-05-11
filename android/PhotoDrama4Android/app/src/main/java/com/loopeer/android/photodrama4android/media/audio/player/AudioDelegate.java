@@ -90,6 +90,13 @@ public class AudioDelegate implements IMusic {
         }
     }
 
+    @Override public void stopMusic() {
+        mIsStop =true;
+        if(isBindServiceAvailable()){
+            mBindService.stopMusic();
+        }
+    }
+
     @Override public void onProgressChange(int time) {
         if (isBindServiceAvailable()) {
             mBindService.onProgressChange(time);

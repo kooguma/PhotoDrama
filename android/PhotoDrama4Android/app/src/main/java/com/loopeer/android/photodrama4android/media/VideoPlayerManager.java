@@ -206,6 +206,13 @@ public class VideoPlayerManager
         }
     }
 
+    public void stopVideo() {
+        mGLThread.stopUp();
+        mIMusic.stopMusic();
+        if (isRecording()) mGLRenderWorker.endRecording();
+        onProgressStop();
+    }
+
     public void startVideo() {
         mGLThread.startUp();
         mIMusic.startMusic();
