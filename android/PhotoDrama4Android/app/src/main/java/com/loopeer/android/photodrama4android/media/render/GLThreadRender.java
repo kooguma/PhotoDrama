@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
@@ -51,7 +52,10 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void stopUp() {
-        mIsStop = true;
+//        synchronized (mLock) {
+        if (DEBUG) Log.e(TAG, "stop");
+            mIsStop = true;
+//        }
     }
 
     public boolean isStop() {
@@ -193,7 +197,11 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         if (!mIsManual) {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
             synchronized (mLock) {
-                mLock.notify();
+                if (!mIsStop) {
+                    if (DEBUG) Log.e(TAG, "notify");
+
+                    mLock.notify();
+                }
             }
         } else {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);

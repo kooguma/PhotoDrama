@@ -12,11 +12,16 @@ import android.util.Log;
 import android.view.TextureView;
 import android.view.ViewGroup;
 
+import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
 public class MovieMakerTextureView extends TextureView implements TextureView.SurfaceTextureListener {
+
+    private static final String TAG = "TextureRenderer View";
+    public static final boolean DEBUG = BuildConfig.DEBUG;
+
     protected float mRatioX;
     protected float mRatioY;
     private TextureRenderer mTextureRenderer;
@@ -72,11 +77,6 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
     public void onPause() {
         TextureRenderer.RenderHandler rh = mTextureRenderer.getHandler();
         rh.sendShutdown();
-        try {
-            mTextureRenderer.join();
-        } catch (InterruptedException ie) {
-            throw new RuntimeException("join was interrupted", ie);
-        }
         mTextureRenderer = null;
     }
 
@@ -111,6 +111,8 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (DEBUG) Log.e(TAG, "onSurfaceTextureDestroyed");
+
         if (mTextureRenderer != null) {
             mTextureRenderer.getHandler().sendSurfaceDestroyed();
         }

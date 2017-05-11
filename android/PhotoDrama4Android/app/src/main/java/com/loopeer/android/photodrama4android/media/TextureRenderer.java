@@ -4,6 +4,7 @@ import android.graphics.SurfaceTexture;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
@@ -40,7 +41,6 @@ public class TextureRenderer extends Thread{
         }
         mEglCore = new EglCore(null, 0);
         Looper.loop();
-
         releaseGl();
         mEglCore.release();
 
@@ -83,7 +83,7 @@ public class TextureRenderer extends Thread{
     }
 
     private void shutdown() {
-        Looper.myLooper().quit();
+        Looper.myLooper().quitSafely();
     }
 
     private void surfaceDestroyed() {
