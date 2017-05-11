@@ -4,18 +4,12 @@ import android.graphics.SurfaceTexture;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
 import com.loopeer.android.photodrama4android.media.recorder.gles.WindowSurface;
 
 import java.lang.ref.WeakReference;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 public class TextureRenderer extends Thread{
     private static final String TAG = "TextureRenderer";
@@ -93,6 +87,7 @@ public class TextureRenderer extends Thread{
     }
 
     private void surfaceDestroyed() {
+        mRenderer.onSurfaceDestroy();
         releaseGl();
     }
 
@@ -116,6 +111,8 @@ public class TextureRenderer extends Thread{
         void onSurfaceChanged(WindowSurface windowSurface, int width, int height);
 
         void onDrawFrame(WindowSurface windowSurface);
+
+        void onSurfaceDestroy();
     }
 
     public static class RenderHandler extends Handler {
@@ -189,5 +186,4 @@ public class TextureRenderer extends Thread{
             }
         }
     }
-
 }

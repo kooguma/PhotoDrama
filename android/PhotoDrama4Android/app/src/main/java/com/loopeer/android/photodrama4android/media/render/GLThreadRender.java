@@ -1,7 +1,6 @@
 package com.loopeer.android.photodrama4android.media.render;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
@@ -213,5 +212,10 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         } else {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
         }
+    }
+
+    @Override
+    public void onSurfaceDestroy() {
+        mIRendererWorker.onSurfaceDestroy();
     }
 }

@@ -12,4 +12,7 @@ public interface IRendererWorker {
     void onSurfaceChanged(WindowSurface windowSurface, int width, int height);
 
     void drawFrame(Context context, WindowSurface windowSurface, long usedTime);
+
+    void onSurfaceDestroy();
+
 }

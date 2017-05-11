@@ -124,6 +124,11 @@ public class GLRenderWorker implements IRendererWorker {
         }
     }
 
+    @Override
+    public void onSurfaceDestroy() {
+        if (mImageClipProcessor != null) mImageClipProcessor.onDestroy();
+    }
+
     public void updateDrama(Drama drama) {
         mDrama = drama;
         if (mImageClipProcessor != null) mImageClipProcessor.updateData(mDrama.videoGroup);
@@ -277,10 +282,5 @@ public class GLRenderWorker implements IRendererWorker {
 
     public TextureLoader getTextureLoader() {
         return mImageClipProcessor.getTextureLoader();
-    }
-
-
-    public void onDestroy() {
-        if (mImageClipProcessor != null) mImageClipProcessor.onDestroy();
     }
 }

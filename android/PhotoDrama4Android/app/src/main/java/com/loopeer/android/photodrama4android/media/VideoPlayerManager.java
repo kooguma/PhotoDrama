@@ -180,7 +180,6 @@ public class VideoPlayerManager
     public void onDestroy() {
         mGLThread.onDestroy();
         mIMusic.onDestroy();
-        mGLRenderWorker.onDestroy();
         mGLThread = null;
     }
 

@@ -85,7 +85,6 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
         mTextureRenderer.start();
         mTextureRenderer.waitUntilReady();
         mTextureRenderer.setRenderer(mRenderer);
-
         if (mSurfaceTexture != null) {
             mTextureRenderer.getHandler().sendSurfaceAvailable(mSurfaceTexture, mSurfaceWidth, mSurfaceHeight);
         }
