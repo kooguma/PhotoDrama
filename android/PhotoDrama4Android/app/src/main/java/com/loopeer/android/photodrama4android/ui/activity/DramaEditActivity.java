@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+
 import com.facebook.common.util.UriUtil;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -34,14 +35,19 @@ import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
+
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class DramaEditActivity extends PhotoDramaBaseActivity
-    implements EditDramaSegmentAdapter.OnSelectedListener
-    ,
-    VideoPlayerManager.BitmapReadyListener,
-    VideoPlayerManager.ProgressChangeListener,
-    VideoPlayerManager.RecordingListener {
+        implements EditDramaSegmentAdapter.OnSelectedListener
+        ,
+        VideoPlayerManager.BitmapReadyListener,
+        VideoPlayerManager.ProgressChangeListener,
+        VideoPlayerManager.RecordingListener {
 
     private ActivityDramaEditBinding mBinding;
     private ImageView mIcon;
@@ -73,14 +79,14 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         if (mDramaFetchHelper == null) mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.checkSubscribe();
         mDramaFetchHelper.getDrama(mTheme,
-            drama -> {
-                updateDrama(drama);
-            }, throwable -> {
-                throwable.printStackTrace();
-                mLoader.showMessage(throwable.getMessage());
-            }, () -> {
-                mLoader.showContent();
-            });
+                drama -> {
+                    updateDrama(drama);
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    mLoader.showMessage(throwable.getMessage());
+                }, () -> {
+                    mLoader.showContent();
+                });
     }
 
     private void updateDrama(Drama drama) {
@@ -120,7 +126,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
         mVideoPlayerManager = new VideoPlayerManager(null,
-            mBinding.glSurfaceView, new Drama());
+                mBinding.glSurfaceView, new Drama());
         mVideoPlayerManager.setBitmapReadyListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.setProgressChangeListener(this);
@@ -141,7 +147,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(
-                @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
+                    @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
             }
 
             @Override
@@ -155,54 +161,54 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
             BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
             mSelectedImageClip.path = uri.getPath();
             HandlerWrapper handler = new HandlerWrapper(
-                Looper.getMainLooper(),
-                HandlerWrapper.TYPE_LOAD_IMAGE
-                , mSelectedImageClip.path
-                , t -> VideoPlayManagerContainer.getDefault()
-                .bitmapLoadReady(DramaEditActivity.this
-                    , mSelectedImageClip.path));
+                    Looper.getMainLooper(),
+                    HandlerWrapper.TYPE_LOAD_IMAGE
+                    , mSelectedImageClip.path
+                    , t -> VideoPlayManagerContainer.getDefault()
+                    .bitmapLoadReady(DramaEditActivity.this
+                            , mSelectedImageClip.path));
             mVideoPlayerManager.getTextureLoader().loadImageTexture(handler);
             mEditDramaSegmentAdapter.selectedNext();
             return true;
         });
         mBottomImagePickerView.getViewPager()
-            .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                }
+                    }
 
-                @Override
-                public void onPageSelected(int position) {
-                    behavior.updateNestScrollChild(
-                        mBottomImagePickerView.getCurrentRecyclerView(position));
-                }
+                    @Override
+                    public void onPageSelected(int position) {
+                        behavior.updateNestScrollChild(
+                                mBottomImagePickerView.getCurrentRecyclerView(position));
+                    }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
 
-                }
-            });
+                    }
+                });
         updateSegmentList();
 
         mBinding.glSurfaceView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    mBinding.glSurfaceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int containerHeight = mBinding.container.getHeight();
-                    int recyclerBottom = mBinding.recyclerView.getBottom();
-                    int minSheetHeight = containerHeight - recyclerBottom;
-                    behavior.setPeekHeight(minSheetHeight);
-                }
-            });
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mBinding.glSurfaceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        int containerHeight = mBinding.container.getHeight();
+                        int recyclerBottom = mBinding.recyclerView.getBottom();
+                        int minSheetHeight = containerHeight - recyclerBottom;
+                        behavior.setPeekHeight(minSheetHeight);
+                    }
+                });
     }
 
     private void updateSegmentList() {
         mEditDramaSegmentAdapter = new EditDramaSegmentAdapter(this);
         mEditDramaSegmentAdapter.setOnSelectedListener(this);
         mBinding.recyclerView.setLayoutManager(
-            new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mBinding.recyclerView.setAdapter(mEditDramaSegmentAdapter);
     }
 
@@ -248,8 +254,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     public void onFullBtnClick(View view) {
         Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
-            mVideoPlayerManager.isStop(),
-            mVideoPlayerManager.getUsedTime(),
+                mVideoPlayerManager.isStop(),
+                mVideoPlayerManager.getUsedTime(),
                 mTheme);
     }
 
@@ -275,7 +281,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     public void showExportProgress(String message) {
         if (mExportProgressLoading == null) {
             mExportProgressLoading = new ExportLoadingDialog(this,
-                R.style.ExportProgressLoadingTheme);
+                    R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
             mExportProgressLoading.setCancelable(false);
         }
@@ -303,7 +309,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     public void recordChange(int progress) {
         if (mExportProgressLoading != null) {
             mExportProgressLoading.setProgress(
-                1f * progress / (mVideoPlayerManager.getSeekbarMaxValue() + 1));
+                    1f * progress / (mVideoPlayerManager.getSeekbarMaxValue() + 1));
         }
     }
 
@@ -320,7 +326,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         super.onBackPressed();
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == Navigator.REQUEST_FULL_SCREEN) {
             boolean restart = data.getBooleanExtra(Navigator.EXTRA_IS_TO_START, false);

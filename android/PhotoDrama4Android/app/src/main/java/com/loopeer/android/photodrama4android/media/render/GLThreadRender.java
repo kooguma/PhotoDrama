@@ -186,13 +186,14 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     @Override
     public void onSurfaceCreated(WindowSurface windowSurface, EglCore eglCore) {
         mIRendererWorker.onSurfaceCreated(windowSurface, eglCore);
+        mIRendererWorker.onSurfaceChanged(windowSurface, windowSurface.getWidth(), windowSurface.getHeight());
+        mTextureViewReadyOk = true;
+        checkToStart();
     }
 
     @Override
     public void onSurfaceChanged(WindowSurface windowSurface, int width, int height) {
         mIRendererWorker.onSurfaceChanged(windowSurface, width, height);
-        mTextureViewReadyOk = true;
-        checkToStart();
     }
 
     private void checkToStart() {

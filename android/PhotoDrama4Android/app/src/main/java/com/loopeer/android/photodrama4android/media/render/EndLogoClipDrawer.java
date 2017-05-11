@@ -99,7 +99,6 @@ public class EndLogoClipDrawer extends ClipDrawer{
     public void checkLogoBitmapReady() {
         mLogoBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(String.valueOf(mEndLogoClip.logoRes));
         if (mLogoBitmap == null) return;
-        Log.e(TAG, mLogoBitmap.getWidth() + " logo ");
         mViewScaleFactor = SCREEN_IMAGE_LOGO_WIDTH_FACTOR * mViewWidth / mLogoBitmap.getWidth();
     }
 
@@ -171,7 +170,6 @@ public class EndLogoClipDrawer extends ClipDrawer{
             preLoadTexture(mMovieMakerTextureView, mTextureLoader);
             return;
         }
-        Log.e(TAG, mCanvasTextureId[0] + " logo drawFrame");
         updateViewMatrices(usedTime);
         textureProgram.useProgram();
         textureProgram.setUniforms(pMatrix, viewMatrix, modelMatrix, mCanvasTextureId[0]);

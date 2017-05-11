@@ -39,15 +39,11 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     @Override
     public void run() {
         Looper.prepare();
-
-        // We need to create the Handler before reporting ready.
         mHandler = new RenderHandler(this);
         synchronized (mStartLock) {
             mReady = true;
-            mStartLock.notify();    // signal waitUntilReady()
+            mStartLock.notify();
         }
-
-        // Prepare EGL and open the camera before we start handling messages.
         mEglCore = new EglCore(null, 0);
         Looper.loop();
 
@@ -73,7 +69,8 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
             while (!mReady) {
                 try {
                     mStartLock.wait();
-                } catch (InterruptedException ie) { /* not expected */ }
+                } catch (InterruptedException ie) {
+                }
             }
         }
     }
@@ -109,7 +106,6 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     private void draw() {
         if (mWindowSurface == null) return;
         mRenderer.onDrawFrame(mWindowSurface);
-        mWindowSurface.swapBuffers();
     }
 
     private void frameAvailable() {
@@ -152,10 +148,6 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
         private static final int MSG_SURFACE_DESTROYED = 2;
         private static final int MSG_SHUTDOWN = 3;
         private static final int MSG_FRAME_AVAILABLE = 4;
-        private static final int MSG_ZOOM_VALUE = 5;
-        private static final int MSG_SIZE_VALUE = 6;
-        private static final int MSG_ROTATE_VALUE = 7;
-        private static final int MSG_POSITION = 8;
         private static final int MSG_REDRAW = 9;
 
         private WeakReference<TextureRenderer> mWeakRenderThread;
@@ -185,22 +177,15 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
             sendMessage(obtainMessage(MSG_FRAME_AVAILABLE));
         }
 
-        public void sendPosition(int x, int y) {
-            sendMessage(obtainMessage(MSG_POSITION, x, y));
-        }
-
         public void sendRedraw() {
             sendMessage(obtainMessage(MSG_REDRAW));
         }
 
-        @Override  // runs on RenderThread
+        @Override
         public void handleMessage(Message msg) {
             int what = msg.what;
-            //Log.d(TAG, "RenderHandler [" + this + "]: what=" + what);
-
             TextureRenderer renderThread = mWeakRenderThread.get();
             if (renderThread == null) {
-                Log.w(TAG, "RenderHandler.handleMessage: weak ref is null");
                 return;
             }
 
