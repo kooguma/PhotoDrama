@@ -103,7 +103,6 @@ public class DramaFetchHelper {
 
     // TODO: 2017/5/9  优化多线程解码
     public void decodeMusicClips(Drama drama) throws IOException {
-        drama.audioGroup.musicClips = new ArrayList<>();
         if(BuildConfig.DEBUG) {
             if (drama == null) return;
             if (drama.audioGroup == null) return;
