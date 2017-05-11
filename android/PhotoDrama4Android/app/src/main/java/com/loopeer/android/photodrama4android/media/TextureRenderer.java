@@ -12,7 +12,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class TextureRenderer extends Thread implements TextureView.SurfaceTextureListener {
-    private static final String TAG = "GLThreadRender Texture";
+    private static final String TAG = "TextureRenderer";
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
     private Object mLock = new Object();
@@ -25,7 +25,7 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     private boolean mRequestRender = true;
 
     public TextureRenderer() {
-        super("TextureViewGL TextureRenderer");
+        super("TextureRenderer");
     }
 
     public void setRenderer(Renderer renderer) {
@@ -59,6 +59,13 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
                 }
                 if (mRequestRender) {
                     mRenderer.onDrawFrame(mWindowSurface);
+                    if (DEBUG) {
+                        Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "swapBuffers start");
+                    }
+                    mWindowSurface.swapBuffers();
+                    if (DEBUG) {
+                        Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "swapBuffers end");
+                    }
                     mRequestRender = false;
                 }
 
@@ -76,9 +83,19 @@ public class TextureRenderer extends Thread implements TextureView.SurfaceTextur
     }
 
     public void requestRender() {
+        if (DEBUG) {
+            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "requestRender");
+        }
         synchronized (mLock) {
+            if (DEBUG) {
+                Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "requestRender getLock");
+            }
             mRequestRender = true;
             mLock.notifyAll();
+
+            if (DEBUG) {
+                Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "requestRender releaseLock");
+            }
         }
     }
 

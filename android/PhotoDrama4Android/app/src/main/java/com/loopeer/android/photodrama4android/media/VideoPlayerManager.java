@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.media;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.BuildConfig;
@@ -19,6 +20,9 @@ import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoM
 public class VideoPlayerManager
         implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
         AudioProcessor.AudioProcessorPrepareListener, MusicProcessor.ProcessorPrepareListener {
+
+    private static final String TAG = "VideoPlayerManager";
+    public static final boolean DEBUG = BuildConfig.DEBUG;
 
     private SeekWrapper mSeekWrapper;
     private GLThreadRender mGLThread;
@@ -181,10 +185,25 @@ public class VideoPlayerManager
     }
 
     public void pauseVideo() {
+        if (DEBUG) {
+            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "pauseVideo start");
+        }
         mGLThread.stopUp();
+        if (DEBUG) {
+            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "stopUp ok");
+        }
         mIMusic.pauseMusic();
+        if (DEBUG) {
+            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "pauseMusic ok");
+        }
         if (isRecording()) mGLRenderWorker.endRecording();
+        if (DEBUG) {
+            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "endRecording ok");
+        }
         onProgressStop();
+        if (DEBUG) {
+            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "pauseVideo ok");
+        }
     }
 
     public void startVideo() {

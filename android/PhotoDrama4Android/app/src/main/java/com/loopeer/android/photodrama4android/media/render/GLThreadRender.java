@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.media.render;
 import android.content.Context;
 import android.util.Log;
 import android.view.TextureView;
+
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.IPlayerLife;
 import com.loopeer.android.photodrama4android.media.IRendererWorker;
@@ -30,8 +31,11 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     protected SeekChangeListener mSeekChangeListener;
     public static final int RECORDFPS = 29;
     private boolean mIsRecording = false;
+    private Object mLock = new Object();
+
 
     public GLThreadRender(Context context, TextureView textureView, IRendererWorker iRendererWorker) {
+        super("GLThreadRender");
         mMovieMakerTextureView = (MovieMakerTextureView) textureView;
         mMovieMakerTextureView.setRenderer(this);
         mContext = context;
@@ -48,7 +52,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void stopUp() {
-        synchronized (this) {
+        synchronized (mLock) {
             mIsStop = true;
         }
     }
@@ -59,15 +63,15 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
 
     public void startUp() {
         setManual(false);
-        synchronized (this) {
+        synchronized (mLock) {
             mIsStop = false;
-            this.notify();
+            mLock.notify();
         }
     }
 
     @Override
     public void run() {
-        synchronized (this) {
+        synchronized (mLock) {
             while (!mIsFinish) {
                 try {
                     if (mUsedTime >= mSumTime) {
@@ -79,17 +83,14 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                                 }
                             });
                         }
-                        this.wait();
+                        mLock.wait();
                     }
-                    if (mIsStop)
-                        this.wait();
+                    if (mIsStop) {
+                        mLock.wait();
+                    }
                     long startTime = System.currentTimeMillis();
                     mMovieMakerTextureView.requestRender();
-                    this.wait();
-
-                    if (DEBUG) {
-                        Log.e(TAG, "sleep Time " + (1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));
-                    }
+                    mLock.wait();
                     if (!mIsRecording)
                         Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
                     if (!mIsBackGround)
@@ -104,7 +105,6 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                             }
                         }));
                     }
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -116,13 +116,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         if (!mIsManual)
             return;
         this.mUsedTime = usedTime;
-//        mMovieMakerTextureView.requestRender();
-        mMovieMakerTextureView.post(new Runnable() {
-            @Override
-            public void run() {
-                mMovieMakerTextureView.requestRender();
-            }
-        });
+        mMovieMakerTextureView.requestRender();
     }
 
     @Override
@@ -170,24 +164,12 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         stopUp();
         setManual(true);
         this.mUsedTime = usedTime;
-        mMovieMakerTextureView.post(new Runnable() {
-            @Override
-            public void run() {
-                mMovieMakerTextureView.requestRender();
-            }
-        });
-//        mMovieMakerTextureView.requestRender();
+        mMovieMakerTextureView.requestRender();
     }
 
     public void requestRender() {
         setManual(true);
-//        mMovieMakerTextureView.requestRender();
-        mMovieMakerTextureView.post(new Runnable() {
-            @Override
-            public void run() {
-                mMovieMakerTextureView.requestRender();
-            }
-        });
+        mMovieMakerTextureView.requestRender();
     }
 
     public void setManual(boolean isManual) {
@@ -215,9 +197,9 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     @Override
     public void onDrawFrame(WindowSurface windowSurface) {
         if (!mIsManual) {
-            synchronized (this) {
+            synchronized (mLock) {
                 mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
-                this.notify();
+                mLock.notify();
             }
         } else {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);

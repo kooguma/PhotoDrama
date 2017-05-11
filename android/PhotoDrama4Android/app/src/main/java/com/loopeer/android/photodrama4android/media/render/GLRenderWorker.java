@@ -99,7 +99,6 @@ public class GLRenderWorker implements IRendererWorker {
             glClear(GL_COLOR_BUFFER_BIT);
             setIdentityM(projectionMatrix, 0);
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
-            windowSurface.swapBuffers();
         } else {
             if (DEBUG) Log.e(TAG, "mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);  " + usedTime * 1000);
             mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);
@@ -111,7 +110,6 @@ public class GLRenderWorker implements IRendererWorker {
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
             GlUtil.checkGlError("glBindFramebuffer");
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
-            windowSurface.swapBuffers();
             mMuxerWrapper.frameVideoAvailableSoon();
             mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

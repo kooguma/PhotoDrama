@@ -7,6 +7,7 @@ import android.opengl.EGL14;
 import android.opengl.EGLContext;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.ViewGroup;
 
