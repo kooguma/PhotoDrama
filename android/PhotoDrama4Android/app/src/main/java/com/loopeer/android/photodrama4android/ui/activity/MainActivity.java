@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import com.laputapp.http.NetworkUtils;
@@ -50,4 +51,5 @@ public class MainActivity extends PhotoDramaBaseActivity {
         Analyst.homeSettingClick();
         Navigator.startSettingActivity(this);
     }
+
 }

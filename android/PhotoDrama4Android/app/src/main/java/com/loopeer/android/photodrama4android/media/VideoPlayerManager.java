@@ -18,8 +18,8 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoMediaStore;
 
 public class VideoPlayerManager
-        implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
-        AudioProcessor.AudioProcessorPrepareListener, MusicProcessor.ProcessorPrepareListener {
+    implements OnSeekProgressChangeListener, SeekChangeListener, IPlayerLife,
+    AudioProcessor.AudioProcessorPrepareListener, MusicProcessor.ProcessorPrepareListener {
 
     private static final String TAG = "VideoPlayerManager";
     public static final boolean DEBUG = BuildConfig.DEBUG;
@@ -119,7 +119,7 @@ public class VideoPlayerManager
     public void seekChange(long usedTime) {
         if (mSeekWrapper != null) mSeekWrapper.setProgress((int) usedTime);
         onProgressChange((int) usedTime);
-        mIMusic.onProgressChange((int) usedTime);
+        if (!isRecording()) mIMusic.onProgressChange((int) usedTime);
         recordChange((int) usedTime);
     }
 
@@ -186,13 +186,26 @@ public class VideoPlayerManager
     public void pauseVideo() {
         mGLThread.stopUp();
         mIMusic.pauseMusic();
+        if (DEBUG) {
+            Log.e(TAG,
+                "Thread : " + Thread.currentThread().getName() + "     " + "pauseVideo start");
+        }
+        mGLThread.stopUp();
+        if (DEBUG) {
+            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "stopUp ok");
+        }
+        mIMusic.pauseMusic();
+        if (DEBUG) {
+            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "pauseMusic ok");
+        }
         if (isRecording()) mGLRenderWorker.endRecording();
         if (DEBUG) {
-            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "endRecording ok");
+            Log.e(TAG,
+                "Thread : " + Thread.currentThread().getName() + "     " + "endRecording ok");
         }
         onProgressStop();
         if (DEBUG) {
-            Log.e(TAG, "Thread : "  + Thread.currentThread().getName() + "     " + "pauseVideo ok");
+            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "pauseVideo ok");
         }
     }
 
@@ -323,9 +336,9 @@ public class VideoPlayerManager
 
     public boolean isMoveReadyOk() {
         return mGLThread != null && mGLThread.isStop()
-                && isMusicPrepared
-                && isImagePrepared
-                && isSubtitlePrepared;
+            && isMusicPrepared
+            && isImagePrepared
+            && isSubtitlePrepared;
     }
 
     public int getMaxTime() {

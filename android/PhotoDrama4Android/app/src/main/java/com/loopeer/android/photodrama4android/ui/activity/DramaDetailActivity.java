@@ -139,8 +139,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),
-            mBinding.glSurfaceView, new Drama());
+        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),mBinding.glSurfaceView, new Drama());
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
@@ -228,20 +227,22 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
 
     @Override
     protected void onPause() {
+        Log.e("TAG","onPause");
         super.onPause();
         mVideoPlayerManager.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.e("TAG","onStop");
+        super.onStop();
+        mVideoPlayerManager.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mVideoPlayerManager.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mVideoPlayerManager.onStop();
     }
 
     @Override

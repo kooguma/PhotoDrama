@@ -95,7 +95,7 @@ public class MusicDelegate implements IMusic {
     }
 
     @Override public void stopMusic() {
-
+        this.pauseMusic();
     }
 
     private boolean isBindServiceAvailable() {

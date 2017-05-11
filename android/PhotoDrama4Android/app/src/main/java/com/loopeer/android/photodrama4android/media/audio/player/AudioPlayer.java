@@ -194,14 +194,16 @@ public class AudioPlayer {
     }
 
     public void pause() {
-        if (mAudioTrack != null && !isAudioTrackUninitialized()) {
+        Log.e(TAG,"pause");
+        if (mAudioTrack != null) {
             mState = State.PAUSE;
             mAudioTrack.pause();
         }
     }
 
     public void stop() {
-        if (mAudioTrack != null && !isAudioTrackUninitialized()) {
+        Log.e(TAG,"stop");
+        if (mAudioTrack != null) {
             mState = State.STOP;
             mAudioTrack.stop();
             mThreadExitFlag = true;

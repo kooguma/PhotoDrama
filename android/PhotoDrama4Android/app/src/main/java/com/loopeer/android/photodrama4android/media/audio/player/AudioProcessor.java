@@ -80,7 +80,9 @@ public class AudioProcessor implements AudioClipPlayer.AudioClipPrepareListener 
         }
 
         for (Map.Entry<String, AudioClipPlayer> entry : mClipPlayerHashMap.entrySet()) {
-            entry.getValue().prepare();
+            if(!entry.getValue().isPrepared()) {
+                entry.getValue().prepare();
+            }
         }
     }
 

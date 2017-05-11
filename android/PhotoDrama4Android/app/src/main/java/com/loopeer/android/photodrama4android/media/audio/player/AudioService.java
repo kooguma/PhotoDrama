@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 
 public class AudioService extends Service {
+    private static final String TAG = "AudioService";
 
     private AudioService.AudioBinder mBinder;
     private AudioProcessor mAudioProcessor;
@@ -18,11 +20,12 @@ public class AudioService extends Service {
     }
 
     public void initAudioProcessor(Drama drama, AudioProcessor.AudioProcessorPrepareListener listener) {
+        Log.e(TAG, "initAudioProcessor：" + (mAudioProcessor == null));
         if (mAudioProcessor == null) {
             mAudioProcessor = new AudioProcessor(mContext);
         }
         mAudioProcessor.setProcessorPrepareListener(listener);
-        mAudioProcessor.updateAudioClipPlayer(mContext,drama.audioGroup.musicClips);
+        mAudioProcessor.updateAudioClipPlayer(mContext, drama.audioGroup.musicClips);
     }
 
     public void startMusic() {
@@ -33,7 +36,7 @@ public class AudioService extends Service {
         mAudioProcessor.pauseMusic();
     }
 
-    public void stopMusic(){
+    public void stopMusic() {
         mAudioProcessor.stopMusic();
     }
 
@@ -61,7 +64,7 @@ public class AudioService extends Service {
     }
 
     public void updateDrama(Drama drama) {
-        mAudioProcessor.updateAudioClipPlayer(mContext,drama.audioGroup.musicClips);
+        mAudioProcessor.updateAudioClipPlayer(mContext, drama.audioGroup.musicClips);
     }
 
     public Context getContext() {

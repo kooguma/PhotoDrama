@@ -107,6 +107,7 @@ public class AudioClipPlayer {
             if (usedTime < mMusicClip.startTime || usedTime > mMusicClip.getEndTime()) {
                 mAudioPlayer.pause();
             } else {
+                Log.e(TAG,"4"+ " state = " + mAudioPlayer.getState());
                 if (mAudioPlayer.isPrepared()) {
                     mAudioPlayer.play();
                 }

@@ -24,22 +24,24 @@ public class AudioDelegate implements IMusic {
     public AudioDelegate(Context context, Drama drama, AudioProcessor.AudioProcessorPrepareListener listener) {
         mDrama = drama;
         mContext = context;
-        mConn = new ServiceConnection() {
-            @Override public void onServiceConnected(ComponentName name, IBinder service) {
-                AudioService.AudioBinder mBinder = (AudioService.AudioBinder) service;
-                mBindService = mBinder.getMusicService(mContext);
-                mBindService.initAudioProcessor(mDrama, listener);
-                mBindService.seekToMusic(mUseTime);
-                if (!mIsStop) mBindService.startMusic();
-                mIsBind = true;
-            }
+        if (mConn == null) {
+            mConn = new ServiceConnection() {
+                @Override public void onServiceConnected(ComponentName name, IBinder service) {
+                    AudioService.AudioBinder mBinder = (AudioService.AudioBinder) service;
+                    mBindService = mBinder.getMusicService(mContext);
+                    // TODO: 2017/5/11 横屏切换两次 init
+                    mBindService.initAudioProcessor(mDrama, listener);
+                    mBindService.seekToMusic(mUseTime);
+                    if (!mIsStop) mBindService.startMusic();
+                    mIsBind = true;
+                }
 
-            @Override public void onServiceDisconnected(ComponentName name) {
-            }
-        };
+                @Override public void onServiceDisconnected(ComponentName name) {
+                }
+            };
+        }
         bingService();
     }
-
 
     private void reConnect(Context context) {
         if (mBindService != null && !context.equals(mBindService.getContext())) {
@@ -65,8 +67,9 @@ public class AudioDelegate implements IMusic {
 
     @Override public void updateDrama(Drama drama) {
         mDrama = drama;
-        if (isBindServiceAvailable())
+        if (isBindServiceAvailable()) {
             mBindService.updateDrama(mDrama);
+        }
     }
 
     @Override public void startMusic() {
@@ -91,8 +94,8 @@ public class AudioDelegate implements IMusic {
     }
 
     @Override public void stopMusic() {
-        mIsStop =true;
-        if(isBindServiceAvailable()){
+        mIsStop = true;
+        if (isBindServiceAvailable()) {
             mBindService.stopMusic();
         }
     }
