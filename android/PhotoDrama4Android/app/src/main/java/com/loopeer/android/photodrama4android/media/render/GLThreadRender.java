@@ -32,7 +32,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     public static final int RECORDFPS = 29;
     private boolean mIsRecording = false;
     private Object mLock = new Object();
-
+    private boolean mTextureViewReadyOk = false;
 
     public GLThreadRender(Context context, TextureView textureView, IRendererWorker iRendererWorker) {
         super("GLThreadRender");
@@ -62,11 +62,10 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void startUp() {
-        setManual(false);
         synchronized (mLock) {
             mIsStop = false;
-            mLock.notify();
         }
+        checkToStart();
     }
 
     @Override
@@ -192,6 +191,16 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     @Override
     public void onSurfaceChanged(WindowSurface windowSurface, int width, int height) {
         mIRendererWorker.onSurfaceChanged(windowSurface, width, height);
+        mTextureViewReadyOk = true;
+        checkToStart();
+    }
+
+    private void checkToStart() {
+        if (!mTextureViewReadyOk || mIsStop) return;
+        setManual(false);
+        synchronized (mLock) {
+            mLock.notify();
+        }
     }
 
     @Override

@@ -31,6 +31,7 @@ public class MovieMakerTextureView extends TextureView {
         setOpaque(false);
         mTextureRenderer = new TextureRenderer();
         mTextureRenderer.start();
+        mTextureRenderer.waitUntilReady();
         setSurfaceTextureListener(mTextureRenderer);
     }
 
