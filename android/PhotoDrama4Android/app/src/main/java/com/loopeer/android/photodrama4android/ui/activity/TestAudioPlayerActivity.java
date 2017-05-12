@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import com.loopeer.andebug.LogEntry;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityTestAudioPlayerBinding;
 import com.loopeer.android.photodrama4android.media.audio.player.AudioProcessor;
