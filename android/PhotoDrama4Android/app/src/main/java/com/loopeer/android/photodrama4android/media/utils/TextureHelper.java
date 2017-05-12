@@ -132,11 +132,7 @@ public class TextureHelper {
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
         Paint textPaint = new Paint();
-        if (DEBUG) {
-            Log.e(TAG, DeviceScreenUtils.getDensity(context) + " : ");
-        }
         float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
-//        float textSize = DisplayUtils.px2sp(context, 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM);
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
