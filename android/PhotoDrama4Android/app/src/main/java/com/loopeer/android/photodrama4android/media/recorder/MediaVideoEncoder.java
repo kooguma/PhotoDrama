@@ -21,7 +21,6 @@ public class MediaVideoEncoder extends MediaEncoder {
 	private final int mHeight;
 	private final int mBitRate;
     private Surface mInputSurface;
-	private long time = 0;
     private LinkedList<Long> mUsedTimes = new LinkedList<>();
 
 	public MediaVideoEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, final int width, final int height, final int bitRate) {
