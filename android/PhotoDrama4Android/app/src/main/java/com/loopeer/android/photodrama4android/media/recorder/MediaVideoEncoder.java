@@ -15,7 +15,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 
 	private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
 	private static final int FRAME_RATE = 30;               // 30fps
-	private static final int IFRAME_INTERVAL = 5;           // 5 seconds between I-frames
+	private static final int IFRAME_INTERVAL = 1;           // 5 seconds between I-frames
 
     private final int mWidth;
 	private final int mHeight;
