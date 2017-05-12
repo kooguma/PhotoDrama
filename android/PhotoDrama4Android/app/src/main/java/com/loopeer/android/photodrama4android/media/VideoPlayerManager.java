@@ -147,7 +147,7 @@ public class VideoPlayerManager
             mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
             updateDrama(mGLRenderWorker.getDrama());
             String path = mGLRenderWorker.endRecording();
-            scanIntoMediaStore(mContext, path);
+            scanIntoMediaStore(mContext, path, mMaxTime);
             recordFinished(path);
             mIsRecording = false;
         }

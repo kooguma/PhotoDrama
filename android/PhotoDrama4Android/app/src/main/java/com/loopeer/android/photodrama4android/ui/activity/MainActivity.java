@@ -1,5 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -14,9 +16,13 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
 import com.loopeer.android.photodrama4android.utils.ShareUtils;
 
+import java.io.File;
+
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class MainActivity extends PhotoDramaBaseActivity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,7 @@ public class MainActivity extends PhotoDramaBaseActivity {
         setSwipeBackEnable(false);
         setContentView(R.layout.activity_main);
         PermissionUtils.checkStoragePermission(this);
+
     }
 
     @Override

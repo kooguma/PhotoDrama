@@ -2,11 +2,14 @@ package com.loopeer.android.photodrama4android.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -230,12 +233,25 @@ public class FileManager {
         return perm == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void scanIntoMediaStore(Context context, String filePath) {
+    public static void scanIntoMediaStore(Context context, String filePath, int duration) {
         if (!checkFile(filePath))
             return;
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(Uri.fromFile(new File(filePath)));
-        context.sendBroadcast(intent);
+
+        File file = new File(filePath);
+        /*Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(file));
+        context.sendBroadcast(intent);*/
+
+        ContentValues values = new ContentValues(7);
+        values.put(MediaStore.Video.Media.TITLE, "Camera");
+        values.put(MediaStore.Video.Media.DISPLAY_NAME, file.getName());
+        values.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+        values.put(MediaStore.Video.Media.DURATION, duration);
+        values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
+        values.put(MediaStore.Video.Media.SIZE, file.length());
+        Uri uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
     }
 
     private static boolean checkFile(String filePath) {
@@ -243,3 +259,4 @@ public class FileManager {
         return file.exists();
     }
 }
+

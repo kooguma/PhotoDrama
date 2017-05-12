@@ -16,6 +16,8 @@ import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.laputapp.utilities.DeviceScreenUtils;
+import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
@@ -44,6 +46,7 @@ public class TextureHelper {
     private static final float LINE_MAX_TEXT_NUM = 26;//TODO test value
 
     private static final String TAG = "TextureHelper";
+    private static final boolean DEBUG = BuildConfig.DEBUG || true;
 
     public static int loadTexture(Context context, int resourceId) {
         final int[] textureObjectIds = new int[1];
@@ -129,7 +132,11 @@ public class TextureHelper {
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
         Paint textPaint = new Paint();
+        if (DEBUG) {
+            Log.e(TAG, DeviceScreenUtils.getDensity(context) + " : ");
+        }
         float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
+//        float textSize = DisplayUtils.px2sp(context, 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM);
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
