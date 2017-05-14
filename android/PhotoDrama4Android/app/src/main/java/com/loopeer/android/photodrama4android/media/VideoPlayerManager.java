@@ -265,7 +265,7 @@ public class VideoPlayerManager
 
     private void onProgressChange(int progress) {
         if (mProgressChangeListener != null) {
-            mProgressChangeListener.onProgressChange(progress);
+            mProgressChangeListener.onProgressChange(progress, mSeekbarMaxValue);
         }
     }
 
@@ -408,7 +408,7 @@ public class VideoPlayerManager
 
         void onProgressStop();
 
-        void onProgressChange(int progress);
+        void onProgressChange(int progress, int maxValue);
 
         void onProgressStart();
     }

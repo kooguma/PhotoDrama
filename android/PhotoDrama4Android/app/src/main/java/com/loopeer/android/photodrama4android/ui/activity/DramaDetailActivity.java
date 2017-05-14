@@ -6,13 +6,14 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -25,7 +26,10 @@ import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
+import com.loopeer.android.photodrama4android.ui.hepler.DramaDetailOrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
+import com.loopeer.android.photodrama4android.ui.hepler.OrientationAdapter;
+import com.loopeer.android.photodrama4android.ui.hepler.OrientationViewWrapper;
 import com.loopeer.android.photodrama4android.ui.hepler.ScreenOrientationHelper;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import java.text.SimpleDateFormat;
@@ -64,15 +68,18 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                 .subscribe()
         );
         registerSubscription(
-            mHideToolSubject.debounce(1500, TimeUnit.MILLISECONDS)
+            mHideToolSubject.debounce(getResources().getInteger(R.integer.movie_show_time), TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(o -> hideAllBar())
                 .subscribe()
         );
         loadDramaSend(mTheme);
         getChangingConfigurations();
+
+        OrientationAdapter orientationAdapter = new DramaDetailOrientationAdapter(mBinding);
         mScreenOrientationHelper = new ScreenOrientationHelper(this
-                , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                , orientationAdapter);
     }
 
     private void parseIntent() {
@@ -224,10 +231,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         Navigator.startDramaEditActivity(DramaDetailActivity.this, mTheme);
     }
 
-    public void onCloseClick(View view) {
-        onBackPressed();
-    }
-
     @Override
     protected void onPause() {
         Log.e("TAG","onPause");
@@ -271,11 +274,11 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     }
 
     @Override
-    public void onProgressChange(int progress) {
+    public void onProgressChange(int progress, int maxValue) {
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(progress);
         mBinding.textTimeStart.setText(hms);
-        String hmsTotal = formatter.format(mVideoPlayerManager.getSeekbarMaxValue() + 1 - progress);
+        String hmsTotal = formatter.format(maxValue + 1 - progress);
         mBinding.textTimeEnd.setText(hmsTotal);
     }
 
@@ -312,6 +315,25 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (mTheme != null) {
+            getSupportActionBar().setTitle(mTheme.name);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

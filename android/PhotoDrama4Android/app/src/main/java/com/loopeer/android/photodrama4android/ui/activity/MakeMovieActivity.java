@@ -126,7 +126,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     @Override
-    public void onProgressChange(int progress) {
+    public void onProgressChange(int progress, int maxValue) {
         SimpleDateFormat formatter = new SimpleDateFormat("m:ss");
         String hms = formatter.format(progress);
         mBinding.textStart.setText(hms);

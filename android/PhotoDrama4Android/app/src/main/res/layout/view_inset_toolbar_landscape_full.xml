@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
-    <com.loopeer.compatinset.SingleInsetHolderView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="@bool/fits_system_windows"
-        app:insetStatusBarColor="@android:color/transparent"/>
+    <merge
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Toolbar.Dark.Transparent"/>
+        <com.loopeer.compatinset.SingleInsetHolderView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="@bool/fits_system_windows"
+            app:insetStatusBarColor="@android:color/transparent"/>
 
-</merge>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar.Dark.Transparent"/>
+
+    </merge>
+
+</layout>

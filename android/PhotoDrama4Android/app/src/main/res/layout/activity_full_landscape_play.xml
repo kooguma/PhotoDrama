@@ -20,6 +20,9 @@
             app:screenRatioY="@integer/gl_screen_y"/>
 
         <LinearLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/layout_tool_top"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,7 +30,8 @@
             android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:showIn="@layout/activity_full_landscape_play">
 
             <include
                 layout="@layout/view_inset_toolbar_landscape_full"/>

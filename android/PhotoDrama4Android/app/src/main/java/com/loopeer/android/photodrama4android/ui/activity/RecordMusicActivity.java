@@ -196,7 +196,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     }
 
     @Override
-    public void onProgressChange(int progress) {
+    public void onProgressChange(int progress, int maxValue) {
         if (mMusicClipRecording != null) {
             mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
             if (!checkClipValidate(mMusicClipRecording)) {

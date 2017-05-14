@@ -2,4 +2,5 @@
 <resources>
     <integer name="gl_screen_x">16</integer>
     <integer name="gl_screen_y">9</integer>
+    <integer name="movie_show_time">3000</integer>
 </resources>

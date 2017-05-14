@@ -9,10 +9,12 @@ public class ScreenOrientationHelper {
 
     public boolean mOrientationLandscape;
     public Activity mActivity;
+    private OrientationAdapter mOrientationAdapter;
 
-    public ScreenOrientationHelper(Activity activity, boolean orientationLandscape) {
+    public ScreenOrientationHelper(Activity activity, boolean orientationLandscape, OrientationAdapter orientationAdapter) {
         mActivity = activity;
         mOrientationLandscape = orientationLandscape;
+        mOrientationAdapter = orientationAdapter;
     }
 
     private void toggle() {
@@ -21,6 +23,7 @@ public class ScreenOrientationHelper {
         } else {
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+        mOrientationAdapter.toggle(!mOrientationLandscape);
     }
 
     public void fullScreen() {

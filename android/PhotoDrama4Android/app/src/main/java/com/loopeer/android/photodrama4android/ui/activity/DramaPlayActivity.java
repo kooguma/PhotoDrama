@@ -183,11 +183,11 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     @Override
-    public void onProgressChange(int progress) {
+    public void onProgressChange(int progress, int maxValue) {
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         String hms = formatter.format(progress);
         mBinding.textTimeStart.setText(hms);
-        String hmsTotal = formatter.format(mVideoPlayerManager.getSeekbarMaxValue() + 1 - progress);
+        String hmsTotal = formatter.format(maxValue + 1 - progress);
         mBinding.textTimeEnd.setText("- " + hmsTotal);
     }
 

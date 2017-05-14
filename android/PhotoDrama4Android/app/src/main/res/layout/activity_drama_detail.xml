@@ -28,13 +28,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ViewAnimator
+                <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
                     android:id="@+id/animator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/black">
 
-                    <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
+                    <FrameLayout
                         android:id="@+id/layout_player"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -79,7 +79,6 @@
                                 android:id="@+id/seek_bar"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-
                                 android:layout_weight="1"/>
 
                             <TextView
@@ -91,9 +90,9 @@
                                 android:textSize="@dimen/text_size_small"
                                 tools:text="13:00"/>
 
-
                             <ImageView
                                 style="?actionButtonStyle"
+                                android:id="@+id/btn_full"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|right"
@@ -102,15 +101,15 @@
                                 android:src="@drawable/ic_full"/>
 
                         </LinearLayout>
-
-                    </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
+                    </FrameLayout>
 
                     <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:screenRatioX="@integer/gl_screen_x"
                         app:screenRatioY="@integer/gl_screen_y"/>
-                </ViewAnimator>
+
+                </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
 
                 <View
                     android:layout_width="match_parent"
@@ -242,28 +241,20 @@
             </LinearLayout>
 
             <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/layout_tool_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:background="@drawable/bg_play_seek_top"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:showIn="@layout/activity_full_landscape_play">
 
-                <com.loopeer.compatinset.SingleInsetHolderView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fitsSystemWindows="@bool/fits_system_windows"
-                    app:insetStatusBarColor="@android:color/transparent"/>
-
-                <ImageButton
-                    android:id="@+id/btn_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:layout_marginLeft="@dimen/large_padding"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:minHeight="?actionBarSize"
-                    android:onClick="onCloseClick"
-                    android:src="@drawable/ic_back_white"/>
+                <include
+                    android:id="@+id/toolbar_wrapper"
+                    layout="@layout/view_inset_toolbar_landscape_full"/>
             </LinearLayout>
 
         </FrameLayout>

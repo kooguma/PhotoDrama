@@ -3,11 +3,11 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.facebook.common.util.UriUtil;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -36,12 +35,6 @@ import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
-
-import java.io.File;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class DramaEditActivity extends PhotoDramaBaseActivity
         implements EditDramaSegmentAdapter.OnSelectedListener
@@ -272,7 +265,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     }
 
     @Override
-    public void onProgressChange(int progress) {
+    public void onProgressChange(int progress, int maxValue) {
     }
 
     @Override
