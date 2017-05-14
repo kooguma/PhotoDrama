@@ -140,7 +140,7 @@
         <activity
             android:name=".ui.activity.DramaEditActivity"
             android:label="@string/label_drama_edit"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.FullLandscapePlayActivity"

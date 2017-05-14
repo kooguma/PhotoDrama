@@ -4,6 +4,7 @@ package com.loopeer.android.photodrama4android.ui.hepler;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.view.MenuItem;
 
 public class ScreenOrientationHelper {
 

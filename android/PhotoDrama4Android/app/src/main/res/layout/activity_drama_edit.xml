@@ -14,9 +14,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/view_toolbar_dark_inset" />
+            <include
+                android:id="@+id/view_toolbar_dark_inset"
+                layout="@layout/view_toolbar_dark_inset" />
 
-            <ViewAnimator
+            <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
                 android:id="@+id/animator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -24,7 +26,8 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
 
                     <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
                         android:id="@+id/gl_surface_view"
@@ -50,12 +53,21 @@
                         android:src="@drawable/ic_play_green_large"/>
 
                     <ImageView
+                        android:id="@+id/btn_full"
                         style="?actionButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onFullBtnClick"
                         android:layout_gravity="bottom|right"
                         android:src="@drawable/ic_full"/>
+
+                    <include
+                        android:id="@+id/view_full_bottom"
+                        layout="@layout/view_full_screen_bottom"/>
+
+                    <include
+                        android:id="@+id/view_full_top"
+                        layout="@layout/view_full_screen_top"/>
                 </FrameLayout>
 
                 <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
@@ -63,7 +75,7 @@
                     android:layout_height="wrap_content"
                     app:screenRatioX="@integer/gl_screen_x"
                     app:screenRatioY="@integer/gl_screen_y"/>
-            </ViewAnimator>
+            </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"

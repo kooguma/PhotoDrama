@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.ui.hepler;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.view.MenuItem;
 
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper;
@@ -30,4 +31,5 @@ public abstract class OrientationAdapter<T extends ViewDataBinding> {
     abstract void changeToPortrait(T binding);
 
     abstract void changeToLandscape(T binding);
+
 }

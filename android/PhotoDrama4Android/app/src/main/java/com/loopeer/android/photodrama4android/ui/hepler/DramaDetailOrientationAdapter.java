@@ -6,6 +6,8 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaDetailBinding;
 
+import static com.loopeer.android.photodrama4android.ui.hepler.FullBottomLayoutHelper.updateBottomLayoutPadding;
+
 public class DramaDetailOrientationAdapter extends OrientationAdapter<ActivityDramaDetailBinding> {
 
     public DramaDetailOrientationAdapter(ActivityDramaDetailBinding activityDataBinding) {
@@ -26,11 +28,7 @@ public class DramaDetailOrientationAdapter extends OrientationAdapter<ActivityDr
         binding.animator.setLandscape(true);
         binding.btnFull.setVisibility(View.GONE);
         binding.btnPlayCenterWrapper.setVisibility(View.VISIBLE);
-        int padding = mContext.getResources().getDimensionPixelSize(R.dimen.xsmall_padding);
-        int paddingRight = mContext.getResources().getDimensionPixelSize(R.dimen.xxlarge_padding);
-        int paddingLeft = mContext.getResources().getDimensionPixelSize(R.dimen.large_padding);
-        binding.layoutToolBottom.setPadding(
-                paddingLeft, padding, paddingRight, padding);
+        updateBottomLayoutPadding(mContext, binding.layoutToolBottom);
         ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 

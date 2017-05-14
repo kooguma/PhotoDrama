@@ -3,7 +3,6 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/layout_tool_bottom"
         android:layout_width="match_parent"
@@ -12,14 +11,11 @@
         android:background="@drawable/bg_play_seek"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="15dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="15dp"
         android:visibility="gone">
 
         <ImageView
             android:id="@+id/btn_pause_play_btn"
+            style="?actionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onPausePlayBtnClick"
@@ -39,7 +35,6 @@
             android:id="@+id/seek_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_weight="1"/>
 
         <TextView
