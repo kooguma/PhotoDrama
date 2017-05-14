@@ -93,7 +93,6 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void drawFrame(Context context, WindowSurface windowSurface, long usedTime) {
-        glViewport(0, 0, windowSurface.getWidth(), windowSurface.getHeight());
 
         if (!mIsRecording) {
             glClear(GL_COLOR_BUFFER_BIT);

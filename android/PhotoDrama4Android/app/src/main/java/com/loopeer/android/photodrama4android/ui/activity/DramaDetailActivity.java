@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.hepler.DramaDetailOrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.OrientationAdapter;
-import com.loopeer.android.photodrama4android.ui.hepler.OrientationViewWrapper;
 import com.loopeer.android.photodrama4android.ui.hepler.ScreenOrientationHelper;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import java.text.SimpleDateFormat;
@@ -265,7 +263,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         String hms = formatter.format(progress);
         mBinding.textTimeStart.setText(hms);
         String hmsTotal = formatter.format(maxValue + 1 - progress);
-        mBinding.textTimeEnd.setText("-" + hmsTotal);
+        mBinding.textTimeEnd.setText(hmsTotal);
     }
 
     @Override

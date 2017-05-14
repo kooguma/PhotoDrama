@@ -37,12 +37,14 @@
                     <FrameLayout
                         android:id="@+id/layout_player"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
 
                         <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
                             android:id="@+id/gl_surface_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             app:screenRatioX="@integer/gl_screen_x"
                             app:screenRatioY="@integer/gl_screen_y"/>
 
@@ -91,8 +93,8 @@
                                 tools:text="13:00"/>
 
                             <ImageView
-                                style="?actionButtonStyle"
                                 android:id="@+id/btn_full"
+                                style="?actionButtonStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|right"
@@ -112,8 +114,8 @@
                                 android:id="@+id/btn_play_center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:onClick="onPlayBtnClick"
                                 android:layout_gravity="center"
+                                android:onClick="onPlayBtnClick"
                                 android:src="@drawable/ic_play_green_large"/>
                         </FrameLayout>
                     </FrameLayout>
@@ -181,8 +183,8 @@
                     android:id="@+id/container_episode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"

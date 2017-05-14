@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.TextureView;
 import android.view.ViewGroup;
 
+import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.BuildConfig;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;
@@ -56,9 +57,16 @@ public class MovieMakerTextureView extends TextureView implements TextureView.Su
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT) {
             setMeasuredDimension(getDefaultSize(0, widthMeasureSpec), getDefaultSize(0, heightMeasureSpec));
-            int childWidthSize = (getMeasuredWidth());
-            widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (1f * childWidthSize * mRatioY / mRatioX), MeasureSpec.EXACTLY);
+            int childWidthSize = getMeasuredWidth();
+            if (childWidthSize == Math.max(DeviceScreenUtils.getScreenHeight(getContext()), DeviceScreenUtils.getScreenWidth(getContext()))) {
+                int childHeightSize = Math.min(DeviceScreenUtils.getScreenHeight(getContext())
+                        , DeviceScreenUtils.getScreenWidth(getContext()));
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(childHeightSize, MeasureSpec.EXACTLY);
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (1f * childHeightSize * mRatioX / mRatioY), MeasureSpec.EXACTLY);
+            } else {
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (1f * childWidthSize * mRatioY / mRatioX), MeasureSpec.EXACTLY);
+            }
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
