@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -253,10 +254,11 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     }
 
     public void onFullBtnClick(View view) {
-        Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        /*Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
                 mVideoPlayerManager.isStop(),
                 mVideoPlayerManager.getUsedTime(),
-                mTheme);
+                mTheme);*/
     }
 
     @Override

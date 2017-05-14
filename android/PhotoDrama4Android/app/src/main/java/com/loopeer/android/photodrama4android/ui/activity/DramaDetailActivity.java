@@ -2,15 +2,17 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.jakewharton.rxbinding2.view.RxView;
+import android.widget.Toast;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -24,13 +26,10 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
+import com.loopeer.android.photodrama4android.ui.hepler.ScreenOrientationHelper;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -49,6 +48,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     private Subject mHideToolSubject = PublishSubject.create();
     private boolean mToolShow = true;
     private int mUsedTime;
+    private ScreenOrientationHelper mScreenOrientationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,9 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                 .subscribe()
         );
         loadDramaSend(mTheme);
+        getChangingConfigurations();
+        mScreenOrientationHelper = new ScreenOrientationHelper(this
+                , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     private void parseIntent() {
@@ -291,10 +294,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     }
 
     public void onFullBtnClick(View view) {
-        Navigator.startFullLandscapePlayActivityForResult(this, mDrama,
-            mVideoPlayerManager.isStop(),
-            mVideoPlayerManager.getUsedTime(),
-                mTheme);
+        mScreenOrientationHelper.fullScreen();
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -313,4 +313,16 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        mScreenOrientationHelper.backPressed();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mScreenOrientationHelper.updateOrientation(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE);
+    }
+
 }

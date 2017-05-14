@@ -103,7 +103,7 @@
         <activity
             android:name=".ui.activity.DramaDetailActivity"
             android:label="@string/label_drama_detail"
-            android:screenOrientation="portrait">
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.DramaSelectActivity"/>
@@ -140,6 +140,7 @@
         <activity
             android:name=".ui.activity.DramaEditActivity"
             android:label="@string/label_drama_edit"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.FullLandscapePlayActivity"
