@@ -96,11 +96,26 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|right"
-                                android:background="?selectableItemBackgroundBorderless"
                                 android:onClick="onFullBtnClick"
                                 android:src="@drawable/ic_full"/>
 
                         </LinearLayout>
+
+                        <FrameLayout
+                            android:id="@+id/btn_play_center_wrapper"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/btn_play_center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onPlayBtnClick"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_play_green_large"/>
+                        </FrameLayout>
                     </FrameLayout>
 
                     <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar

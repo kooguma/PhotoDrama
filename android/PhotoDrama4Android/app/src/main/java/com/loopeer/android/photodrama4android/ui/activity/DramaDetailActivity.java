@@ -271,6 +271,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     @Override
     public void onProgressStop() {
         mBinding.btnPausePlayBtn.setSelected(true);
+        mBinding.btnPlayCenter.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -285,7 +286,12 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     @Override
     public void onProgressStart() {
         mBinding.btnPausePlayBtn.setSelected(false);
+        mBinding.btnPlayCenter.setVisibility(View.GONE);
         hideTool();
+    }
+
+    public void onPlayBtnClick(View view) {
+        mVideoPlayerManager.startVideo();
     }
 
     public void onPausePlayBtnClick(View view) {

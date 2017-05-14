@@ -15,6 +15,7 @@ public class DramaDetailOrientationAdapter extends OrientationAdapter<ActivityDr
     @Override
     void changeToPortrait(ActivityDramaDetailBinding binding) {
         binding.btnFull.setVisibility(View.VISIBLE);
+        binding.btnPlayCenterWrapper.setVisibility(View.GONE);
         binding.layoutToolBottom.setPadding(0, 0, 0, 0);
         ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
@@ -22,9 +23,12 @@ public class DramaDetailOrientationAdapter extends OrientationAdapter<ActivityDr
     @Override
     void changeToLandscape(ActivityDramaDetailBinding binding) {
         binding.btnFull.setVisibility(View.GONE);
-        int padding = mContext.getResources().getDimensionPixelSize(R.dimen.large_padding);
+        binding.btnPlayCenterWrapper.setVisibility(View.VISIBLE);
+        int padding = mContext.getResources().getDimensionPixelSize(R.dimen.xsmall_padding);
+        int paddingRight = mContext.getResources().getDimensionPixelSize(R.dimen.xxlarge_padding);
+        int paddingLeft = mContext.getResources().getDimensionPixelSize(R.dimen.large_padding);
         binding.layoutToolBottom.setPadding(
-                padding, padding, padding, padding);
+                paddingLeft, padding, paddingRight, padding);
         ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 
