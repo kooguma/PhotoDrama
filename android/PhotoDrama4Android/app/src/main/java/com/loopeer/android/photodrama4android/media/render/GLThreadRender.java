@@ -52,10 +52,9 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void stopUp() {
-//        synchronized (mLock) {
-        if (DEBUG) Log.e(TAG, "stop");
+        synchronized (mLock) {
             mIsStop = true;
-//        }
+        }
     }
 
     public boolean isStop() {
@@ -197,15 +196,12 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         if (!mIsManual) {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
             synchronized (mLock) {
-                if (!mIsStop) {
-                    if (DEBUG) Log.e(TAG, "notify");
-
-                    mLock.notify();
-                }
+                mLock.notify();
             }
         } else {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
         }
+
     }
 
     @Override

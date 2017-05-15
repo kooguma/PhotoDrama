@@ -54,7 +54,8 @@ public class VideoPlayerManager
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
 
         if (BuildConfig.DEBUG) {
-            mIMusic = new AudioDelegate(mContext, drama, this);
+//            mIMusic = new AudioDelegate(mContext, drama, this);
+            mIMusic = new MusicDelegate(mContext, drama, this);
         } else {
             mIMusic = new MusicDelegate(mContext, drama, this);
         }
