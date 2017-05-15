@@ -53,6 +53,13 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="TabLayoutTextAppearance.Dark"
+        parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_color_secondary</item>
+    </style>
+
     <style name="Toolbar.Dark">
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="titleTextAppearance">@style/TextAppearance.PhotoDrama.Toolbar.Dark</item>

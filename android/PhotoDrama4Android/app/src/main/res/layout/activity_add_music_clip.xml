@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar"/>
+
+    <android.support.design.widget.CustomTabLayout
+        android:id="@+id/music_clip_add_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabBackground="@color/window_background_gray"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        android:background="@color/window_background_gray"
+        app:tabTextAppearance="@style/TabLayoutTextAppearance.Dark"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabIndicatorWidth="100dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/music_clip_add_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

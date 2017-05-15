@@ -14,7 +14,7 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import java.io.File;
 import zlc.season.rxdownload2.RxDownload;
 
-public class MusicSelectAdapter extends BaseFooterAdapter<Voice> {
+public class MusicClipAddAdapter extends BaseFooterAdapter<Voice> {
 
     private IMusicAdapter mIMusicAdapter;
 
@@ -29,7 +29,7 @@ public class MusicSelectAdapter extends BaseFooterAdapter<Voice> {
         void onAudioPauseClick(String path, MusicClipView musicClipView);
     }
 
-    public MusicSelectAdapter(Context context) {
+    public MusicClipAddAdapter(Context context) {
         super(context);
     }
 

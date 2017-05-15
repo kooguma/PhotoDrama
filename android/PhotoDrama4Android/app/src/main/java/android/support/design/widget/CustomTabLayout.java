@@ -196,6 +196,8 @@ public class CustomTabLayout extends HorizontalScrollView {
     private AdapterChangeListener mAdapterChangeListener;
     private boolean mSetupViewPagerImplicitly;
 
+    private int mIndicatorWidth;
+
     // Pool we use as a simple RecyclerBin
     private final Pools.Pool<TabView> mTabViewPool = new Pools.SimplePool<>(12);
 
@@ -275,6 +277,13 @@ public class CustomTabLayout extends HorizontalScrollView {
         mMode = a.getInt(R.styleable.TabLayout_tabMode, MODE_FIXED);
         mTabGravity = a.getInt(R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
         a.recycle();
+
+        TypedArray a1 = context.obtainStyledAttributes(attrs, R.styleable.CustomTabLayout,
+            defStyleAttr,0);
+
+        mIndicatorWidth = a1.getDimensionPixelOffset(R.styleable.CustomTabLayout_tabIndicatorWidth,dpToPx(32));
+
+        a1.recycle();
 
         // TODO add attr for these
         final Resources res = getResources();
@@ -1934,10 +1943,10 @@ public class CustomTabLayout extends HorizontalScrollView {
 
             // Thick colored underline below the current selection
             if (mIndicatorLeft >= 0 && mIndicatorRight > mIndicatorLeft) {
-                int indicatorWidth = DeviceScreenUtils.dp2px(32, getContext());
+                //int indicatorWidth = DeviceScreenUtils.dp2px(32, getContext());
                 int width = mIndicatorRight - mIndicatorLeft;
-                canvas.drawRect(mIndicatorLeft + (width - indicatorWidth) / 2, getHeight() - mSelectedIndicatorHeight,
-                        mIndicatorRight - (width - indicatorWidth) / 2, getHeight(), mSelectedIndicatorPaint);
+                canvas.drawRect(mIndicatorLeft + (width - mIndicatorWidth) / 2, getHeight() - mSelectedIndicatorHeight,
+                        mIndicatorRight - (width - mIndicatorWidth) / 2, getHeight(), mSelectedIndicatorPaint);
             }
         }
     }

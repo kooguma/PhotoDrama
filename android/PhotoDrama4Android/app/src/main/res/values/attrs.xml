@@ -31,6 +31,7 @@
             format="dimension"/>
         <attr name="indicatorWidth"
             format="dimension"/>
+
     </declare-styleable>
 
     <declare-styleable name="MusicClipView">
@@ -60,9 +61,23 @@
     </declare-styleable>
 
     <declare-styleable name="ElasticDragDismissFrameLayout">
-        <attr name="dragDismissDistance" format="dimension" />
-        <attr name="dragDismissFraction" format="float" />
-        <attr name="dragDismissScale" format="float" />
-        <attr name="dragElasticity" format="float" />
+        <attr name="dragDismissDistance"
+            format="dimension"/>
+        <attr name="dragDismissFraction"
+            format="float"/>
+        <attr name="dragDismissScale"
+            format="float"/>
+        <attr name="dragElasticity"
+            format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomTabLayout">
+        <attr name="tabIndicatorWidth" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="MusicBarImageView">
+        <attr name="barColor" format="color"/>
+        <attr name="barCount" format="integer"/>
+        <attr name="ratio" format="float"/>
     </declare-styleable>
 </resources>
