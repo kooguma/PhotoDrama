@@ -1,6 +1,5 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -17,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -32,9 +29,7 @@ import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.EditDramaSegmentAdapter;
-import com.loopeer.android.photodrama4android.ui.hepler.DramaDetailOrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.DramaEditOrientationAdapter;
-import com.loopeer.android.photodrama4android.ui.hepler.OrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ScreenOrientationHelper;
 import com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingDialog;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
@@ -42,13 +37,6 @@ import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
-
-import java.text.SimpleDateFormat;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
 
 public class DramaEditActivity extends PhotoDramaBaseActivity
         implements EditDramaSegmentAdapter.OnSelectedListener
@@ -69,9 +57,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     private ImageClip mSelectedImageClip;
     private ExportLoadingDialog mExportProgressLoading;
     private int mUsedTime;
+
     private ScreenOrientationHelper mScreenOrientationHelper;
-    private Subject mHideToolSubject = PublishSubject.create();
-    private boolean mToolShow = true;
     private DramaEditOrientationAdapter mOrientationAdapter;
 
     @Override
@@ -83,17 +70,12 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         Analyst.dramaUseClick(mTheme.id);
         setupView();
         loadDrama();
-        registerSubscription(
-                mHideToolSubject.debounce(getResources().getInteger(R.integer.movie_show_time), TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext(o -> hideAllBar())
-                        .subscribe()
-        );
-        mOrientationAdapter = new DramaEditOrientationAdapter(mBinding);
+        mOrientationAdapter = new DramaEditOrientationAdapter(mBinding, this);
         mScreenOrientationHelper = new ScreenOrientationHelper(this
                 , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 , mOrientationAdapter);
         mOrientationAdapter.setVideoPlayerManager(mVideoPlayerManager);
+        mOrientationAdapter.onCreate();
     }
 
     private void loadDrama() {
@@ -127,6 +109,14 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         setCenterTitle(R.string.label_drama_edit);
     }
 
+    public void onPausePlayBtnClick(View view) {
+        if (mVideoPlayerManager.isStop()) {
+            mVideoPlayerManager.startVideo();
+        } else {
+            mVideoPlayerManager.pauseVideo();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_export, menu);
@@ -154,14 +144,13 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.viewFullBottom.seekBar),
-                mBinding.glSurfaceView, new Drama());
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, new Drama()
+                , new SeekWrapper(mBinding.viewFullBottom.seekBar));
         mVideoPlayerManager.setBitmapReadyListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
-        mVideoPlayerManager.setProgressChangeListener(this);
+        mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
         mVideoPlayerManager.setRecordingListener(this);
-        mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
 
         mBottomImagePickerView = (BottomImagePickerView) findViewById(R.id.pick_view);
         mIcon = mBottomImagePickerView.getIconView();
@@ -260,6 +249,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
         mDramaFetchHelper.unSubscribe();
+        mOrientationAdapter.onDestroy();
     }
 
     @Override
@@ -280,32 +270,19 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     @Override
     public void onProgressInit(int progress, int maxValue) {
-        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-        String hms = formatter.format(progress);
-        mBinding.viewFullBottom.textTimeStart.setText(hms);
-        String hmsTotal = formatter.format(maxValue + 1 - progress);
-        mBinding.viewFullBottom.textTimeEnd.setText(hmsTotal);
     }
 
     @Override
     public void onProgressStop() {
-        mBinding.viewFullBottom.btnPausePlayBtn.setSelected(true);
         mBinding.btnPlay.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onProgressChange(int progress, int maxValue) {
-        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-        String hms = formatter.format(progress);
-        mBinding.viewFullBottom.textTimeStart.setText(hms);
-        String hmsTotal = formatter.format(maxValue + 1 - progress);
-        mBinding.viewFullBottom.textTimeEnd.setText(hmsTotal);
     }
 
     @Override
     public void onProgressStart() {
-        hideTool();
-        mBinding.viewFullBottom.btnPausePlayBtn.setSelected(false);
         mBinding.btnPlay.setVisibility(View.GONE);
     }
 
@@ -351,47 +328,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         Navigator.startShareActivity(this, path, mTheme);
     }
 
-    private void onPlayRectClick() {
-        if (!mToolShow) {
-            showAllBar();
-            hideTool();
-        } else {
-            if (mVideoPlayerManager.isStop()) {
-                mVideoPlayerManager.startVideo();
-            } else {
-                mVideoPlayerManager.pauseVideo();
-            }
-        }
-    }
-
-    public void onPausePlayBtnClick(View view) {
-        if (mVideoPlayerManager.isStop()) {
-            mVideoPlayerManager.startVideo();
-        } else {
-            mVideoPlayerManager.pauseVideo();
-        }
-    }
-
-    private void hideTool() {
-        mHideToolSubject.onNext(new Object());
-    }
-
-    private void hideAllBar() {
-        if (mVideoPlayerManager.getGLThread().isStop() || !mToolShow) return;
-        mToolShow = false;
-        ObjectAnimator.ofFloat(mBinding.viewFullBottom.layoutToolBottom, View.TRANSLATION_Y, 0,
-                mBinding.viewFullBottom.layoutToolBottom.getHeight()).start();
-        ObjectAnimator.ofFloat(mBinding.viewFullTop.layoutToolTop, View.TRANSLATION_Y, 0, -mBinding.viewFullTop.layoutToolTop.getHeight()).start();
-    }
-
-    private void showAllBar() {
-        if (mToolShow) return;
-        mToolShow = true;
-        ObjectAnimator.ofFloat(mBinding.viewFullBottom.layoutToolBottom, View.TRANSLATION_Y,
-                mBinding.viewFullBottom.layoutToolBottom.getHeight(), 0).start();
-        ObjectAnimator.ofFloat(mBinding.viewFullTop.layoutToolTop, View.TRANSLATION_Y, -mBinding.viewFullTop.layoutToolTop.getHeight(), 0).start();
-    }
-
     @Override
     public void onBackPressed() {
         if (mVideoPlayerManager.isRecording()) return;
@@ -419,6 +355,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mScreenOrientationHelper.updateOrientation(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE);
+        mScreenOrientationHelper.updateOrientation(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 }

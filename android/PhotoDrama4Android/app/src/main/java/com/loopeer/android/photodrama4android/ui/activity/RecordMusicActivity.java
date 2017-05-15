@@ -45,9 +45,9 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
         mAudioRecorder = new AudioRecorder();
         mAudioRecorder.requestPermission(this);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
-                , mBinding.glSurfaceView, mDrama);
-        mVideoPlayerManager.setProgressChangeListener(this);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama,
+                new SeekWrapper(mBinding.scrollSelectView));
+        mVideoPlayerManager.addProgressChangeListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         updateBtn();

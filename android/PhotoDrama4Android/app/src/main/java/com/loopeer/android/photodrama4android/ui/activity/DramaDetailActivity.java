@@ -74,7 +74,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         loadDramaSend(mTheme);
         getChangingConfigurations();
 
-        OrientationAdapter orientationAdapter = new DramaDetailOrientationAdapter(mBinding);
+        OrientationAdapter orientationAdapter = new DramaDetailOrientationAdapter(mBinding, this);
         mScreenOrientationHelper = new ScreenOrientationHelper(this
                 , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 , orientationAdapter);
@@ -147,11 +147,11 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(seekBar),mBinding.glSurfaceView, new Drama());
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, new Drama(), new SeekWrapper(seekBar));
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
-        mVideoPlayerManager.setProgressChangeListener(this);
+        mVideoPlayerManager.addProgressChangeListener(this);
     }
 
     private Button generaEpisodeButton(final Theme theme) {

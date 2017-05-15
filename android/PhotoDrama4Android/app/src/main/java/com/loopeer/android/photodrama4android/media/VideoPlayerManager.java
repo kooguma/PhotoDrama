@@ -15,6 +15,9 @@ import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.loopeer.android.photodrama4android.utils.FileManager.scanIntoMediaStore;
 
 public class VideoPlayerManager
@@ -24,9 +27,9 @@ public class VideoPlayerManager
     private static final String TAG = "VideoPlayerManager";
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
-    private SeekWrapper mSeekWrapper;
+    private SeekWrapperHolders mSeekWrapperHolders;
     private GLThreadRender mGLThread;
-    private ProgressChangeListener mProgressChangeListener;
+    private List<ProgressChangeListener> mChangeListeners;
     private RecordingListener mRecordingListener;
     private GLRenderWorker mGLRenderWorker;
     private int mSeekbarMaxValue;
@@ -43,9 +46,10 @@ public class VideoPlayerManager
     private boolean mIsRecording;
     private BitmapReadyListener mBitmapReadyListener;
 
-    public VideoPlayerManager(SeekWrapper seekWrapper, TextureView glSurfaceView, Drama drama) {
+    public VideoPlayerManager(TextureView glSurfaceView, Drama drama, SeekWrapper... seekWrappers) {
+        mChangeListeners = new ArrayList<>();
         mContext = glSurfaceView.getContext();
-        mSeekWrapper = seekWrapper;
+        mSeekWrapperHolders = new SeekWrapperHolders(seekWrappers);
         mGLRenderWorker = new GLRenderWorker(mContext, drama, glSurfaceView);
         mGLThread = new GLThreadRender(glSurfaceView.getContext(), glSurfaceView, mGLRenderWorker);
 
@@ -62,7 +66,7 @@ public class VideoPlayerManager
     private void updateTime(Drama drama) {
         mMaxTime = drama.getShowTimeTotal();
         setSeekBarMaxValue(mMaxTime);
-        if (mSeekWrapper != null) mSeekWrapper.setMax(mMaxTime);
+        mSeekWrapperHolders.setMax(mMaxTime);
         mStartTime = 0;
         mFinishAtTime = mStartTime;
         mEndTime = mMaxTime;
@@ -71,12 +75,13 @@ public class VideoPlayerManager
     }
 
     private void init() {
-        if (mSeekWrapper != null) mSeekWrapper.setOnSeekChangeListener(this);
+        mSeekWrapperHolders.setOnSeekChangeListener(this);
         mGLThread.setSeekChangeListener(this);
     }
 
-    public void setProgressChangeListener(ProgressChangeListener progressChangeListener) {
-        mProgressChangeListener = progressChangeListener;
+    public void addProgressChangeListener(ProgressChangeListener progressChangeListener) {
+        if (progressChangeListener == null) return;
+        mChangeListeners.add(progressChangeListener);
         onProgressInit(mStartTime, mSeekbarMaxValue);
     }
 
@@ -117,7 +122,7 @@ public class VideoPlayerManager
 
     @Override
     public void seekChange(long usedTime) {
-        if (mSeekWrapper != null) mSeekWrapper.setProgress((int) usedTime);
+        mSeekWrapperHolders.setProgress((int) usedTime);
         onProgressChange((int) usedTime);
         if (!isRecording()) mIMusic.onProgressChange((int) usedTime);
         recordChange((int) usedTime);
@@ -133,7 +138,7 @@ public class VideoPlayerManager
         mGLThread.stopUp();
         mGLThread.setManual(true);
         mGLThread.setManualUpSeekBar(finishToTime);
-        if (mSeekWrapper != null) mSeekWrapper.setProgress(finishToTime);
+        mSeekWrapperHolders.setProgress(finishToTime);
         mGLThread.setManual(false);
         mIMusic.seekToMusic(finishToTime);
         mIMusic.pauseMusic();
@@ -248,30 +253,34 @@ public class VideoPlayerManager
         mIMusic.seekToMusic(time);
         mIMusic.pauseMusic();
         onProgressStop();
-        if (mSeekWrapper != null) mSeekWrapper.setProgress(time);
+        mSeekWrapperHolders.setProgress(time);
     }
 
     private void onProgressInit(int progress, int maxValue) {
-        if (mProgressChangeListener != null) {
-            mProgressChangeListener.onProgressInit(progress, maxValue);
+        for (ProgressChangeListener listener :
+                mChangeListeners) {
+            listener.onProgressInit(progress, maxValue);
         }
     }
 
     private void onProgressStop() {
-        if (mProgressChangeListener != null) {
-            mProgressChangeListener.onProgressStop();
+        for (ProgressChangeListener listener :
+                mChangeListeners) {
+            listener.onProgressStop();
         }
     }
 
     private void onProgressChange(int progress) {
-        if (mProgressChangeListener != null) {
-            mProgressChangeListener.onProgressChange(progress, mSeekbarMaxValue);
+        for (ProgressChangeListener listener :
+                mChangeListeners) {
+            listener.onProgressChange(progress, mSeekbarMaxValue);
         }
     }
 
     private void onProgressStart() {
-        if (mProgressChangeListener != null) {
-            mProgressChangeListener.onProgressStart();
+        for (ProgressChangeListener listener :
+                mChangeListeners) {
+            listener.onProgressStart();
         }
     }
 

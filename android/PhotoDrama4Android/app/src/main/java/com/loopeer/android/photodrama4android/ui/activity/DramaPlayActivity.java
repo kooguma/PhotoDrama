@@ -94,11 +94,11 @@ public class DramaPlayActivity extends PhotoDramaBaseActivity implements VideoPl
 
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar),
-                mBinding.glSurfaceView, new Drama());
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, new Drama(),
+                new SeekWrapper(mBinding.seekBar));
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
-        mVideoPlayerManager.setProgressChangeListener(this);
+        mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
         mVideoPlayerManager.startVideo();
 

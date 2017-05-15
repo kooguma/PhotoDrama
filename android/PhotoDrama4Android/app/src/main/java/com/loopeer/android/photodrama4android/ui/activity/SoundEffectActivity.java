@@ -38,8 +38,8 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sound_effect);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.scrollSelectView)
-                , mBinding.glSurfaceView, mDrama);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama,
+                new SeekWrapper(mBinding.scrollSelectView));
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         updateScrollImageView();

@@ -49,8 +49,8 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(new SeekWrapper(mBinding.seekBar), mBinding.glSurfaceView, mDrama);
-        mVideoPlayerManager.setProgressChangeListener(this);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, new SeekWrapper(mBinding.seekBar));
+        mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         mVideoPlayerManager.setRecordingListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);

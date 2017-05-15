@@ -39,7 +39,7 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_image_clip_edit);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
-        mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         mGLTouchListener = new GLTouchListener(mBinding.glSurfaceView);

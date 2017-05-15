@@ -41,7 +41,7 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(null, mBinding.glSurfaceView, mDrama);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         updateRecyclerView();
