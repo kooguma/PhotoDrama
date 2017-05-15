@@ -27,8 +27,10 @@
             android:launchMode="singleTask"/>
         <activity
             android:name=".ui.activity.MakeMovieActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/label_drama_make"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"

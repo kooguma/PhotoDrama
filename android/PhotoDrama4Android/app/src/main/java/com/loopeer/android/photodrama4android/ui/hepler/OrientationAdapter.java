@@ -1,9 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.hepler;
 
-import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.view.MenuItem;
-
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.ui.activity.PhotoDramaBaseActivity;
 import com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper;
@@ -34,15 +31,15 @@ public abstract class OrientationAdapter<T extends ViewDataBinding, E extends Ph
         mIsLandscape = isLandscape;
         if (mTextureViewWrapper != null) mTextureViewWrapper.setLandscape(isLandscape);
         if (isLandscape) {
-            changeToLandscape(mBinding);
+            changeToLandscape();
         } else {
-            changeToPortrait(mBinding);
+            changeToPortrait();
         }
     }
 
-    abstract void changeToPortrait(T binding);
+    abstract void changeToPortrait();
 
-    abstract void changeToLandscape(T binding);
+    abstract void changeToLandscape();
 
     protected void registerSubscription(Disposable disposable) {
         this.mAllSubscription.add(disposable);

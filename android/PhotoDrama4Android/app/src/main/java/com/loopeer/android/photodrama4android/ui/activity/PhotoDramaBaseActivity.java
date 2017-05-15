@@ -1,11 +1,14 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import android.widget.TextView;
@@ -36,6 +39,18 @@ public class PhotoDramaBaseActivity extends BaseActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_black);
             if (mHasParent) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+            ActivityInfo activityInfo = null;
+            try {
+                activityInfo = getPackageManager().getActivityInfo(
+                        getComponentName(), PackageManager.GET_META_DATA);
+                String title = activityInfo.loadLabel(getPackageManager())
+                        .toString();
+                if (!TextUtils.isEmpty(title)) {
+                    setCenterTitle(title);
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }

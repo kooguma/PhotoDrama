@@ -1,12 +1,16 @@
 package com.loopeer.android.photodrama4android.ui.hepler;
 
 import android.animation.ObjectAnimator;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
+import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.ui.activity.DramaEditActivity;
+import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
@@ -17,14 +21,14 @@ import io.reactivex.subjects.Subject;
 
 import static com.loopeer.android.photodrama4android.ui.hepler.FullBottomLayoutHelper.updateBottomLayoutPadding;
 
-public class DramaEditOrientationAdapter extends OrientationAdapter<ActivityDramaEditBinding, DramaEditActivity> implements VideoPlayerManager.ProgressChangeListener {
+public class MakeMovieOrientationAdapter extends OrientationAdapter<ActivityMakeMovieBinding, MakeMovieActivity> implements VideoPlayerManager.ProgressChangeListener {
 
     private VideoPlayerManager mVideoPlayerManager;
     private boolean mIsLandscape;
     private boolean mToolShow = true;
     private Subject mHideToolSubject = PublishSubject.create();
 
-    public DramaEditOrientationAdapter(ActivityDramaEditBinding activityDataBinding, DramaEditActivity activity) {
+    public MakeMovieOrientationAdapter(ActivityMakeMovieBinding activityDataBinding, MakeMovieActivity activity) {
         super(activityDataBinding, activity);
     }
 
@@ -39,12 +43,20 @@ public class DramaEditOrientationAdapter extends OrientationAdapter<ActivityDram
                         .subscribe()
         );
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
+        mBinding.viewFullBottom.btnPausePlayBtn.setOnClickListener(this::onPausePlayBtnClick);
+    }
+
+    public void onPausePlayBtnClick(View view) {
+        if (mVideoPlayerManager.isStop()) {
+            mVideoPlayerManager.startVideo();
+        } else {
+            mVideoPlayerManager.pauseVideo();
+        }
     }
 
     @Override
     void changeToPortrait() {
         mIsLandscape = false;
-        mBinding.pickView.setVisibility(View.VISIBLE);
         mBinding.viewToolbarDarkInset.insetView.setVisibility(View.VISIBLE);
         mBinding.viewToolbarDarkInset.toolbar.setVisibility(View.VISIBLE);
         mBinding.viewFullBottom.getRoot().setVisibility(View.GONE);
@@ -60,7 +72,6 @@ public class DramaEditOrientationAdapter extends OrientationAdapter<ActivityDram
 
     @Override
     void changeToLandscape() {
-        mBinding.pickView.setVisibility(View.GONE);
         mBinding.viewToolbarDarkInset.insetView.setVisibility(View.GONE);
         mBinding.viewToolbarDarkInset.toolbar.setVisibility(View.GONE);
         mBinding.viewFullTop.getRoot().setVisibility(View.VISIBLE);

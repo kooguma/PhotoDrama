@@ -191,27 +191,10 @@ public class VideoPlayerManager
     public void pauseVideo() {
         mGLThread.stopUp();
         mIMusic.pauseMusic();
-        if (DEBUG) {
-            Log.e(TAG,
-                "Thread : " + Thread.currentThread().getName() + "     " + "pauseVideo start");
-        }
         mGLThread.stopUp();
-        if (DEBUG) {
-            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "stopUp ok");
-        }
         mIMusic.pauseMusic();
-        if (DEBUG) {
-            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "pauseMusic ok");
-        }
         if (isRecording()) mGLRenderWorker.endRecording();
-        if (DEBUG) {
-            Log.e(TAG,
-                "Thread : " + Thread.currentThread().getName() + "     " + "endRecording ok");
-        }
         onProgressStop();
-        if (DEBUG) {
-            Log.e(TAG, "Thread : " + Thread.currentThread().getName() + "     " + "pauseVideo ok");
-        }
     }
 
     public void stopVideo() {

@@ -14,20 +14,20 @@ public class DramaDetailOrientationAdapter extends OrientationAdapter<ActivityDr
     }
 
     @Override
-    void changeToPortrait(ActivityDramaDetailBinding binding) {
-        binding.btnFull.setVisibility(View.VISIBLE);
-        binding.btnPlayCenterWrapper.setVisibility(View.GONE);
-        binding.layoutToolBottom.setPadding(0, 0, 0, 0);
-        binding.animator.setLandscape(false);
+    void changeToPortrait() {
+        mBinding.btnFull.setVisibility(View.VISIBLE);
+        mBinding.btnPlayCenterWrapper.setVisibility(View.GONE);
+        mBinding.layoutToolBottom.setPadding(0, 0, 0, 0);
+        mBinding.animator.setLandscape(false);
         mActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override
-    void changeToLandscape(ActivityDramaDetailBinding binding) {
-        binding.animator.setLandscape(true);
-        binding.btnFull.setVisibility(View.GONE);
-        binding.btnPlayCenterWrapper.setVisibility(View.VISIBLE);
-        updateBottomLayoutPadding(mActivity, binding.layoutToolBottom);
+    void changeToLandscape() {
+        mBinding.animator.setLandscape(true);
+        mBinding.btnFull.setVisibility(View.GONE);
+        mBinding.btnPlayCenterWrapper.setVisibility(View.VISIBLE);
+        updateBottomLayoutPadding(mActivity, mBinding.layoutToolBottom);
         mActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 

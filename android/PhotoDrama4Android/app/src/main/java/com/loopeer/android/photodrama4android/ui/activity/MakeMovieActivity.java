@@ -1,6 +1,8 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +23,9 @@ import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 import com.loopeer.android.photodrama4android.model.DramaMakeItem;
+import com.loopeer.android.photodrama4android.ui.hepler.DramaEditOrientationAdapter;
+import com.loopeer.android.photodrama4android.ui.hepler.MakeMovieOrientationAdapter;
+import com.loopeer.android.photodrama4android.ui.hepler.ScreenOrientationHelper;
 import com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingDialog;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +44,9 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     private Drama mDrama;
     private ExportLoadingDialog mExportProgressLoading;
 
+    private ScreenOrientationHelper mScreenOrientationHelper;
+    private MakeMovieOrientationAdapter mOrientationAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,16 +57,22 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, new SeekWrapper(mBinding.seekBar));
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama
+                , new SeekWrapper(mBinding.seekBar), new SeekWrapper(mBinding.viewFullBottom.seekBar));
         mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         mVideoPlayerManager.setRecordingListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
-        mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
-
         mVideoPlayerManager.onRestart();
         setUpEditItem();
+
+        mOrientationAdapter = new MakeMovieOrientationAdapter(mBinding, this);
+        mScreenOrientationHelper = new ScreenOrientationHelper(this
+                , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                , mOrientationAdapter);
+        mOrientationAdapter.setVideoPlayerManager(mVideoPlayerManager);
+        mOrientationAdapter.onCreate();
     }
 
     private void setUpEditItem() {
@@ -78,22 +92,28 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
+        getMenuInflater().inflate(R.menu.menu_export, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mOrientationAdapter.update(menu.findItem(R.id.menu_export));
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
         }
 
-        if (item.getItemId() == R.id.menu_save) {
+        if (item.getItemId() == R.id.menu_export) {
             mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
@@ -125,6 +145,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
         BitmapFactory.getInstance().clear();
+        mOrientationAdapter.onDestroy();
     }
 
     @Override
@@ -160,7 +181,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     public void onFullBtnClick(View view) {
-        Navigator.startFullLandscapePlayActivity(this, mDrama);
+        mScreenOrientationHelper.fullScreen();
     }
     public void onCreateZip(View view) {
         mVideoPlayerManager.pauseVideo();
@@ -201,6 +222,11 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     @Override
+    public void onBackPressed() {
+        mScreenOrientationHelper.backPressed();
+    }
+
+    @Override
     public void recordStart() {
         showExportProgress(getString(R.string.drama_export_message));
     }
@@ -236,6 +262,12 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         if (mExportProgressLoading != null && !isFinishing()) {
             mExportProgressLoading.dismiss();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mScreenOrientationHelper.updateOrientation(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
 }
