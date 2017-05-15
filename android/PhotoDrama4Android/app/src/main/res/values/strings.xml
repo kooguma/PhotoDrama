@@ -84,6 +84,12 @@
     <string name="drama_unzip_success">解压成功</string>
     <string name="drama_series_format">%1$02d/%2$02d</string>
     <string name="drama_export_message">正在导出，请耐心等待 ~</string>
+    <string name="drama_make_subtitle">字幕</string>
+    <string name="drama_make_record">配音</string>
+    <string name="drama_make_clip_time">时长</string>
+    <string name="drama_make_transition">字幕</string>
+    <string name="drama_make_music">配乐</string>
+    <string name="drama_make_sound">音效</string>
 
     <!-- guide -->
     <string name="guide_btn_text">立即体验</string>

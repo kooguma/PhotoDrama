@@ -4,8 +4,9 @@
     <color name="colorPrimaryDark">#222222</color>
     <color name="colorAccent">#61d898</color>
 
+    <color name="bg_edit">#282828</color>
 
-    <color name="window_background_dark">#333333</color>
+    <color name="window_background_dark">#222222</color>
     <color name="window_background_white">@android:color/white</color>
     <color name="window_background_gray">#f4f4f4</color>
 

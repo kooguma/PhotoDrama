@@ -28,6 +28,8 @@
         <item name="android:windowAnimationStyle">@style/AppWindowAnimationStyle</item>
         <item name="actionMenuTextColor">@color/color_menu_text</item>
 
+        <item name="seekBarStyle">@style/SeekBarAppTheme</item>
+
     </style>
 
     <style name="AppTheme.Dark">

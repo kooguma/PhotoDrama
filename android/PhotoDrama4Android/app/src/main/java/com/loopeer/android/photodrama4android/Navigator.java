@@ -47,6 +47,7 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM_SELECT = 1008;
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM = 1009;
     public static final int REQUEST_FULL_SCREEN = 10010;
+    public static final int REQUEST_CODE_DRAMA_MAKE_EDIT = 10011;
     public static final String EXTRA_THEME ="extra_theme" ;
     public static final String EXTRA_USEDTIME ="extra_usedtime" ;
     public static final String EXTRA_IS_TO_START ="extra_is_to_start" ;
@@ -107,6 +108,12 @@ public class Navigator {
         Intent intent = new Intent(context, BgmMusicActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_SOUND_BGM);
+    }
+
+    public static void startDramaEditItemActivity(Context context, Drama drama, Class zclass) {
+        Intent intent = new Intent(context, zclass);
+        intent.putExtra(EXTRA_DRAMA, drama);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_DRAMA_MAKE_EDIT);
     }
 
     //TODO test

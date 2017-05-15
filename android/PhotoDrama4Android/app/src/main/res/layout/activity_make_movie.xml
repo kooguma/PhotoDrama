@@ -3,131 +3,108 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.loopeer.android.moviemaker.ui.activity.MakeMovieActivity">
+        android:orientation="vertical">
 
-        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
-            android:id="@+id/gl_surface_view"
-            android:layout_width="0dp"
+        <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
+            android:id="@+id/texture_wrapper"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:screenRatioX="@integer/gl_screen_x"
-            app:screenRatioY="@integer/gl_screen_y"/>
-
-        <ImageButton
-            style="?actionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onFullBtnClick"
-            android:src="@drawable/ic_full"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/gl_surface_view"
-            app:layout_constraintRight_toRightOf="@+id/gl_surface_view"/>
-
-        <ImageButton
-            android:id="@+id/btn_play"
-            style="?actionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onPlayBtnClick"
-            android:src="@drawable/ic_play_arrow_white_48dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/gl_surface_view"
-            app:layout_constraintLeft_toLeftOf="@+id/gl_surface_view"
-            app:layout_constraintRight_toRightOf="@+id/gl_surface_view"
-            app:layout_constraintTop_toTopOf="@+id/gl_surface_view"/>
-
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
+            tools:layout_editor_absoluteY="25dp">
 
-        <TextView
-            android:id="@+id/text_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/tertiary_text_dark"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seek_bar"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/text_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/tertiary_text_dark"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seek_bar"/>
+                <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
+                    android:id="@+id/gl_surface_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:screenRatioX="@integer/gl_screen_x"
+                    app:screenRatioY="@integer/gl_screen_y"/>
+
+                <ImageButton
+                    style="?actionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:onClick="onFullBtnClick"
+                    android:src="@drawable/ic_full"
+                    android:visibility="visible"/>
+
+                <ImageButton
+                    android:id="@+id/btn_play"
+                    style="?actionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:onClick="onPlayBtnClick"
+                    android:src="@drawable/ic_play_arrow_white_48dp"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+        </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="0dp"
+            android:id="@+id/seek_wrapper"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            android:gravity="center_vertical"
+            android:background="@color/bg_edit">
 
-            <Button
+            <TextView
+                android:id="@+id/text_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/large_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:layout_marginTop="@dimen/large_padding"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/text_size_small"/>
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/seek_bar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onTransitionEdit"
-                android:text="转场"/>
+                android:layout_weight="1"/>
 
-            <Button
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/text_total"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onSubtitleEdit"
-                android:text="字幕"/>
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onAudioRecord"
-                android:text="配音"/>
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onBgmClick"
-                android:text="配乐"/>
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onSoundEffect"
-                android:text="音效"/>
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onStartFragmentEdit"
-                android:text="片段"/>
+                android:layout_marginBottom="@dimen/large_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:layout_marginTop="@dimen/large_padding"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/text_size_small"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="生成模版"
-            android:onClick="onCreateZip"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seek_bar"/>
-    </android.support.constraint.ConstraintLayout>
+            android:scrollbars="none"
+            android:background="@color/bg_edit">
+
+            <LinearLayout
+                android:id="@+id/container_edit_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+        </HorizontalScrollView>
+    </LinearLayout>
 
 </layout>

@@ -13,12 +13,14 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
+import com.loopeer.android.photodrama4android.databinding.ViewMakeMovieEditItemBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
+import com.loopeer.android.photodrama4android.model.DramaMakeItem;
 import com.loopeer.android.photodrama4android.ui.widget.loading.ExportLoadingDialog;
 
 import java.text.SimpleDateFormat;
@@ -56,6 +58,20 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         mBinding.glSurfaceView.setOnClickListener(v -> mVideoPlayerManager.pauseVideo());
 
         mVideoPlayerManager.onRestart();
+        setUpEditItem();
+    }
+
+    private void setUpEditItem() {
+        mBinding.containerEditItem.removeAllViews();
+        for (DramaMakeItem item :
+                DramaMakeItem.sDramaMakeItems) {
+            ViewMakeMovieEditItemBinding binding = DataBindingUtil.inflate(getLayoutInflater()
+                    , R.layout.view_make_movie_edit_item, mBinding.containerEditItem, true);
+            binding.imgIcon.setImageResource(item.icon);
+            binding.textTitle.setText(item.text);
+            binding.getRoot().setOnClickListener(v
+                    -> Navigator.startDramaEditItemActivity(MakeMovieActivity.this, mDrama, item.targetClass));
+        }
     }
 
     @Override
@@ -143,34 +159,9 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         mBinding.btnPlay.setVisibility(View.GONE);
     }
 
-    public void onStartFragmentEdit(View view) {
-        Navigator.startImageClipEditActivity(this, mDrama);
-    }
-
     public void onFullBtnClick(View view) {
         Navigator.startFullLandscapePlayActivity(this, mDrama);
     }
-
-    public void onTransitionEdit(View view) {
-        Navigator.startTransitionEditActivity(this, mDrama);
-    }
-
-    public void onSubtitleEdit(View view) {
-        Navigator.startSubtitleEditActivity(this, mDrama);
-    }
-
-    public void onAudioRecord(View view) {
-        Navigator.startRecordMusicActivity(this, mDrama);
-    }
-
-    public void onSoundEffect(View view) {
-        Navigator.startSoundEffectActivity(this, mDrama);
-    }
-
-    public void onBgmClick(View view) {
-        Navigator.startBgmMusicActivity(this, mDrama);
-    }
-
     public void onCreateZip(View view) {
         mVideoPlayerManager.pauseVideo();
         showProgressLoading("");
@@ -200,12 +191,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
             if (drama != null)
                 mDrama = drama;
             switch (requestCode) {
-                case Navigator.REQUEST_CODE_DRAMA_IMAGE_EDIT:
-                case Navigator.REQUEST_CODE_DRAMA_TRANSITION_EDIT:
-                case Navigator.REQUEST_CODE_DRAMA_SUBTITLE_EDIT:
-                case Navigator.REQUEST_CODE_DRAMA_AUDIO_RECORD:
-                case Navigator.REQUEST_CODE_DRAMA_SOUND_EFFECT:
-                case Navigator.REQUEST_CODE_DRAMA_SOUND_BGM:
+                case Navigator.REQUEST_CODE_DRAMA_MAKE_EDIT:
                     mVideoPlayerManager.updateDrama(mDrama);
                     break;
                 default:

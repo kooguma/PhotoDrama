@@ -160,4 +160,10 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+
+    <style name="SeekBarAppTheme" parent="android:Widget.Holo.SeekBar">
+        <item name="android:progressDrawable">@drawable/layer_seek_progress</item>
+        <item name="android:indeterminateDrawable">@drawable/layer_seek_progress</item>
+        <item name="android:thumb">@drawable/shape_thumb</item>
+    </style>
 </resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <com.loopeer.formitemview.ForegroundLinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/xlarge_padding"
+        android:paddingLeft="@dimen/xxlarge_padding"
+        android:paddingRight="@dimen/xxlarge_padding"
+        android:paddingTop="@dimen/xlarge_padding"
+        tools:background="@color/bg_edit">
+
+        <ImageView
+            android:id="@+id/img_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/ic_music"/>
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:textColor="@color/text_color_tertiary"
+            android:textSize="11sp"
+            tools:text="jslkgjd"/>
+
+    </com.loopeer.formitemview.ForegroundLinearLayout>
+</layout>
