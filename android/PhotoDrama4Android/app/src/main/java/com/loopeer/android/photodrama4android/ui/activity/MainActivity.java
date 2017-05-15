@@ -48,10 +48,8 @@ public class MainActivity extends PhotoDramaBaseActivity {
         Navigator.startDramaSelectActivity(this);
     }
 
-    //TODO version later
     public void onCreateClick(View view) {
-        showToast(R.string.make_drama_next);
-//        Navigator.startImageSelectActivity(this);
+        Navigator.startImageSelectActivity(this);
     }
 
     public void onSettingClick(View view) {
