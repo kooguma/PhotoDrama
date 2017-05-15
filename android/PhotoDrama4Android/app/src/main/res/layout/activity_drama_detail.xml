@@ -71,8 +71,6 @@
                                 android:id="@+id/text_time_start"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="17dp"
-                                android:layout_marginRight="4dp"
                                 android:textColor="@color/text_color_white"
                                 android:textSize="@dimen/text_size_small"
                                 tools:text="13:00"/>
@@ -87,7 +85,6 @@
                                 android:id="@+id/text_time_end"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
                                 android:textColor="@color/text_color_white"
                                 android:textSize="@dimen/text_size_small"
                                 tools:text="13:00"/>

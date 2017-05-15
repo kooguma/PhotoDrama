@@ -37,14 +37,14 @@
                     android:src="@drawable/ic_full"
                     android:visibility="visible"/>
 
-                <ImageButton
-                    android:id="@+id/btn_play"
+                <ImageView
                     style="?actionButtonStyle"
+                    android:id="@+id/btn_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:onClick="onPlayBtnClick"
-                    android:src="@drawable/ic_play_arrow_white_48dp"
+                    android:src="@drawable/ic_play_green_large"
                     android:visibility="gone"/>
 
             </FrameLayout>
