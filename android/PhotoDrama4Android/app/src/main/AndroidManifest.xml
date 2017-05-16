@@ -36,6 +36,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark"/>
         <activity
+            android:name=".ui.activity.ClipTimeEditActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/label_clip_time_edit"
+            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+        <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
             android:launchMode="singleTop"

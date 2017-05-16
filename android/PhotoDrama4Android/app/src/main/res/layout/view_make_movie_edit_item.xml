@@ -12,6 +12,7 @@
         android:paddingLeft="@dimen/xxlarge_padding"
         android:paddingRight="@dimen/xxlarge_padding"
         android:paddingTop="@dimen/xlarge_padding"
+        android:gravity="center_horizontal"
         tools:background="@color/bg_edit">
 
         <ImageView

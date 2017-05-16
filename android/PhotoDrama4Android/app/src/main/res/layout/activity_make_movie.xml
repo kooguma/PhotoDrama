@@ -15,10 +15,7 @@
         <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
             android:id="@+id/texture_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout_editor_absoluteY="25dp">
+            android:layout_height="wrap_content">
 
             <FrameLayout
                 android:layout_width="match_parent"

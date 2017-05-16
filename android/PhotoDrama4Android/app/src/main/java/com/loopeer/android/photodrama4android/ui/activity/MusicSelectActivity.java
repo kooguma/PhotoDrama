@@ -113,7 +113,7 @@ public class MusicSelectActivity extends PhotoDramaBaseActivity
         return mMusicSelectAdapter;
     }
 
-    @Override public Flowable<BaseResponse<List<Voice>>> requestData(String page, String pageSize) {
+    @Override public Flowable<BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
         return VoiceService.INSTANCE.voices("1");
     }
 

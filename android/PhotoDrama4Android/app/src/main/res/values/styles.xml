@@ -78,6 +78,14 @@
         <item name="android:background">@drawable/bg_button_black</item>
     </style>
 
+    <style name="PhotoDramaButton.Blue">
+        <item name="android:background">@drawable/bg_button</item>
+    </style>
+
+    <style name="PhotoDramaButton.Blue.Normal">
+        <item name="android:height">@dimen/btn_normal_height</item>
+    </style>
+
     <style name="PhotoDramaButton.Black.Main">
         <item name="android:layout_width">@dimen/btn_main_width</item>
         <item name="android:layout_height">@dimen/btn_main_height</item>
