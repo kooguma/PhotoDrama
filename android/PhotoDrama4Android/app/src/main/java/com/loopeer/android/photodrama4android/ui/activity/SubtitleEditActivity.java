@@ -2,11 +2,15 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
+import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivitySubtitleEditBinding;
@@ -21,9 +25,17 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
-import static com.loopeer.android.photodrama4android.media.model.SubtitleClip.MIN_SUBTITLE_LENGTH;
+import java.util.concurrent.TimeUnit;
 
-public class SubtitleEditActivity extends PhotoDramaBaseActivity implements ScrollSelectView.ClipSelectedListener, ScrollSelectView.ClipIndicatorPosChangeListener {
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
+import static com.loopeer.android.photodrama4android.media.model.SubtitleClip.MIN_SUBTITLE_LENGTH;
+import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTime;
+import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTimeMilli;
+
+public class SubtitleEditActivity extends PhotoDramaBaseActivity implements ScrollSelectView.ClipSelectedListener
+        , ScrollSelectView.ClipIndicatorPosChangeListener, VideoPlayerManager.ProgressChangeListener {
 
     private ActivitySubtitleEditBinding mBinding;
     private Drama mDrama;
@@ -40,15 +52,19 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama,
                 new SeekWrapper(mBinding.scrollSelectView));
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
+        mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
+        mBinding.glSurfaceView.setOnClickListener(this::onPlayRectClick);
         updateScrollImageView();
         updateScrollSelectViewClips();
+        setInputPositionListener();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
     }
 
     private void updateScrollImageView() {
@@ -105,16 +121,13 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         super.onDestroy();
         VideoPlayManagerContainer.getDefault().onFinish(this);
         mVideoPlayerManager.onDestroy();
+
+        getWindow().getDecorView().getViewTreeObserver()
+                .removeOnGlobalLayoutListener(mGlobalLayoutListener);
     }
 
     public void onPlayClick(View view) {
         mVideoPlayerManager.startVideo();
-    }
-
-    public void onTextInputClick(View view) {
-        if (mSelectedClip == null && !checkAddValidate())
-            return;
-        Navigator.startTextInputActivity(this, mSelectedClip == null ? null : mSelectedClip.content);
     }
 
     public void onDeleteClick(View view) {
@@ -150,18 +163,29 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             String content = data.getStringExtra(Navigator.EXTRA_TEXT);
             switch (requestCode) {
                 case Navigator.REQUEST_CODE_TEXT_INPUT:
-                    if (mSelectedClip == null) {
-                        mSelectedClip = new SubtitleClip(
-                                content
-                                , (int) mVideoPlayerManager.getGLThread().getUsedTime());
-                        mDrama.videoGroup.subtitleClips.add(mSelectedClip);
-                    } else {
-                        mSelectedClip.content = content;
-                    }
-                    mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
-                    mVideoPlayerManager.requestRender();
+                    updateSubtitle(content);
                 default:
             }
+        }
+    }
+
+    private void updateSubtitle(String content) {
+        if (mSelectedClip == null) {
+            mSelectedClip = new SubtitleClip(
+                    content
+                    , (int) mVideoPlayerManager.getGLThread().getUsedTime());
+            mDrama.videoGroup.subtitleClips.add(mSelectedClip);
+        } else {
+            mSelectedClip.content = content;
+        }
+        mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
+        mVideoPlayerManager.requestRender();
+    }
+
+    public void onInputConfirm(View view) {
+        String content = mBinding.textInput.getText().toString().trim();
+        if (!TextUtils.isEmpty(content)) {
+            updateSubtitle(content);
         }
     }
 
@@ -169,10 +193,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     public void onClipSelected(Clip clip) {
         if (clip != null) {
             mSelectedClip = (SubtitleClip) clip;
-            mBinding.btnDelete.setVisibility(View.VISIBLE);
+//            mBinding.btnDelete.setVisibility(View.VISIBLE);
         } else {
             mSelectedClip = null;
-            mBinding.btnDelete.setVisibility(View.GONE);
+//            mBinding.btnDelete.setVisibility(View.GONE);
         }
     }
 
@@ -224,5 +248,93 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             }
         }
         return true;
+    }
+
+    @Override
+    public void onProgressInit(int progress, int maxValue) {
+        mBinding.textStart.setText(formatTimeMilli(progress));
+        mBinding.textTotal.setText(formatTimeMilli(maxValue + 1));
+    }
+
+    @Override
+    public void onProgressStop() {
+        mBinding.btnPlayFrame.setSelected(true);
+        mBinding.btnPlay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onProgressChange(int progress, int maxValue) {
+        mBinding.textStart.setText(formatTimeMilli(progress));
+    }
+
+    @Override
+    public void onProgressStart() {
+        mBinding.btnPlayFrame.setSelected(false);
+        if (mBinding.btnPlay.getVisibility() == View.VISIBLE)
+            mBinding.btnPlay.setVisibility(View.GONE);
+    }
+
+    public void onPlayRectClick(View view) {
+        if (mVideoPlayerManager.isStop()) {
+            mVideoPlayerManager.startVideo();
+        } else {
+            mVideoPlayerManager.pauseVideo();
+        }
+    }
+
+
+    private void setInputPositionListener() {
+        getWindow().getDecorView().getViewTreeObserver()
+                .addOnGlobalLayoutListener(mGlobalLayoutListener);
+    }
+
+    public void onTextInputClick(View view) {
+        if (mSelectedClip == null && !checkAddValidate())
+            return;
+        if (isSoftKeyboardActive()) {
+            hideSoftInputMethod();
+            hideInput();
+        } else {
+            showSoftInputMethod();
+            showInput();
+        }
+    }
+
+    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener =
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    Rect r = new Rect();
+                    getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+                    int inputPositionY = r.bottom - mBinding.textInputWrapper.getMeasuredHeight();
+                    if (isSoftKeyboardActive()) {
+                        showInput();
+                        mBinding.textInputWrapper.requestFocus();
+                        mBinding.textInputWrapper.setY(inputPositionY);
+                    } else {
+                        hideInput();
+                    }
+                }
+            };
+
+
+    private void showInput() {
+        registerSubscription(
+                Flowable.timer(
+                        getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                        , TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(t -> mBinding.textInputWrapper.setVisibility(View.VISIBLE))
+        );
+    }
+
+    private void hideInput() {
+        mBinding.textInputWrapper.setVisibility(View.INVISIBLE);
+    }
+
+    private boolean isSoftKeyboardActive() {
+        Rect r = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+        return r.bottom < DeviceScreenUtils.getScreenHeight(SubtitleEditActivity.this) / 4 * 3;
     }
 }

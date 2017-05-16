@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
@@ -46,6 +47,7 @@ public class ScrollSelectView extends ViewGroup {
     private int mMiddlePos;
 
     private float mImageShowHeight;
+    private float mImageMargin;
     private float mIndicatorTriangleHeight;
     private float mIndicatorRectangleHeight;
     private float mIndicatorBottomMargin;
@@ -53,7 +55,7 @@ public class ScrollSelectView extends ViewGroup {
 
     private boolean isManual = true;
 
-    private float mMiddleLineWidth = 4f;
+    private float mMiddleLineWidth;
     private int mTotalContentWidth;
     private Adapter mAdapter;
     private final ChildViewDataObserver mObserver = new ChildViewDataObserver();
@@ -91,7 +93,7 @@ public class ScrollSelectView extends ViewGroup {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         getAttrs(context, attrs, defStyleAttr);
 
-        mMiddleLineColor = ContextCompat.getColor(context, R.color.colorAccent);
+        mMiddleLineColor = ContextCompat.getColor(context, android.R.color.white);
         mTextRectColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color);
         mTextRectSelectedColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color_selected);
         mStrokeLineColor = ContextCompat.getColor(context, android.R.color.white);
@@ -112,6 +114,8 @@ public class ScrollSelectView extends ViewGroup {
         mIndicatorShapeStart = new IndicatorShape(mIndicatorWidth);
         mIndicatorShapeStart.setRectangleHeight(mIndicatorRectangleHeight);
         mIndicatorShapeStart.setTriangleHeight(mIndicatorTriangleHeight);
+
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -119,17 +123,19 @@ public class ScrollSelectView extends ViewGroup {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScrollSelectView, defStyleAttr, 0);
         if (a == null) return;
 
-        mImageShowHeight = a.getDimension(R.styleable.ScrollSelectView_imageShowHeight, 120f);
+        mImageShowHeight = a.getDimension(R.styleable.ScrollSelectView_imageShowHeight, DeviceScreenUtils.dp2px(65f, getContext()));
+        mImageMargin = a.getDimension(R.styleable.ScrollSelectView_imageMargin, DeviceScreenUtils.dp2px(4f, getContext()));
         mIndicatorRectangleHeight = a.getDimension(R.styleable.ScrollSelectView_indicatorRectangleHeight, 30f);
         mIndicatorTriangleHeight = a.getDimension(R.styleable.ScrollSelectView_indicatorTriangleHeight, 20f);
         mIndicatorBottomMargin = a.getDimension(R.styleable.ScrollSelectView_indicatorBottomMargin, 20f);
         mIndicatorWidth = a.getDimension(R.styleable.ScrollSelectView_indicatorWidth, 20f);
+        mMiddleLineWidth = DeviceScreenUtils.dp2px(2f, getContext());
         a.recycle();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = (int) (mImageShowHeight + mIndicatorRectangleHeight + mIndicatorTriangleHeight + mIndicatorBottomMargin);
+        int height = (int) (mImageShowHeight + mImageMargin * 2);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         measureChild(widthMeasureSpec);
@@ -150,7 +156,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void layoutChild() {
-        int childTop = getPaddingTop();
+        int childTop = (int) (getPaddingTop() + mImageMargin);
         int childLeft = mMiddlePos;
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
@@ -366,12 +372,12 @@ public class ScrollSelectView extends ViewGroup {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        mPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.black));
-        canvas.drawRect(0, 0, getWidth(), mImageShowHeight, mPaint);
         super.dispatchDraw(canvas);
         drawTextRect(canvas);
+
         mPaint.setColor(mMiddleLineColor);
-        canvas.drawRect(mMiddlePos - mMiddleLineWidth / 2, 0, mMiddlePos + mMiddleLineWidth / 2, mImageShowHeight, mPaint);
+        mPaint.setShadowLayer(4, 0, 0, ContextCompat.getColor(getContext(), R.color.shadow_color));
+        canvas.drawRect(mMiddlePos - mMiddleLineWidth / 2, 0, mMiddlePos + mMiddleLineWidth / 2, getHeight(), mPaint);
     }
 
     private void drawTextRect(Canvas canvas) {

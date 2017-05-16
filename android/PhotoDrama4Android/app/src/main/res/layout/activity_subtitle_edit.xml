@@ -3,72 +3,162 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity">
-
-
-        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
-            android:id="@+id/gl_surface_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:screenRatioX="@integer/gl_screen_x"
-            app:screenRatioY="@integer/gl_screen_y"/>
-
-        <ImageButton
-            style="?actionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="onPlayClick"
-            android:src="@drawable/ic_play_arrow_black_24dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
-
-        <com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView
-            android:id="@+id/scrollSelectView"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="100dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollSelectView">
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageButton
-                style="?actionButtonStyle"
+            <include
+                android:id="@+id/view_toolbar_dark_inset"
+                layout="@layout/view_toolbar_dark_inset"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
+                    android:id="@+id/gl_surface_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:screenRatioX="@integer/gl_screen_x"
+                    app:screenRatioY="@integer/gl_screen_y"/>
+
+                <ImageView
+                    android:id="@+id/btn_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_play_green_large"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/text_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small"/>
+
+                <TextView
+                    android:id="@+id/text_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/large_padding"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small"/>
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="73dp">
+
+                <com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView
+                    android:id="@+id/scrollSelectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <FrameLayout
+                    android:id="@+id/btn_play_frame"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/btn_unable_color"
+                    android:foreground="?selectableItemBackground"
+                    android:onClick="onPlayRectClick">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/selector_play_white_edit"/>
+                </FrameLayout>
+            </FrameLayout>
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="84dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:onClick="onTextInputClick"
-                android:src="@drawable/ic_edit_color_black_36dp"/>
+                android:src="@drawable/selector_subtitle_add"/>
 
-            <ImageButton
-                android:id="@+id/btn_delete"
-                android:visibility="gone"
-                style="?actionButtonStyle"
-                android:onClick="onDeleteClick"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_delete_black_36dp"/>
-
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/large_padding"
+                android:text="@string/subtitle_add"
+                android:textColor="@color/text_color_tertiary"
+                android:textSize="@dimen/text_size_medium"/>
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/text_input_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/subtitle_bg_text_input_color"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <EditText
+                android:id="@+id/text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="66dp"
+                android:layout_marginTop="11dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_subtitle_input"
+                android:hint="@string/subtitle_intput_hint"
+                android:lineSpacingExtra="@dimen/line_space"
+                android:maxLines="5"
+                android:paddingBottom="@dimen/xxsmall_padding"
+                android:paddingLeft="@dimen/medium_padding"
+                android:paddingRight="@dimen/medium_padding"
+                android:paddingTop="@dimen/xxsmall_padding"
+                android:textColor="@color/subtitle_text_input_color"
+                android:textColorHint="@color/text_color_tertiary"
+                android:textSize="@dimen/text_size_large"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onInputConfirm"
+                android:paddingBottom="15dp"
+                android:paddingLeft="@dimen/large_padding"
+                android:paddingRight="@dimen/large_padding"
+                android:paddingTop="15dp"
+                android:text="@string/common_sure"
+                android:textColor="@color/text_color_secondary"/>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
 
 </layout>
 

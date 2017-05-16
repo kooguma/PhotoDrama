@@ -29,6 +29,7 @@
     <dimen name="text_size_xxlarge">22sp</dimen>
 
     <dimen name="elevation">0dp</dimen>
+    <dimen name="line_space">6dp</dimen>
 
     <dimen name="movie_height">200dip</dimen>
     <dimen name="image_segment_width">100dip</dimen>

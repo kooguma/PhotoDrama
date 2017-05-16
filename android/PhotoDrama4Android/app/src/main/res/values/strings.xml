@@ -98,6 +98,10 @@
     <string name="drama_make_music">配乐</string>
     <string name="drama_make_sound">音效</string>
 
+    <!-- subtitle -->
+    <string name="subtitle_add">添加字幕</string>
+    <string name="subtitle_intput_hint">请输入字幕…</string>
+
     <!-- guide -->
     <string name="guide_btn_text">立即体验</string>
 

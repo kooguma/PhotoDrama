@@ -23,6 +23,8 @@
     <declare-styleable name="ScrollSelectView">
         <attr name="imageShowHeight"
             format="dimension"/>
+        <attr name="imageMargin"
+              format="dimension"/>
         <attr name="indicatorRectangleHeight"
             format="dimension"/>
         <attr name="indicatorTriangleHeight"

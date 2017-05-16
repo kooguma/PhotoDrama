@@ -56,7 +56,7 @@
             android:label="@string/label_subtitle"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark.NoActionBar"/>
         <activity
             android:name=".ui.activity.TextInputActivity"
             android:launchMode="singleTop"
