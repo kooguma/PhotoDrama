@@ -69,6 +69,22 @@ public class ClipsCreator {
         }
     }
 
+    public static void updateImageClipsByShowTime(VideoGroup videoGroup) {
+        List<ImageClip> imageClips = videoGroup.imageClips;
+        List<TransitionClip> transitionClips = videoGroup.transitionClips;
+
+        for (int i = 0; i < imageClips.size() - 1; i++) {
+            ImageClip imageClip = imageClips.get(i);
+            ImageClip nextImageClip = imageClips.get(i + 1);
+            TransitionClip transitionClip = transitionClips.get(i);
+            imageClip.endWithNextTransitionTime = imageClip.getEndTime() + transitionClip.showTime;
+            transitionClip.startTime = imageClip.getEndTime() + 1;
+            nextImageClip.startWithPreTransitionTime = imageClip.getEndTime() + 1;
+            nextImageClip.startTime = imageClip.endWithNextTransitionTime + 1;
+            nextImageClip.endWithNextTransitionTime = nextImageClip.getEndTime();
+        }
+    }
+
     public static List<TransitionImageWrapper> createTransiImageWrappers(VideoGroup videoGroup) {
         List<Clip> clips = new ArrayList<>();
         clips.addAll(videoGroup.imageClips);

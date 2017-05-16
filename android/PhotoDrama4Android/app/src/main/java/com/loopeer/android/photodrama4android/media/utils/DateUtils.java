@@ -10,6 +10,11 @@ public class DateUtils {
         return sdf.format(milliseconds);
     }
 
+    public static String formatTime(int time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+        return formatter.format(time);
+    }
+
     public static String getCurrentTimeString() {
         return formatDate(System.currentTimeMillis(), "yyyyMMdd_HH_mm");
     }
