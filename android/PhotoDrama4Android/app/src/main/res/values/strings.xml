@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">由我主演</string>
     <string name="label_segment_edit">Segment Edit</string>
-    <string name="label_transition_edit">Transition Edit</string>
+    <string name="label_transition_edit">转场</string>
     <string name="label_subtitle">字幕</string>
     <string name="label_record_audio">配音</string>
     <string name="label_sound_effect">音效</string>
@@ -94,7 +94,7 @@
     <string name="drama_make_subtitle">字幕</string>
     <string name="drama_make_record">配音</string>
     <string name="drama_make_clip_time">时长</string>
-    <string name="drama_make_transition">字幕</string>
+    <string name="drama_make_transition">转场</string>
     <string name="drama_make_music">配乐</string>
     <string name="drama_make_sound">音效</string>
 

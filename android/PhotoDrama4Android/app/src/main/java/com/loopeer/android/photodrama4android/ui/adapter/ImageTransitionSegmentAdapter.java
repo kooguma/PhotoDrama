@@ -1,6 +1,9 @@
 package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -48,8 +51,14 @@ public class ImageTransitionSegmentAdapter extends BaseFooterAdapter<TransitionI
         if (((DataBindingViewHolder) viewHolder).binding instanceof ListItemTransitionEffectNoNameBinding) {
             ListItemTransitionEffectNoNameBinding binding = (ListItemTransitionEffectNoNameBinding) ((DataBindingViewHolder) viewHolder).binding;
             binding.getRoot().setSelected(mSelectedTransitionImageWrapper.equals(transitionImageWrapper));
-            binding.imgIcon.setClickable(false);
             binding.imgIcon.setImageResource(transitionImageWrapper.transitionClip.transitionType.getIcon());
+            Drawable drawable1 = getContext().getResources().getDrawable(transitionImageWrapper.transitionClip.transitionType.getIcon());
+            Drawable drawable = drawable1.mutate();
+            if (mSelectedTransitionImageWrapper.equals(transitionImageWrapper)) {
+                drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+            }
+            binding.imgIcon.setImageDrawable(drawable);
+            binding.imgIcon.setClickable(false);
             binding.getRoot().setOnClickListener(v -> {
                 mSelectedTransitionImageWrapper = transitionImageWrapper;
                 mOnSelectedListener.onImageTransitionSelected(mSelectedTransitionImageWrapper);

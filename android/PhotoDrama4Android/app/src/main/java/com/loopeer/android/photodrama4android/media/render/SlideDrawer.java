@@ -87,7 +87,7 @@ public class SlideDrawer extends TransitionDrawer{
         translateM(viewMatrix1, 0, 0f, -2f * (1f - getProgress(usedTime)), 0f);
     }
 
-    public void drawFrame(long usedTime, float[] pMatrix, boolean isRecording) {
+    public void drawFrame(long usedTime, float[] pMatrix) {
         if (usedTime < mTransitionClip.startTime || usedTime > mTransitionClip.getEndTime()) return;
         updateViewMatrices(usedTime);
         updateProgramBindData0(usedTime, pMatrix);

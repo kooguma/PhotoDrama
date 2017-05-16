@@ -12,6 +12,8 @@ import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityTransitionEditBinding;
+import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
+import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -22,10 +24,14 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ImageTransitionSegmentAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.TransitionEffectAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransitionEditActivity extends AppCompatActivity implements ImageTransitionSegmentAdapter.OnSelectedListener, TransitionEffectAdapter.OnSelectedListener {
+import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTime;
+
+public class TransitionEditActivity extends PhotoDramaBaseActivity implements ImageTransitionSegmentAdapter.OnSelectedListener
+        , TransitionEffectAdapter.OnSelectedListener, VideoPlayerManager.ProgressChangeListener, OnSeekProgressChangeListener {
 
     private ActivityTransitionEditBinding mBinding;
     private ImageTransitionSegmentAdapter mImageTransitionSegmentAdapter;
@@ -41,9 +47,13 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
+        SeekWrapper seekWrapper = new SeekWrapper(mBinding.seekBar);
+        seekWrapper.getSeekImpl().addOnSeekChangeListener(this);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, seekWrapper);
+        mVideoPlayerManager.addProgressChangeListener(this);
+        mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
-
+        mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
         updateRecyclerView();
     }
 
@@ -51,6 +61,7 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
     }
 
     private void updateRecyclerView() {
@@ -95,12 +106,14 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
     public void onEffectSelected(TransitionClip transitionClip) {
         mImageTransitionSegmentAdapter.notifyTransition(transitionClip);
         updateDramaImageAndTransitionTime();
+        mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mSelectedTransitionClip = mImageTransitionSegmentAdapter.getSelectedTransition();
         mVideoPlayerManager.refreshTransitionRender();
 
         mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime
                 , mSelectedTransitionClip.getEndTime());
         mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
+        mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime);
     }
 
     private void updateDramaImageAndTransitionTime() {
@@ -159,4 +172,48 @@ public class TransitionEditActivity extends AppCompatActivity implements ImageTr
         mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime);
     }
 
+    @Override
+    public void onProgressInit(int progress, int maxValue) {
+        mBinding.textStart.setText(formatTime(progress));
+        mBinding.textTotal.setText(formatTime(maxValue + 1));
+    }
+
+    @Override
+    public void onProgressStop() {
+        mBinding.btnPlay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onProgressChange(int progress, int maxValue) {
+        mBinding.textStart.setText(formatTime(progress));
+    }
+
+    @Override
+    public void onProgressStart() {
+        if (mBinding.btnPlay.getVisibility() == View.VISIBLE)
+            mBinding.btnPlay.setVisibility(View.GONE);
+    }
+
+    private void onPlayRectClick() {
+        if (mVideoPlayerManager.isStop()) {
+            mVideoPlayerManager.startVideo();
+        } else {
+            mVideoPlayerManager.pauseVideo();
+        }
+    }
+
+    @Override
+    public void onProgressChanged(SeekWrapper.SeekImpl seek, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekWrapper.SeekImpl seek) {
+        mVideoPlayerManager.updateVideoTimeOnly(0, mDrama.getShowTimeTotal());
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekWrapper.SeekImpl seek) {
+
+    }
 }

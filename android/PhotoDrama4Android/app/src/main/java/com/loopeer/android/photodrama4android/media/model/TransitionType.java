@@ -17,7 +17,7 @@ import java.util.Map;
 public enum TransitionType {
 
     @SerializedName("0")
-    NO(0, R.string.transition_name_no, 0, null, null),
+    NO(0, R.string.transition_name_no, R.drawable.ic_transition_none, null, null),
 
     @SerializedName("3")
     DISSOLVE(1, R.string.transition_name_dissolve, R.drawable.ic_transition_dissolve, DissolveDrawer.class, DissolveShaderProgram.class),

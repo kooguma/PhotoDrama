@@ -16,7 +16,7 @@ public class ScrollSelectViewSeekImpl implements SeekWrapper.SeekImpl {
     }
 
     @Override
-    public void setOnSeekChangeListener(OnSeekProgressChangeListener listener) {
+    public void addOnSeekChangeListener(OnSeekProgressChangeListener listener) {
         mScrollSelectView.setOnSeekProgressChangeListener(this, listener);
     }
 
@@ -29,4 +29,5 @@ public class ScrollSelectViewSeekImpl implements SeekWrapper.SeekImpl {
     public int getProgress() {
         return mScrollSelectView.getProgress();
     }
+
 }

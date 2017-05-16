@@ -3,11 +3,16 @@ package com.loopeer.android.photodrama4android.media;
 
 import android.widget.SeekBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SeekBarImpl implements SeekWrapper.SeekImpl, SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
-    private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
+    private List<OnSeekProgressChangeListener> mOnSeekProgressChangeListeners;
     public SeekBarImpl(SeekBar seekBar) {
         mSeekBar = seekBar;
+        mOnSeekProgressChangeListeners = new ArrayList<>();
+        mSeekBar.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -16,9 +21,8 @@ public class SeekBarImpl implements SeekWrapper.SeekImpl, SeekBar.OnSeekBarChang
     }
 
     @Override
-    public void setOnSeekChangeListener(OnSeekProgressChangeListener listener) {
-        mOnSeekProgressChangeListener = listener;
-        mSeekBar.setOnSeekBarChangeListener(this);
+    public void addOnSeekChangeListener(OnSeekProgressChangeListener listener) {
+        mOnSeekProgressChangeListeners.add(listener);
     }
 
     @Override
@@ -33,16 +37,28 @@ public class SeekBarImpl implements SeekWrapper.SeekImpl, SeekBar.OnSeekBarChang
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mOnSeekProgressChangeListener.onProgressChanged(this, progress, fromUser);
+        if (mOnSeekProgressChangeListeners == null) return;
+        for (OnSeekProgressChangeListener listener :
+                mOnSeekProgressChangeListeners) {
+            listener.onProgressChanged(this, progress, fromUser);
+        }
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        mOnSeekProgressChangeListener.onStartTrackingTouch(this);
+        if (mOnSeekProgressChangeListeners == null) return;
+        for (OnSeekProgressChangeListener listener :
+                mOnSeekProgressChangeListeners) {
+            listener.onStartTrackingTouch(this);
+        }
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        mOnSeekProgressChangeListener.onStopTrackingTouch(this);
+        if (mOnSeekProgressChangeListeners == null) return;
+        for (OnSeekProgressChangeListener listener :
+                mOnSeekProgressChangeListeners) {
+            listener.onStopTrackingTouch(this);
+        }
     }
 }

@@ -232,6 +232,13 @@ public class VideoPlayerManager
         mGLThread.updateTime(mStartTime, mEndTime);
     }
 
+    public void updateVideoTimeOnly(int startTime, int endTime) {
+        mStartTime = startTime;
+        mEndTime = endTime;
+        mFinishAtTime = mStartTime;
+        mGLThread.updateTime(mStartTime, mEndTime);
+    }
+
     public void seekToVideo(int time) {
         mGLThread.seekToTime(time);
         mIMusic.seekToMusic(time);

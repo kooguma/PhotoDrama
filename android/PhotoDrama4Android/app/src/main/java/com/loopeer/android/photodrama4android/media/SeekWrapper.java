@@ -10,7 +10,7 @@ public class SeekWrapper {
     public interface SeekImpl {
         void setMax(int max);
 
-        void setOnSeekChangeListener(OnSeekProgressChangeListener listener);
+        void addOnSeekChangeListener(OnSeekProgressChangeListener listener);
 
         void setProgress(int progress);
 
@@ -32,12 +32,14 @@ public class SeekWrapper {
     }
 
     public void setOnSeekChangeListener(OnSeekProgressChangeListener listener) {
-        mSeekImpl.setOnSeekChangeListener(listener);
+        mSeekImpl.addOnSeekChangeListener(listener);
     }
 
     public void setProgress(int progress) {
         mSeekImpl.setProgress(progress);
     }
 
-
+    public SeekImpl getSeekImpl() {
+        return mSeekImpl;
+    }
 }

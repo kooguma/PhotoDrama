@@ -1,74 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity">
+        android:orientation="vertical">
 
+        <include
+            android:id="@+id/view_toolbar_dark_inset"
+            layout="@layout/view_toolbar_dark_inset" />
 
-        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
-            android:id="@+id/gl_surface_view"
-            android:layout_width="0dp"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:screenRatioX="@integer/gl_screen_x"
-            app:screenRatioY="@integer/gl_screen_y"/>
+            android:layout_gravity="center">
 
+            <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
+                android:id="@+id/gl_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:screenRatioX="@integer/gl_screen_x"
+                app:screenRatioY="@integer/gl_screen_y"/>
+
+            <ImageView
+                android:id="@+id/btn_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_play_green_large"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/seek_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/bg_edit">
+
+            <TextView
+                android:id="@+id/text_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/large_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:layout_marginTop="@dimen/large_padding"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/text_size_small"/>
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/text_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/large_padding"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:layout_marginTop="@dimen/large_padding"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/text_size_small"/>
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_segment"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <ImageButton
-            style="?actionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="onPlayClick"
-            android:src="@drawable/ic_play_arrow_black_24dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/transition_selected_segment"
-            app:layout_constraintBottom_toTopOf="@+id/recycler_view_segment"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/transition_selected_effect"
-            app:layout_constraintBottom_toTopOf="@+id/recycler_view_transition"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:paddingRight="@dimen/small_padding"
+            android:paddingLeft="@dimen/small_padding"
+            android:clipToPadding="false"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_transition"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center_horizontal"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </layout>

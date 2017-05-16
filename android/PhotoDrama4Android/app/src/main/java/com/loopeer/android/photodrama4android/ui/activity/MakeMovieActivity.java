@@ -35,6 +35,7 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTime;
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener {
@@ -150,11 +151,8 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
 
     @Override
     public void onProgressInit(int progress, int maxValue) {
-        SimpleDateFormat formatter = new SimpleDateFormat("m:ss");
-        String hms = formatter.format(progress);
-        mBinding.textStart.setText(hms);
-        String hmsTotal = formatter.format(maxValue + 1);
-        mBinding.textTotal.setText(hmsTotal);
+        mBinding.textStart.setText(formatTime(progress));
+        mBinding.textTotal.setText(formatTime(maxValue + 1));
     }
 
     @Override
@@ -164,9 +162,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
 
     @Override
     public void onProgressChange(int progress, int maxValue) {
-        SimpleDateFormat formatter = new SimpleDateFormat("m:ss");
-        String hms = formatter.format(progress);
-        mBinding.textStart.setText(hms);
+        mBinding.textStart.setText(formatTime(progress));
     }
 
     @Override
