@@ -199,8 +199,8 @@ public class TimeSelectView extends View {
                 , clampX + drawTextWidth / 2 + mTextPadding, mRectHeight, mRectRadius, mRectRadius), mPaint);
         Path path = new Path();
         path.moveTo(getProgressViewWidth(), mRectHeight + mTriangleHeight);
-        path.lineTo(getProgressViewWidth() - 1f * mTriangleHeight * 2 / 3, mRectHeight);
-        path.lineTo(getProgressViewWidth() + 1f * mTriangleHeight * 2 / 3, mRectHeight);
+        path.lineTo(getProgressViewWidth() - 1f * mTriangleHeight * 3 / 4, mRectHeight);
+        path.lineTo(getProgressViewWidth() + 1f * mTriangleHeight * 3 / 4, mRectHeight);
         path.lineTo(getProgressViewWidth(), mRectHeight + mTriangleHeight);
         path.close();
         canvas.drawPath(path, mPaint);
@@ -248,7 +248,6 @@ public class TimeSelectView extends View {
 
     }
 
-
     private void onStopTouch() {
         mIsOnTouch = false;
     }
@@ -256,7 +255,6 @@ public class TimeSelectView extends View {
     private void checkTouchOnIndicator(float lastTouchX, float lastTouchY) {
         mIsOnTouch = isOnTouch(lastTouchX, lastTouchY);
     }
-
 
     public boolean isOnTouch(float x, float y) {
         float height = 1f * mCircleRadius * 3 / 2;
