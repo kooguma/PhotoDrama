@@ -3,7 +3,7 @@
     <string name="label_segment_edit">Segment Edit</string>
     <string name="label_transition_edit">转场</string>
     <string name="label_subtitle">字幕</string>
-    <string name="label_record_audio">配音</string>
+    <string name="label_record_audio">配乐</string>
     <string name="label_sound_effect">音效</string>
     <string name="label_bgm">配乐</string>
     <string name="label_music_select">选择配乐</string>
@@ -105,6 +105,12 @@
     <!-- record -->
     <string name="record_add">长按开始录音</string>
     <string name="record_add_finish">结束录音</string>
+
+    <!-- bgm -->
+    <string name="bgm_add">添加配乐</string>
+
+    <!-- sound -->
+    <string name="sound_add">添加音效</string>
 
     <!-- guide -->
     <string name="guide_btn_text">立即体验</string>

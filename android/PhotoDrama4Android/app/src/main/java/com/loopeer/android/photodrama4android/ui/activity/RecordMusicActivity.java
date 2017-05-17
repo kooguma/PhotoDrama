@@ -211,10 +211,6 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mVideoPlayerManager.onDestroy();
     }
 
-    public void onPlayClick(View view) {
-        mVideoPlayerManager.startVideo();
-    }
-
     @Override
     public void onProgressInit(int progress, int maxValue) {
         mBinding.textStart.setText(formatTimeMilli(progress));
