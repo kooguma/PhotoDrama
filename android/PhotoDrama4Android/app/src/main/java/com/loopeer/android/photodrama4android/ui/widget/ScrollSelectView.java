@@ -21,6 +21,7 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.model.Clip;
+import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -265,7 +266,7 @@ public class ScrollSelectView extends ViewGroup {
         mPreSelectedClip = mSelectedClip;
         mSelectedClip = null;
         for (Clip clip : mClips) {
-            if (isManual && getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
+            if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
                 mSelectedClip = clip;
                 break;
             }
@@ -407,12 +408,12 @@ public class ScrollSelectView extends ViewGroup {
 
     public void onProgressStop() {
         if (isManual) return;
-        for (Clip clip : mClips) {
-            if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
-                mSelectedClip = clip;
-            }
-        }
+        updateSelected();
         invalidate();
+    }
+
+    private void updateSelected() {
+        updateSelectedClip();
     }
 
     public void onProgressStart() {
@@ -521,10 +522,8 @@ public class ScrollSelectView extends ViewGroup {
             return;
         }
         mPosX = -1f * progress / mMaxValue * getTotalLength();
-        isManual = false;/*
-        mSelectedImageWrapperLineShape = null;
-        mSelectedIndicatorShape = null;
-        mSelectedClip = null;*/
+        isManual = false;
+        updateSelectedClip();
         scrollContent();
         notifyProgressChange();
     }

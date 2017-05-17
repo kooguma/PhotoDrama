@@ -5,11 +5,13 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/view_volume_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_edit"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:visibility="gone"
         tools:showIn="@layout/activity_record_music">
 
         <ImageView
@@ -22,8 +24,9 @@
             android:id="@+id/seek_bar_volume"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:thumb="@drawable/ic_thumb_volume"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:max="100"
+            android:thumb="@drawable/ic_thumb_volume"/>
 
         <TextView
             android:id="@+id/text_volume"

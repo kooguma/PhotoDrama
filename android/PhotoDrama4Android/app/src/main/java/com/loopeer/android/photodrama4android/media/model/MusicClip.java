@@ -10,7 +10,7 @@ public class MusicClip extends Clip {
     public static final int MIN_BGM_LENGTH = 500;
     public String path;
 
-    public float volume = 5.0f;
+    public float volume = 0.5f;
 
     public int musicStartOffset;
     public int musicSelectedLength;

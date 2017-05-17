@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SeekBar;
+
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -25,11 +28,16 @@ import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
 import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTimeMilli;
 
 public class RecordMusicActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener
-        , ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
+        , ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener, ScrollSelectView.TouchStateListener {
 
     private ActivityRecordMusicBinding mBinding;
     private Drama mDrama;
@@ -37,6 +45,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     private AudioRecorder mAudioRecorder;
     private MusicClip mMusicClipRecording;
     private MusicClip mSelectedClip;
+    private boolean mToolShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,8 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick(v));
+        mBinding.scrollSelectView.setTouchStateListener(this);
+        setUpVolumeListener();
         updateBtn();
         updateScrollImageView();
     }
@@ -75,7 +86,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
                 default:
                     break;
             }
-            return false;
+            return true;
         });
     }
 
@@ -84,14 +95,19 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             mDrama.audioGroup.musicClips.remove(mSelectedClip);
             mVideoPlayerManager.getIMusic().updateDrama(mDrama);
             updateScrollSelectViewClips();
+            mSelectedClip = null;
+            updateBtnView();
         }
     }
 
     public void onRecordConfirm(View view) {
-
+        mMusicClipRecording = null;
+        if (mSelectedClip != null)
+            mVideoPlayerManager.seekToVideo(mSelectedClip.getEndTime() + 1);
     }
 
     private void stopRecord(boolean validate) {
+        mBinding.textAdd.setText(R.string.record_add);
         mAudioRecorder.stopRecording();
         mVideoPlayerManager.pauseVideo();
         if (mMusicClipRecording == null) return;
@@ -105,13 +121,20 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             FileUtils.deleteFile(new File(mMusicClipRecording.path));
         }
 
-        mBinding.scrollSelectView.setProgress(mMusicClipRecording.getEndTime());
         mVideoPlayerManager.getIMusic().updateDrama(mDrama);
-        mMusicClipRecording = null;
-        updateScrollSelectViewClips();
+        registerSubscription(
+                Flowable.timer(200, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(t -> {
+                            updateScrollSelectViewClips();
+                            mBinding.scrollSelectView.setStop(true);
+                            mVideoPlayerManager.seekToVideo(mMusicClipRecording.getEndTime());
+                        })
+        );
     }
 
     private void startRecord() {
+        mBinding.textAdd.setText(R.string.record_add_finish);
         mMusicClipRecording = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
                 , MusicClip.MusicType.RECORD_AUDIO);
         mMusicClipRecording.path = FileManager.getInstance().createNewAudioFile();
@@ -214,6 +237,17 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
                 stopRecord(false);
             }
         }
+
+        if (mSelectedClip == null) {
+            MusicClip musicClip = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
+                    , MusicClip.MusicType.RECORD_AUDIO);
+            if (!checkClipValidate(musicClip)) {
+                mBinding.btnAdd.setEnabled(false);
+            } else {
+                mBinding.btnAdd.setEnabled(true);
+            }
+        }
+        updateBtnView();
     }
 
     @Override
@@ -301,11 +335,74 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             mSelectedClip = null;
             mBinding.switcherBtn.setDisplayedChild(0);
         }
+        updateBtnView();
+    }
+
+    private void updateBtnView() {
+        if (mSelectedClip != null) {
+            showVolume();
+        } else {
+            hideVolume();
+        }
+    }
+
+    private void hideVolume() {
+        if (!mToolShow) return;
+        mToolShow = false;
+        mBinding.switcherBtn.setDisplayedChild(0);
+        ObjectAnimator.ofFloat(mBinding.viewMusicVolume.viewVolumeContainer, View.TRANSLATION_Y, 0,
+                mBinding.viewMusicVolume.viewVolumeContainer.getHeight()).start();
+    }
+
+    private void showVolume() {
+        if (mToolShow) return;
+        mBinding.switcherBtn.setDisplayedChild(1);
+        mBinding.btnConfirm.setVisibility(mMusicClipRecording != null ? View.VISIBLE : View.GONE);
+        mBinding.viewMusicVolume.viewVolumeContainer.setVisibility(View.VISIBLE);
+        mToolShow = true;
+        ObjectAnimator.ofFloat(mBinding.viewMusicVolume.viewVolumeContainer, View.TRANSLATION_Y,
+                mBinding.viewMusicVolume.viewVolumeContainer.getHeight(), 0).start();
+        mBinding.viewMusicVolume.seekBarVolume.setProgress((int) (mSelectedClip.volume * 100));
+        updateVolumeText();
+    }
+
+    private void updateVolumeText() {
+        mBinding.viewMusicVolume.textVolume.setText(String.format("%2.0f", mSelectedClip.volume * 100) + "%");
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mAudioRecorder.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onStartTouch() {
+        mMusicClipRecording = null;
+    }
+
+    @Override
+    public void onStopTouch() {
+
+    }
+
+    private void setUpVolumeListener() {
+        mBinding.viewMusicVolume.seekBarVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (mSelectedClip != null) mSelectedClip.volume = 1f * progress / 100;
+                updateVolumeText();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 }
