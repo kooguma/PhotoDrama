@@ -32,7 +32,6 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.loopeer.android.photodrama4android.media.model.SubtitleClip.MIN_SUBTITLE_LENGTH;
-import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTime;
 import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTimeMilli;
 
 public class SubtitleEditActivity extends PhotoDramaBaseActivity implements ScrollSelectView.ClipSelectedListener
@@ -198,10 +197,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     public void onClipSelected(Clip clip) {
         if (clip != null) {
             mSelectedClip = (SubtitleClip) clip;
-//            mBinding.btnDelete.setVisibility(View.VISIBLE);
+            mBinding.btnAdd.setEnabled(false);
         } else {
             mSelectedClip = null;
-//            mBinding.btnDelete.setVisibility(View.GONE);
+            mBinding.btnAdd.setEnabled(true);
         }
     }
 
@@ -289,6 +288,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     public void onProgressStop() {
         mBinding.btnPlayFrame.setSelected(true);
         mBinding.btnPlay.setVisibility(View.VISIBLE);
+        mBinding.scrollSelectView.onProgressStop();
     }
 
     @Override
@@ -299,6 +299,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     @Override
     public void onProgressStart() {
         mBinding.btnPlayFrame.setSelected(false);
+        mBinding.scrollSelectView.onProgressStart();
         if (mBinding.btnPlay.getVisibility() == View.VISIBLE)
             mBinding.btnPlay.setVisibility(View.GONE);
     }

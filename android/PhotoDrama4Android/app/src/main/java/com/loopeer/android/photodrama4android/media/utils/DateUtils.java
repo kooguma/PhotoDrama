@@ -18,7 +18,7 @@ public class DateUtils {
     public static String formatTimeMilli(int time) {
         if (time > 0) time = time + 1;
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss.S");
-        return formatter.format(time);
+        return formatter.format(time).substring(0, 7);
     }
 
     public static String getCurrentTimeString() {

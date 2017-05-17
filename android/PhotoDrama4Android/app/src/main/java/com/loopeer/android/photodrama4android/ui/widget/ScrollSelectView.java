@@ -53,7 +53,8 @@ public class ScrollSelectView extends ViewGroup {
     private float mIndicatorInLineWidth;
     private float mIndicatorInLineHeight;
 
-    private boolean isManual = true;
+    private boolean isManual = false;
+    private boolean isStop = false;
     private boolean isScrollByTouchContent = false;
 
     private float mMiddleLineWidth;
@@ -316,7 +317,11 @@ public class ScrollSelectView extends ViewGroup {
 
     private void scrollToTime(int time) {
         mOnSeekProgressChangeListener.onProgressChanged(mSeek, time, true);
-        setProgress(time);
+//        setProgress(time);
+
+        mPosX = -1f * time / mMaxValue * getTotalLength();
+        scrollContent();
+        notifyProgressChange();
     }
 
     public void changeTimeByEndIndicator(int offset) {
@@ -355,8 +360,8 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void onStartTouch() {
-        mOnSeekProgressChangeListener.onStartTrackingTouch(mSeek);
         isManual = true;
+        mOnSeekProgressChangeListener.onStartTrackingTouch(mSeek);
     }
 
     private void onProgressChange() {
@@ -369,6 +374,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void onStopTouch() {
+        mOnSeekProgressChangeListener.onStopTrackingTouch(mSeek);
         isScrollByTouchContent = false;
         isManual = false;
         for (Clip clip : mClips) {
@@ -376,7 +382,6 @@ public class ScrollSelectView extends ViewGroup {
                 mSelectedClip = clip;
             }
         }
-        mOnSeekProgressChangeListener.onStopTrackingTouch(mSeek);
         if (mSelectedClip != null && mSelectedIndicatorShape != null) {
             if (mSelectedIndicatorShape == mIndicatorShapeStart) {
                 scrollToTime(mSelectedClip.startTime);
@@ -390,6 +395,22 @@ public class ScrollSelectView extends ViewGroup {
             mSelectedImageWrapperLineShape = null;
         }
         invalidate();
+    }
+
+    public void onProgressStop() {
+        if (isManual) return;
+        isStop = true;
+        for (Clip clip : mClips) {
+            if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
+                mSelectedClip = clip;
+            }
+        }
+        invalidate();
+    }
+
+    public void onProgressStart() {
+        if (isManual) return;
+        isStop = false;
     }
 
     private void scrollContent() {
@@ -490,11 +511,15 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void setProgress(int progress) {
+        if (isStop) return;
         if (isManual) {
             return;
         }
         mPosX = -1f * progress / mMaxValue * getTotalLength();
         isManual = false;
+        mSelectedImageWrapperLineShape = null;
+        mSelectedIndicatorShape = null;
+        mSelectedClip = null;
         scrollContent();
         notifyProgressChange();
     }
