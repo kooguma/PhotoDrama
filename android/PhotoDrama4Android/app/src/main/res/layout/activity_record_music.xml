@@ -3,69 +3,167 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity">
+        android:orientation="vertical">
 
+        <include
+            android:id="@+id/view_toolbar_dark_inset"
+            layout="@layout/view_toolbar_dark_inset"/>
 
-        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
-            android:id="@+id/gl_surface_view"
-            android:layout_width="0dp"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:screenRatioX="@integer/gl_screen_x"
-            app:screenRatioY="@integer/gl_screen_y"/>
+            android:layout_gravity="center">
 
-        <ImageButton
-            style="?actionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="onPlayClick"
-            android:src="@drawable/ic_play_arrow_black_24dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
+            <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
+                android:id="@+id/gl_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:screenRatioX="@integer/gl_screen_x"
+                app:screenRatioY="@integer/gl_screen_y"/>
 
-        <com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView
-            android:id="@+id/scrollSelectView"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="100dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gl_surface_view"/>
+            <com.loopeer.android.photodrama4android.ui.widget.SubtitleEditRectView
+                android:id="@+id/subtitle_rect_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:screenRatioX="@integer/gl_screen_x"
+                app:screenRatioY="@integer/gl_screen_y"/>
+
+            <ImageView
+                android:id="@+id/btn_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_play_green_large"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/text_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small"/>
+
+            <TextView
+                android:id="@+id/text_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/large_padding"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small"/>
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp">
+
+            <com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView
+                android:id="@+id/scrollSelectView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:imageMargin="4dp"
+                app:imageShowHeight="64dp"
+                app:indicatorInLineHeight="28dp"
+                app:indicatorInLineWidth="2dp"
+                app:indicatorWidth="12dp"/>
+
+            <FrameLayout
+                android:id="@+id/btn_play_frame"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/btn_unable_color"
+                android:foreground="?selectableItemBackground"
+                android:onClick="onPlayRectClick">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/selector_play_white_edit"/>
+            </FrameLayout>
+        </FrameLayout>
 
         <ViewAnimator
             android:id="@+id/switcher_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollSelectView">
+            android:layout_marginTop="65dp">
 
-            <ImageButton
-                android:id="@+id/btn_record"
-                style="?actionButtonStyle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_record_black_36dp"/>
+                android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/btn_delete"
-                style="?actionButtonStyle"
-                android:onClick="onDeleteClick"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/btn_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/selector_record_music_add"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/large_padding"
+                    android:text="@string/subtitle_add"
+                    android:textColor="@color/text_color_tertiary"
+                    android:textSize="@dimen/text_size_medium"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_delete_black_36dp"/>
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onDeleteClick"
+                    android:src="@drawable/ic_music_delete"/>
+
+                <ImageView
+                    android:id="@+id/btn_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="120dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onRecordConfirm"
+                    android:src="@drawable/ic_record_confirm"/>
+            </LinearLayout>
         </ViewAnimator>
 
-    </android.support.constraint.ConstraintLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <include
+            android:id="@+id/view_music_volume"
+            layout="@layout/view_music_volume"/>
+    </LinearLayout>
 
 </layout>
 

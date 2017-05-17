@@ -315,8 +315,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         if (mVideoPlayerManager.isStop()) {
             mVideoPlayerManager.startVideo();
             hideTextRect();
+            mBinding.scrollSelectView.setStop(false);
         } else {
             mVideoPlayerManager.pauseVideo();
+            mBinding.scrollSelectView.setStop(true);
             showTextRect();
         }
     }

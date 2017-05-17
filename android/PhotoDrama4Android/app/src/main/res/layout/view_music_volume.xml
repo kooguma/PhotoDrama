@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_edit"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:showIn="@layout/activity_record_music">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/large_padding"
+            android:src="@drawable/ic_music_volume"/>
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seek_bar_volume"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/ic_thumb_volume"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/text_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/xlarge_padding"
+            android:layout_marginRight="@dimen/large_padding"
+            android:layout_marginTop="@dimen/xlarge_padding"
+            android:textColor="@color/text_color_white"
+            android:textSize="@dimen/text_size_medium"/>
+    </LinearLayout>
+
+</layout>
+
+        

@@ -26,6 +26,7 @@ import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import java.io.File;
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
+import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTimeMilli;
 
 public class RecordMusicActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener
         , ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener {
@@ -50,6 +51,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mVideoPlayerManager.addProgressChangeListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
+        mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick(v));
         updateBtn();
         updateScrollImageView();
     }
@@ -58,10 +60,11 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
     }
 
     private void updateBtn() {
-        mBinding.btnRecord.setOnTouchListener((v, event) -> {
+        mBinding.btnAdd.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_UP:
                     stopRecord(true);
@@ -82,6 +85,10 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             mVideoPlayerManager.getIMusic().updateDrama(mDrama);
             updateScrollSelectViewClips();
         }
+    }
+
+    public void onRecordConfirm(View view) {
+
     }
 
     private void stopRecord(boolean validate) {
@@ -187,16 +194,20 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
 
     @Override
     public void onProgressInit(int progress, int maxValue) {
-
+        mBinding.textStart.setText(formatTimeMilli(progress));
+        mBinding.textTotal.setText(formatTimeMilli(maxValue + 1));
     }
 
     @Override
     public void onProgressStop() {
-
+        mBinding.btnPlayFrame.setSelected(true);
+        mBinding.btnPlay.setVisibility(View.VISIBLE);
+        mBinding.scrollSelectView.onProgressStop();
     }
 
     @Override
     public void onProgressChange(int progress, int maxValue) {
+        mBinding.textStart.setText(formatTimeMilli(progress));
         if (mMusicClipRecording != null) {
             mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
             if (!checkClipValidate(mMusicClipRecording)) {
@@ -207,7 +218,20 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
 
     @Override
     public void onProgressStart() {
+        mBinding.btnPlayFrame.setSelected(false);
+        mBinding.scrollSelectView.onProgressStart();
+        if (mBinding.btnPlay.getVisibility() == View.VISIBLE)
+            mBinding.btnPlay.setVisibility(View.GONE);
+    }
 
+    public void onPlayRectClick(View view) {
+        if (mVideoPlayerManager.isStop()) {
+            mVideoPlayerManager.startVideo();
+            mBinding.scrollSelectView.setStop(false);
+        } else {
+            mVideoPlayerManager.pauseVideo();
+            mBinding.scrollSelectView.setStop(true);
+        }
     }
 
     @Override

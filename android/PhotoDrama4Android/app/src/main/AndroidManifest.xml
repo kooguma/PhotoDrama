@@ -72,7 +72,7 @@
             android:label="@string/label_record_audio"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark.NoActionBar"/>
         <activity
             android:name=".ui.activity.SoundEffectActivity"
             android:label="@string/label_sound_effect"
