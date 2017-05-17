@@ -183,6 +183,30 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
         return true;
     }
 
+    @Override
+    public boolean changeTimeByMiddleLine(Clip clip, int offset, int minValue, int maxValue) {
+        int preStartTime = clip.startTime;
+        clip.startTime += offset;
+        if (clip.getEndTime() >= maxValue + 1)
+            clip.startTime = maxValue + 1 - clip.showTime;
+        if (clip.startTime <= 0) {
+            clip.startTime = 0;
+        }
+        for (MusicClip c : mDrama.audioGroup.getSoundEffectClips()) {
+            if (clip != c) {
+                if (preStartTime < c.startTime && clip.getEndTime() >= c.startTime) {
+                    clip.startTime = c.startTime - 1 - clip.showTime;
+                    break;
+                }
+                if (preStartTime > c.startTime && clip.startTime <= c.getEndTime()) {
+                    clip.startTime = c.getEndTime() + 1;
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
     private boolean checkClipValidate(Clip recordingClip) {
         if (recordingClip.startTime + MIN_BGM_LENGTH > mVideoPlayerManager.getMaxTime())
             return false;

@@ -19,6 +19,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Clip;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
@@ -179,6 +180,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             mSelectedClip.content = content;
         }
         mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
+        mVideoPlayerManager.refreshSubtitleRender();
         mVideoPlayerManager.requestRender();
     }
 
@@ -189,6 +191,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         if (!TextUtils.isEmpty(content)) {
             updateSubtitle(content);
         }
+        mBinding.textInput.setText("");
     }
 
     @Override
@@ -245,6 +248,30 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             if (clip != c) {
                 if (clip.startTime < c.startTime && clip.getEndTime() >= c.startTime) {
                     clip.showTime = c.startTime - clip.startTime;
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean changeTimeByMiddleLine(Clip clip, int offset, int minValue, int maxValue) {
+        int preStartTime = clip.startTime;
+        clip.startTime += offset;
+        if (clip.getEndTime() >= maxValue + 1)
+            clip.startTime = maxValue + 1 - clip.showTime;
+        if (clip.startTime <= 0) {
+            clip.startTime = 0;
+        }
+        for (MusicClip c : mDrama.audioGroup.getSoundEffectClips()) {
+            if (clip != c) {
+                if (preStartTime < c.startTime && clip.getEndTime() >= c.startTime) {
+                    clip.startTime = c.startTime - 1 - clip.showTime;
+                    break;
+                }
+                if (preStartTime > c.startTime && clip.startTime <= c.getEndTime()) {
+                    clip.startTime = c.getEndTime() + 1;
                     break;
                 }
             }

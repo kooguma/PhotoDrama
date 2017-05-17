@@ -222,6 +222,12 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         return true;
     }
 
+    @Override
+    public boolean changeTimeByMiddleLine(Clip clip, int offset, int minValue, int maxValue) {
+        changeClipTimeByIndicator(clip, offset, maxValue);
+        return true;
+    }
+
     private void changeClipTimeByIndicator(Clip clip, int offset, int maxValue) {
         int preStartTime = clip.startTime;
         clip.startTime += offset;

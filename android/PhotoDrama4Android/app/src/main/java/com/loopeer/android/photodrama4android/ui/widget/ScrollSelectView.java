@@ -40,11 +40,11 @@ public class ScrollSelectView extends ViewGroup {
     private IndicatorShape mIndicatorShapeStart;
     private IndicatorShape mIndicatorShapeEnd;
     private ImageWrapperLineShape mImageWrapperLineShape;
+    private ImageWrapperLineShape mSelectedImageWrapperLineShape;
     private IndicatorShape mSelectedIndicatorShape;
     private int mMiddleLineColor;
     private int mStrokeLineColor;
     private int mTextRectColor;
-    private int mTextRectSelectedColor;
     private int mMiddlePos;
 
     private float mImageShowHeight;
@@ -95,7 +95,6 @@ public class ScrollSelectView extends ViewGroup {
 
         mMiddleLineColor = ContextCompat.getColor(context, android.R.color.white);
         mTextRectColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color);
-        mTextRectSelectedColor = ContextCompat.getColor(context, R.color.subtitle_text_rect_color_selected);
         mStrokeLineColor = ContextCompat.getColor(context, android.R.color.white);
         setWillNotDraw(false);
         mClips = new ArrayList<>();
@@ -189,7 +188,6 @@ public class ScrollSelectView extends ViewGroup {
                 mLastTouchX = x;
                 mLastTouchY = y;
                 mActivePointerId = ev.getPointerId(0);
-                checkTouchOnIndicator(mLastTouchX, mLastTouchY);
                 onStartTouch();
                 break;
             }
@@ -210,6 +208,7 @@ public class ScrollSelectView extends ViewGroup {
 
             case MotionEvent.ACTION_UP: {
                 mActivePointerId = INVALID_POINTER_ID;
+                checkTouchOnIndicator(mLastTouchX, mLastTouchY);
                 onStopTouch();
                 break;
             }
@@ -239,19 +238,22 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void scrollAndMoveIndicator(float dx, float dy) {
-        if (mSelectedIndicatorShape == null || mSelectedClip == null) {
-            mPosX += dx;
-            mPosY += dy;
-            scrollContent();
-            updateSelectedClip();
-            onProgressChange();
-        } else {
+        if (mSelectedImageWrapperLineShape != null && mSelectedClip != null) {
+            changeTimeByMiddleLine(getChangeTime(dx));
+            invalidate();
+        } else if (mSelectedIndicatorShape != null && mSelectedClip != null) {
             if (mSelectedIndicatorShape == mIndicatorShapeStart) {
                 changeTimeByStartIndicator(getChangeTime(dx));
             } else {
                 changeTimeByEndIndicator(getChangeTime(dx));
             }
             invalidate();
+        } else {
+            mPosX += dx;
+            mPosY += dy;
+            scrollContent();
+            updateSelectedClip();
+            onProgressChange();
         }
     }
 
@@ -270,6 +272,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void changeTimeByStartIndicator(int offset) {
+        mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.startTime, true);
         if (mClipIndicatorPosChangeListener != null
                 && mClipIndicatorPosChangeListener.changeTimeByStartIndicator(mSelectedClip
                 , offset, mMinClipShowTime, mMaxValue))
@@ -291,7 +294,22 @@ public class ScrollSelectView extends ViewGroup {
             mSelectedClip.startTime = 0;
             mSelectedClip.showTime = endValue;
         }
+    }
+
+    public void changeTimeByMiddleLine(int offset) {
         mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.startTime, true);
+        if (mClipIndicatorPosChangeListener != null
+                && mClipIndicatorPosChangeListener.changeTimeByMiddleLine(mSelectedClip
+                , offset, mMinClipShowTime, mMaxValue))
+            return;
+        int endValue = mSelectedClip.startTime + mSelectedClip.showTime;
+        if (endValue >= mMaxValue) {
+            mSelectedClip.startTime = mMaxValue - mSelectedClip.showTime;
+        }
+        if (mSelectedClip.startTime <= 0) {
+            mSelectedClip.startTime = 0;
+        }
+        mSelectedClip.startTime += offset;
     }
 
     private void scrollToTime(int time) {
@@ -300,6 +318,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void changeTimeByEndIndicator(int offset) {
+        mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.getEndTime(), true);
         if (mClipIndicatorPosChangeListener != null
                 && mClipIndicatorPosChangeListener.changeTimeByEndIndicator(mSelectedClip
                 , offset, mMinClipShowTime, mMaxValue))
@@ -309,13 +328,16 @@ public class ScrollSelectView extends ViewGroup {
             mSelectedClip.showTime = mMaxValue + 1 - mSelectedClip.startTime;
         if (mSelectedClip.showTime <= mMinClipShowTime)
             mSelectedClip.showTime = mMinClipShowTime;
-
-        mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.getEndTime(), true);
     }
 
     private void checkTouchOnIndicator(float lastTouchX, float lastTouchY) {
+        boolean touchImageWrapperLine = mImageWrapperLineShape.isOnTouch(lastTouchX, lastTouchY);
         boolean touchStart = mIndicatorShapeStart.isOnTouch(lastTouchX, lastTouchY);
         boolean touchEnd = mIndicatorShapeEnd.isOnTouch(lastTouchX, lastTouchY);
+        if (touchImageWrapperLine) {
+            mSelectedImageWrapperLineShape = mImageWrapperLineShape;
+            return;
+        }
         if (touchStart && touchEnd) {
             mSelectedIndicatorShape = (mIndicatorShapeEnd.rightRectTopX + mIndicatorShapeEnd.rightRectTopX) / 2 > lastTouchX
                     ? mIndicatorShapeStart : mIndicatorShapeEnd;
@@ -344,6 +366,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void onStopTouch() {
+        isManual = false;
         for (Clip clip : mClips) {
             if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
                 mSelectedClip = clip;
@@ -357,6 +380,10 @@ public class ScrollSelectView extends ViewGroup {
                 scrollToTime(mSelectedClip.getEndTime());
             }
             mSelectedIndicatorShape = null;
+        }
+        if (mSelectedImageWrapperLineShape != null && mSelectedClip != null) {
+            scrollToTime(mSelectedClip.startTime);
+            mSelectedImageWrapperLineShape = null;
         }
         invalidate();
     }
@@ -399,6 +426,7 @@ public class ScrollSelectView extends ViewGroup {
             float right = mMiddlePos + mPosX + getTotalLength() * clip.getEndTime() / mMaxValue;
             if (clip == mSelectedClip) {
                 mImageWrapperLineShape.update(left, right);
+                mImageWrapperLineShape.selected(mSelectedImageWrapperLineShape);
                 mImageWrapperLineShape.draw(canvas, mPaint);
                 mIndicatorShapeStart.updateTopDot(left - mIndicatorWidth);
                 mIndicatorShapeStart.selected(mSelectedIndicatorShape);
@@ -444,6 +472,9 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void setProgress(int progress) {
+        if (isManual) {
+            return;
+        }
         mPosX = -1f * progress / mMaxValue * getTotalLength();
         isManual = false;
         scrollContent();
@@ -679,10 +710,11 @@ public class ScrollSelectView extends ViewGroup {
         }
 
         public boolean isOnTouch(float x, float y) {
+            float altTouchWidth = width;
             if (y > 0
                     && y < rightRectTopY * 2 + rectangleHeight
-                    && x > rightRectTopX
-                    && x < rightRectTopX + width)
+                    && x > rightRectTopX - width - altTouchWidth
+                    && x < rightRectTopX + width + altTouchWidth)
                 return true;
             return false;
         }
@@ -736,12 +768,18 @@ public class ScrollSelectView extends ViewGroup {
         }
 
         public boolean isOnTouch(float x, float y) {
-            if (y > 0
-                    && y < rightRectTopY * 2 + rectangleHeight
-                    && x > leftRectTopX - 1
-                    && x < rightRectTopX + 1)
-                return true;
+            if (x > leftRectTopX
+                    && x < rightRectTopX) {
+                if ((y > 0 && y < lineWidth + lineWidth * 2)
+                        || (y > rectangleHeight - lineWidth && y < lineWidth * 2 + rectangleHeight)) {
+                    return true;
+                }
+            }
             return false;
+        }
+
+        public void selected(ImageWrapperLineShape selectedImageWrapperLineShape) {
+            isSelected = this == selectedImageWrapperLineShape;
         }
     }
 
@@ -756,6 +794,7 @@ public class ScrollSelectView extends ViewGroup {
     public interface ClipIndicatorPosChangeListener{
         boolean changeTimeByStartIndicator(Clip clip, int offset, int minValue, int maxValue);
         boolean changeTimeByEndIndicator(Clip clip, int offset, int minValue, int maxValue);
+        boolean changeTimeByMiddleLine(Clip clip, int offset, int minValue, int maxValue);
     }
 
     public interface ClipSelectedListener{
