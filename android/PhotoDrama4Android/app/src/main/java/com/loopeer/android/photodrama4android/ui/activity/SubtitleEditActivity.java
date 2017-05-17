@@ -183,6 +183,8 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     }
 
     public void onInputConfirm(View view) {
+        hideSoftInputMethod();
+        hideInput();
         String content = mBinding.textInput.getText().toString().trim();
         if (!TextUtils.isEmpty(content)) {
             updateSubtitle(content);

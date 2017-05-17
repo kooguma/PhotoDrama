@@ -39,6 +39,7 @@ public class ScrollSelectView extends ViewGroup {
     private Paint mStrokePaint;
     private IndicatorShape mIndicatorShapeStart;
     private IndicatorShape mIndicatorShapeEnd;
+    private ImageWrapperLineShape mImageWrapperLineShape;
     private IndicatorShape mSelectedIndicatorShape;
     private int mMiddleLineColor;
     private int mStrokeLineColor;
@@ -48,10 +49,9 @@ public class ScrollSelectView extends ViewGroup {
 
     private float mImageShowHeight;
     private float mImageMargin;
-    private float mIndicatorTriangleHeight;
-    private float mIndicatorRectangleHeight;
-    private float mIndicatorBottomMargin;
     private float mIndicatorWidth;
+    private float mIndicatorInLineWidth;
+    private float mIndicatorInLineHeight;
 
     private boolean isManual = true;
 
@@ -103,17 +103,22 @@ public class ScrollSelectView extends ViewGroup {
         mPaint.setColor(mMiddleLineColor);
 
         mStrokePaint = new Paint();
-        mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setColor(mStrokeLineColor);
+        mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setStrokeWidth(mMiddleLineWidth);
         mStrokePaint.setStrokeCap(Paint.Cap.ROUND);
 
-        mIndicatorShapeEnd = new IndicatorShape(mIndicatorWidth);
-        mIndicatorShapeEnd.setRectangleHeight(mIndicatorRectangleHeight);
-        mIndicatorShapeEnd.setTriangleHeight(mIndicatorTriangleHeight);
-        mIndicatorShapeStart = new IndicatorShape(mIndicatorWidth);
-        mIndicatorShapeStart.setRectangleHeight(mIndicatorRectangleHeight);
-        mIndicatorShapeStart.setTriangleHeight(mIndicatorTriangleHeight);
+        mIndicatorShapeEnd = new IndicatorShape(mIndicatorWidth, mImageMargin, mImageShowHeight, mIndicatorInLineWidth, mIndicatorInLineHeight, false);
+        mIndicatorShapeStart = new IndicatorShape(mIndicatorWidth, mImageMargin, mImageShowHeight, mIndicatorInLineWidth, mIndicatorInLineHeight, true);;
+        int selectedColor = ContextCompat.getColor(context, R.color.colorAccent);
+        int unselectedColor = ContextCompat.getColor(context, android.R.color.white);
+        int selectedLineColor = ContextCompat.getColor(context, android.R.color.white);
+        int unselectedLineColor = ContextCompat.getColor(context, R.color.scroll_indicator_inline_color);
+        mIndicatorShapeEnd.updateColor(selectedColor, unselectedColor, selectedLineColor, unselectedLineColor);
+        mIndicatorShapeStart.updateColor(selectedColor, unselectedColor, selectedLineColor, unselectedLineColor);
+
+        mImageWrapperLineShape = new ImageWrapperLineShape(mImageMargin, mImageShowHeight);
+        mImageWrapperLineShape.updateColor(selectedColor, unselectedColor);
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
@@ -125,11 +130,11 @@ public class ScrollSelectView extends ViewGroup {
 
         mImageShowHeight = a.getDimension(R.styleable.ScrollSelectView_imageShowHeight, DeviceScreenUtils.dp2px(65f, getContext()));
         mImageMargin = a.getDimension(R.styleable.ScrollSelectView_imageMargin, DeviceScreenUtils.dp2px(4f, getContext()));
-        mIndicatorRectangleHeight = a.getDimension(R.styleable.ScrollSelectView_indicatorRectangleHeight, 30f);
-        mIndicatorTriangleHeight = a.getDimension(R.styleable.ScrollSelectView_indicatorTriangleHeight, 20f);
-        mIndicatorBottomMargin = a.getDimension(R.styleable.ScrollSelectView_indicatorBottomMargin, 20f);
-        mIndicatorWidth = a.getDimension(R.styleable.ScrollSelectView_indicatorWidth, 20f);
+        mIndicatorWidth = a.getDimension(R.styleable.ScrollSelectView_indicatorWidth, DeviceScreenUtils.dp2px(12f, getContext()));
         mMiddleLineWidth = DeviceScreenUtils.dp2px(2f, getContext());
+        mIndicatorInLineHeight = a.getDimension(R.styleable.ScrollSelectView_indicatorInLineHeight, DeviceScreenUtils.dp2px(28f, getContext()));
+        mIndicatorInLineWidth = a.getDimension(R.styleable.ScrollSelectView_indicatorInLineWidth, DeviceScreenUtils.dp2px(2f, getContext()));
+
         a.recycle();
     }
 
@@ -312,7 +317,7 @@ public class ScrollSelectView extends ViewGroup {
         boolean touchStart = mIndicatorShapeStart.isOnTouch(lastTouchX, lastTouchY);
         boolean touchEnd = mIndicatorShapeEnd.isOnTouch(lastTouchX, lastTouchY);
         if (touchStart && touchEnd) {
-            mSelectedIndicatorShape = (mIndicatorShapeEnd.topDotX + mIndicatorShapeEnd.topDotX) / 2 > lastTouchX
+            mSelectedIndicatorShape = (mIndicatorShapeEnd.rightRectTopX + mIndicatorShapeEnd.rightRectTopX) / 2 > lastTouchX
                     ? mIndicatorShapeStart : mIndicatorShapeEnd;
         } else if (touchStart) {
             mSelectedIndicatorShape = mIndicatorShapeStart;
@@ -339,6 +344,11 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void onStopTouch() {
+        for (Clip clip : mClips) {
+            if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()) {
+                mSelectedClip = clip;
+            }
+        }
         mOnSeekProgressChangeListener.onStopTrackingTouch(mSeek);
         if (mSelectedClip != null && mSelectedIndicatorShape != null) {
             if (mSelectedIndicatorShape == mIndicatorShapeStart) {
@@ -348,6 +358,7 @@ public class ScrollSelectView extends ViewGroup {
             }
             mSelectedIndicatorShape = null;
         }
+        invalidate();
     }
 
     private void scrollContent() {
@@ -375,7 +386,9 @@ public class ScrollSelectView extends ViewGroup {
         super.dispatchDraw(canvas);
         drawTextRect(canvas);
 
+        mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mMiddleLineColor);
+        mPaint.setStrokeWidth(mMiddleLineWidth);
         mPaint.setShadowLayer(4, 0, 0, ContextCompat.getColor(getContext(), R.color.shadow_color));
         canvas.drawRect(mMiddlePos - mMiddleLineWidth / 2, 0, mMiddlePos + mMiddleLineWidth / 2, getHeight(), mPaint);
     }
@@ -385,16 +398,19 @@ public class ScrollSelectView extends ViewGroup {
             float left = mMiddlePos + mPosX + getTotalLength() * clip.startTime / mMaxValue;
             float right = mMiddlePos + mPosX + getTotalLength() * clip.getEndTime() / mMaxValue;
             if (clip == mSelectedClip) {
-                mPaint.setColor(mTextRectSelectedColor);
-                canvas.drawRect(left, 0, right, mImageShowHeight, mPaint);
-                canvas.drawRect(left, 0, right, mImageShowHeight, mStrokePaint);
-                mIndicatorShapeStart.updateTopDot(left, mImageShowHeight);
+                mImageWrapperLineShape.update(left, right);
+                mImageWrapperLineShape.draw(canvas, mPaint);
+                mIndicatorShapeStart.updateTopDot(left - mIndicatorWidth);
+                mIndicatorShapeStart.selected(mSelectedIndicatorShape);
                 mIndicatorShapeStart.draw(canvas, mPaint);
-                mIndicatorShapeEnd.updateTopDot(right, mImageShowHeight);
+                mIndicatorShapeEnd.updateTopDot(right);
+                mIndicatorShapeEnd.selected(mSelectedIndicatorShape);
                 mIndicatorShapeEnd.draw(canvas, mPaint);
             } else {
+                mPaint.clearShadowLayer();
+                mPaint.setStyle(Paint.Style.FILL);
                 mPaint.setColor(mTextRectColor);
-                canvas.drawRect(left, 0, right, mImageShowHeight, mPaint);
+                canvas.drawRect(left, mImageMargin, right, mImageMargin + mImageShowHeight, mPaint);
             }
         }
     }
@@ -578,60 +594,152 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public class IndicatorShape {
-        public float topDotX;
-        public float topDotY;
+        public float rightRectTopX;
+        public float rightRectTopY;
         public float width;
-        public float triangleHeight = 10f;
-        public float rectangleHeight = 20f;
+        public float triangleHeight;
+        public float rectangleHeight;
+        public float inLineWith;
+        public float inLineHeight;
+        public int selectedColor;
+        public int unSelectedColor;
+        public int selectedLineColor;
+        public int unSelectedLineColor;
+        public boolean isLeft;
+        public boolean isSelected;
 
-        public IndicatorShape(float width) {
+        public IndicatorShape(float width, float triangleHeight, float rectangleHeight, float inLineWith, float inLineHeight, boolean isLeft) {
             this.width = width;
-        }
-
-        public void setTriangleHeight(float triangleHeight) {
             this.triangleHeight = triangleHeight;
-        }
-
-        public void setRectangleHeight(float rectangleHeight) {
             this.rectangleHeight = rectangleHeight;
+            this.inLineWith = inLineWith;
+            this.inLineHeight = inLineHeight;
+            this.isLeft = isLeft;
         }
 
-        public void updateTopDot(float x, float y) {
-            topDotX = x;
-            topDotY = y;
+        public void updateColor(int selectedColor, int unselectedColor, int selectedLineColor, int unselectedLineColor) {
+            this.selectedColor = selectedColor;
+            this.unSelectedColor = unselectedColor;
+            this.selectedLineColor = selectedLineColor;
+            this.unSelectedLineColor = unselectedLineColor;
+        }
+
+        public void updateTopDot(float x) {
+            rightRectTopX = x;
+            rightRectTopY = triangleHeight;
+        }
+
+        public void selected(IndicatorShape indicatorShape) {
+            isSelected = this == indicatorShape;
         }
 
         public void draw(Canvas canvas, Paint paint) {
+            paint.setStyle(Paint.Style.FILL);
+            if (isLeft) {
+                paint.setShadowLayer(4, -5, 0, ContextCompat.getColor(getContext(), R.color.shadow_color));
+            } else {
+                paint.setShadowLayer(4, 5, 0, ContextCompat.getColor(getContext(), R.color.shadow_color));
+            }
             drawTriangle(canvas, paint);
-            drawRectangle(canvas, paint);
+            drawRectangleInline(canvas, paint);
         }
 
         private void drawTriangle(Canvas canvas, Paint paint) {
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            paint.setColor(isSelected ? selectedColor : unSelectedColor);
             paint.setAntiAlias(true);
             Path path = new Path();
-            path.moveTo(topDotX, topDotY);
-            path.lineTo(topDotX - width / 2, topDotY + triangleHeight);
-            path.lineTo(topDotX + width / 2, topDotY + triangleHeight);
-            path.lineTo(topDotX, topDotY);
+            if (isLeft) {
+                path.moveTo(rightRectTopX, rightRectTopY);
+                path.lineTo(rightRectTopX + width, 0);
+                path.lineTo(rightRectTopX + width, rightRectTopY * 2 + rectangleHeight);
+                path.lineTo(rightRectTopX, rightRectTopY + rectangleHeight);
+                path.moveTo(rightRectTopX, rightRectTopY);
+            } else {
+                path.moveTo(rightRectTopX + width, rightRectTopY);
+                path.lineTo(rightRectTopX, 0);
+                path.lineTo(rightRectTopX, rightRectTopY * 2 + rectangleHeight);
+                path.lineTo(rightRectTopX + width, rightRectTopY + rectangleHeight);
+                path.moveTo(rightRectTopX + width, rightRectTopY);
+            }
             path.close();
             canvas.drawPath(path, paint);
         }
 
-        private void drawRectangle(Canvas canvas, Paint paint) {
-            canvas.drawRect(topDotX - width / 2
-                    , topDotY + triangleHeight
-                    , topDotX + width / 2
-                    , topDotY + triangleHeight + rectangleHeight
+        private void drawRectangleInline(Canvas canvas, Paint paint) {
+            paint.setColor(isSelected ? selectedLineColor : unSelectedLineColor);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(inLineWith);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.clearShadowLayer();
+            canvas.drawLine(rightRectTopX + width / 2
+                    , rightRectTopY + (rectangleHeight - inLineHeight) / 2
+                    , rightRectTopX + width / 2
+                    , rightRectTopY + (rectangleHeight + inLineHeight) / 2
                     , paint);
         }
 
         public boolean isOnTouch(float x, float y) {
-            float height = mIndicatorRectangleHeight + mIndicatorTriangleHeight;
-            if (y > topDotY - height
-                    && y < topDotY + height
-                    && x > topDotX - height
-                    && x < topDotX + height)
+            if (y > 0
+                    && y < rightRectTopY * 2 + rectangleHeight
+                    && x > rightRectTopX
+                    && x < rightRectTopX + width)
+                return true;
+            return false;
+        }
+    }
+
+    public class ImageWrapperLineShape {
+        public float leftRectTopX;
+        public float rightRectTopY;
+        public float lineWidth;
+        public float rightRectTopX;
+        public float rectangleHeight;
+        public int selectedColor;
+        public int unSelectedColor;
+        public boolean isSelected;
+
+        public ImageWrapperLineShape(float lineWidth, float rectangleHeight) {
+            this.lineWidth = lineWidth;
+            this.rectangleHeight = rectangleHeight;
+        }
+
+        public void updateColor(int selectedColor, int unselectedColor) {
+            this.selectedColor = selectedColor;
+            this.unSelectedColor = unselectedColor;
+        }
+
+        public void update(float left, float right) {
+            leftRectTopX = left - 0.5f;
+            rightRectTopY = 0;
+            rightRectTopX = right + 0.5f;
+        }
+
+        public void draw(Canvas canvas, Paint paint) {
+            paint.clearShadowLayer();
+            paint.setStyle(Paint.Style.FILL);
+            drawRectangle(canvas, paint);
+        }
+
+        private void drawRectangle(Canvas canvas, Paint paint) {
+            paint.setColor(isSelected ? selectedColor : unSelectedColor);
+            canvas.drawRect(leftRectTopX
+                    , rightRectTopY
+                    , rightRectTopX
+                    , lineWidth
+                    , paint);
+
+            canvas.drawRect(leftRectTopX
+                    , rightRectTopY + lineWidth + rectangleHeight
+                    , rightRectTopX
+                    , rightRectTopY + lineWidth * 2 + rectangleHeight
+                    , paint);
+        }
+
+        public boolean isOnTouch(float x, float y) {
+            if (y > 0
+                    && y < rightRectTopY * 2 + rectangleHeight
+                    && x > leftRectTopX - 1
+                    && x < rightRectTopX + 1)
                 return true;
             return false;
         }

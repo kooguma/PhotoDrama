@@ -25,15 +25,12 @@
             format="dimension"/>
         <attr name="imageMargin"
               format="dimension"/>
-        <attr name="indicatorRectangleHeight"
-            format="dimension"/>
-        <attr name="indicatorTriangleHeight"
-            format="dimension"/>
-        <attr name="indicatorBottomMargin"
-            format="dimension"/>
         <attr name="indicatorWidth"
             format="dimension"/>
-
+        <attr name="indicatorInLineHeight"
+              format="dimension"/>
+        <attr name="indicatorInLineWidth"
+              format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="MusicClipView">
