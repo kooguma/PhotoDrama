@@ -187,6 +187,10 @@
         <activity android:name=".ui.activity.AddMusicClipActivity"
             android:label="AddMusicClip"/>
 
+        <activity android:name=".ui.activity.MusicDownloadActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+
         <!--TalkingData-->
         <service
             android:name="com.talkingdata.sdk.TDAntiCheatingService"

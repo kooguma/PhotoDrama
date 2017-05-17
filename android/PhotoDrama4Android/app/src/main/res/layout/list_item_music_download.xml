@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="voice"
+            type="com.loopeer.android.photodrama4android.model.Voice"/>
+    </data>
+
+    <LinearLayout
+        android:id="@+id/layout_brief"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/medium_padding"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ViewSwitcher
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_lmall"
+                android:textColor="@color/text_color_tertiary"
+                android:layout_gravity="center"
+                android:text="@{voice.getFormatDuration()}"
+                tools:text="00:12.0"/>
+
+            <com.loopeer.android.photodrama4android.ui.widget.musicbar.MusicBarImageView
+                android:layout_width="34dp"
+                android:layout_height="18dp"/>
+
+
+        </ViewSwitcher>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:layout_marginLeft="14dp"
+            android:textSize="@dimen/text_size_larger"
+            android:textColor="@color/text_color_primary"
+            android:text="@{voice.name}"/>
+
+        <ViewSwitcher
+            android:id="@+id/view_switcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_music_clip_download"/>
+
+            <TextView
+                android:id="@+id/txt_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:layout_gravity="center"
+                android:textSize="17sp"
+                android:text="@string/common_percent_initial"/>
+
+        </ViewSwitcher>
+
+    </LinearLayout>
+
+</layout>

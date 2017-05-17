@@ -50,6 +50,8 @@
     <string name="common_sure">确定</string>
     <string name="common_cancel">取消</string>
     <string name="common_net_error">网络错误</string>
+    <string name="common_percent_format">%d%%</string>
+    <string name="common_percent_initial">0%</string>
 
     <!--about us-->
     <string name="label_image">图标</string>

@@ -13,6 +13,6 @@ public interface VoiceService {
     VoiceService INSTANCE = ApiService.getRetrofit().create(VoiceService.class);
 
     @GET("voices")
-    Flowable<BaseResponse<List<Voice>>> voices(@Query("type") String type);
+    Flowable<BaseResponse<List<Voice>>> voices(@Query("category_id") String category_id);
 
 }

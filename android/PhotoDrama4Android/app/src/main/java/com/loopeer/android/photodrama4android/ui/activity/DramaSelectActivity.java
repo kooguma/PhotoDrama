@@ -57,7 +57,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
 
         mDramaSelectViewPager = new DramaSelectViewPager(getSupportFragmentManager());
         registerSubscription(
-            ResponseObservable.unwrap(CategoryService.INSTANCE.categories())
+            ResponseObservable.unwrap(CategoryService.INSTANCE.categories(CategoryService.TYPE_MODEL))
                 .doOnTerminate(() -> {
                     mViewPager.setAdapter(
                         new DramaSelectViewPager(getSupportFragmentManager()));

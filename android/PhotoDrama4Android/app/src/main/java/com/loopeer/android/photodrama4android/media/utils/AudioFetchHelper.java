@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.media.utils;
 
 import android.content.Context;
+import android.util.Log;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,7 +27,8 @@ public class AudioFetchHelper {
                          Consumer<DownloadStatus> consumer,
                          Consumer<Throwable> throwable, Action action) {
         final String saveName = voice.name + "_" + voice.id;
-        final String savePath = FileManager.getInstance().audioDirPath;
+        final String savePath = FileManager.getInstance().getAudioDirPath();
+        Log.e("TAG", "saveName = " + saveName + " savePath = " + savePath);
         mDisposable = mRxDownload.download(voice.voiceUrl, saveName, savePath)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

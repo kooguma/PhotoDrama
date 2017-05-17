@@ -1,17 +1,14 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.design.widget.CustomTabLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.ui.fragment.AddMusicClipFragment;
-import com.loopeer.android.photodrama4android.ui.fragment.DramaSelectFragment;
+import com.loopeer.android.photodrama4android.ui.fragment.MyDownloadMusicFragment;
+import com.loopeer.android.photodrama4android.ui.fragment.RecommendMusicFragment;
 
 public class AddMusicClipActivity extends PhotoDramaBaseActivity {
 
@@ -19,7 +16,7 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
     private ViewPager mViewPager;
 
     private static final String[] sTitle = { "我的下载", "精选推荐" };
-    private AddMusicClipFragment[] mFragments = new AddMusicClipFragment[2];
+    private Fragment[] mFragments = new Fragment[2];
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,8 +25,8 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
         mTabLayout = (CustomTabLayout) findViewById(R.id.music_clip_add_tab);
         mViewPager = (ViewPager) findViewById(R.id.music_clip_add_view_pager);
 
-        mFragments[0] = AddMusicClipFragment.newInstance();
-        mFragments[1] = AddMusicClipFragment.newInstance();
+        mFragments[0] = new MyDownloadMusicFragment();
+        mFragments[1] = new RecommendMusicFragment();
 
         mTabLayout.addTab(mTabLayout.newTab().setText(sTitle[0]));
         mTabLayout.addTab(mTabLayout.newTab().setText(sTitle[1]));

@@ -1,46 +1,15 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.view.View;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
-import com.loopeer.android.photodrama4android.api.service.VoiceService;
 import com.loopeer.android.photodrama4android.model.Voice;
-import com.loopeer.android.photodrama4android.ui.adapter.MusicClipAddAdapter;
-import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import io.reactivex.Flowable;
 import java.util.List;
 
-public class MusicSelectActivity extends PhotoDramaBaseActivity
-    implements IPageRecycler<Voice>, MusicClipAddAdapter.IMusicAdapter {
-    @Override public int getExtraItemCount() {
-        return 0;
-    }
 
-    @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        return null;
-    }
+public class MusicSelectActivity extends PhotoDramaBaseActivity {
 
-    @Override
-    public Flowable<? extends BaseResponse<List<Voice>>> requestData(String page, String pageSize) {
-        return null;
-    }
-
-    @Override public void onAddAudioClick(Voice voice) {
-
-    }
-
-    @Override public void onDownloadClick(Voice voice, View v) {
-
-    }
-
-    @Override public void onAudioPlayClick(String path, MusicClipView musicClipView) {
-
-    }
-
-    @Override public void onAudioPauseClick(String path, MusicClipView musicClipView) {
-
-    }
     // private MediaPlayer mPlayer;
     // private MusicClipAddAdapter mMusicSelectAdapter;
     // private AudioFetchHelper mAudioFetchHelper;
@@ -67,7 +36,7 @@ public class MusicSelectActivity extends PhotoDramaBaseActivity
     //
     // @Override protected void onCreate(Bundle savedInstanceState) {
     //     super.onCreate(savedInstanceState);
-    //     setContentView(R.layout.fragment_add_music_clip);
+    //     setContentView(R.layout.fragment_simple_list);
     //     mAudioFetchHelper = new AudioFetchHelper(this);
     //     mMusicSelectAdapter = new MusicClipAddAdapter(this);
     //     mMusicSelectAdapter.setIMusicAdapter(this);

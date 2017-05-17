@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
@@ -20,6 +21,7 @@ import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivi
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MainActivity;
 import com.loopeer.android.photodrama4android.ui.activity.MakeMovieActivity;
+import com.loopeer.android.photodrama4android.ui.activity.MusicDownloadActivity;
 import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.SettingActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ShareActivity;
@@ -51,6 +53,7 @@ public class Navigator {
     public static final String EXTRA_THEME ="extra_theme" ;
     public static final String EXTRA_USEDTIME ="extra_usedtime" ;
     public static final String EXTRA_IS_TO_START ="extra_is_to_start" ;
+    public static final String EXTRA_CATEGORY ="extra_category" ;
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -205,6 +208,12 @@ public class Navigator {
 
     public static void startGuideActivity(Context context) {
         Intent intent = new Intent(context, GuideActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startMusicDownloadActivity(Context context,Category category) {
+        Intent intent = new Intent(context, MusicDownloadActivity.class);
+        intent.putExtra(Navigator.EXTRA_CATEGORY,category);
         context.startActivity(intent);
     }
 }

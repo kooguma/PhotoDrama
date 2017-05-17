@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.R;
 
 public class MusicBarImageView extends AppCompatImageView {
@@ -13,7 +14,7 @@ public class MusicBarImageView extends AppCompatImageView {
     private MusicBarDrawable mDrawable;
 
     public MusicBarImageView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public MusicBarImageView(Context context, AttributeSet attrs) {
@@ -43,8 +44,4 @@ public class MusicBarImageView extends AppCompatImageView {
         setBackground(mDrawable);
     }
 
-
-    public void startAnimation(){
-        postInvalidateDelayed(150);
-    }
 }

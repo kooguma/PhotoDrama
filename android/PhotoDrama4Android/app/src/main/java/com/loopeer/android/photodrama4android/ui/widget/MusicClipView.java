@@ -1,5 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.widget;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -9,13 +11,16 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.opengl.GLSurfaceView;
+import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import com.loopeer.android.photodrama4android.R;
 
 public class MusicClipView extends View {
@@ -52,9 +57,12 @@ public class MusicClipView extends View {
 
     private Paint mDotPaint;
     private int mDotColor;
-    private int mDotProgress;
+    private float mDotProgress;
     private int mDotX;
     private int mDotY;
+
+    private Drawable mIndicatorDrawable;
+    private Drawable mDotDrawable;
 
     private IndicatorMoveListener mIndicatorMoveListener;
 
@@ -98,6 +106,9 @@ public class MusicClipView extends View {
 
         a.recycle();
 
+        mIndicatorDrawable = getResources().getDrawable(R.drawable.ic_music_clip_slip_bar);
+        mDotDrawable = getResources().getDrawable(R.drawable.ic_music_clip_slip_dot);
+
         mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mProgressPaint.setColor(mProgressColor);
         mProgressPaint.setStyle(Paint.Style.FILL);
@@ -115,11 +126,11 @@ public class MusicClipView extends View {
         mIndicatorRightPaint.setStrokeWidth(2);
 
         mIndicatorLeft = new Indicator();
-        mIndicatorLeft.setRadius(15).setPaint(mIndicatorLeftPaint);
+        mIndicatorLeft.setRadius(25).setPaint(mIndicatorLeftPaint);
         mLeftTrianglePath = new Path();
 
         mIndicatorRight = new Indicator();
-        mIndicatorRight.setRadius(15).setPaint(mIndicatorRightPaint);
+        mIndicatorRight.setRadius(25).setPaint(mIndicatorRightPaint);
         mRightTrianglePath = new Path();
 
         mDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -138,11 +149,11 @@ public class MusicClipView extends View {
         mProgressStartY = mHeight / 2;
 
         final int cxl = mProgressStartX + mIndicatorLeft.cx;
-        final int cyl = mProgressStartY + mIndicatorLeft.radius * 3;
+        final int cyl = mProgressStartY;
         mIndicatorLeft.setPivotX(cxl).setPivotY(cyl);
 
         final int cxr = mProgressStartX + mProgressWidth;
-        final int cyr = mProgressStartY + mIndicatorRight.radius * 3;
+        final int cyr = mProgressStartY;
         mIndicatorRight.setPivotX(cxr).setPivotY(cyr);
 
     }
@@ -168,7 +179,7 @@ public class MusicClipView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 final int cx = (int) (mPosX - mIndicatorLeft.radius - getPaddingLeft());
-                final int cy = mProgressStartY + mIndicatorLeft.radius * 3;
+                final int cy = mProgressStartY;
                 boolean shouldInvalidate = false;
                 if (mIndicatorTouched != null) {
                     final float position =
@@ -244,26 +255,28 @@ public class MusicClipView extends View {
 
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // TODO: 2017/3/30 test
-        Rect rect = new Rect();
-        getDrawingRect(rect);
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-        //canvas.drawRect(rect, paint);
-
         drawProgress(canvas);
-        drawIndicator(canvas);
         drawDot(canvas);
+        drawIndicator(canvas);
     }
 
     private void drawDot(Canvas canvas) {
-        // TODO: 2017/3/31
-        final float scale = (float) mDotProgress / sDefaultMax;
+        // TODO: 2017/5/15 dot position
+        final float scale = mDotProgress / sDefaultMax;
         final float x = mProgressStartX + scale * mProgressWidth;
         final float y = mProgressStartY;
-        canvas.drawPoint(x, y, mDotPaint);
+        drawDrawable(canvas, mDotDrawable, x, y);
+    }
+
+    private void drawDrawable(Canvas canvas, Drawable drawable, float x, float y) {
+        canvas.save();
+        canvas.translate(x, y);
+
+        final int height = drawable.getIntrinsicHeight();
+        final int width = drawable.getIntrinsicWidth();
+        drawable.setBounds(-width / 2, -height / 2, width / 2, height / 2);
+        drawable.draw(canvas);
+        canvas.restore();
     }
 
     private void drawProgress(Canvas canvas) {
@@ -295,16 +308,10 @@ public class MusicClipView extends View {
     }
 
     private void drawIndicator(Canvas canvas, Indicator indicator, Path path) {
-        path.rewind();
-        path.moveTo(indicator.cx - indicator.radius, indicator.cy);
-        path.lineTo(indicator.cx + indicator.radius, indicator.cy);
-        path.lineTo(indicator.cx, indicator.cy - indicator.radius * 3);
-        path.close();
-        indicator.setPath(path);
-        indicator.draw(canvas);
+        drawDrawable(canvas, mIndicatorDrawable, indicator.cx, indicator.cy);
     }
 
-    public void setDotProgress(@IntRange(from = 0, to = 100) int dotProgress) {
+    public void setDotProgress(@FloatRange(from = 0f, to = 100f) float dotProgress) {
         mDotProgress = dotProgress;
         postInvalidate();
     }

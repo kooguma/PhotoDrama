@@ -25,6 +25,10 @@ import com.loopeer.android.photodrama4android.model.Voice;
 import java.io.File;
 import java.io.FileInputStream;
 
+import java.io.FilenameFilter;
+import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 import retrofit2.http.Field;
 import zlc.season.rxdownload2.RxDownload;
 
@@ -60,14 +64,16 @@ public class FileManager {
             if (DEBUG) {
                 dramaDir = createFilePath(dramaPath);
             } else {
-                dramaDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
+                dramaDir = createFilePath(
+                    PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
             }
             tempAudioDir = createFilePath(tempAudioPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
             videoDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + videoDirPath);
             dramaDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
-            tempAudioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + tempAudioPath);
+            tempAudioDir = createFilePath(
+                PhotoDramaApp.getAppContext().getCacheDir() + tempAudioPath);
         }
     }
 
@@ -160,7 +166,8 @@ public class FileManager {
     }
 
     public String createNewVideoFile() {
-        return getVideoDir().getPath() + File.separator + DateUtils.getCurrentTimeVideoString() + ".mp4";
+        return getVideoDir().getPath() + File.separator + DateUtils.getCurrentTimeVideoString() +
+            ".mp4";
     }
 
     public String getDecodeAudioFilePath(MusicClip musicClip) {
@@ -169,9 +176,27 @@ public class FileManager {
         return getTempAudioDir().getPath() + File.separator + name;
     }
 
-    public static String getAudioPath(Context context, Voice voice) {
+    public String getAudioDirPath() {
+        return audioPath;
+    }
+
+    public List<Voice> getAudioFiles() {
+        File[] files = new File(getAudioDirPath()).listFiles(new FilenameFilter() {
+            @Override public boolean accept(File dir, String name) {
+                return !name.equals(".cache");
+            }
+        });
+        List<Voice> voices = new ArrayList<>();
+        for (File file : files) {
+            Voice v = Voice.fromFile(file);
+            voices.add(v);
+        }
+        return voices;
+    }
+
+    public String getAudioPath(Context context, Voice voice) {
         if (voice == null) return null;
-        File[] file = RxDownload.getInstance(context).getRealFiles(voice.voiceUrl);
+        File[] file = RxDownload.getInstance(context).getRealFiles(voice.getSaveName(),getAudioDirPath());
         if (file != null) {
             return file[0].getAbsolutePath();
         }
@@ -234,8 +259,9 @@ public class FileManager {
     }
 
     public static void scanIntoMediaStore(Context context, String filePath, int duration) {
-        if (!checkFile(filePath))
+        if (!checkFile(filePath)) {
             return;
+        }
 
         File file = new File(filePath);
         /*Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -250,7 +276,8 @@ public class FileManager {
         values.put(MediaStore.Video.Media.DURATION, duration);
         values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
         values.put(MediaStore.Video.Media.SIZE, file.length());
-        Uri uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        Uri uri = context.getContentResolver()
+            .insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
     }
 
