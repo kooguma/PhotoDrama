@@ -29,4 +29,5 @@ public class SubtitleInfo implements Serializable{
                 ", height=" + height +
                 '}';
     }
+
 }

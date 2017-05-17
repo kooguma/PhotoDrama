@@ -5,7 +5,7 @@
  * courses, books, articles, and the like. Contact us if you are in doubt.
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/kbogla for more book information.
-***/
+ ***/
 package com.loopeer.android.photodrama4android.media.utils;
 
 import android.content.Context;
@@ -20,8 +20,10 @@ import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 import com.loopeer.android.photodrama4android.BuildConfig;
+import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
+import com.loopeer.android.photodrama4android.utils.ShapeUtils;
 
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
 import static android.opengl.GLES20.GL_LINEAR;
@@ -40,10 +42,10 @@ import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLUtils.texImage2D;
 
 public class TextureHelper {
-    private static final float TEXTMARGINBOTTOM = 40;//TODO test value
-    private static final float TEXT_LINE_PADDING = 6;//TODO test value
-    private static final float TEXT_MARGIN_HORIZONTAL = 20 * 3;//TODO test value
-    private static final float LINE_MAX_TEXT_NUM = 26;//TODO test value
+    public static final float TEXTMARGINBOTTOM = 40;//TODO test value
+    public static final float TEXT_LINE_PADDING = 6;//TODO test value
+    public static final float TEXT_MARGIN_HORIZONTAL = 20 * 3;//TODO test value
+    public static final float LINE_MAX_TEXT_NUM = 26;//TODO test value
 
     private static final String TAG = "TextureHelper";
     private static final boolean DEBUG = BuildConfig.DEBUG || true;
@@ -57,13 +59,13 @@ public class TextureHelper {
                 Log.w(TAG, "Could not generate a new OpenGL texture object.");
             }
             return 0;
-        } 
-        
+        }
+
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
 
         final Bitmap bitmap = BitmapFactory.decodeResource(
-            context.getResources(), resourceId, options);
+                context.getResources(), resourceId, options);
 
         if (bitmap == null) {
             if (BuildConfig.LOG_ON) {
@@ -138,7 +140,7 @@ public class TextureHelper {
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
         textPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
 
-        drawText(subtitleInfo, canvas, textPaint);
+        drawText(context, subtitleInfo, canvas, textPaint, null);
 
         int textureObjectIds[] = {0};
         glGenTextures(1, textureObjectIds, 0);
@@ -153,11 +155,46 @@ public class TextureHelper {
         return subtitleInfo;
     }
 
-    private static void drawText(SubtitleInfo subtitleInfo, Canvas canvas, Paint textPaint) {
+    public static SubtitleInfo loadSelectedTexture(Context context, SubtitleInfo subtitleInfo) {
+        Bitmap bitmap = Bitmap.createBitmap(subtitleInfo.width, subtitleInfo.height, Bitmap.Config.ARGB_4444);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        final Bitmap deleteBitmap = BitmapFactory.decodeResource(
+                context.getResources(), R.drawable.ic_subtitle_delete, options);
+
+        Canvas canvas = new Canvas(bitmap);
+        bitmap.eraseColor(0);
+        Paint textPaint = new Paint();
+        float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
+        textPaint.setTextSize(textSize);
+        textPaint.setAntiAlias(true);
+        textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
+        textPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
+
+        drawText(context, subtitleInfo, canvas, textPaint, deleteBitmap);
+
+        int textureObjectIds[] = {0};
+        glGenTextures(1, textureObjectIds, 0);
+        glBindTexture(GL_TEXTURE_2D, textureObjectIds[0]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap, 0);
+        bitmap.recycle();
+        subtitleInfo.textureObjectId = textureObjectIds[0];
+        return subtitleInfo;
+    }
+
+    public static void drawText(Context context, SubtitleInfo subtitleInfo, Canvas canvas, Paint textPaint, Bitmap deleteBitmap) {
         float textWidth = textPaint.measureText(subtitleInfo.content);
+        float left = 0, right = 0, top = 0, bottom = 0;
+        float horizontalMargin = TEXT_MARGIN_HORIZONTAL * 2 / 5;
+        float verticalMargin = TEXTMARGINBOTTOM / 2;
+
         if (textWidth + TEXT_MARGIN_HORIZONTAL * 2 > subtitleInfo.width) {
             float textSingleWidth = textPaint.measureText("我");
-            int maxText = (int)((subtitleInfo.width - TEXT_MARGIN_HORIZONTAL * 2) / textSingleWidth);
+            int maxText = (int) ((subtitleInfo.width - TEXT_MARGIN_HORIZONTAL * 2) / textSingleWidth);
             int line = subtitleInfo.content.length() / maxText + (subtitleInfo.content.length() % maxText == 0 ? 0 : 1);
 
             for (int i = 0; i < line; i++) {
@@ -173,6 +210,18 @@ public class TextureHelper {
                 float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM - (line - i - 1) * height - (line - i - 1) * TEXT_LINE_PADDING;
                 float x = subtitleInfo.width / 2 - drawTextWidth / 2;
                 canvas.drawText(s, x, y, textPaint);
+                if (i == 0) {
+                    left = x - horizontalMargin;
+                    top = y + fontMetrics.top - verticalMargin;
+                    right = left + drawTextWidth + horizontalMargin * 2;
+                }
+                if (i == line - 1) {
+                    bottom = y + fontMetrics.bottom + verticalMargin;
+                }
+            }
+
+            if (deleteBitmap != null) {
+                drawDeleteRect(context, canvas, left, right, top, bottom, deleteBitmap);
             }
             return;
         }
@@ -180,5 +229,25 @@ public class TextureHelper {
         float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM;
         float x = subtitleInfo.width / 2 - textWidth / 2;
         canvas.drawText(subtitleInfo.content, x, y, textPaint);
+
+        left = x - horizontalMargin;
+        top = y + fontMetrics.top - verticalMargin;
+        right = left + textWidth + horizontalMargin * 2;
+        bottom = y + fontMetrics.bottom + verticalMargin;
+        if (deleteBitmap != null) {
+            drawDeleteRect(context, canvas, left, right, top, bottom, deleteBitmap);
+        }
+    }
+
+    public static void drawDeleteRect(Context context, Canvas canvas, float left, float right, float top, float bottom, Bitmap deleteBitmap) {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(4f);
+        paint.setColor(ContextCompat.getColor(context, android.R.color.white));
+        canvas.drawPath(ShapeUtils.RoundedRect(left
+                , top
+                , right, bottom, 8f, 8f), paint);
+
+        canvas.drawBitmap(deleteBitmap, right - deleteBitmap.getWidth() / 2, top - deleteBitmap.getHeight() / 2, paint);
     }
 }

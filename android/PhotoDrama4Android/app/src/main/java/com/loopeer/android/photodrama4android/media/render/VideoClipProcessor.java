@@ -9,6 +9,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
+import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.media.model.VideoGroup;
 import com.loopeer.android.photodrama4android.media.recorder.gles.EglCore;

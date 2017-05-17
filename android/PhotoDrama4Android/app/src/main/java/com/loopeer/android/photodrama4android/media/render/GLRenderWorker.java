@@ -13,6 +13,8 @@ import com.loopeer.android.photodrama4android.media.IRendererWorker;
 import com.loopeer.android.photodrama4android.media.SubtitleTextureLoader;
 import com.loopeer.android.photodrama4android.media.TextureLoader;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
+import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.recorder.MediaAudioEncoder;
 import com.loopeer.android.photodrama4android.media.recorder.MediaEncoder;
 import com.loopeer.android.photodrama4android.media.recorder.MediaMuxerWrapper;
@@ -282,4 +284,5 @@ public class GLRenderWorker implements IRendererWorker {
     public TextureLoader getTextureLoader() {
         return mImageClipProcessor.getTextureLoader();
     }
+
 }

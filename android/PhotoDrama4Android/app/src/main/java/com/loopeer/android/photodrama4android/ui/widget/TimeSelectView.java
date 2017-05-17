@@ -88,7 +88,6 @@ public class TimeSelectView extends View {
         mTriangleHeight = DeviceScreenUtils.dp2px(TRIANGLE_HEIGHT, getContext());
         mTextSize = DeviceScreenUtils.sp2px(TEXT_SIZE, (Activity) getContext());
         mTextPadding = DeviceScreenUtils.dp2px(TEXT_PADDING_HORIZONTAL, getContext());
-        ;
         mRectRadius = DeviceScreenUtils.dp2px(RECT_RADIUS, getContext());
 
         mLineTop = mRectHeight + mTriangleHeight + mTextMargin + mCircleRadius - mLineHeight / 2;

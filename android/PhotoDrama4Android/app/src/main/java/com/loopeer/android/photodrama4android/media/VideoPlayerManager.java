@@ -11,6 +11,8 @@ import com.loopeer.android.photodrama4android.media.audio.player.AudioDelegate;
 import com.loopeer.android.photodrama4android.media.audio.player.AudioProcessor;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.EndLogoClip;
+import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
+import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
 import com.loopeer.android.photodrama4android.utils.FileManager;

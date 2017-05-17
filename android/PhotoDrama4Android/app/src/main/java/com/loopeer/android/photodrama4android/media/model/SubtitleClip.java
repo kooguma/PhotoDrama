@@ -8,6 +8,8 @@ public class SubtitleClip extends Clip{
 
     public String content;
 
+    public boolean showEditRect = false;
+
     public SubtitleClip() {
         super();
         showTime = MIN_SUBTITLE_LENGTH;

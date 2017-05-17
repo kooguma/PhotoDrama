@@ -62,10 +62,11 @@ public class ScrollSelectView extends ViewGroup {
     private Adapter mAdapter;
     private final ChildViewDataObserver mObserver = new ChildViewDataObserver();
     private int mMaxValue;
-    private OnSeekProgressChangeListener mOnSeekProgressChangeListener;
+    private List<OnSeekProgressChangeListener> mOnSeekProgressChangeListeners;
     private SeekWrapper.SeekImpl mSeek;
     private ClipIndicatorPosChangeListener mClipIndicatorPosChangeListener;
     private ClipSelectedListener mClipSelectedListener;
+    private TouchStateListener mTouchStateListener;
 
     private List<Clip> mClips;
     private Clip mSelectedClip;
@@ -84,6 +85,7 @@ public class ScrollSelectView extends ViewGroup {
         super(context, attrs, defStyleAttr);
 
         init(context, attrs, defStyleAttr);
+        mOnSeekProgressChangeListeners = new ArrayList<>();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -111,7 +113,6 @@ public class ScrollSelectView extends ViewGroup {
 
         mIndicatorShapeEnd = new IndicatorShape(mIndicatorWidth, mImageMargin, mImageShowHeight, mIndicatorInLineWidth, mIndicatorInLineHeight, false);
         mIndicatorShapeStart = new IndicatorShape(mIndicatorWidth, mImageMargin, mImageShowHeight, mIndicatorInLineWidth, mIndicatorInLineHeight, true);
-        ;
         int selectedColor = ContextCompat.getColor(context, R.color.colorAccent);
         int unselectedColor = ContextCompat.getColor(context, android.R.color.white);
         int selectedLineColor = ContextCompat.getColor(context, android.R.color.white);
@@ -275,7 +276,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void changeTimeByStartIndicator(int offset) {
-        mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.startTime, true);
+        onProgressChanged(mSeek, mSelectedClip.startTime, true);
         if (mClipIndicatorPosChangeListener != null
                 && mClipIndicatorPosChangeListener.changeTimeByStartIndicator(mSelectedClip
                 , offset, mMinClipShowTime, mMaxValue))
@@ -300,7 +301,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     public void changeTimeByMiddleLine(int offset) {
-        mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.startTime, true);
+        onProgressChanged(mSeek, mSelectedClip.startTime, true);
         if (mClipIndicatorPosChangeListener != null
                 && mClipIndicatorPosChangeListener.changeTimeByMiddleLine(mSelectedClip
                 , offset, mMinClipShowTime, mMaxValue))
@@ -316,16 +317,14 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void scrollToTime(int time) {
-        mOnSeekProgressChangeListener.onProgressChanged(mSeek, time, true);
-//        setProgress(time);
-
+        onProgressChanged(mSeek, time, true);
         mPosX = -1f * time / mMaxValue * getTotalLength();
         scrollContent();
         notifyProgressChange();
     }
 
     public void changeTimeByEndIndicator(int offset) {
-        mOnSeekProgressChangeListener.onProgressChanged(mSeek, mSelectedClip.getEndTime(), true);
+        onProgressChanged(mSeek, mSelectedClip.getEndTime(), true);
         if (mClipIndicatorPosChangeListener != null
                 && mClipIndicatorPosChangeListener.changeTimeByEndIndicator(mSelectedClip
                 , offset, mMinClipShowTime, mMaxValue))
@@ -361,11 +360,12 @@ public class ScrollSelectView extends ViewGroup {
 
     private void onStartTouch() {
         isManual = true;
-        mOnSeekProgressChangeListener.onStartTrackingTouch(mSeek);
+        onStartTrackingTouch(mSeek);
+        mTouchStateListener.onStartTouch();
     }
 
     private void onProgressChange() {
-        mOnSeekProgressChangeListener.onProgressChanged(mSeek, getProgress(), true);
+        onProgressChanged(mSeek, getProgress(), true);
         notifyProgressChange();
     }
 
@@ -374,7 +374,8 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void onStopTouch() {
-        mOnSeekProgressChangeListener.onStopTrackingTouch(mSeek);
+        mTouchStateListener.onStopTouch();
+        onStopTrackingTouch(mSeek);
         isScrollByTouchContent = false;
         isManual = false;
         for (Clip clip : mClips) {
@@ -664,7 +665,32 @@ public class ScrollSelectView extends ViewGroup {
 
     public void setOnSeekProgressChangeListener(SeekWrapper.SeekImpl seek, OnSeekProgressChangeListener listener) {
         mSeek = seek;
-        mOnSeekProgressChangeListener = listener;
+        mOnSeekProgressChangeListeners.add(listener);
+    }
+
+    public void addOnSeekProgressChangeListener(OnSeekProgressChangeListener listener) {
+        mOnSeekProgressChangeListeners.add(listener);
+    }
+
+    private void onProgressChanged(SeekWrapper.SeekImpl seek, int progress, boolean fromUser) {
+        for (OnSeekProgressChangeListener listener :
+                mOnSeekProgressChangeListeners) {
+            listener.onProgressChanged(seek, progress, fromUser);
+        }
+    }
+
+    private void onStartTrackingTouch(SeekWrapper.SeekImpl seek) {
+        for (OnSeekProgressChangeListener listener :
+                mOnSeekProgressChangeListeners) {
+            listener.onStartTrackingTouch(seek);
+        }
+    }
+
+    private void onStopTrackingTouch(SeekWrapper.SeekImpl seek) {
+        for (OnSeekProgressChangeListener listener :
+                mOnSeekProgressChangeListeners) {
+            listener.onStopTrackingTouch(seek);
+        }
     }
 
     public class IndicatorShape {
@@ -834,6 +860,10 @@ public class ScrollSelectView extends ViewGroup {
         mClipSelectedListener = clipSelectedListener;
     }
 
+    public void setTouchStateListener(TouchStateListener touchStateListener) {
+        mTouchStateListener = touchStateListener;
+    }
+
     public interface ClipIndicatorPosChangeListener {
         boolean changeTimeByStartIndicator(Clip clip, int offset, int minValue, int maxValue);
 
@@ -844,5 +874,10 @@ public class ScrollSelectView extends ViewGroup {
 
     public interface ClipSelectedListener {
         void onClipSelected(Clip clip);
+    }
+
+    public interface TouchStateListener {
+        void onStartTouch();
+        void onStopTouch();
     }
 }

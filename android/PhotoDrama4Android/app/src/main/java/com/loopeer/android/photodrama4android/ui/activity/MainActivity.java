@@ -1,24 +1,13 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
-
-import com.laputapp.http.NetworkUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
-import com.loopeer.android.photodrama4android.utils.AnimationUtils;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
-import com.loopeer.android.photodrama4android.utils.ShareUtils;
-
-import java.io.File;
-
-import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class MainActivity extends PhotoDramaBaseActivity {
 

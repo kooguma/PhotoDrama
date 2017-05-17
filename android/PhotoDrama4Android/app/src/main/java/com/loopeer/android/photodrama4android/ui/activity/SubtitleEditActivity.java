@@ -9,11 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivitySubtitleEditBinding;
+import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
@@ -25,6 +25,7 @@ import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
+import com.loopeer.android.photodrama4android.ui.widget.SubtitleEditRectView;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,13 +35,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import static com.loopeer.android.photodrama4android.media.model.SubtitleClip.MIN_SUBTITLE_LENGTH;
 import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTimeMilli;
 
+
 public class SubtitleEditActivity extends PhotoDramaBaseActivity implements ScrollSelectView.ClipSelectedListener
-        , ScrollSelectView.ClipIndicatorPosChangeListener, VideoPlayerManager.ProgressChangeListener {
+        , ScrollSelectView.ClipIndicatorPosChangeListener, VideoPlayerManager.ProgressChangeListener, SubtitleEditRectView.SubtitleRectClickListener
+        , ScrollSelectView.TouchStateListener {
 
     private ActivitySubtitleEditBinding mBinding;
     private Drama mDrama;
     private VideoPlayerManager mVideoPlayerManager;
     private SubtitleClip mSelectedClip;
+    private boolean mShowSoftInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,8 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.seekToVideo(0);
-        mBinding.glSurfaceView.setOnClickListener(this::onPlayRectClick);
+        mBinding.subtitleRectView.setSubtitleRectClickListener(this);
+        mBinding.scrollSelectView.setTouchStateListener(this);
         updateScrollImageView();
         updateScrollSelectViewClips();
         setInputPositionListener();
@@ -135,6 +140,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             mDrama.videoGroup.subtitleClips.remove(mSelectedClip);
             updateScrollSelectViewClips();
             mVideoPlayerManager.refresh();
+            mSelectedClip = null;
         }
     }
 
@@ -178,18 +184,19 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         } else {
             mSelectedClip.content = content;
         }
+        showTextRect();
         mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
         mVideoPlayerManager.refreshSubtitleRender();
         mVideoPlayerManager.requestRender();
     }
 
     public void onInputConfirm(View view) {
-        hideSoftInputMethod();
-        hideInput();
         String content = mBinding.textInput.getText().toString().trim();
         if (!TextUtils.isEmpty(content)) {
             updateSubtitle(content);
         }
+        hideSoftInputMethod();
+        hideInput();
         mBinding.textInput.setText("");
     }
 
@@ -307,8 +314,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     public void onPlayRectClick(View view) {
         if (mVideoPlayerManager.isStop()) {
             mVideoPlayerManager.startVideo();
+            hideTextRect();
         } else {
             mVideoPlayerManager.pauseVideo();
+            showTextRect();
         }
     }
 
@@ -321,6 +330,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     public void onTextInputClick(View view) {
         if (mSelectedClip == null && !checkAddValidate())
             return;
+        if (mSelectedClip != null) {
+            mBinding.textInput.setText(mSelectedClip.content);
+            mBinding.textInput.setSelection(mSelectedClip.content.length());
+        }
         if (isSoftKeyboardActive()) {
             hideSoftInputMethod();
             hideInput();
@@ -349,22 +362,65 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
 
 
     private void showInput() {
+        mShowSoftInput = true;
         registerSubscription(
                 Flowable.timer(
                         getResources().getInteger(android.R.integer.config_mediumAnimTime)
                         , TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(t -> mBinding.textInputWrapper.setVisibility(View.VISIBLE))
+                        .subscribe(t -> {
+                            if (mShowSoftInput) mBinding.textInputWrapper.setVisibility(View.VISIBLE);
+                        })
         );
     }
 
     private void hideInput() {
-        mBinding.textInputWrapper.setVisibility(View.INVISIBLE);
+        mShowSoftInput = false;
+        mBinding.textInputWrapper.post(() -> mBinding.textInputWrapper.setVisibility(View.INVISIBLE));
     }
 
     private boolean isSoftKeyboardActive() {
         Rect r = new Rect();
         getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
         return r.bottom < DeviceScreenUtils.getScreenHeight(SubtitleEditActivity.this) / 4 * 3;
+    }
+
+    @Override
+    public void onRectTextClick() {
+        onTextInputClick(null);
+    }
+
+    @Override
+    public void onRectDeleteClick() {
+        onDeleteClick(null);
+        hideTextRect();
+    }
+
+    @Override
+    public void onRectSpaceClick() {
+        onPlayRectClick(null);
+    }
+
+    private void hideTextRect() {
+        mBinding.subtitleRectView.hideTextRect();
+    }
+
+    private void showTextRect() {
+        if (mSelectedClip == null) {
+            mBinding.btnPlay.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.btnPlay.setVisibility(View.GONE);
+        }
+        mBinding.subtitleRectView.showTextRect(mSelectedClip);
+    }
+
+    @Override
+    public void onStartTouch() {
+        hideTextRect();
+    }
+
+    @Override
+    public void onStopTouch() {
+        showTextRect();
     }
 }

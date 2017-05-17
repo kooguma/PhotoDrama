@@ -12,6 +12,7 @@ import com.loopeer.android.photodrama4android.media.cache.ShaderProgramCache;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.media.programs.ImageClipShaderProgram;
+import com.loopeer.android.photodrama4android.media.utils.TextureHelper;
 
 import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
