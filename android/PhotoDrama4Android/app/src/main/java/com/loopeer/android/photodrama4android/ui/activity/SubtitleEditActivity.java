@@ -335,6 +335,8 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         if (mSelectedClip != null) {
             mBinding.textInput.setText(mSelectedClip.content);
             mBinding.textInput.setSelection(mSelectedClip.content.length());
+        } else {
+            mBinding.textInput.setText("");
         }
         if (isSoftKeyboardActive()) {
             hideSoftInputMethod();

@@ -645,6 +645,8 @@ public class ScrollSelectView extends ViewGroup {
 
     private void notifySelectedClip() {
         mSelectedClip = null;
+        mSelectedIndicatorShape = null;
+        mSelectedImageWrapperLineShape = null;
         for (Clip clip : mClips) {
             if (getProgress() >= clip.startTime && getProgress() <= clip.getEndTime()
                     && mClipSelectedListener != null) {

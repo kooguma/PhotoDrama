@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
@@ -21,6 +22,9 @@ import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.model.SubtitleEditRectInfo;
 import com.loopeer.android.photodrama4android.utils.ShapeUtils;
+
+import retrofit2.http.PATCH;
+
 import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.LINE_MAX_TEXT_NUM;
 import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXTMARGINBOTTOM;
 import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXT_LINE_PADDING;
@@ -47,6 +51,7 @@ public class SubtitleEditRectView extends View {
         getAttrs(context, attrs, 0);
 
         setTouchListener();
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -175,14 +180,22 @@ public class SubtitleEditRectView extends View {
 
     private void drawDeleteRect(Context context, Canvas canvas, float left, float right, float top, float bottom, Bitmap deleteBitmap) {
         Paint paint = new Paint();
+        paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(4f);
         paint.setColor(ContextCompat.getColor(context, android.R.color.white));
+        paint.setShadowLayer(4f, 0f, 0f, ContextCompat.getColor(context, R.color.shadow_color));
+
         canvas.drawPath(ShapeUtils.RoundedRect(left
                 , top
                 , right, bottom, 8f, 8f), paint);
 
-        canvas.drawBitmap(deleteBitmap, right - deleteBitmap.getWidth() / 2, top - deleteBitmap.getHeight() / 2, paint);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(right, top, deleteBitmap.getWidth() / 2, paint);
+        canvas.drawBitmap(deleteBitmap, null, new RectF(right - deleteBitmap.getWidth() / 2
+                , top - deleteBitmap.getHeight() / 2
+                , right + deleteBitmap.getWidth() / 2
+                , top + deleteBitmap.getHeight() / 2), paint);
     }
 
     private void setTouchListener() {
@@ -229,17 +242,14 @@ public class SubtitleEditRectView extends View {
         if (mSubtitleEditRectInfo != null) {
             if (checkTouchText(x, y, mSubtitleEditRectInfo)) {
                 mSubtitleRectClickListener.onRectTextClick();
-//                onTextInputClick(null);
                 return;
             }
             if (checkTouchDeleteBtn(x, y, mSubtitleEditRectInfo)) {
                 mSubtitleRectClickListener.onRectDeleteClick();
-//                onDeleteClick(null);
                 return;
             }
         }
         mSubtitleRectClickListener.onRectSpaceClick();
-//        onPlayRectClick(null);
     }
 
     private boolean checkTouchText(float x, float y, SubtitleEditRectInfo subtitleInfo) {
