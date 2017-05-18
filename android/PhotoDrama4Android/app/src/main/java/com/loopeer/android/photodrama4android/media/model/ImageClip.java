@@ -4,6 +4,8 @@ package com.loopeer.android.photodrama4android.media.model;
 import com.loopeer.android.photodrama4android.media.mediaio.XmlImageClip;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 
+import static com.loopeer.android.photodrama4android.media.Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME;
+
 public class ImageClip extends Clip{
     public String path;
     public int startWithPreTransitionTime = 0;
@@ -11,9 +13,12 @@ public class ImageClip extends Clip{
     public ScaleTranslateRatio startScaleTransRatio;
     public ScaleTranslateRatio endScaleTransRatio;
 
-    public ImageClip() {}
+    public ImageClip() {
+        showTime = DEFAULT_IMAGE_CLIP_SHOW_TIME;
+    }
 
     public ImageClip(String path, int startTime) {
+        this();
         this.path = path;
         this.startTime = startTime;
         this.startWithPreTransitionTime = startTime;

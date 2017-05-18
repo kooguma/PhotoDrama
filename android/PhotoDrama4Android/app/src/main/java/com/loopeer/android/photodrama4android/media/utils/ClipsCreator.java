@@ -17,8 +17,8 @@ public class ClipsCreator {
         ArrayList<ImageClip> imageClips = new ArrayList<>();
 
         for (int i = 0; i < urls.size(); i++) {
-            ScaleTranslateRatio large = new ScaleTranslateRatio(3f, 0f, 0f);
-            ScaleTranslateRatio deft = new ScaleTranslateRatio(2.5f, 0f, 0f);
+            ScaleTranslateRatio large = new ScaleTranslateRatio(1.0f, 0f, 0f);
+            ScaleTranslateRatio deft = new ScaleTranslateRatio(1.3f, 0f, 0f);
 
             ImageClip imageClip;
             if (imageClips.isEmpty()) {

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.Constants;
 import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
-import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectInnderImageView;
+import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectInnerImageView;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 
 public class ScrollSelectAdapter extends ScrollSelectView.Adapter<TransitionImageWrapper> {
@@ -20,7 +20,7 @@ public class ScrollSelectAdapter extends ScrollSelectView.Adapter<TransitionImag
 
     @Override
     public void onBindView(View view, TransitionImageWrapper clip) {
-        ScrollSelectInnderImageView innderImageView = (ScrollSelectInnderImageView) view;
+        ScrollSelectInnerImageView innderImageView = (ScrollSelectInnerImageView) view;
         if (clip.isImageClip()) {
             innderImageView.updateImage(Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME, clip.imageClip.showTime, clip.imageClip.path);
         } else {

@@ -10,5 +10,6 @@ package com.loopeer.android.photodrama4android.media;
 
 public class Constants {
     public static final int BYTES_PER_FLOAT = 4;
-    public static final int DEFAULT_IMAGE_CLIP_SHOW_TIME = 2000;
+    public static final int DEFAULT_IMAGE_CLIP_SHOW_TIME = 3000;
+    public static final int DEFAULT_TRANSITION_CLIP_SHOW_TIME = 500;
 }
