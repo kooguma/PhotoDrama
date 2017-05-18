@@ -29,6 +29,15 @@
                     app:screenRatioX="@integer/gl_screen_x"
                     app:screenRatioY="@integer/gl_screen_y"/>
 
+                <com.loopeer.android.photodrama4android.ui.widget.VideoRecordCover
+                    android:id="@+id/view_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:screenRatioX="@integer/gl_screen_x"
+                    app:screenRatioY="@integer/gl_screen_y"
+                    android:background="@android:color/black"/>
+
                 <ImageButton
                     android:id="@+id/btn_full"
                     style="?actionButtonStyle"

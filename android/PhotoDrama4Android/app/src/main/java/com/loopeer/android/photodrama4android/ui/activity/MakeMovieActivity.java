@@ -224,6 +224,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
 
     @Override
     public void recordStart() {
+        mBinding.viewCover.setVisibility(View.VISIBLE);
         showExportProgress(getString(R.string.drama_export_message));
     }
 
@@ -236,6 +237,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
 
     @Override
     public void recordFinished(String path) {
+        mBinding.viewCover.setVisibility(View.GONE);
         dismissExportProgressLoading();
         Navigator.startShareActivity(this, path);
     }
