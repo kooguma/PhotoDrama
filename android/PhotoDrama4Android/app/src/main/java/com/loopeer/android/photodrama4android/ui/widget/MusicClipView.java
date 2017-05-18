@@ -71,8 +71,10 @@ public class MusicClipView extends View {
     }
 
     public interface IndicatorMoveListener {
-        void onLeftIndicatorMove(float position);
-        void onRightIndicatorMove(float position);
+        void onLeftIndicatorMoving(float position);
+        void onRightIndicatorMoving(float position);
+        void onLeftIndicatorMoved(float position);
+        void onRightIndicatorMoved(float position);
     }
 
     public MusicClipView(Context context) {
@@ -182,15 +184,17 @@ public class MusicClipView extends View {
                 final int cy = mProgressStartY;
                 boolean shouldInvalidate = false;
                 if (mIndicatorTouched != null) {
-                    final float position =
-                        (float) (mIndicatorTouched.cx - mIndicatorTouched.radius) / mProgressWidth;
                     if (checkIndicatorPivotX(cx)) {
                         mIndicatorTouched.setPivotX(cx);
+                        final float position =
+                            (float) (mIndicatorTouched.cx - mIndicatorTouched.radius) /
+                                mProgressWidth;
+                        mDotProgress = position * 100;
                         if (mIndicatorMoveListener != null) {
                             if (mIndicatorTouched == mIndicatorLeft) {
-                                mIndicatorMoveListener.onLeftIndicatorMove(position);
+                                mIndicatorMoveListener.onLeftIndicatorMoving(position);
                             } else {
-                                mIndicatorMoveListener.onRightIndicatorMove(position);
+                                mIndicatorMoveListener.onRightIndicatorMoving(position);
                             }
                         }
                         shouldInvalidate = true;
@@ -205,6 +209,16 @@ public class MusicClipView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                if (mIndicatorMoveListener != null && mIndicatorTouched != null) {
+                    final float position =
+                        (float) (mIndicatorTouched.cx - mIndicatorTouched.radius) /
+                            mProgressWidth;
+                    if (mIndicatorTouched == mIndicatorLeft) {
+                        mIndicatorMoveListener.onLeftIndicatorMoved(position);
+                    } else {
+                        mIndicatorMoveListener.onRightIndicatorMoved(position);
+                    }
+                }
                 break;
             case MotionEvent.ACTION_CANCEL:
                 mIndicatorTouched = null;

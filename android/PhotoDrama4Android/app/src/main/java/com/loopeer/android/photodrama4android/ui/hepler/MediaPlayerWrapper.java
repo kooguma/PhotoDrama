@@ -29,13 +29,24 @@ public class MediaPlayerWrapper {
     private MusicClipView mMusicClipView;
     private MusicClipView.IndicatorMoveListener mIndicatorMoveListener
         = new MusicClipView.IndicatorMoveListener() {
-        @Override public void onLeftIndicatorMove(float position) {
+
+        @Override public void onLeftIndicatorMoving(float position) {
+            mMediaPlayer.pause();
+        }
+
+        @Override public void onRightIndicatorMoving(float position) {
+            mMediaPlayer.pause();
+        }
+
+        @Override public void onLeftIndicatorMoved(float position) {
+            mMediaPlayer.start();
             mStartPos = position;
             final int mesc = (int) (position * mMediaPlayer.getDuration());
             mMediaPlayer.seekTo(mesc);
         }
 
-        @Override public void onRightIndicatorMove(float position) {
+        @Override public void onRightIndicatorMoved(float position) {
+            mMediaPlayer.start();
             mEndPos = position;
         }
     };
