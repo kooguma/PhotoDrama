@@ -14,12 +14,16 @@
     <string name="label_setting">设置</string>
     <string name="label_share">分享</string>
     <string name="label_drama_edit">故事编排</string>
+    <string name="label_image_selected">选择片段</string>
     <string name="label_drama_make">视频编辑</string>
     <string name="label_clip_time_edit">时长编辑</string>
 
     <!--main-->
     <string name="main_act">我要主演</string>
     <string name="main_create">我要创作</string>
+
+    <!-- image selected -->
+    <string name="image_too_small">不能少于2张图片</string>
 
     <!--drama select-->
     <string name="drama_select">选择故事</string>
@@ -49,6 +53,7 @@
     <string name="common_commit">提交</string>
     <string name="common_sure">确定</string>
     <string name="common_cancel">取消</string>
+    <string name="common_make">制作</string>
     <string name="common_net_error">网络错误</string>
     <string name="common_percent_format">%d%%</string>
     <string name="common_percent_initial">0%</string>

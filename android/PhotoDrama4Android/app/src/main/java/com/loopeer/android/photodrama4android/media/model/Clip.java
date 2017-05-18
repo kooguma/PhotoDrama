@@ -27,6 +27,7 @@ public class Clip extends BaseModel {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) return false;
         if (obj.getClass() != this.getClass()) return false;
         return id.equals(((Clip)obj).id);
     }

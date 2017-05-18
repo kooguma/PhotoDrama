@@ -1,5 +1,6 @@
 package com.loopeer.bottomimagepicker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,7 +75,6 @@ public class PickerFragment extends Fragment {
             new GridLayoutManager(getContext(), 5, GridLayoutManager.VERTICAL, false));
         mRecyclerView.addItemDecoration(
             new GridLayoutItemDecoration(getSpacing(mWindowManager)));
-        //weak reference
         mRecyclerView.setAdapter(mImageAdapter);
 
     }
@@ -100,6 +100,23 @@ public class PickerFragment extends Fragment {
         int screenWidth = display.getWidth();
         return screenWidth /
             (DECORATION_COUNT * DECORATION_SIZE_UNIT + IMAGE_COUNT * IMAGE_SIZE_UNIT);
+    }
+
+    public static int getImageSize(Context context) {
+        WindowManager wm = ((Activity)context).getWindowManager();
+        int unitSize = getUnitSize(wm);
+        return unitSize * IMAGE_SIZE_UNIT;
+    }
+
+    public static int getImageSpacing(Context context) {
+        WindowManager wm = ((Activity)context).getWindowManager();
+        int unitSize = getUnitSize(wm);
+        Display display = wm.getDefaultDisplay();
+        int screenWidth = display.getWidth();
+        final int gridCount = IMAGE_COUNT;
+        final int gridSize = unitSize * IMAGE_SIZE_UNIT;
+        final int totalSpacing = screenWidth - gridCount * gridSize;
+        return totalSpacing / (gridCount * 2 + 2);
     }
 
     private int getSpacing(WindowManager wm) {

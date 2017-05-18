@@ -39,6 +39,7 @@
         <item name="android:toolbarStyle"
             tools:targetApi="lollipop">@style/Toolbar.Dark
         </item>
+        <item name="actionMenuTextColor">@android:color/white</item>
         <item name="homeAsUpIndicator">@drawable/ic_home_up_white</item>
         <item name="android:windowBackground">@color/window_background_dark</item>
     </style>

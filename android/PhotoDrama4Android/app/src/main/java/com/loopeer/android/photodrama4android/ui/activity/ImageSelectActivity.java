@@ -1,19 +1,27 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.databinding.ActivityImageSelectBinding;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.ImageClip;
+import com.loopeer.android.photodrama4android.ui.adapter.EditDramaSegmentAdapter;
+import com.loopeer.android.photodrama4android.ui.adapter.ImageSelectedAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.GalleryLinearLayout;
 import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
@@ -22,63 +30,63 @@ import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSelectActivity extends PhotoDramaBaseActivity {
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-    private BottomImagePickerView mBottomImagePickerView;
+public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener, ImageSelectedAdapter.OnSelectedListener {
 
-    private  GalleryLinearLayout mGalleryLinearLayout;
-    private LinearLayout mLayoutDisplay;
-    private  SimpleDraweeView mImageDisplay;
+    private ActivityImageSelectBinding mBinding;
+    private ImageSelectedAdapter mImageSelectedAdapter;
 
     private  ImageAdapter.OnImagePickListener mPickListener
         = new ImageAdapter.OnImagePickListener() {
         @Override public boolean onImagePick(Uri uri) {
-            mGalleryLinearLayout.setUri(uri);
-            mImageDisplay.setImageURI(uri);
+            mImageSelectedAdapter.addUri(uri);
             return true;
         }
     };
 
+    private void updateDisplayImage(String path) {
+        mBinding.imageDisplay.setImageURI(path == null ? null : Uri.parse(path));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_select);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_image_select);
         setupView();
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
+        setCenterTitle(R.string.label_drama_edit);
+    }
+
     @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_image_group_submit, menu);
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            if (item.getItemId() == R.id.action_submit) {
-                View v = item.getActionView();
-                if (v != null) {
-                    v.setOnClickListener(v1 -> {
-                        List<String> urls = new ArrayList<>();
-                        Uri[] uris = mGalleryLinearLayout.getUris();
-                        for (Uri uri : uris) {
-                            if(uri != null) {
-                                String path = uri.getPath();
-                                urls.add(path);
-                            }
-                        }
-                        // TODO: 2017/3/30 check urls.size
-                        Navigator.startMakeMovieActivity(ImageSelectActivity.this,
-                            Drama.createFromPath(urls));
-                        this.finish();
-                    });
-                }
-            }
-        }
+        getMenuInflater().inflate(R.menu.menu_make, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_make) {
+            List<String> urls = mImageSelectedAdapter.getUrls();
+            if (urls.size() < 2) {
+                showToast(R.string.image_too_small);
+                return true;
+            }
+            Navigator.startMakeMovieActivity(ImageSelectActivity.this,
+                    Drama.createFromPath(urls));
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupView() {
-        mBottomImagePickerView = (BottomImagePickerView) findViewById(R.id.pick_view);
-        mGalleryLinearLayout = (GalleryLinearLayout) findViewById(R.id.layout_gallery);
-        mLayoutDisplay = (LinearLayout) findViewById(R.id.layout_display);
-        mImageDisplay = (SimpleDraweeView) findViewById(R.id.image_display);
-        PickerBottomBehavior behavior = PickerBottomBehavior.from(mBottomImagePickerView);
+        PickerBottomBehavior behavior = PickerBottomBehavior.from(mBinding.pickView);
         behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(
@@ -89,11 +97,57 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity {
             @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             }
         });
-        mBottomImagePickerView.post(() -> {
-            final int peekHeight = mBottomImagePickerView.getPeekHeight();
-            behavior.setPeekHeight(peekHeight);
+        mBinding.pickView.setOnImagePickListener(mPickListener);
+
+        mBinding.pickView.getViewPager()
+                .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        behavior.updateNestScrollChild(
+                                mBinding.pickView.getCurrentRecyclerView(position));
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+
+        updateSegmentList();
+
+
+        mBinding.pickView.post(() -> {
+            int containerHeight = mBinding.container.getHeight();
+            int recyclerBottom = mBinding.recyclerView.getBottom();
+            int minSheetHeight = containerHeight - recyclerBottom;
+            behavior.setPeekHeight(minSheetHeight);
         });
-        mBottomImagePickerView.setOnImagePickListener(mPickListener);
+        mBinding.imageDisplay.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mBinding.imageDisplay.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        int containerHeight = mBinding.container.getHeight();
+                        int recyclerBottom = mBinding.recyclerView.getBottom();
+                        int minSheetHeight = containerHeight - recyclerBottom;
+                        behavior.setPeekHeight(minSheetHeight);
+                    }
+                });
+    }
+
+    private void updateSegmentList() {
+        mImageSelectedAdapter = new ImageSelectedAdapter(this);
+        mImageSelectedAdapter.setOnSelectedListener(this);
+        mBinding.recyclerView.setPadding(13, 0, 13, 0);
+        mBinding.recyclerView.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mBinding.recyclerView.setAdapter(mImageSelectedAdapter);
+        mImageSelectedAdapter.init();
     }
 
     @Override
@@ -101,4 +155,8 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onImageSelected(ImageClip imageClip) {
+        updateDisplayImage(imageClip == null ? null : imageClip.path);
+    }
 }

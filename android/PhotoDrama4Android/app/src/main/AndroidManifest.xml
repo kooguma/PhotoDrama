@@ -34,7 +34,7 @@
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark.NoActionBar"/>
         <activity
             android:name=".ui.activity.ClipTimeEditActivity"
             android:screenOrientation="portrait"

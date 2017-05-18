@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <data>
     </data>
@@ -8,13 +8,18 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
         android:layout_marginRight="22dp"
         android:foreground="@drawable/selector_foreground_image_show">
 
-        <com.loopeer.android.photodrama4android.ui.widget.LocalSquareImageView
+        <com.loopeer.android.librarys.imagegroupview.view.SquareImageView
             android:id="@+id/img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/ic_image_default"
+            fresco:actualImageScaleType="centerCrop"
+            fresco:placeholderImage="@drawable/ic_image_default"
+            fresco:placeholderImageScaleType="centerCrop"
             android:clickable="false"/>
 
     </FrameLayout>
