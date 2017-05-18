@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -32,6 +35,7 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
 
     private ActivityImageSelectBinding mBinding;
     private ImageSelectedAdapter mImageSelectedAdapter;
+    private ImageView mIcon;
 
     private ImageAdapter.OnImagePickListener mPickListener
             = new ImageAdapter.OnImagePickListener() {
@@ -116,6 +120,20 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
             int recyclerBottom = mBinding.recyclerView.getBottom();
             int minSheetHeight = containerHeight - recyclerBottom;
             behavior.setPeekHeight(minSheetHeight);
+        });
+        mIcon = mBinding.pickView.getIconView();
+
+        behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(
+                    @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                final float degrees = slideOffset * 180;
+                mIcon.setRotation(degrees);
+            }
         });
         mBinding.imageDisplay.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
