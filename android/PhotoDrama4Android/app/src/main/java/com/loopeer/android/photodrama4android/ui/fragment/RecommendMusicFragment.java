@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
+import com.laputapp.http.CacheResponse;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
@@ -18,7 +19,8 @@ import com.loopeer.android.photodrama4android.ui.adapter.MusicRecommendAdapter;
 import io.reactivex.Flowable;
 import java.util.List;
 
-public class RecommendMusicFragment extends MovieMakerBaseFragment implements IPageRecycler<Category> {
+public class RecommendMusicFragment extends MovieMakerBaseFragment
+    implements IPageRecycler<Category> {
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,8 +30,10 @@ public class RecommendMusicFragment extends MovieMakerBaseFragment implements IP
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getRecyclerManager().getRecyclerView()
-            .addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST,
-                DeviceScreenUtils.dp2px(16,getContext()),0,DeviceScreenUtils.dp2px(0.5f,getContext())));
+            .addItemDecoration(
+                new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST,
+                    DeviceScreenUtils.dp2px(16, getContext()), 0,
+                    DeviceScreenUtils.dp2px(0.5f, getContext())));
     }
 
     @Override public int getExtraItemCount() {
@@ -41,7 +45,8 @@ public class RecommendMusicFragment extends MovieMakerBaseFragment implements IP
     }
 
     @Override
-    public Flowable<? extends BaseResponse<List<Category>>> requestData(String page, String pageSize) {
+    public Flowable<? extends CacheResponse<List<Category>>> requestData(String offset, String page, String pageSize) {
         return CategoryService.INSTANCE.categories(CategoryService.TYPE_SOUND_BGM);
     }
+
 }

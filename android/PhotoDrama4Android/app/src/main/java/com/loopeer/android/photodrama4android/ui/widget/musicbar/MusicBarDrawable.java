@@ -13,8 +13,10 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import com.laputapp.utilities.DeviceScreenUtils;
+import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 
 public class MusicBarDrawable extends Drawable {
 
@@ -27,41 +29,31 @@ public class MusicBarDrawable extends Drawable {
 
     private Params mParams;
 
-    private ValueAnimator[] mAnimators = new ValueAnimator[4];
-    private float mRatios[] = new float[4];
-    private static final float[] sRatios = new float[] { 0.8f, 0.7f, 1.0f, 0.6f };
+    private ValueAnimator mAnimator;
+    private float mRatio;
 
-    public class AnimatorUpdateListenerWrapper implements ValueAnimator.AnimatorUpdateListener {
-
-        public float ratio;
-
-        public AnimatorUpdateListenerWrapper(float ratio) {
-            this.ratio = ratio;
-        }
-
-        @Override public void onAnimationUpdate(ValueAnimator animation) {
-            ratio = animation.getAnimatedFraction();
-            //Log.e(TAG,"AnimatorUpdateListenerWrapper ratio = " + ratio);
-            invalidateSelf();
-        }
-    }
+    private static final float[] sRatios = new float[] { 0.5f, 1.0f, 0.6f, 0.8f };
 
     private MusicBarDrawable(Params params) {
         mParams = params;
-        setupAnimators();
+        setupAnimator();
     }
 
-    private void setupAnimators() {
-        // TODO: 2017/5/17  one animator for all
-        for (int i = 0; i < sRatios.length; i++) {
-            mAnimators[i] = ValueAnimator.ofFloat(sRatios[i] / 2, sRatios[i]);
-            mAnimators[i].setInterpolator(new LinearInterpolator());
-            mAnimators[i].addUpdateListener(new AnimatorUpdateListenerWrapper(mRatios[i]));
-            mAnimators[i].setDuration(500);
-            mAnimators[i].setRepeatCount(ValueAnimator.INFINITE);
-            mAnimators[i].setRepeatMode(ValueAnimator.RESTART);
-            mAnimators[i].start();
-        }
+    private void setupAnimator() {
+        mAnimator = ValueAnimator.ofFloat(1f, 0.5f);
+        mAnimator.setInterpolator(new LinearInterpolator());
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override public void onAnimationUpdate(ValueAnimator animation) {
+                mRatio = (float) animation.getAnimatedValue();
+                invalidateSelf();
+            }
+        });
+
+        mAnimator.setDuration(300);
+        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+        mAnimator.start();
     }
 
     @Override protected void onBoundsChange(Rect bounds) {
@@ -82,12 +74,19 @@ public class MusicBarDrawable extends Drawable {
         final RectF rect = new RectF();
         rect.top = mBounds.top;
         rect.bottom = mBounds.bottom;
+        float ratio = 0;
 
+        Log.e(TAG,"ration = " + mRatio);
         for (int i = 0; i < mParams.mRectCount; i++) {
             rect.left = left + i * (gapWidth + rectWidth);
             rect.right = rect.left + rectWidth;
-            rect.top = mRatios[i] * rect.bottom;
-            Log.e(TAG, "ratio = " + mRatios[i] + "rect top = " + rect.top);
+            if (i % 2 == 0) {
+                ratio = (1.5f - mRatio);
+                rect.top = mBounds.bottom * (1.0f - ratio * sRatios[i]);
+            } else {
+                ratio = mRatio;
+                rect.top = mBounds.bottom * (1.0f - ratio * sRatios[i]);
+            }
             canvas.drawRect(rect, mParams.mPaint);
         }
 

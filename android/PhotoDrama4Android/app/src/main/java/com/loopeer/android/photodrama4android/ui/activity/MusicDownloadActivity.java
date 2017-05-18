@@ -54,7 +54,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override
-    public Flowable<? extends BaseResponse<List<Voice>>> requestData(String page, String pageSize) {
+    public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
         return VoiceService.INSTANCE.voices(mCategory.id);
     }
 

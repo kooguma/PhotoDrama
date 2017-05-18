@@ -46,7 +46,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override
-    public Flowable<? extends BaseResponse<List<Voice>>> requestData(String page, String pageSize) {
+    public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
         getRecyclerManager().onCacheLoaded(FileManager.getInstance().getAudioFiles());
         return null;
     }
