@@ -14,9 +14,12 @@ import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.adapter.MyDownloadMusicAdapter;
+import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
 import com.loopeer.android.photodrama4android.ui.hepler.MediaPlayerWrapper;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
+import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
+
 import io.reactivex.Flowable;
 import java.io.File;
 import java.util.List;
@@ -43,6 +46,10 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
             .addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL_LIST, 0,
                 DeviceScreenUtils.dp2px(0.5f, getContext())));
+        ItemTouchHelperCallback callback = new ItemTouchHelperCallback();
+        ItemTouchHelperExtension itemTouchHelperExtension = new ItemTouchHelperExtension(callback);
+        itemTouchHelperExtension.attachToRecyclerView(getRecyclerManager().getRecyclerView());
+//        mAdapter.setItemTouchHelperExtension(mItemTouchHelper);
     }
 
     @Override public int getExtraItemCount() {

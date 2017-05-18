@@ -33,6 +33,7 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
 
         mViewPager.setAdapter(new AddMusicClipPagerAdapter(getSupportFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
+
     }
 
     @Override protected void onPostCreate(Bundle savedInstanceState) {

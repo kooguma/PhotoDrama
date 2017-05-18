@@ -17,6 +17,8 @@ import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
+import com.loopeer.itemtouchhelperextension.Extension;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import zlc.season.rxdownload2.RxDownload;
@@ -57,6 +59,12 @@ public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
         ListItemMusicSelectBinding binding =
             ((DataBindingViewHolder<ListItemMusicSelectBinding>) holder).binding;
 
+        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doDelete(holder.getAdapterPosition());
+            }
+        });
         binding.setVoice(voice);
 
         binding.txtStart.setText(getDefaultStartTime());
@@ -105,9 +113,31 @@ public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
         binding.executePendingBindings();
     }
 
+    private void doDelete(int adapterPosition) {
+        getDatas().remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        //TODO
+    }
+
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {
         View v = getLayoutInflater().inflate(R.layout.list_item_music_select, parent, false);
-        return new DataBindingViewHolder<>(v);
+        return new MusicItemViewHolder(v);
+    }
+
+    public static class MusicItemViewHolder extends DataBindingViewHolder implements Extension {
+
+        public MusicItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public View getContentView() {
+            return itemView.findViewById(R.id.layout_brief);
+        }
+
+        @Override
+        public float getActionWidth() {
+            return itemView.findViewById(R.id.btn_delete).getWidth();
+        }
     }
 
 }
