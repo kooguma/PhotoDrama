@@ -8,13 +8,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
+import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
+import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
 import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
+import com.loopeer.android.photodrama4android.ui.adapter.EffectDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.MediaPlayerWrapper;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -31,9 +35,20 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     private BGMDownloadAdapter mAdapter;
     private MediaPlayerWrapper mPlayerWrapper;
 
+    private MusicClip.MusicType mType;
+
+    public static MyDownloadMusicFragment newInstance(MusicClip.MusicType type) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Navigator.EXTRA_MUSIC_CLIP, type);
+        MyDownloadMusicFragment fragment = new MyDownloadMusicFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        mType = (MusicClip.MusicType) getArguments().getSerializable(Navigator.EXTRA_MUSIC_CLIP);
         mPlayerWrapper = new MediaPlayerWrapper(getContext());
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable @Override
@@ -42,7 +57,8 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);   getRecyclerManager().getRecyclerView()
+        super.onViewCreated(view, savedInstanceState);
+        getRecyclerManager().getRecyclerView()
             .addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL_LIST, 0,
                 DeviceScreenUtils.dp2px(0.5f, getContext())));
@@ -57,9 +73,14 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        BGMDownloadAdapter adapter = new BGMDownloadAdapter(getContext());
-        adapter.setIMusicAdapter(this);
-        return adapter;
+        // BaseFooterAdapter<Voice> adapter;
+        // if (mType == MusicClip.MusicType.BGM) {
+        //     adapter = new BGMDownloadAdapter(getContext());
+        //     ((BGMDownloadAdapter) adapter).setIMusicAdapter(this);
+        // } else {
+        //     adapter = new EffectDownloadAdapter(getContext());
+        // }
+        return new BGMDownloadAdapter(getContext());
     }
 
     @Override

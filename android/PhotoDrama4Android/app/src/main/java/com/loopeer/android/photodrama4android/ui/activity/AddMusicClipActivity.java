@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.ui.fragment.MyDownloadMusicFragment;
 import com.loopeer.android.photodrama4android.ui.fragment.RecommendMusicFragment;
 
@@ -22,10 +24,13 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_music_clip);
 
+        MusicClip.MusicType type = (MusicClip.MusicType) getIntent().getSerializableExtra(
+            Navigator.EXTRA_MUSIC_CLIP);
+
         mTabLayout = (CustomTabLayout) findViewById(R.id.music_clip_add_tab);
         mViewPager = (ViewPager) findViewById(R.id.music_clip_add_view_pager);
 
-        mFragments[0] = new MyDownloadMusicFragment();
+        mFragments[0] = MyDownloadMusicFragment.newInstance(type);
         mFragments[1] = new RecommendMusicFragment();
 
         mTabLayout.addTab(mTabLayout.newTab().setText(sTitle[0]));
