@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
+
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageSelectBinding;
@@ -20,6 +21,10 @@ import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
@@ -28,9 +33,10 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
     private ActivityImageSelectBinding mBinding;
     private ImageSelectedAdapter mImageSelectedAdapter;
 
-    private  ImageAdapter.OnImagePickListener mPickListener
-        = new ImageAdapter.OnImagePickListener() {
-        @Override public boolean onImagePick(Uri uri) {
+    private ImageAdapter.OnImagePickListener mPickListener
+            = new ImageAdapter.OnImagePickListener() {
+        @Override
+        public boolean onImagePick(Uri uri) {
             mImageSelectedAdapter.addUri(uri);
             return true;
         }
@@ -55,7 +61,8 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
         setCenterTitle(R.string.label_drama_edit);
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_make, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -70,7 +77,11 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
             }
             Navigator.startMakeMovieActivity(ImageSelectActivity.this,
                     Drama.createFromPath(urls));
-            this.finish();
+            registerSubscription(
+                    Flowable.timer(400, TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(t -> this.finish())
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -21,7 +21,6 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.model.Clip;
-import com.loopeer.android.photodrama4android.ui.activity.RecordMusicActivity;
 
 import java.util.ArrayList;
 import java.util.List;

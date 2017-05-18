@@ -42,13 +42,23 @@ public class AudioRecorder {
         } catch (IOException e) {
             return false;
         }
-        mRecorder.start();
+        try {
+            mRecorder.start();
+        } catch (Exception e) {
+
+        }
         return true;
     }
 
     public void stopRecording() {
-        if (mRecorder != null) {
-            mRecorder.stop();
+        try{
+
+            if (mRecorder != null) {
+                mRecorder.stop();
+                mRecorder.release();
+                mRecorder = null;
+            }
+        }catch(RuntimeException stopException){
             mRecorder.release();
             mRecorder = null;
         }

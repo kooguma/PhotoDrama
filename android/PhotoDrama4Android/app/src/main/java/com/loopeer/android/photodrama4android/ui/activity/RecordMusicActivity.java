@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -80,13 +81,16 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
                 case MotionEvent.ACTION_UP:
                     stopRecord(true);
                     break;
+                case MotionEvent.ACTION_CANCEL:
+                    stopRecord(false);
+                    break;
                 case MotionEvent.ACTION_DOWN:
                     startRecord();
                     break;
                 default:
                     break;
             }
-            return true;
+            return false;
         });
     }
 
@@ -96,6 +100,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             mVideoPlayerManager.getIMusic().updateDrama(mDrama);
             updateScrollSelectViewClips();
             mSelectedClip = null;
+            updateRecordBtnEnable();
             updateBtnView();
         }
     }
@@ -234,6 +239,11 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             }
         }
 
+        updateRecordBtnEnable();
+//        updateBtnView();
+    }
+
+    private void updateRecordBtnEnable() {
         if (mSelectedClip == null) {
             MusicClip musicClip = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
                     , MusicClip.MusicType.RECORD_AUDIO);
@@ -243,7 +253,6 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
                 mBinding.btnAdd.setEnabled(true);
             }
         }
-        updateBtnView();
     }
 
     @Override
@@ -326,10 +335,8 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     public void onClipSelected(Clip clip) {
         if (clip != null) {
             mSelectedClip = (MusicClip) clip;
-            mBinding.switcherBtn.setDisplayedChild(1);
         } else {
             mSelectedClip = null;
-            mBinding.switcherBtn.setDisplayedChild(0);
         }
         updateBtnView();
     }
@@ -352,14 +359,14 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
 
     private void showVolume() {
         if (mToolShow) return;
-        mBinding.switcherBtn.setDisplayedChild(1);
-        mBinding.btnConfirm.setVisibility(mMusicClipRecording != null ? View.VISIBLE : View.GONE);
-        mBinding.viewMusicVolume.viewVolumeContainer.setVisibility(View.VISIBLE);
         mToolShow = true;
+        mBinding.switcherBtn.setDisplayedChild(1);
+        mBinding.viewMusicVolume.viewVolumeContainer.setVisibility(View.VISIBLE);
         ObjectAnimator.ofFloat(mBinding.viewMusicVolume.viewVolumeContainer, View.TRANSLATION_Y,
                 mBinding.viewMusicVolume.viewVolumeContainer.getHeight(), 0).start();
         mBinding.viewMusicVolume.seekBarVolume.setProgress((int) (mSelectedClip.volume * 100));
         updateVolumeText();
+        mBinding.btnConfirm.setVisibility(mMusicClipRecording != null ? View.VISIBLE : View.GONE);
     }
 
     private void updateVolumeText() {
@@ -379,7 +386,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
 
     @Override
     public void onStopTouch() {
-
+        updateBtnView();
     }
 
     private void setUpVolumeListener() {
