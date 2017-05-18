@@ -31,7 +31,7 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.addProgressChangeListener(this);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);

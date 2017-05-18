@@ -13,6 +13,7 @@ import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageClipEditBinding;
 import com.loopeer.android.photodrama4android.media.GLTouchListener;
+import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -39,7 +40,7 @@ public class ImageSegmentEditActivity extends AppCompatActivity implements Image
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_image_clip_edit);
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
 
         mGLTouchListener = new GLTouchListener(mBinding.glSurfaceView);

@@ -32,7 +32,7 @@ public class MusicBarDrawable extends Drawable {
     private ValueAnimator mAnimator;
     private float mRatio;
 
-    private static final float[] sRatios = new float[] { 0.5f, 1.0f, 0.6f, 0.8f };
+    private static final float[] sRatios = new float[] { 0.7f, 1.0f, 0.75f, 0.8f };
 
     private MusicBarDrawable(Params params) {
         mParams = params;
@@ -49,7 +49,7 @@ public class MusicBarDrawable extends Drawable {
             }
         });
 
-        mAnimator.setDuration(300);
+        mAnimator.setDuration(200);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.setRepeatMode(ValueAnimator.REVERSE);
 
