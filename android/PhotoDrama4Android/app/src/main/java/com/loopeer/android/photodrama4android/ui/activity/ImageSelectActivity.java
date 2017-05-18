@@ -37,7 +37,7 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
     };
 
     private void updateDisplayImage(String path) {
-        mBinding.imageDisplay.post(() -> mBinding.imageDisplay.setImageURI(path == null ? null : Uri.fromFile(new File(path))));
+        mBinding.imageDisplay.setImageURI(path == null ? null : Uri.fromFile(new File(path)));
     }
 
     @Override
