@@ -27,18 +27,18 @@ import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDef
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDurationFromLocal;
 
-public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
+public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     //当前播放的item
     private int mPlayingPosition = -1;
 
-    private IMusicAdapter mIMusicAdapter;
 
-    public class ItemState{
-        boolean isPlaying;
-
+    class ItemPlayState{
+        int startPos;
+        int endPos;
     }
 
+    private IMusicAdapter mIMusicAdapter;
 
     public void setIMusicAdapter(IMusicAdapter iMusicAdapter) {
         this.mIMusicAdapter = iMusicAdapter;
@@ -51,7 +51,7 @@ public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
         void onMusicPauseClick(String path, MusicClipView musicClipView);
     }
 
-    public MyDownloadMusicAdapter(Context context) {
+    public BGMDownloadAdapter(Context context) {
         super(context);
     }
 

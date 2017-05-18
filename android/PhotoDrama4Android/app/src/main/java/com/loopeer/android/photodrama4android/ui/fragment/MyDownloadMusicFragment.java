@@ -13,8 +13,8 @@ import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.model.Voice;
-import com.loopeer.android.photodrama4android.ui.adapter.MyDownloadMusicAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
+import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.MediaPlayerWrapper;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -26,9 +26,9 @@ import java.util.List;
 
 public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Voice>,
-    MyDownloadMusicAdapter.IMusicAdapter {
+    BGMDownloadAdapter.IMusicAdapter {
 
-    private MyDownloadMusicAdapter mAdapter;
+    private BGMDownloadAdapter mAdapter;
     private MediaPlayerWrapper mPlayerWrapper;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        MyDownloadMusicAdapter adapter = new MyDownloadMusicAdapter(getContext());
+        BGMDownloadAdapter adapter = new BGMDownloadAdapter(getContext());
         adapter.setIMusicAdapter(this);
         return adapter;
     }

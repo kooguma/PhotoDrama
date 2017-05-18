@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.loopeer.android.photodrama4android.ui.adapter.MyDownloadMusicAdapter;
+import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 public class ItemTouchHelperCallback extends ItemTouchHelperExtension.Callback {
@@ -33,8 +33,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelperExtension.Callback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (dY != 0 && dX == 0) super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        MyDownloadMusicAdapter.MusicItemViewHolder holder = (MyDownloadMusicAdapter.MusicItemViewHolder) viewHolder;
-        if (viewHolder instanceof MyDownloadMusicAdapter.MusicItemViewHolder)
+        BGMDownloadAdapter.MusicItemViewHolder holder = (BGMDownloadAdapter.MusicItemViewHolder) viewHolder;
+        if (viewHolder instanceof BGMDownloadAdapter.MusicItemViewHolder)
             holder.getContentView().setTranslationX(dX);
     }
 }
