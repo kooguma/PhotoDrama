@@ -112,6 +112,7 @@ dependencies {
     compile libs.flexbox
     compile libs.cardview
     compile libs.ztZip
+    compile libs.itemtouchhelperextension
     compile('org.simpleframework:simple-xml:2.7.+') {
         exclude module: 'stax'
         exclude module: 'stax-api'

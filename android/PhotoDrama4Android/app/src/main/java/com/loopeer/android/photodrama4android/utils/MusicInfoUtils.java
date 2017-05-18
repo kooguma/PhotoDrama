@@ -21,9 +21,14 @@ public class MusicInfoUtils {
 
     public static String getFormatDurationFromLocal(Context context, Voice voice) {
         String filePath = FileManager.getInstance().getAudioPath(context, voice);
-        metaRetriever.setDataSource(filePath);
-        String duration = metaRetriever.extractMetadata(
-            MediaMetadataRetriever.METADATA_KEY_DURATION);
+        String duration = "0";
+        try {
+            metaRetriever.setDataSource(filePath);
+            duration = metaRetriever.extractMetadata(
+                    MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception e) {
+
+        }
         return formatter.format(Integer.valueOf(duration));
     }
 

@@ -67,7 +67,7 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
         if (!checkClipValidate(musicClip)) {
             return;
         }
-        Navigator.startTestMusicSelectedActivity(this, mDrama, REQUEST_CODE_DRAMA_SOUND_BGM_SELECT);
+        Navigator.addAddMusicActivity(this);
     }
 
     public void onDeleteClick(View view) {

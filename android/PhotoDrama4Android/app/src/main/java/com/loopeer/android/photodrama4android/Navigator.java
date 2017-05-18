@@ -9,6 +9,7 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
+import com.loopeer.android.photodrama4android.ui.activity.AddMusicClipActivity;
 import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaDetailActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaEditActivity;
@@ -211,9 +212,14 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void startMusicDownloadActivity(Context context,Category category) {
+    public static void startMusicDownloadActivity(Context context, Category category) {
         Intent intent = new Intent(context, MusicDownloadActivity.class);
         intent.putExtra(Navigator.EXTRA_CATEGORY,category);
+        context.startActivity(intent);
+    }
+
+    public static void addAddMusicActivity(Context context) {
+        Intent intent = new Intent(context, AddMusicClipActivity.class);
         context.startActivity(intent);
     }
 }
