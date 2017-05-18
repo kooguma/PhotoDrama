@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.laputapp.model.BaseModel;
 import com.loopeer.android.photodrama4android.utils.FileManager;
+import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,9 +17,6 @@ public class Voice extends BaseModel {
     @SerializedName("voice_url")
     public String voiceUrl; // 下载链接
     public String duration;
-
-    private static SimpleDateFormat formatter = new SimpleDateFormat("mm:ss.SS");
-    private static MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
 
     public Voice(String id, String name) {
         this.id = id;
@@ -42,15 +40,11 @@ public class Voice extends BaseModel {
     }
 
     public String getFormatDuration() {
-        int time = (int) (Float.valueOf(duration) * 1000);
-        return formatter.format(time);
+       return MusicInfoUtils.getFormatDuration(duration);
     }
 
     public String getFormatDurationFromLocal(Context context) {
-        String filePath = FileManager.getInstance().getAudioPath(context, this);
-        metaRetriever.setDataSource(filePath);
-        String duration = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        return formatter.format(Integer.valueOf(duration));
+        return MusicInfoUtils.getFormatDurationFromLocal(context,this);
     }
 
 }

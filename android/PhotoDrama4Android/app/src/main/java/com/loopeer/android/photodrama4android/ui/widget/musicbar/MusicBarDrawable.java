@@ -49,7 +49,7 @@ public class MusicBarDrawable extends Drawable {
             }
         });
 
-        mAnimator.setDuration(200);
+        mAnimator.setDuration(350);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.setRepeatMode(ValueAnimator.REVERSE);
 
@@ -76,7 +76,6 @@ public class MusicBarDrawable extends Drawable {
         rect.bottom = mBounds.bottom;
         float ratio = 0;
 
-        Log.e(TAG,"ration = " + mRatio);
         for (int i = 0; i < mParams.mRectCount; i++) {
             rect.left = left + i * (gapWidth + rectWidth);
             rect.right = rect.left + rectWidth;

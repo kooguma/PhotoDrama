@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.R;
 
 public class MusicClipView extends View {
@@ -58,8 +59,8 @@ public class MusicClipView extends View {
     private Paint mDotPaint;
     private int mDotColor;
     private float mDotProgress;
-    private int mDotX;
-    private int mDotY;
+
+    private Paint mTextPaint;
 
     private Drawable mIndicatorDrawable;
     private Drawable mDotDrawable;
@@ -71,8 +72,9 @@ public class MusicClipView extends View {
     }
 
     public interface IndicatorMoveListener {
-        void onLeftIndicatorMoving(float position);
-        void onRightIndicatorMoving(float position);
+        // void onProgressChanged(float progress);
+        void onLeftIndicatorMoving(float position1, float position2);
+        void onRightIndicatorMoving(float position1, float position2);
         void onLeftIndicatorMoved(float position);
         void onRightIndicatorMoved(float position);
     }
@@ -139,6 +141,9 @@ public class MusicClipView extends View {
         mDotPaint.setColor(mDotColor);
         mDotPaint.setStrokeWidth(10);
 
+        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setColor(getResources().getColor(R.color.text_color_tertiary));
+        mTextPaint.setTextSize(32);
     }
 
     @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -186,15 +191,22 @@ public class MusicClipView extends View {
                 if (mIndicatorTouched != null) {
                     if (checkIndicatorPivotX(cx)) {
                         mIndicatorTouched.setPivotX(cx);
-                        final float position =
+                        final float position1 =
                             (float) (mIndicatorTouched.cx - mIndicatorTouched.radius) /
                                 mProgressWidth;
-                        mDotProgress = position * 100;
+                        mDotProgress = position1 * 100;
                         if (mIndicatorMoveListener != null) {
+                            float position2;
                             if (mIndicatorTouched == mIndicatorLeft) {
-                                mIndicatorMoveListener.onLeftIndicatorMoving(position);
+                                position2 =
+                                    (float) (mIndicatorRight.cx - mIndicatorRight.radius) /
+                                        mProgressWidth;
+                                mIndicatorMoveListener.onLeftIndicatorMoving(position1, position2);
                             } else {
-                                mIndicatorMoveListener.onRightIndicatorMoving(position);
+                                position2 =
+                                    (float) (mIndicatorLeft.cx - mIndicatorLeft.radius) /
+                                        mProgressWidth;
+                                mIndicatorMoveListener.onRightIndicatorMoving(position1,position2);
                             }
                         }
                         shouldInvalidate = true;
@@ -274,6 +286,32 @@ public class MusicClipView extends View {
         drawIndicator(canvas);
     }
 
+    //时间和滑块一起动
+    private void drawTimeText(Canvas canvas) {
+        final float textWidth = mTextPaint.measureText("00:01.02");
+
+        final float posL = mIndicatorLeft.cx;
+        final float y = mIndicatorLeft.cy - mIndicatorDrawable.getIntrinsicHeight() / 2 - 14;
+
+        float cxl;
+        if (posL < textWidth / 2) {
+            cxl = mProgressStartX - mIndicatorLeft.radius;
+        } else {
+            cxl = posL - textWidth / 2;
+        }
+        canvas.drawText("00:01.02", cxl, y, mTextPaint);
+
+        final float posR = mIndicatorRight.cx;
+        float cxr;
+        if (posR > (mProgressStartX + mProgressWidth + mIndicatorRight.radius - textWidth / 2)) {
+            cxr = mProgressStartX + mProgressWidth + mIndicatorRight.radius - textWidth;
+        } else {
+            cxr = posR - textWidth / 2;
+        }
+        canvas.drawText("00:01.02", cxr, y, mTextPaint);
+
+    }
+
     private void drawDot(Canvas canvas) {
         // TODO: 2017/5/15 dot position
         final float scale = mDotProgress / sDefaultMax;
@@ -285,7 +323,6 @@ public class MusicClipView extends View {
     private void drawDrawable(Canvas canvas, Drawable drawable, float x, float y) {
         canvas.save();
         canvas.translate(x, y);
-
         final int height = drawable.getIntrinsicHeight();
         final int width = drawable.getIntrinsicWidth();
         drawable.setBounds(-width / 2, -height / 2, width / 2, height / 2);
@@ -294,6 +331,7 @@ public class MusicClipView extends View {
     }
 
     private void drawProgress(Canvas canvas) {
+
         //1
         mProgressPaint.setColor(mProgressSelectedColor);
         canvas.drawLine(mProgressStartX, mProgressStartY, mIndicatorLeft.cx, mProgressStartY,

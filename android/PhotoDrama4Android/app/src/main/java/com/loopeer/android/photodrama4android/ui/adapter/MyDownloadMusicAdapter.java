@@ -3,8 +3,10 @@ package com.loopeer.android.photodrama4android.ui.adapter;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.dynamic.utils.ViewUtils;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.laputapp.utilities.Utilities;
@@ -19,11 +21,22 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import zlc.season.rxdownload2.RxDownload;
 
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDurationFromLocal;
+
 public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
 
-    private int mPlayingPosition;
+    //当前播放的item
+    private int mPlayingPosition = -1;
 
     private IMusicAdapter mIMusicAdapter;
+
+    public class ItemState{
+        boolean isPlaying;
+
+    }
+
 
     public void setIMusicAdapter(IMusicAdapter iMusicAdapter) {
         this.mIMusicAdapter = iMusicAdapter;
@@ -31,6 +44,7 @@ public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
 
     public interface IMusicAdapter {
         void onMusicAddClick(Voice voice);
+        void onControllerShow(TextView txtStart, TextView txtCur, TextView txtEnd);
         void onMusicPlayClick(String path, MusicClipView musicClipView);
         void onMusicPauseClick(String path, MusicClipView musicClipView);
     }
@@ -45,30 +59,42 @@ public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
 
         binding.setVoice(voice);
 
-        // if (isAudioExists(voice)) {
-        //     // binding.btnDownload.setText("已下载");
-        //     binding.btnDownload.setOnClickListener(v -> {
-        //         if (mIMusicAdapter != null) {
-        //             mIMusicAdapter.onAddAudioClick(voice);
-        //         }
-        //     });
-        // } else {
-        //     binding.btnDownload.setOnClickListener(v -> {
-        //         if (mIMusicAdapter != null) {
-        //             mIMusicAdapter.onDownloadClick(voice, v);
-        //         }
-        //     });
-        // }
+        binding.txtStart.setText(getDefaultStartTime());
+        binding.txtCur.setText(getDefaultStartTime());
+        binding.txtEnd.setText(getFormatDurationFromLocal(getContext(), voice));
 
         binding.layoutBrief.setOnClickListener(v -> {
-            if (binding.layoutController.getVisibility() == View.GONE) {
-                binding.layoutController.setVisibility(View.VISIBLE);
-                v.setSelected(true);
-            } else {
-                binding.layoutController.setVisibility(View.GONE);
-                v.setSelected(false);
-            }
+            mPlayingPosition = pos;
+            notifyDataSetChanged();
         });
+
+        //change ui
+        if (mPlayingPosition == pos) { //playing item
+            final String path = FileManager.getInstance().getAudioPath(getContext(), voice);
+            Log.e("tag", "controller  = " + binding.layoutController.getVisibility());
+            if (binding.layoutController.getVisibility() == View.VISIBLE) {
+                binding.layoutController.setVisibility(View.GONE);
+                binding.viewSwitcher.setDisplayedChild(0);
+                binding.btnPausePlayBtn.setSelected(true);
+                binding.btnExpand.setSelected(false);
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
+                }
+            } else {
+                binding.layoutController.setVisibility(View.VISIBLE);
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onControllerShow(binding.txtStart, binding.txtCur, binding.txtEnd);
+                    mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
+                }
+                binding.viewSwitcher.setDisplayedChild(1);
+                binding.btnPausePlayBtn.setSelected(false);
+                binding.btnExpand.setSelected(true);
+            }
+        } else { // not playing item
+            binding.viewSwitcher.setDisplayedChild(0);
+            binding.layoutController.setVisibility(View.GONE);
+            binding.btnExpand.setSelected(false);
+        }
 
         binding.btnExpand.setOnClickListener(v -> {
             if (v.isSelected()) {
@@ -76,39 +102,12 @@ public class MyDownloadMusicAdapter extends BaseFooterAdapter<Voice> {
             }
         });
 
-        if (pos != mPlayingPosition) {
-            binding.btnPausePlayBtn.setSelected(true);
-        }
-
-        binding.btnPausePlayBtn.setOnClickListener(v -> {
-            final String path = FileManager.getInstance().getAudioPath(getContext(), voice);
-            if (mIMusicAdapter != null) {
-                if (!v.isSelected()) {
-                    mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
-                    v.setSelected(true);
-                    binding.viewSwitcher.setDisplayedChild(0);
-                } else {
-                    mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
-                    mPlayingPosition = pos;
-                    v.setSelected(false);
-                    binding.viewSwitcher.setDisplayedChild(1);
-                }
-                notifyDataSetChanged();
-            }
-        });
         binding.executePendingBindings();
     }
 
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {
         View v = getLayoutInflater().inflate(R.layout.list_item_music_select, parent, false);
         return new DataBindingViewHolder<>(v);
-    }
-
-    private boolean isAudioExists(Voice voice) {
-        // if(voice == null) return false;
-        // File[] file = RxDownload.getInstance(getContext()).getRealFiles(voice.voiceUrl);
-        // return file != null;
-        return false;
     }
 
 }

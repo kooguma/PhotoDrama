@@ -4,14 +4,24 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
+import android.widget.TextView;
 import com.facebook.common.util.UriUtil;
 import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
+import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
+import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
 
 public class MediaPlayerWrapper {
 
@@ -26,16 +36,38 @@ public class MediaPlayerWrapper {
     private float mEndPos;
     private boolean mScheduled;
     private Uri mUri;
+
     private MusicClipView mMusicClipView;
+
+    private TextView mTextStart;
+    private TextView mTextCur;
+    private TextView mTextEnd;
+
     private MusicClipView.IndicatorMoveListener mIndicatorMoveListener
         = new MusicClipView.IndicatorMoveListener() {
 
-        @Override public void onLeftIndicatorMoving(float position) {
+        @Override public void onLeftIndicatorMoving(float position1, float position2) {
             mMediaPlayer.pause();
+            if (mTextStart != null) {
+                final int time = (int) (position1 * mMediaPlayer.getDuration());
+                mTextStart.setText(MusicInfoUtils.getFormatDuration(time));
+                if (mTextCur != null) {
+                    int delta  = (int) (Math.abs(position1 - position2) * mMediaPlayer.getDuration());
+                    mTextCur.setText(MusicInfoUtils.getFormatDuration(delta));
+                }
+            }
         }
 
-        @Override public void onRightIndicatorMoving(float position) {
+        @Override public void onRightIndicatorMoving(float position1, float position2) {
             mMediaPlayer.pause();
+            if (mTextEnd != null) {
+                final int time = (int) (position1 * mMediaPlayer.getDuration());
+                mTextEnd.setText(MusicInfoUtils.getFormatDuration(time));
+                if (mTextCur != null) {
+                    int delta  = (int) (Math.abs(position1 - position2) * mMediaPlayer.getDuration());
+                    mTextCur.setText(MusicInfoUtils.getFormatDuration(delta));
+                }
+            }
         }
 
         @Override public void onLeftIndicatorMoved(float position) {
@@ -98,6 +130,24 @@ public class MediaPlayerWrapper {
         mMusicClipView = view;
     }
 
+    public void updateController(TextView start, TextView cur, TextView end) {
+        mTextStart = start;
+        mTextCur = cur;
+        mTextEnd = end;
+    }
+
+    public void setupController(String starTime, String curTime, String endTime) {
+        if (mTextStart != null) {
+            mTextStart.setText(starTime);
+        }
+        if (mTextCur != null) {
+            mTextCur.setText(curTime);
+        }
+        if (mTextEnd != null) {
+            mTextEnd.setText(endTime);
+        }
+    }
+
     public void startAsync() {
         mMediaPlayer.prepareAsync();
         mMusicClipView.setIndicatorMoveListener(mIndicatorMoveListener);
@@ -116,10 +166,10 @@ public class MediaPlayerWrapper {
     }
 
     public void destroy() {
-        mMediaPlayer.stop();
-        mMediaPlayer.release();
         mPlayerTask.cancel();
         mTimer.cancel();
+        mMediaPlayer.stop();
+        mMediaPlayer.release();
     }
 
     public boolean isPlaying() {
@@ -155,6 +205,11 @@ public class MediaPlayerWrapper {
                 } else {
                     mMusicClipView.setDotProgress(progress * 100);
                 }
+                mTextCur.post(() -> mTextCur.setText(
+                    MusicInfoUtils.getFormatDuration(mMediaPlayer.getCurrentPosition())));
+            } else {
+                mTextCur.post(() -> mTextCur.setText(
+                    MusicInfoUtils.getFormatDuration(mMediaPlayer.getDuration())));
             }
         }
     }

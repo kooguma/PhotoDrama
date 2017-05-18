@@ -5,9 +5,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
+import com.laputapp.ui.decorator.DividerItemDecoration;
+import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.adapter.MyDownloadMusicAdapter;
@@ -35,6 +38,13 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         return inflater.inflate(R.layout.fragment_simple_list, container, false);
     }
 
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);   getRecyclerManager().getRecyclerView()
+            .addItemDecoration(new DividerItemDecoration(getContext(),
+                DividerItemDecoration.VERTICAL_LIST, 0,
+                DeviceScreenUtils.dp2px(0.5f, getContext())));
+    }
+
     @Override public int getExtraItemCount() {
         return 0;
     }
@@ -53,6 +63,11 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     @Override public void onMusicAddClick(Voice voice) {
 
+    }
+
+    @Override
+    public void onControllerShow(TextView txtStart, TextView txtCur, TextView txtEnd) {
+        mPlayerWrapper.updateController(txtStart, txtCur, txtEnd);
     }
 
     @Override public void onMusicPlayClick(String path, MusicClipView musicClipView) {
