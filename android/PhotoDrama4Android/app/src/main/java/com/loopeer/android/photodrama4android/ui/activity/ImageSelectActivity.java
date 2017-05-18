@@ -4,35 +4,26 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageSelectBinding;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
-import com.loopeer.android.photodrama4android.ui.adapter.EditDramaSegmentAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.ImageSelectedAdapter;
-import com.loopeer.android.photodrama4android.ui.widget.GalleryLinearLayout;
-import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditDramaSegmentAdapter.OnSelectedListener, ImageSelectedAdapter.OnSelectedListener {
+public class ImageSelectActivity extends PhotoDramaBaseActivity implements ImageSelectedAdapter.OnImageSelectedListener {
 
     private ActivityImageSelectBinding mBinding;
     private ImageSelectedAdapter mImageSelectedAdapter;
@@ -41,13 +32,12 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditD
         = new ImageAdapter.OnImagePickListener() {
         @Override public boolean onImagePick(Uri uri) {
             mImageSelectedAdapter.addUri(uri);
-            updateDisplayImage(uri.getPath());
             return true;
         }
     };
 
     private void updateDisplayImage(String path) {
-        mBinding.imageDisplay.setImageURI(path == null ? null : Uri.parse(path));
+        mBinding.imageDisplay.post(() -> mBinding.imageDisplay.setImageURI(path == null ? null : Uri.fromFile(new File(path))));
     }
 
     @Override
@@ -136,6 +126,7 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditD
         mBinding.recyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mBinding.recyclerView.setAdapter(mImageSelectedAdapter);
+        mBinding.recyclerView.setItemViewCacheSize(6);
         mImageSelectedAdapter.init();
     }
 
@@ -145,7 +136,8 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditD
     }
 
     @Override
-    public void onImageSelected(ImageClip imageClip) {
+    public void onImageClipSelected(ImageClip imageClip) {
         updateDisplayImage(imageClip == null ? null : imageClip.path);
+        mBinding.pickView.updateSelectedImage(imageClip == null ? null : imageClip.path);
     }
 }

@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.databinding.ListItemDramaEditSegmentBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemImageSelectedBinding;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
@@ -44,7 +43,7 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
 
     private void selectedItem(ImageClip imageClip) {
         mSelectedImageClip = imageClip;
-        mOnSelectedListener.onImageSelected(mSelectedImageClip);
+        mOnSelectedListener.onImageClipSelected(mSelectedImageClip);
         notifyDataSetChanged();
     }
 
@@ -59,8 +58,7 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
             binding.getRoot().setSelected(imageClip.equals(mSelectedImageClip));
         }
         binding.img.setClickable(false);
-        binding.getRoot().setOnClickListener(v ->
-                selectedItem(imageClip));
+        binding.getRoot().setOnClickListener(v -> selectedItem(imageClip));
         binding.executePendingBindings();
     }
 
@@ -111,13 +109,13 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
         return results;
     }
 
-    public interface OnSelectedListener {
-        void onImageSelected(ImageClip imageClip);
+    public interface OnImageSelectedListener {
+        void onImageClipSelected(ImageClip imageClip);
     }
 
-    private OnSelectedListener mOnSelectedListener;
+    private OnImageSelectedListener mOnSelectedListener;
 
-    public void setOnSelectedListener(OnSelectedListener listener) {
+    public void setOnSelectedListener(OnImageSelectedListener listener) {
         mOnSelectedListener = listener;
     }
 }
