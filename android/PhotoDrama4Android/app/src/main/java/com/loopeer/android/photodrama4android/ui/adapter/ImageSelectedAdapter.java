@@ -51,7 +51,8 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
     @Override
     public void bindItem(ImageClip imageClip, int position, RecyclerView.ViewHolder viewHolder) {
         ListItemImageSelectedBinding binding = (ListItemImageSelectedBinding) ((DataBindingViewHolder) viewHolder).binding;
-        binding.img.setLocalUrl(imageClip == null ? null : imageClip.path);
+        if ((imageClip != null && binding.img.getLocalUrl() != imageClip.path) || imageClip == null)
+            binding.img.setLocalUrl(imageClip == null ? null : imageClip.path);
         if (imageClip == null) {
             binding.getRoot().setSelected(mSelectedImageClip == null);
         } else {

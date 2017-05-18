@@ -41,6 +41,7 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditD
         = new ImageAdapter.OnImagePickListener() {
         @Override public boolean onImagePick(Uri uri) {
             mImageSelectedAdapter.addUri(uri);
+            updateDisplayImage(uri.getPath());
             return true;
         }
     };
@@ -87,18 +88,7 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditD
 
     private void setupView() {
         PickerBottomBehavior behavior = PickerBottomBehavior.from(mBinding.pickView);
-        behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(
-                @NonNull View bottomSheet, @PickerBottomBehavior.State int newState) {
-                Log.e(PickerBottomBehavior.TAG, "newState = " + newState);
-            }
-
-            @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            }
-        });
         mBinding.pickView.setOnImagePickListener(mPickListener);
-
         mBinding.pickView.getViewPager()
                 .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
@@ -119,7 +109,6 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements EditD
                 });
 
         updateSegmentList();
-
 
         mBinding.pickView.post(() -> {
             int containerHeight = mBinding.container.getHeight();
