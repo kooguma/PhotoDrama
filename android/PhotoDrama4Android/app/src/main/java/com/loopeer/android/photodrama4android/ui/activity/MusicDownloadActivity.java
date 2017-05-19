@@ -12,6 +12,7 @@ import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.api.service.VoiceService;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
 import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Voice;
@@ -30,9 +31,12 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
 
     private Category mCategory;
 
+    private MusicClip.MusicType mType;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_list);
+        mType = (MusicClip.MusicType) getIntent().getSerializableExtra(Navigator.EXTRA_MUSIC_CLIP);
         mCategory = (Category) getIntent().getSerializableExtra(Navigator.EXTRA_CATEGORY);
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
@@ -59,7 +63,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override public void onMusicDownloadClick(Voice voice, TextView txtProgress) {
-        mAudioFetchHelper.getAudio(voice, status -> {
+        mAudioFetchHelper.getAudio(mType,voice, status -> {
             txtProgress.setText(
                 getString(R.string.common_percent_format, status.getPercentNumber()));
         }, throwable -> {

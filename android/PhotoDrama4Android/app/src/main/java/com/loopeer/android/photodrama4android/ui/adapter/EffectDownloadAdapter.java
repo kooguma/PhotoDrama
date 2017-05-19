@@ -9,6 +9,7 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemEffectDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
+import com.loopeer.itemtouchhelperextension.Extension;
 
 public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
@@ -19,10 +20,37 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
     @Override public void bindItem(Voice voice, int pos, RecyclerView.ViewHolder holder) {
         ListItemEffectDownloadBinding binding =
             ((DataBindingViewHolder<ListItemEffectDownloadBinding>) holder).binding;
+
+        binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition()));
+
+        binding.setVoice(voice);
     }
 
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {
         View v = getLayoutInflater().inflate(R.layout.list_item_effect_download, parent, false);
         return new BGMDownloadAdapter.MusicItemViewHolder(v);
+    }
+
+    private void doDelete(int adapterPosition) {
+        getDatas().remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        //TODO
+    }
+
+
+    public static class MusicItemViewHolder extends DataBindingViewHolder implements Extension {
+
+        public MusicItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public View getContentView() {
+            return itemView.findViewById(R.id.layout_brief);
+        }
+
+        @Override
+        public float getActionWidth() {
+            return itemView.findViewById(R.id.btn_delete).getWidth();
+        }
     }
 }

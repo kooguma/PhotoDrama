@@ -213,15 +213,16 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void startMusicDownloadActivity(Context context, Category category) {
+    public static void startMusicDownloadActivity(Context context, MusicClip.MusicType type, Category category) {
         Intent intent = new Intent(context, MusicDownloadActivity.class);
         intent.putExtra(Navigator.EXTRA_CATEGORY, category);
+        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,type);
         context.startActivity(intent);
     }
 
     public static void addAddMusicActivity(Context context, MusicClip.MusicType type) {
         Intent intent = new Intent(context, AddMusicClipActivity.class);
-        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,type);
+        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP, type);
         context.startActivity(intent);
     }
 }

@@ -15,6 +15,7 @@ import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectBinding;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
@@ -86,7 +87,10 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     @Override
     public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
-        getRecyclerManager().onCacheLoaded(FileManager.getInstance().getAudioFiles());
+        List<Voice> voices = mType == MusicClip.MusicType.BGM ?
+                             FileManager.getInstance().getAudioBgmFiles()
+                            : FileManager.getInstance().getAudioEffectFiles();
+        getRecyclerManager().onCacheLoaded(voices);
         return null;
     }
 

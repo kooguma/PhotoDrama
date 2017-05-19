@@ -107,7 +107,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:padding="@dimen/xsmall_padding"
-                            android:layout_marginBottom="5dp"
                             android:src="@drawable/selector_play_pause_btn"/>
                     </FrameLayout>
 

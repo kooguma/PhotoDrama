@@ -20,18 +20,20 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
     private static final String[] sTitle = { "我的下载", "精选推荐" };
     private Fragment[] mFragments = new Fragment[2];
 
+    private MusicClip.MusicType mType;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_music_clip);
 
-        MusicClip.MusicType type = (MusicClip.MusicType) getIntent().getSerializableExtra(
+        mType = (MusicClip.MusicType) getIntent().getSerializableExtra(
             Navigator.EXTRA_MUSIC_CLIP);
 
         mTabLayout = (CustomTabLayout) findViewById(R.id.music_clip_add_tab);
         mViewPager = (ViewPager) findViewById(R.id.music_clip_add_view_pager);
 
-        mFragments[0] = MyDownloadMusicFragment.newInstance(type);
-        mFragments[1] = new RecommendMusicFragment();
+        mFragments[0] = MyDownloadMusicFragment.newInstance(mType);
+        mFragments[1] = RecommendMusicFragment.newInstance(mType);
 
         mTabLayout.addTab(mTabLayout.newTab().setText(sTitle[0]));
         mTabLayout.addTab(mTabLayout.newTab().setText(sTitle[1]));
@@ -44,7 +46,10 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
     @Override protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setCenterTitle(R.string.label_add_music_bgm);
+        final int titleRes = mType == MusicClip.MusicType.BGM
+                             ? R.string.label_add_music_bgm
+                             : R.string.label_add_music_effect;
+        setCenterTitle(titleRes);
     }
 
     class AddMusicClipPagerAdapter extends FragmentPagerAdapter {

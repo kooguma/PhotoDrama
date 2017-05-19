@@ -18,6 +18,7 @@
     <string name="label_drama_make">视频编辑</string>
     <string name="label_clip_time_edit">时长编辑</string>
     <string name="label_add_music_bgm">添加音乐</string>
+    <string name="label_add_music_effect">添加音效</string>
 
     <!--main-->
     <string name="main_act">我要主演</string>

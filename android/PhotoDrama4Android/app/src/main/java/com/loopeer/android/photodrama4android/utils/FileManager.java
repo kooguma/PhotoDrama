@@ -41,14 +41,23 @@ public class FileManager {
     private static String photoDramaPath = Environment.getExternalStorageDirectory() +
         "/photodrama";
     private File audioDir;
+    private File recordDir;
+    private File bgmDir;
+    private File effectDir;
     private File tempAudioDir;
     private File videoDir;
     private File dramaDir;
     public final String audioDirPath = "/audio/";
+    public final String recordDirPath = "record/";
+    public final String bgmDirPath = "bgm/";
+    public final String effectDirPath = "effect/";
     public final String tempAudioDirPath = "/temp/audio/";
     public final String videoDirPath = "/video/";
     public final String dramaDirPath = "/drama/";
     private String audioPath = photoDramaPath + audioDirPath;
+    private String recordPath = photoDramaPath + audioDirPath + recordDirPath;
+    private String bgmPath = photoDramaPath + audioDirPath + bgmDirPath;
+    private String effectPath = photoDramaPath + audioDirPath + effectDirPath;
     private String videoPath = Environment.getExternalStorageDirectory() + "/DCIM/Camera/";
     private String dramaPath = photoDramaPath + dramaDirPath;
     private String tempAudioPath = photoDramaPath + tempAudioDirPath;
@@ -60,6 +69,9 @@ public class FileManager {
     public void init() {
         if (hasSDCard() && hasExternalStoragePermission(PhotoDramaApp.getAppContext())) {
             audioDir = createFilePath(audioPath);
+            recordDir = createFilePath(recordPath);
+            bgmDir = createFilePath(bgmPath);
+            effectDir = createFilePath(effectPath);
             videoDir = createFilePath(videoPath);
             if (DEBUG) {
                 dramaDir = createFilePath(dramaPath);
@@ -70,6 +82,9 @@ public class FileManager {
             tempAudioDir = createFilePath(tempAudioPath);
         } else {
             audioDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + audioDirPath);
+            recordDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + recordDirPath);
+            bgmDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + bgmDirPath);
+            effectDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + effectDirPath);
             videoDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + videoDirPath);
             dramaDir = createFilePath(PhotoDramaApp.getAppContext().getCacheDir() + dramaDirPath);
             tempAudioDir = createFilePath(
@@ -180,8 +195,28 @@ public class FileManager {
         return audioPath;
     }
 
-    public List<Voice> getAudioFiles() {
-        File[] files = new File(getAudioDirPath()).listFiles(new FilenameFilter() {
+    public String getRecordPath() {
+        return recordPath;
+    }
+
+    public String getBgmPath() {
+        return bgmPath;
+    }
+
+    public String getEffectPath() {
+        return effectPath;
+    }
+
+    public List<Voice> getAudioBgmFiles() {
+        return getVoiceFiles(getBgmPath());
+    }
+
+    public List<Voice> getAudioEffectFiles() {
+        return getVoiceFiles(getEffectPath());
+    }
+
+    private List<Voice> getVoiceFiles(String path) {
+        File[] files = new File(path).listFiles(new FilenameFilter() {
             @Override public boolean accept(File dir, String name) {
                 return !name.equals(".cache");
             }
@@ -196,7 +231,8 @@ public class FileManager {
 
     public String getAudioPath(Context context, Voice voice) {
         if (voice == null) return null;
-        File[] file = RxDownload.getInstance(context).getRealFiles(voice.getSaveName(),getAudioDirPath());
+        File[] file = RxDownload.getInstance(context)
+            .getRealFiles(voice.getSaveName(), getAudioDirPath());
         if (file != null) {
             return file[0].getAbsolutePath();
         }
