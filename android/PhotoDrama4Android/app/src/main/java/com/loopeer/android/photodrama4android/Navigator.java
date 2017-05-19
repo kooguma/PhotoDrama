@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
+
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Category;
@@ -216,13 +217,16 @@ public class Navigator {
     public static void startMusicDownloadActivity(Context context, MusicClip.MusicType type, Category category) {
         Intent intent = new Intent(context, MusicDownloadActivity.class);
         intent.putExtra(Navigator.EXTRA_CATEGORY, category);
-        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,type);
+        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP, type);
         context.startActivity(intent);
     }
 
     public static void addAddMusicActivity(Context context, MusicClip.MusicType type) {
         Intent intent = new Intent(context, AddMusicClipActivity.class);
         intent.putExtra(Navigator.EXTRA_MUSIC_CLIP, type);
-        context.startActivity(intent);
+        ((Activity) context).startActivityForResult(intent, type == MusicClip.MusicType.BGM ?
+                REQUEST_CODE_DRAMA_SOUND_BGM_SELECT :
+                REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
     }
+
 }

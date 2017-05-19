@@ -196,6 +196,24 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
         return true;
     }
 
+    private void checkClipValidateAndChange(MusicClip musicClip) {
+        if (musicClip.getEndTime() > mVideoPlayerManager.getMaxTime()) {
+            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime;
+            musicClip.musicSelectedLength = musicClip.showTime;
+            return;
+        }
+        for (MusicClip clip : mDrama.audioGroup.getSoundEffectClips()) {
+            if (musicClip != clip) {
+                if (musicClip.startTime < clip.startTime
+                        && musicClip.getEndTime() >= clip.startTime) {
+                    musicClip.showTime = clip.startTime - musicClip.startTime;
+                    musicClip.musicSelectedLength = musicClip.showTime;
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
     public void onClipSelected(Clip clip) {
         if (clip != null) {
@@ -214,8 +232,12 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
             switch (requestCode) {
                 case REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT:
                     if (musicClip != null) {
+                        musicClip.startTime = mVideoPlayerManager.getUsedTime();
+                        checkClipValidateAndChange(musicClip);
                         mDrama.audioGroup.musicClips.add(musicClip);
                         mVideoPlayerManager.getIMusic().updateDrama(mDrama);
+                        mSelectedClip = musicClip;
+                        showVolume();
                         updateScrollSelectViewClips();
                     }
                 default:

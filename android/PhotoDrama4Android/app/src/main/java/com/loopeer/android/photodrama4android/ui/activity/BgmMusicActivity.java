@@ -18,6 +18,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Clip;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
@@ -231,6 +232,24 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
         return true;
     }
 
+    private void checkClipValidateAndChange(MusicClip musicClip) {
+        if (musicClip.getEndTime() > mVideoPlayerManager.getMaxTime()) {
+            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime;
+            musicClip.musicSelectedLength = musicClip.showTime;
+            return;
+        }
+        for (MusicClip clip : mDrama.audioGroup.getSoundEffectClips()) {
+            if (musicClip != clip) {
+                if (musicClip.startTime < clip.startTime
+                        && musicClip.getEndTime() >= clip.startTime) {
+                    musicClip.showTime = clip.startTime - musicClip.startTime;
+                    musicClip.musicSelectedLength = musicClip.showTime;
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
     public void onClipSelected(Clip clip) {
         if (clip != null) {
@@ -250,9 +269,13 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
             switch (requestCode) {
                 case REQUEST_CODE_DRAMA_SOUND_BGM_SELECT:
                     if (musicClip != null) {
+                        musicClip.startTime = mVideoPlayerManager.getUsedTime();
+                        checkClipValidateAndChange(musicClip);
                         mDrama.audioGroup.musicClips.add(musicClip);
                         mVideoPlayerManager.getIMusic().updateDrama(mDrama);
                         updateScrollSelectViewClips();
+                        mSelectedClip = musicClip;
+                        showVolume();
                     }
                 default:
             }

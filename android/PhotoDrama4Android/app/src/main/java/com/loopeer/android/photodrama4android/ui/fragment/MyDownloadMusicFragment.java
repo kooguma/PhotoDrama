@@ -101,7 +101,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         MusicClip clip = mPlayerWrapper.generateMusicClip(voice, mType);
         Intent intent = new Intent();
         intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,clip);
-        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
 

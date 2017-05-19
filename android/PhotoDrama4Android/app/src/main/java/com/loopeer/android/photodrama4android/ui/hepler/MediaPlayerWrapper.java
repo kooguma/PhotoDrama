@@ -201,8 +201,9 @@ public class MediaPlayerWrapper {
         clip.path = type == MusicClip.MusicType.BGM ?
                     FileManager.getInstance().getAudioBgmPath(mContext, voice) :
                     FileManager.getInstance().getAudioEffectPath(mContext, voice);
-        clip.startTime = (int) (mStartPos * mMediaPlayer.getDuration());
-        clip.showTime = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
+        clip.musicStartOffset = (int) (mStartPos * mMediaPlayer.getDuration());
+        clip.musicSelectedLength = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
+        clip.showTime = clip.musicSelectedLength;
         clip.musicType = type;
         Log.e(TAG, "clip = " + clip.toString());
         return clip;
