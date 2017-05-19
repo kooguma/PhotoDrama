@@ -21,25 +21,35 @@ public class MusicInfoUtils {
         return formatter.format(duration);
     }
 
-    public static String getFormatDurationFromLocal(Context context, String filePath, Voice voice) {
+    public static String getFormatDurationFromLocal(String filePath, Voice voice) {
         String duration = "0";
         String fileName = filePath + voice.getSaveName();
         try {
             metaRetriever.setDataSource(fileName);
-            duration = metaRetriever.extractMetadata(
-                MediaMetadataRetriever.METADATA_KEY_DURATION);
+            duration = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         } catch (Exception e) {
 
         }
         return formatter.format(Integer.valueOf(duration));
     }
 
-    public static String getBgmFormatDurationFromLocal(Context context, Voice voice) {
-        return getFormatDurationFromLocal(context,FileManager.getInstance().getBgmPath(),voice);
+    public static String getFormatDurationFromLocal(String filePath) {
+        String duration = "0";
+        try {
+            metaRetriever.setDataSource(filePath);
+            duration = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception e) {
+
+        }
+        return formatter.format(Integer.valueOf(duration));
     }
 
-    public static String getEffectFormatDurationFromLocal(Context context, Voice voice) {
-        return getFormatDurationFromLocal(context,FileManager.getInstance().getEffectPath(),voice);
+    public static String getBgmFormatDurationFromLocal(Voice voice) {
+        return getFormatDurationFromLocal(FileManager.getInstance().getBgmPath(),voice);
+    }
+
+    public static String getEffectFormatDurationFromLocal(Voice voice) {
+        return getFormatDurationFromLocal(FileManager.getInstance().getEffectPath(),voice);
     }
 
     public static String getDefaultStartTime() {

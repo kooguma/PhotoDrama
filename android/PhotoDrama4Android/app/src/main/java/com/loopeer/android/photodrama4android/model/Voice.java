@@ -5,6 +5,7 @@ import android.media.MediaMetadataRetriever;
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.laputapp.model.BaseModel;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
 import java.io.File;
@@ -18,6 +19,12 @@ public class Voice extends BaseModel {
     public String voiceUrl; // 下载链接
     public String duration;
 
+    public Voice(String id, String name, String duration) {
+        this.id = id;
+        this.name = name;
+        this.duration = duration;
+    }
+
     public Voice(String id, String name) {
         this.id = id;
         this.name = name;
@@ -29,7 +36,8 @@ public class Voice extends BaseModel {
         if (names.length == 2) {
             String id = names[1];
             String name = names[0];
-            return new Voice(id, name);
+            String duration = MusicInfoUtils.getFormatDurationFromLocal(file.getAbsolutePath());
+            return new Voice(id, name,duration);
         } else {
             return null;
         }
@@ -40,15 +48,15 @@ public class Voice extends BaseModel {
     }
 
     public String getFormatDuration() {
-       return MusicInfoUtils.getFormatDuration(duration);
+        return MusicInfoUtils.getFormatDuration(duration);
     }
 
-    public String getBgmFormatDurationFromLocal(Context context) {
-        return MusicInfoUtils.getBgmFormatDurationFromLocal(context,this);
+    public String getBgmFormatDurationFromLocal() {
+        return MusicInfoUtils.getBgmFormatDurationFromLocal(this);
     }
 
-    public String getEffectFormatDurationFromLocal(Context context){
-        return MusicInfoUtils.getEffectFormatDurationFromLocal(context,this);
+    public String getEffectFormatDurationFromLocal() {
+        return MusicInfoUtils.getEffectFormatDurationFromLocal(this);
     }
 
 }

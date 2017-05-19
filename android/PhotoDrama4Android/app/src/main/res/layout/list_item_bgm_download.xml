@@ -51,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@{voice.getBgmFormatDurationFromLocal(context)}"
+                        android:text="@{voice.getBgmFormatDurationFromLocal()}"
                         android:textColor="@color/text_color_tertiary"
                         android:textSize="@dimen/text_size_lmall"
                         tools:text="00:12.0"/>
@@ -85,6 +85,7 @@
                 android:id="@+id/layout_controller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@color/window_background_gray"
                 android:orientation="vertical">
 
@@ -101,12 +102,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/btn_pause_play_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:padding="@dimen/xsmall_padding"
+                            android:background="?selectableItemBackground"
                             android:layout_marginBottom="5dp"
                             android:src="@drawable/selector_play_pause_btn"/>
                     </FrameLayout>

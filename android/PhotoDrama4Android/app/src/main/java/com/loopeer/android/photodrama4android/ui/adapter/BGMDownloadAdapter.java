@@ -1,41 +1,26 @@
 package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
-import android.media.MediaMetadataRetriever;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import com.dynamic.utils.ViewUtils;
+import android.widget.LinearLayout;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
-import com.laputapp.utilities.Utilities;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
-import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
-import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
-import com.loopeer.bottomimagepicker.PickerFragment;
 import com.loopeer.itemtouchhelperextension.Extension;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import zlc.season.rxdownload2.RxDownload;
-
-import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getBgmFormatDurationFromLocal;
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
-import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
-import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDurationFromLocal;
 
 public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     //当前播放的item
-    private int mPlayingPosition = -1;
-
+    private ListItemBgmDownloadBinding mPlayingItem;
 
     private IMusicAdapter mIMusicAdapter;
 
@@ -45,7 +30,8 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     public interface IMusicAdapter {
         void onMusicAddClick(Voice voice);
-        void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd);
+        //void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd);
+        void onControllerVisibilityChange(LinearLayout layoutController);
         void onMusicPlayClick(String path, MusicClipView musicClipView);
         void onMusicPauseClick(String path, MusicClipView musicClipView);
     }
@@ -64,39 +50,43 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
         binding.txtStart.setText(getDefaultStartTime());
         binding.txtCur.setText(getDefaultStartTime());
-        binding.txtEnd.setText(getBgmFormatDurationFromLocal(getContext(), voice));
+        binding.txtEnd.setText(voice.duration);
 
         binding.layoutBrief.setOnClickListener(v -> {
-            if (mPlayingPosition == pos) {
-                mPlayingPosition = -1;
+            String path = FileManager.getInstance().getAudioBgmPath(getContext(),voice);
+            if (mPlayingItem == null) {
+                //当前无播放item
+                Log.e("tag", "0");
+                //更新
+                mPlayingItem = binding;
+                play(binding,path);
             } else {
-                mPlayingPosition = pos;
+                if (mPlayingItem == binding) {
+                    //相同播放item
+                    Log.e("tag", "1");
+                    if (binding.layoutController.getVisibility() == View.GONE) {
+                        //未播放，开始播放
+                        Log.e("tag", "1.1");
+                        play(binding,path);
+                        //更新
+                        mPlayingItem = binding;
+                    } else {
+                        Log.e("tag", "1.2");
+                        //已经播放，暂停播放
+                        pause(binding,path);
+                    }
+                } else {
+                    //不同播放item
+                    //暂停播放的
+                    Log.e("tag", "2");
+                    pause(mPlayingItem,path);
+                    //播放选中的
+                    play(binding,path);
+                    //更新
+                    mPlayingItem = binding;
+                }
             }
-            notifyDataSetChanged();
         });
-
-        final String path = FileManager.getInstance().getAudioBgmPath(getContext(), voice);
-        //change ui
-        if (mPlayingPosition == pos) { //play
-            binding.layoutController.setVisibility(View.VISIBLE);
-            binding.viewSwitcher.setDisplayedChild(1);
-            binding.btnPausePlayBtn.setSelected(false);
-            binding.btnExpand.setSelected(true);
-            if (mIMusicAdapter != null) {
-                mIMusicAdapter.onControllerVisibilityChange(binding.txtStart, binding.txtCur,
-                    binding.txtEnd);
-                mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
-            }
-        } else {//pause
-            binding.viewSwitcher.setDisplayedChild(0);
-            binding.layoutController.setVisibility(View.GONE);
-            binding.btnExpand.setSelected(false);
-            if (mIMusicAdapter != null) {
-                // mIMusicAdapter.onControllerVisibilityChange(binding.txtStart, binding.txtCur,
-                //     binding.txtEnd);
-                mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
-            }
-        }
 
         binding.btnExpand.setOnClickListener(v -> {
             if (v.isSelected()) {
@@ -131,6 +121,27 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         @Override
         public float getActionWidth() {
             return itemView.findViewById(R.id.btn_delete).getWidth();
+        }
+    }
+
+    public void pause(ListItemBgmDownloadBinding binding,String path) {
+        binding.viewSwitcher.setDisplayedChild(0);
+        binding.layoutController.setVisibility(View.GONE);
+        binding.btnExpand.setSelected(false);
+        if (mIMusicAdapter != null) {
+            mIMusicAdapter.onControllerVisibilityChange(binding.layoutController);
+            mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
+        }
+    }
+
+    public void play(ListItemBgmDownloadBinding binding,String path) {
+        binding.layoutController.setVisibility(View.VISIBLE);
+        binding.viewSwitcher.setDisplayedChild(1);
+        binding.btnPausePlayBtn.setSelected(false);
+        binding.btnExpand.setSelected(true);
+        if (mIMusicAdapter != null) {
+            mIMusicAdapter.onControllerVisibilityChange(binding.layoutController);
+            mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
         }
     }
 

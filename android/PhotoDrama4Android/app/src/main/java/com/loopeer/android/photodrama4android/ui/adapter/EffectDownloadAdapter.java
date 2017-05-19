@@ -1,14 +1,17 @@
 package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemEffectDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
+import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.itemtouchhelperextension.Extension;
 
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
@@ -17,8 +20,19 @@ import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFor
 
 public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
+    //当前播放的item
+    private int mPlayingPosition = -1;
+
     public EffectDownloadAdapter(Context context) {
         super(context);
+    }
+
+
+    public interface IMusicAdapter {
+        void onMusicAddClick(Voice voice);
+        void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd);
+        void onMusicPlayClick(String path, AppCompatSeekBar seekBar);
+        void onMusicPauseClick(String path, AppCompatSeekBar seekBar);
     }
 
     @Override public void bindItem(Voice voice, int pos, RecyclerView.ViewHolder holder) {
@@ -29,9 +43,42 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
         binding.txtStart.setText(getDefaultStartTime());
         binding.txtCur.setText(getDefaultStartTime());
-        binding.txtEnd.setText(getEffectFormatDurationFromLocal(getContext(), voice));
+        binding.txtEnd.setText(voice.duration);
 
         binding.setVoice(voice);
+
+        binding.layoutBrief.setOnClickListener(v -> {
+            if (mPlayingPosition == pos) {
+                mPlayingPosition = -1;
+            } else {
+                mPlayingPosition = pos;
+            }
+            // TODO: 2017/5/19 卡顿
+            notifyDataSetChanged();
+        });
+
+        //change ui
+        if (mPlayingPosition == pos) { //play
+            binding.layoutController.setVisibility(View.VISIBLE);
+            binding.viewSwitcher.setDisplayedChild(1);
+            binding.btnPausePlayBtn.setSelected(false);
+            binding.btnExpand.setSelected(true);
+            // if (mIMusicAdapter != null) {
+            //     mIMusicAdapter.onControllerVisibilityChange(binding.txtStart, binding.txtCur,
+            //         binding.txtEnd);
+            //     mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
+            // }
+        } else {//pause
+            binding.viewSwitcher.setDisplayedChild(0);
+            binding.layoutController.setVisibility(View.GONE);
+            binding.btnExpand.setSelected(false);
+            // if (mIMusicAdapter != null) {
+            //     // mIMusicAdapter.onControllerVisibilityChange(binding.txtStart, binding.txtCur,
+            //     //     binding.txtEnd);
+            //     mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
+            // }
+        }
+
     }
 
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {

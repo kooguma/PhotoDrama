@@ -47,8 +47,8 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         super.onPostCreate(savedInstanceState);
         getRecyclerManager().getRecyclerView()
             .addItemDecoration(new DividerItemDecoration(this,
-                    DividerItemDecoration.VERTICAL_LIST, 0,
-                    DeviceScreenUtils.dp2px(0.5f, this)));
+                DividerItemDecoration.VERTICAL_LIST, 0,
+                DeviceScreenUtils.dp2px(0.5f, this)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setCenterTitle(mCategory.name);
     }
@@ -63,7 +63,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override public void onMusicDownloadClick(Voice voice, TextView txtProgress) {
-        mAudioFetchHelper.getAudio(mType,voice, status -> {
+        mAudioFetchHelper.getAudio(mType, voice, status -> {
             txtProgress.setText(
                 getString(R.string.common_percent_format, status.getPercentNumber()));
         }, throwable -> {
@@ -73,9 +73,21 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         });
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        mMediaPlayer.start();
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        mMediaPlayer.pause();
+    }
+
     @Override protected void onDestroy() {
         super.onDestroy();
         mAudioFetchHelper.unSubscribe();
+        mMediaPlayer.stop();
+        mMediaPlayer.release();
     }
 
     @Override public void onItemClick(Voice voice) {

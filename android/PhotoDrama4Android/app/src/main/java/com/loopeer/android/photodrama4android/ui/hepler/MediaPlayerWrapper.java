@@ -9,8 +9,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.method.NumberKeyListener;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.facebook.common.util.UriUtil;
+import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
 import com.loopeer.android.photodrama4android.model.Voice;
@@ -40,6 +43,7 @@ public class MediaPlayerWrapper {
 
     private MusicClipView mMusicClipView;
 
+    private ImageButton mButtonPlay;
     private TextView mTextStart;
     private TextView mTextCur;
     private TextView mTextEnd;
@@ -154,6 +158,13 @@ public class MediaPlayerWrapper {
         mTextEnd = end;
     }
 
+    public void updateController(LinearLayout layoutController) {
+        mTextStart = (TextView) layoutController.findViewById(R.id.txt_start);
+        mTextCur = (TextView) layoutController.findViewById(R.id.txt_cur);
+        mTextEnd = (TextView) layoutController.findViewById(R.id.txt_end);
+        mButtonPlay = (ImageButton) layoutController.findViewById(R.id.btn_pause_play_btn);
+    }
+
     public void setupController(String starTime, String curTime, String endTime) {
         if (mTextStart != null) {
             mTextStart.setText(starTime);
@@ -179,7 +190,7 @@ public class MediaPlayerWrapper {
             mTextStart.setText(MusicInfoUtils.getFormatDuration(state.startPos));
             mTextCur.setText(MusicInfoUtils.getFormatDuration(state.curPos));
             mTextEnd.setText(MusicInfoUtils.getFormatDuration(state.endPos));
-            mMusicClipView.setDotProgress(state.curPos * 100 / mMediaPlayer.getDuration() );
+            mMusicClipView.setDotProgress(state.curPos * 100 / mMediaPlayer.getDuration());
             mMediaPlayer.seekTo(state.curPos);
         } else {
             mMediaPlayer.start();
@@ -189,8 +200,8 @@ public class MediaPlayerWrapper {
     public MusicClip generateMusicClip(Voice voice, MusicClip.MusicType type) {
         MusicClip clip = new MusicClip();
         clip.path = type == MusicClip.MusicType.BGM ?
-                    FileManager.getInstance().getAudioBgmPath(mContext, voice):
-                    FileManager.getInstance().getAudioEffectPath(mContext,voice);
+                    FileManager.getInstance().getAudioBgmPath(mContext, voice) :
+                    FileManager.getInstance().getAudioEffectPath(mContext, voice);
         clip.startTime = (int) (mStartPos * mMediaPlayer.getDuration());
         clip.showTime = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
         clip.musicType = type;
@@ -214,10 +225,11 @@ public class MediaPlayerWrapper {
     }
 
     public void destroy() {
-        mPlayerTask.cancel();
         mTimer.cancel();
+        mPlayerTask.cancel();
         mMediaPlayer.stop();
         mMediaPlayer.release();
+        mMediaPlayer = null;
     }
 
     public boolean isPlaying() {
@@ -257,7 +269,7 @@ public class MediaPlayerWrapper {
             } else {
                 mTextCur.post(() -> mTextCur.setText(
                     MusicInfoUtils.getFormatDuration(mMediaPlayer.getDuration())));
-
+                //mButtonPlay.post(() -> mButtonPlay.setSelected(true));
             }
         }
     }

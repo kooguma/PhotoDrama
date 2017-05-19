@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
@@ -99,8 +100,8 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override
-    public void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd) {
-        mPlayerWrapper.updateController(txtStart, txtCur, txtEnd);
+    public void onControllerVisibilityChange(LinearLayout layoutController) {
+        mPlayerWrapper.updateController(layoutController);
     }
 
     @Override public void onMusicPlayClick(String path, MusicClipView musicClipView) {
@@ -125,12 +126,12 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     @Override public void onPause() {
         super.onPause();
-        //mPlayerWrapper.pause();
+        mPlayerWrapper.pause();
     }
 
     @Override public void onDestroy() {
         super.onDestroy();
-        //mPlayerWrapper.destroy();
+        mPlayerWrapper.destroy();
     }
 
 }
