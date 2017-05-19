@@ -93,34 +93,42 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
+                    android:paddingBottom="@dimen/medium_padding"
                     android:paddingLeft="@dimen/medium_padding"
-                    android:paddingRight="@dimen/medium_padding">
+                    android:paddingRight="@dimen/larger_padding">
 
-                    <ImageView
-                        android:id="@+id/btn_pause_play_btn"
+                    <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/xsmall_padding"
-                        android:src="@drawable/selector_play_pause_btn"/>
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/btn_pause_play_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:padding="@dimen/xsmall_padding"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/selector_play_pause_btn"/>
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingBottom="@dimen/xxsmall_padding"
-                            android:paddingTop="@dimen/xxsmall_padding">
+                            android:paddingTop="@dimen/xsmall_padding">
 
                             <TextView
                                 android:id="@+id/txt_start"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:textColor="@color/text_color_tertiary"
                                 android:textSize="@dimen/text_size_small"
                                 tools:text="00:00"/>
@@ -140,21 +148,22 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="right"
                                 android:textColor="@color/text_color_tertiary"
                                 android:textSize="@dimen/text_size_small"
                                 tools:text="00:00"/>
                         </LinearLayout>
 
-                        <com.loopeer.android.photodrama4android.ui.widget.MusicClipView
-                            android:id="@+id/view_clip"
+                        <android.support.v7.widget.AppCompatSeekBar
+                            android:id="@+id/seek_bar_volume"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"/>
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:thumb="@drawable/ic_thumb_volume"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>
-
 </layout>

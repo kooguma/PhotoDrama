@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="voice"
+            type="com.loopeer.android.photodrama4android.model.Voice"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#444444">
+
+        <com.laputapp.widget.ForegroundTextView
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:foreground="?selectableItemBackground"
+            android:gravity="center"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:text="@string/music_delete"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_large"/>
+
+        <LinearLayout
+            android:id="@+id/layout_brief"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:foreground="?selectableItemBackground"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/medium_padding">
+
+                <ViewSwitcher
+                    android:id="@+id/view_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@{voice.getFormatDurationFromLocal(context)}"
+                        android:textColor="@color/text_color_tertiary"
+                        android:textSize="@dimen/text_size_lmall"
+                        tools:text="00:12.0"/>
+
+                    <com.loopeer.android.photodrama4android.ui.widget.musicbar.MusicBarImageView
+                        android:layout_width="34dp"
+                        android:layout_height="20dp"/>
+
+                </ViewSwitcher>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:text="@{voice.name}"
+                    android:textColor="@color/text_color_primary"
+                    android:textSize="@dimen/text_size_larger"
+                    android:textStyle="bold"/>
+
+                <ImageButton
+                    android:id="@+id/btn_expand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/selector_expand_add_btn"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_controller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/window_background_gray"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/medium_padding"
+                    android:paddingLeft="@dimen/medium_padding"
+                    android:paddingRight="@dimen/larger_padding">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/btn_pause_play_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:padding="@dimen/xsmall_padding"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/selector_play_pause_btn"/>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="@dimen/xsmall_padding">
+
+                            <TextView
+                                android:id="@+id/txt_start"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:textColor="@color/text_color_tertiary"
+                                android:textSize="@dimen/text_size_small"
+                                tools:text="00:00"/>
+
+                            <TextView
+                                android:id="@+id/txt_cur"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/text_color_tertiary"
+                                android:textSize="@dimen/text_size_small"
+                                tools:text="00:00"/>
+
+                            <TextView
+                                android:id="@+id/txt_end"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="right"
+                                android:textColor="@color/text_color_tertiary"
+                                android:textSize="@dimen/text_size_small"
+                                tools:text="00:00"/>
+                        </LinearLayout>
+
+                        <com.loopeer.android.photodrama4android.ui.widget.MusicClipView
+                            android:id="@+id/view_clip"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

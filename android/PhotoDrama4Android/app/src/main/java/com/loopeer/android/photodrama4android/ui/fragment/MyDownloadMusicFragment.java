@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,13 @@ import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 import io.reactivex.Flowable;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Voice>,
     BGMDownloadAdapter.IMusicAdapter {
 
-    private BGMDownloadAdapter mAdapter;
     private MediaPlayerWrapper mPlayerWrapper;
 
     private MusicClip.MusicType mType;
@@ -65,7 +66,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         ItemTouchHelperCallback callback = new ItemTouchHelperCallback();
         ItemTouchHelperExtension itemTouchHelperExtension = new ItemTouchHelperExtension(callback);
         itemTouchHelperExtension.attachToRecyclerView(getRecyclerManager().getRecyclerView());
-//        mAdapter.setItemTouchHelperExtension(mItemTouchHelper);
+        //        mAdapter.setItemTouchHelperExtension(mItemTouchHelper);
     }
 
     @Override public int getExtraItemCount() {
@@ -73,14 +74,14 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        // BaseFooterAdapter<Voice> adapter;
-        // if (mType == MusicClip.MusicType.BGM) {
-        //     adapter = new BGMDownloadAdapter(getContext());
-        //     ((BGMDownloadAdapter) adapter).setIMusicAdapter(this);
-        // } else {
-        //     adapter = new EffectDownloadAdapter(getContext());
-        // }
-        return new BGMDownloadAdapter(getContext());
+        if (mType == MusicClip.MusicType.BGM) {
+            BGMDownloadAdapter adapter = new BGMDownloadAdapter(getContext());
+            adapter.setIMusicAdapter(this);
+            return adapter;
+        } else {
+            EffectDownloadAdapter adapter = new EffectDownloadAdapter(getContext());
+            return adapter;
+        }
     }
 
     @Override
@@ -90,11 +91,11 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override public void onMusicAddClick(Voice voice) {
-
+        MusicClip clip = mPlayerWrapper.generateMusicClip(voice, mType);
     }
 
     @Override
-    public void onControllerShow(TextView txtStart, TextView txtCur, TextView txtEnd) {
+    public void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd) {
         mPlayerWrapper.updateController(txtStart, txtCur, txtEnd);
     }
 
@@ -112,18 +113,20 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     }
 
     @Override public void onMusicPauseClick(String path, MusicClipView musicClipView) {
-        mPlayerWrapper.updateMusicClipView(musicClipView);
-        mPlayerWrapper.pause();
+        if (mPlayerWrapper.isPlaying()) {
+            mPlayerWrapper.updateMusicClipView(musicClipView);
+            mPlayerWrapper.pause();
+        }
     }
 
     @Override public void onPause() {
         super.onPause();
-        mPlayerWrapper.pause();
+        //mPlayerWrapper.pause();
     }
 
     @Override public void onDestroy() {
         super.onDestroy();
-        mPlayerWrapper.destroy();
+        //mPlayerWrapper.destroy();
     }
 
 }

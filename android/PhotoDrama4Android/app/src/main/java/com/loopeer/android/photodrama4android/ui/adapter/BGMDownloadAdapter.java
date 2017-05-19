@@ -11,16 +11,19 @@ import com.dynamic.utils.ViewUtils;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.laputapp.utilities.Utilities;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.databinding.ListItemMusicSelectBinding;
+import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
+import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
+import com.loopeer.bottomimagepicker.PickerFragment;
 import com.loopeer.itemtouchhelperextension.Extension;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import zlc.season.rxdownload2.RxDownload;
 
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
@@ -33,11 +36,6 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
     private int mPlayingPosition = -1;
 
 
-    class ItemPlayState{
-        int startPos;
-        int endPos;
-    }
-
     private IMusicAdapter mIMusicAdapter;
 
     public void setIMusicAdapter(IMusicAdapter iMusicAdapter) {
@@ -46,7 +44,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     public interface IMusicAdapter {
         void onMusicAddClick(Voice voice);
-        void onControllerShow(TextView txtStart, TextView txtCur, TextView txtEnd);
+        void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd);
         void onMusicPlayClick(String path, MusicClipView musicClipView);
         void onMusicPauseClick(String path, MusicClipView musicClipView);
     }
@@ -56,15 +54,11 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
     }
 
     @Override public void bindItem(Voice voice, int pos, RecyclerView.ViewHolder holder) {
-        ListItemMusicSelectBinding binding =
-            ((DataBindingViewHolder<ListItemMusicSelectBinding>) holder).binding;
+        ListItemBgmDownloadBinding binding =
+            ((DataBindingViewHolder<ListItemBgmDownloadBinding>) holder).binding;
 
-        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doDelete(holder.getAdapterPosition());
-            }
-        });
+        binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition()));
+
         binding.setVoice(voice);
 
         binding.txtStart.setText(getDefaultStartTime());
@@ -72,36 +66,35 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.txtEnd.setText(getFormatDurationFromLocal(getContext(), voice));
 
         binding.layoutBrief.setOnClickListener(v -> {
-            mPlayingPosition = pos;
+            if (mPlayingPosition == pos) {
+                mPlayingPosition = -1;
+            } else {
+                mPlayingPosition = pos;
+            }
             notifyDataSetChanged();
         });
 
+        final String path = FileManager.getInstance().getAudioPath(getContext(), voice);
         //change ui
-        if (mPlayingPosition == pos) { //playing item
-            final String path = FileManager.getInstance().getAudioPath(getContext(), voice);
-            Log.e("tag", "controller  = " + binding.layoutController.getVisibility());
-            if (binding.layoutController.getVisibility() == View.VISIBLE) {
-                binding.layoutController.setVisibility(View.GONE);
-                binding.viewSwitcher.setDisplayedChild(0);
-                binding.btnPausePlayBtn.setSelected(true);
-                binding.btnExpand.setSelected(false);
-                if (mIMusicAdapter != null) {
-                    mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
-                }
-            } else {
-                binding.layoutController.setVisibility(View.VISIBLE);
-                if (mIMusicAdapter != null) {
-                    mIMusicAdapter.onControllerShow(binding.txtStart, binding.txtCur, binding.txtEnd);
-                    mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
-                }
-                binding.viewSwitcher.setDisplayedChild(1);
-                binding.btnPausePlayBtn.setSelected(false);
-                binding.btnExpand.setSelected(true);
+        if (mPlayingPosition == pos) { //play
+            binding.layoutController.setVisibility(View.VISIBLE);
+            binding.viewSwitcher.setDisplayedChild(1);
+            binding.btnPausePlayBtn.setSelected(false);
+            binding.btnExpand.setSelected(true);
+            if (mIMusicAdapter != null) {
+                mIMusicAdapter.onControllerVisibilityChange(binding.txtStart, binding.txtCur,
+                    binding.txtEnd);
+                mIMusicAdapter.onMusicPlayClick(path, binding.viewClip);
             }
-        } else { // not playing item
+        } else {//pause
             binding.viewSwitcher.setDisplayedChild(0);
             binding.layoutController.setVisibility(View.GONE);
             binding.btnExpand.setSelected(false);
+            if (mIMusicAdapter != null) {
+                // mIMusicAdapter.onControllerVisibilityChange(binding.txtStart, binding.txtCur,
+                //     binding.txtEnd);
+                mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
+            }
         }
 
         binding.btnExpand.setOnClickListener(v -> {
@@ -120,7 +113,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
     }
 
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {
-        View v = getLayoutInflater().inflate(R.layout.list_item_music_select, parent, false);
+        View v = getLayoutInflater().inflate(R.layout.list_item_bgm_download, parent, false);
         return new MusicItemViewHolder(v);
     }
 

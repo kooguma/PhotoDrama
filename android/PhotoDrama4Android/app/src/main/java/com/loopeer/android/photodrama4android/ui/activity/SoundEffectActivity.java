@@ -66,7 +66,7 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
         if (!checkClipValidate(musicClip)) {
             return;
         }
-        Navigator.addAddMusicActivity(this);
+        Navigator.addAddMusicActivity(this, MusicClip.MusicType.SOUND_EFFECT);
     }
 
     public void onDeleteClick(View view) {

@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.utils;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import com.loopeer.android.photodrama4android.model.Voice;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class MusicInfoUtils {

@@ -11,12 +11,15 @@ import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.widget.TextView;
 import com.facebook.common.util.UriUtil;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
+import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,12 +32,10 @@ public class MediaPlayerWrapper {
 
     private MediaPlayer mMediaPlayer;
     private Context mContext;
-    private AudioFetchHelper mAudioFetchHelper;
     private MusicPlayerTask mPlayerTask;
     private Timer mTimer;
     private float mStartPos;
     private float mEndPos;
-    private boolean mScheduled;
     private Uri mUri;
 
     private MusicClipView mMusicClipView;
@@ -42,6 +43,20 @@ public class MediaPlayerWrapper {
     private TextView mTextStart;
     private TextView mTextCur;
     private TextView mTextEnd;
+
+    private HashMap<Uri, PlayState> mHashMap;
+
+    private class PlayState {
+        int startPos;
+        int curPos;
+        int endPos;
+
+        public PlayState(int startPos, int curPos, int endPos) {
+            this.startPos = startPos;
+            this.curPos = curPos;
+            this.endPos = endPos;
+        }
+    }
 
     private MusicClipView.IndicatorMoveListener mIndicatorMoveListener
         = new MusicClipView.IndicatorMoveListener() {
@@ -52,7 +67,8 @@ public class MediaPlayerWrapper {
                 final int time = (int) (position1 * mMediaPlayer.getDuration());
                 mTextStart.setText(MusicInfoUtils.getFormatDuration(time));
                 if (mTextCur != null) {
-                    int delta  = (int) (Math.abs(position1 - position2) * mMediaPlayer.getDuration());
+                    int delta = (int) (Math.abs(position1 - position2) *
+                        mMediaPlayer.getDuration());
                     mTextCur.setText(MusicInfoUtils.getFormatDuration(delta));
                 }
             }
@@ -64,7 +80,8 @@ public class MediaPlayerWrapper {
                 final int time = (int) (position1 * mMediaPlayer.getDuration());
                 mTextEnd.setText(MusicInfoUtils.getFormatDuration(time));
                 if (mTextCur != null) {
-                    int delta  = (int) (Math.abs(position1 - position2) * mMediaPlayer.getDuration());
+                    int delta = (int) (Math.abs(position1 - position2) *
+                        mMediaPlayer.getDuration());
                     mTextCur.setText(MusicInfoUtils.getFormatDuration(delta));
                 }
             }
@@ -91,7 +108,7 @@ public class MediaPlayerWrapper {
 
     public MediaPlayerWrapper(Context context) {
         mContext = context;
-        mScheduled = false;
+        mHashMap = new HashMap<>();
         setupMediaPlayer();
     }
 
@@ -99,6 +116,7 @@ public class MediaPlayerWrapper {
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnPreparedListener(mp -> {
+            Log.e(TAG, "onPrepared");
             mStartPos = 0f;
             mEndPos = 1.0f;
             schedulePlayerTask();
@@ -154,7 +172,28 @@ public class MediaPlayerWrapper {
     }
 
     public void start() {
-        mMediaPlayer.start();
+        PlayState state = mHashMap.get(mUri);
+        if (state != null) {
+            mStartPos = state.startPos;
+            mEndPos = state.endPos;
+            mTextStart.setText(MusicInfoUtils.getFormatDuration(state.startPos));
+            mTextCur.setText(MusicInfoUtils.getFormatDuration(state.curPos));
+            mTextEnd.setText(MusicInfoUtils.getFormatDuration(state.endPos));
+            mMusicClipView.setDotProgress(state.curPos * 100 / mMediaPlayer.getDuration() );
+            mMediaPlayer.seekTo(state.curPos);
+        } else {
+            mMediaPlayer.start();
+        }
+    }
+
+    public MusicClip generateMusicClip(Voice voice, MusicClip.MusicType type) {
+        MusicClip clip = new MusicClip();
+        clip.path = FileManager.getInstance().getAudioPath(mContext, voice);
+        clip.startTime = (int) (mStartPos * mMediaPlayer.getDuration());
+        clip.showTime = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
+        clip.musicType = type;
+        Log.e(TAG, "clip = " + clip.toString());
+        return clip;
     }
 
     public void seekTo(int msec) {
@@ -162,6 +201,13 @@ public class MediaPlayerWrapper {
     }
 
     public void pause() {
+        //save state
+        final int duration = mMediaPlayer.getDuration();
+        final int startPos = (int) (mStartPos * duration);
+        final int endPos = (int) (mEndPos * duration);
+        PlayState state = new PlayState(startPos, mMediaPlayer.getCurrentPosition(), endPos);
+        mHashMap.put(mUri, state);
+
         mMediaPlayer.pause();
     }
 
@@ -185,7 +231,6 @@ public class MediaPlayerWrapper {
     public void reset() {
         mStartPos = 0f;
         mEndPos = 1.0f;
-        mScheduled = false;
         mPlayerTask.cancel();
         mTimer.cancel();
         mMediaPlayer.stop();
@@ -210,6 +255,7 @@ public class MediaPlayerWrapper {
             } else {
                 mTextCur.post(() -> mTextCur.setText(
                     MusicInfoUtils.getFormatDuration(mMediaPlayer.getDuration())));
+
             }
         }
     }

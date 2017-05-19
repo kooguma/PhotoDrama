@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
@@ -51,10 +52,10 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_SOUND_BGM = 1009;
     public static final int REQUEST_FULL_SCREEN = 10010;
     public static final int REQUEST_CODE_DRAMA_MAKE_EDIT = 10011;
-    public static final String EXTRA_THEME ="extra_theme" ;
-    public static final String EXTRA_USEDTIME ="extra_usedtime" ;
-    public static final String EXTRA_IS_TO_START ="extra_is_to_start" ;
-    public static final String EXTRA_CATEGORY ="extra_category" ;
+    public static final String EXTRA_THEME = "extra_theme";
+    public static final String EXTRA_USEDTIME = "extra_usedtime";
+    public static final String EXTRA_IS_TO_START = "extra_is_to_start";
+    public static final String EXTRA_CATEGORY = "extra_category";
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -134,21 +135,21 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void startFullLandscapePlayActivityForResult(Activity activity, Drama drama,boolean isStop,int usedTime) {
+    public static void startFullLandscapePlayActivityForResult(Activity activity, Drama drama, boolean isStop, int usedTime) {
         Intent intent = new Intent(activity, FullLandscapePlayActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        intent.putExtra(EXTRA_USEDTIME,usedTime);
-        intent.putExtra(EXTRA_IS_TO_START,!isStop);
-        activity.startActivityForResult(intent,REQUEST_FULL_SCREEN);
+        intent.putExtra(EXTRA_USEDTIME, usedTime);
+        intent.putExtra(EXTRA_IS_TO_START, !isStop);
+        activity.startActivityForResult(intent, REQUEST_FULL_SCREEN);
     }
 
-    public static void startFullLandscapePlayActivityForResult(Activity activity, Drama drama,boolean isStop,int usedTime, Theme theme) {
+    public static void startFullLandscapePlayActivityForResult(Activity activity, Drama drama, boolean isStop, int usedTime, Theme theme) {
         Intent intent = new Intent(activity, FullLandscapePlayActivity.class);
         intent.putExtra(EXTRA_DRAMA, drama);
-        intent.putExtra(EXTRA_USEDTIME,usedTime);
-        intent.putExtra(EXTRA_IS_TO_START,!isStop);
+        intent.putExtra(EXTRA_USEDTIME, usedTime);
+        intent.putExtra(EXTRA_IS_TO_START, !isStop);
         intent.putExtra(EXTRA_THEME, theme);
-        activity.startActivityForResult(intent,REQUEST_FULL_SCREEN);
+        activity.startActivityForResult(intent, REQUEST_FULL_SCREEN);
     }
 
     public static void startDramaSelectActivity(Context context) {
@@ -173,19 +174,19 @@ public class Navigator {
 
     public static void startDramaDetailActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaDetailActivity.class);
-        intent.putExtra(EXTRA_THEME,theme);
+        intent.putExtra(EXTRA_THEME, theme);
         context.startActivity(intent);
     }
 
     public static void startDramaEditActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaEditActivity.class);
-        intent.putExtra(EXTRA_THEME,theme);
+        intent.putExtra(EXTRA_THEME, theme);
         context.startActivity(intent);
     }
 
     public static void startDramaPlayActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaPlayActivity.class);
-        intent.putExtra(EXTRA_THEME,theme);
+        intent.putExtra(EXTRA_THEME, theme);
         context.startActivity(intent);
     }
 
@@ -214,12 +215,13 @@ public class Navigator {
 
     public static void startMusicDownloadActivity(Context context, Category category) {
         Intent intent = new Intent(context, MusicDownloadActivity.class);
-        intent.putExtra(Navigator.EXTRA_CATEGORY,category);
+        intent.putExtra(Navigator.EXTRA_CATEGORY, category);
         context.startActivity(intent);
     }
 
-    public static void addAddMusicActivity(Context context) {
+    public static void addAddMusicActivity(Context context, MusicClip.MusicType type) {
         Intent intent = new Intent(context, AddMusicClipActivity.class);
+        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,type);
         context.startActivity(intent);
     }
 }
