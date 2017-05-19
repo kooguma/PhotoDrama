@@ -22,17 +22,14 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     //当前播放的item
     private int mPlayingPosition = -1;
+    private BGMDownloadAdapter.IMusicAdapter mIMusicAdapter;
 
     public EffectDownloadAdapter(Context context) {
         super(context);
     }
 
-
-    public interface IMusicAdapter {
-        void onMusicAddClick(Voice voice);
-        void onControllerVisibilityChange(TextView txtStart, TextView txtCur, TextView txtEnd);
-        void onMusicPlayClick(String path, AppCompatSeekBar seekBar);
-        void onMusicPauseClick(String path, AppCompatSeekBar seekBar);
+    public void setIMusicAdapter(BGMDownloadAdapter.IMusicAdapter iMusicAdapter) {
+        this.mIMusicAdapter = iMusicAdapter;
     }
 
     @Override public void bindItem(Voice voice, int pos, RecyclerView.ViewHolder holder) {
@@ -78,6 +75,15 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
             //     mIMusicAdapter.onMusicPauseClick(path, binding.viewClip);
             // }
         }
+
+        binding.btnExpand.setOnClickListener(v -> {
+            if (v.isSelected()) {
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicAddClick(voice);
+                }
+            }
+        });
+        binding.executePendingBindings();
 
     }
 

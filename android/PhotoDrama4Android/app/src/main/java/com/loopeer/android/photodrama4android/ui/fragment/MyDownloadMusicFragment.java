@@ -42,6 +42,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     private MusicClip.MusicType mType;
 
+
     public static MyDownloadMusicFragment newInstance(MusicClip.MusicType type) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Navigator.EXTRA_MUSIC_CLIP, type);
@@ -84,6 +85,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
             return adapter;
         } else {
             EffectDownloadAdapter adapter = new EffectDownloadAdapter(getContext());
+            adapter.setIMusicAdapter(this);
             return adapter;
         }
     }
