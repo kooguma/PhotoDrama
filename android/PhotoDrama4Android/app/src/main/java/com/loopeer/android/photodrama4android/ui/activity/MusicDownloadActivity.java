@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 import com.fastui.uipattern.IRecycler;
 import com.laputapp.http.BaseResponse;
@@ -51,6 +52,14 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
                 DeviceScreenUtils.dp2px(0.5f, this)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setCenterTitle(mCategory.name);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
