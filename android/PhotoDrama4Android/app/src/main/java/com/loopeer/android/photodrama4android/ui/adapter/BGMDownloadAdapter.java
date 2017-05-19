@@ -53,13 +53,13 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.txtEnd.setText(voice.duration);
 
         binding.layoutBrief.setOnClickListener(v -> {
-            String path = FileManager.getInstance().getAudioBgmPath(getContext(),voice);
+            String path = FileManager.getInstance().getAudioBgmPath(getContext(), voice);
             if (mPlayingItem == null) {
                 //当前无播放item
                 Log.e("tag", "0");
                 //更新
                 mPlayingItem = binding;
-                play(binding,path);
+                play(binding, path);
             } else {
                 if (mPlayingItem == binding) {
                     //相同播放item
@@ -67,21 +67,21 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
                     if (binding.layoutController.getVisibility() == View.GONE) {
                         //未播放，开始播放
                         Log.e("tag", "1.1");
-                        play(binding,path);
+                        play(binding, path);
                         //更新
                         mPlayingItem = binding;
                     } else {
                         Log.e("tag", "1.2");
                         //已经播放，暂停播放
-                        pause(binding,path);
+                        pause(binding, path);
                     }
                 } else {
                     //不同播放item
                     //暂停播放的
                     Log.e("tag", "2");
-                    pause(mPlayingItem,path);
+                    pause(mPlayingItem, path);
                     //播放选中的
-                    play(binding,path);
+                    play(binding, path);
                     //更新
                     mPlayingItem = binding;
                 }
@@ -90,7 +90,9 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
         binding.btnExpand.setOnClickListener(v -> {
             if (v.isSelected()) {
-
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicAddClick(voice);
+                }
             }
         });
 
@@ -124,7 +126,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         }
     }
 
-    public void pause(ListItemBgmDownloadBinding binding,String path) {
+    public void pause(ListItemBgmDownloadBinding binding, String path) {
         binding.viewSwitcher.setDisplayedChild(0);
         binding.layoutController.setVisibility(View.GONE);
         binding.btnExpand.setSelected(false);
@@ -134,7 +136,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         }
     }
 
-    public void play(ListItemBgmDownloadBinding binding,String path) {
+    public void play(ListItemBgmDownloadBinding binding, String path) {
         binding.layoutController.setVisibility(View.VISIBLE);
         binding.viewSwitcher.setDisplayedChild(1);
         binding.btnPausePlayBtn.setSelected(false);

@@ -48,6 +48,8 @@ public class MediaPlayerWrapper {
     private TextView mTextCur;
     private TextView mTextEnd;
 
+    private int mDuration;
+
     private HashMap<Uri, PlayState> mHashMap;
 
     private class PlayState {
@@ -114,6 +116,8 @@ public class MediaPlayerWrapper {
         mContext = context;
         mHashMap = new HashMap<>();
         setupMediaPlayer();
+        mPlayerTask = new MusicPlayerTask();
+        mTimer = new Timer();
     }
 
     private void setupMediaPlayer() {
@@ -123,19 +127,14 @@ public class MediaPlayerWrapper {
             Log.e(TAG, "onPrepared");
             mStartPos = 0f;
             mEndPos = 1.0f;
-            schedulePlayerTask();
+            mTimer.schedule(mPlayerTask, 0, 10);
             mp.start();
         });
         mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
             Log.e(TAG, "error : " + " what = " + what + " extra = " + extra);
             return false;
         });
-    }
-
-    private void schedulePlayerTask() {
-        mPlayerTask = new MusicPlayerTask();
-        mTimer = new Timer();
-        mTimer.schedule(mPlayerTask, 0, 10);
+        mDuration = mMediaPlayer.getDuration();
     }
 
     public void updateDataSource(File file) {
@@ -229,7 +228,6 @@ public class MediaPlayerWrapper {
         mPlayerTask.cancel();
         mMediaPlayer.stop();
         mMediaPlayer.release();
-        mMediaPlayer = null;
     }
 
     public boolean isPlaying() {
@@ -254,22 +252,26 @@ public class MediaPlayerWrapper {
     private class MusicPlayerTask extends TimerTask {
 
         @Override public void run() {
-            if (mMediaPlayer.isPlaying()) {
-                final int duration = mMediaPlayer.getDuration();
-                final int curPosition = mMediaPlayer.getCurrentPosition();
-                final float progress = (float) curPosition / duration;
-                if (progress >= mEndPos) { //check if end
-                    final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
-                    mMediaPlayer.seekTo(mesc);
+            if (mMediaPlayer == null) return;
+            try {
+                if (mMediaPlayer.isPlaying()) {
+                    final int duration = mMediaPlayer.getDuration();
+                    final int curPosition = mMediaPlayer.getCurrentPosition();
+                    final float progress = (float) curPosition / duration;
+                    if (progress >= mEndPos) { //check if end
+                        final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
+                        mMediaPlayer.seekTo(mesc);
+                    } else {
+                        mMusicClipView.setDotProgress(progress * 100);
+                    }
+                    mTextCur.post(() -> mTextCur.setText(
+                        MusicInfoUtils.getFormatDuration(mMediaPlayer.getCurrentPosition())));
                 } else {
-                    mMusicClipView.setDotProgress(progress * 100);
+                    mTextCur.post(() -> mTextCur.setText(
+                        MusicInfoUtils.getFormatDuration(mDuration)));
                 }
-                mTextCur.post(() -> mTextCur.setText(
-                    MusicInfoUtils.getFormatDuration(mMediaPlayer.getCurrentPosition())));
-            } else {
-                mTextCur.post(() -> mTextCur.setText(
-                    MusicInfoUtils.getFormatDuration(mMediaPlayer.getDuration())));
-                //mButtonPlay.post(() -> mButtonPlay.setSelected(true));
+            } catch (IllegalStateException e) {
+                return;
             }
         }
     }
