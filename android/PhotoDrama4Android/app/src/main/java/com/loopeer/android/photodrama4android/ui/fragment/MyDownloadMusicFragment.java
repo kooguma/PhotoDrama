@@ -1,5 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -90,13 +92,17 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
         List<Voice> voices = mType == MusicClip.MusicType.BGM ?
                              FileManager.getInstance().getAudioBgmFiles()
-                            : FileManager.getInstance().getAudioEffectFiles();
+                            :FileManager.getInstance().getAudioEffectFiles();
         getRecyclerManager().onCacheLoaded(voices);
         return null;
     }
 
     @Override public void onMusicAddClick(Voice voice) {
         MusicClip clip = mPlayerWrapper.generateMusicClip(voice, mType);
+        Intent intent = new Intent();
+        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,clip);
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override
