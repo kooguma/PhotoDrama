@@ -188,7 +188,9 @@ public class MediaPlayerWrapper {
 
     public MusicClip generateMusicClip(Voice voice, MusicClip.MusicType type) {
         MusicClip clip = new MusicClip();
-        clip.path = FileManager.getInstance().getAudioPath(mContext, voice);
+        clip.path = type == MusicClip.MusicType.BGM ?
+                    FileManager.getInstance().getAudioBgmPath(mContext, voice):
+                    FileManager.getInstance().getAudioEffectPath(mContext,voice);
         clip.startTime = (int) (mStartPos * mMediaPlayer.getDuration());
         clip.showTime = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
         clip.musicType = type;

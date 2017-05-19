@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import zlc.season.rxdownload2.RxDownload;
 
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getBgmFormatDurationFromLocal;
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDurationFromLocal;
@@ -63,7 +64,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
         binding.txtStart.setText(getDefaultStartTime());
         binding.txtCur.setText(getDefaultStartTime());
-        binding.txtEnd.setText(getFormatDurationFromLocal(getContext(), voice));
+        binding.txtEnd.setText(getBgmFormatDurationFromLocal(getContext(), voice));
 
         binding.layoutBrief.setOnClickListener(v -> {
             if (mPlayingPosition == pos) {
@@ -74,7 +75,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
             notifyDataSetChanged();
         });
 
-        final String path = FileManager.getInstance().getAudioPath(getContext(), voice);
+        final String path = FileManager.getInstance().getAudioBgmPath(getContext(), voice);
         //change ui
         if (mPlayingPosition == pos) { //play
             binding.layoutController.setVisibility(View.VISIBLE);

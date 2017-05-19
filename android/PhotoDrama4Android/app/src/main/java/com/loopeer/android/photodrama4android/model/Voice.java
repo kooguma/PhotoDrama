@@ -43,8 +43,12 @@ public class Voice extends BaseModel {
        return MusicInfoUtils.getFormatDuration(duration);
     }
 
-    public String getFormatDurationFromLocal(Context context) {
-        return MusicInfoUtils.getFormatDurationFromLocal(context,this);
+    public String getBgmFormatDurationFromLocal(Context context) {
+        return MusicInfoUtils.getBgmFormatDurationFromLocal(context,this);
+    }
+
+    public String getEffectFormatDurationFromLocal(Context context){
+        return MusicInfoUtils.getEffectFormatDurationFromLocal(context,this);
     }
 
 }

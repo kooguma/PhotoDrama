@@ -11,6 +11,10 @@ import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.itemtouchhelperextension.Extension;
 
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getEffectFormatDurationFromLocal;
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDurationFromLocal;
+
 public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     public EffectDownloadAdapter(Context context) {
@@ -22,6 +26,10 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
             ((DataBindingViewHolder<ListItemEffectDownloadBinding>) holder).binding;
 
         binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition()));
+
+        binding.txtStart.setText(getDefaultStartTime());
+        binding.txtCur.setText(getDefaultStartTime());
+        binding.txtEnd.setText(getEffectFormatDurationFromLocal(getContext(), voice));
 
         binding.setVoice(voice);
     }

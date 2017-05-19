@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.utils;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import com.loopeer.android.photodrama4android.model.Voice;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,17 +21,25 @@ public class MusicInfoUtils {
         return formatter.format(duration);
     }
 
-    public static String getFormatDurationFromLocal(Context context, Voice voice) {
-        String filePath = FileManager.getInstance().getAudioPath(context, voice);
+    public static String getFormatDurationFromLocal(Context context, String filePath, Voice voice) {
         String duration = "0";
+        String fileName = filePath + voice.getSaveName();
         try {
-            metaRetriever.setDataSource(filePath);
+            metaRetriever.setDataSource(fileName);
             duration = metaRetriever.extractMetadata(
-                    MediaMetadataRetriever.METADATA_KEY_DURATION);
+                MediaMetadataRetriever.METADATA_KEY_DURATION);
         } catch (Exception e) {
 
         }
         return formatter.format(Integer.valueOf(duration));
+    }
+
+    public static String getBgmFormatDurationFromLocal(Context context, Voice voice) {
+        return getFormatDurationFromLocal(context,FileManager.getInstance().getBgmPath(),voice);
+    }
+
+    public static String getEffectFormatDurationFromLocal(Context context, Voice voice) {
+        return getFormatDurationFromLocal(context,FileManager.getInstance().getEffectPath(),voice);
     }
 
     public static String getDefaultStartTime() {

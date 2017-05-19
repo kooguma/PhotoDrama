@@ -229,14 +229,22 @@ public class FileManager {
         return voices;
     }
 
-    public String getAudioPath(Context context, Voice voice) {
+    private String getAudioPath(Context context, String dirPath, Voice voice) {
         if (voice == null) return null;
         File[] file = RxDownload.getInstance(context)
-            .getRealFiles(voice.getSaveName(), getAudioDirPath());
+            .getRealFiles(voice.getSaveName(), dirPath);
         if (file != null) {
             return file[0].getAbsolutePath();
         }
         return null;
+    }
+
+    public String getAudioBgmPath(Context context, Voice voice) {
+        return getAudioPath(context,getBgmPath(),voice);
+    }
+
+    public String getAudioEffectPath(Context context,Voice voice){
+        return getAudioPath(context,getEffectPath(),voice);
     }
 
     public static void deleteFile(File file) {
