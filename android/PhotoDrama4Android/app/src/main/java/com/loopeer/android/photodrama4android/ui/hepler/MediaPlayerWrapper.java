@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
@@ -99,11 +100,28 @@ public class MediaPlayerWrapper {
         }
     };
 
-    // private MediaPlayerWrapperListener mListener;
-    //
-    // public interface MediaPlayerWrapperListener {
-    //     void onProgressUpdate(float progress);
-    // }
+    private boolean isTrackManual;
+
+    private AppCompatSeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener
+        = new SeekBar.OnSeekBarChangeListener() {
+        @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (isTrackManual) {
+                mMediaPlayer.pause();
+            }
+        }
+
+        @Override public void onStartTrackingTouch(SeekBar seekBar) {
+            isTrackManual = true;
+        }
+
+        @Override public void onStopTrackingTouch(SeekBar seekBar) {
+            mMediaPlayer.start();
+            isTrackManual = false;
+            mStartPos = (float) seekBar.getProgress() / 100;
+            final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
+            mMediaPlayer.seekTo(mesc);
+        }
+    };
 
     public MediaPlayerWrapper(Context context) {
         mContext = context;
@@ -182,6 +200,9 @@ public class MediaPlayerWrapper {
         if (mMusicClipView != null) {
             mMusicClipView.setIndicatorMoveListener(mIndicatorMoveListener);
         }
+        if (mSeekBar != null) {
+            mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+        }
     }
 
     public void start() {
@@ -241,8 +262,12 @@ public class MediaPlayerWrapper {
     public void destroy() {
         mHashMap.clear();
         mHashMap = null;
-        mTimer.cancel();
-        mPlayerTask.cancel();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+        if (mPlayerTask != null) {
+            mPlayerTask.cancel();
+        }
         mMediaPlayer.stop();
         mMediaPlayer.release();
     }
@@ -275,8 +300,10 @@ public class MediaPlayerWrapper {
                     final int duration = mMediaPlayer.getDuration();
                     final int curPosition = mMediaPlayer.getCurrentPosition();
                     final float progress = (float) curPosition / duration;
+
                     if (progress >= mEndPos) { //check if end
                         final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
+                        Log.e(TAG, "mesc = " + mesc);
                         mMediaPlayer.seekTo(mesc);
                     } else {
                         if (mMusicClipView != null) {
@@ -286,13 +313,16 @@ public class MediaPlayerWrapper {
                             mSeekBar.setProgress((int) (progress * 100));
                         }
                     }
-                    mTextCur.post(() -> mTextCur.setText(
-                        MusicInfoUtils.getFormatDuration(mMediaPlayer.getCurrentPosition())));
-                } else {
-                    mTextCur.post(() -> mTextCur.setText(
-                        MusicInfoUtils.getFormatDuration(mDuration)));
-                    Log.e(TAG, "play end = " + MusicInfoUtils.getFormatDuration(mDuration));
-                }
+
+                    // TODO: 2017/5/20  curPosition 取不到 duration
+                    if(duration - curPosition <= 900 ){
+                        mTextCur.post(() -> mTextCur.setText(
+                            MusicInfoUtils.getFormatDuration(duration)));
+                    }else {
+                        mTextCur.post(() -> mTextCur.setText(
+                            MusicInfoUtils.getFormatDuration(curPosition)));
+                    }
+                } 
             } catch (IllegalStateException e) {
                 return;
             }
