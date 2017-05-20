@@ -4,39 +4,33 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
-import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
-import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectBinding;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
-import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
 import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.EffectDownloadAdapter;
+import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
 import com.loopeer.android.photodrama4android.ui.hepler.MediaPlayerWrapper;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
-
 import io.reactivex.Flowable;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 public class MyDownloadMusicFragment extends MovieMakerBaseFragment
-    implements IPageRecycler<Voice>,
-    BGMDownloadAdapter.IMusicAdapter {
+    implements IPageRecycler<Voice> {
 
     private MediaPlayerWrapper mPlayerWrapper;
 
@@ -81,25 +75,60 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
         if (mType == MusicClip.MusicType.BGM) {
             BGMDownloadAdapter adapter = new BGMDownloadAdapter(getContext());
-            adapter.setIMusicAdapter(this);
+            adapter.setIMusicAdapter(new BGMDownloadAdapter.IMusicAdapter() {
+                @Override public void onMusicAddClick(Voice voice) {
+                    addMusic(voice);
+                }
+
+                @Override public void onControllerVisibilityChange(LinearLayout layoutController) {
+                    updateController(layoutController);
+                }
+
+                @Override public void onMusicPlayClick(String path, MusicClipView musicClipView) {
+                    playMusic(path, musicClipView);
+                }
+
+                @Override public void onMusicPauseClick(String path, MusicClipView musicClipView) {
+                    pauseMusic(musicClipView);
+                }
+            });
             return adapter;
         } else {
             EffectDownloadAdapter adapter = new EffectDownloadAdapter(getContext());
-            adapter.setIMusicAdapter(this);
+
+            adapter.setIMusicAdapter(new EffectDownloadAdapter.IMusicAdapter() {
+                @Override public void onMusicAddClick(Voice voice) {
+                    addMusic(voice);
+                }
+
+                @Override public void onControllerVisibilityChange(LinearLayout layoutController) {
+                    updateController(layoutController);
+                }
+
+                @Override public void onMusicPlayClick(String path, AppCompatSeekBar seekBar) {
+                    playMusic(path,seekBar);
+                }
+
+                @Override public void onMusicPauseClick(String path, AppCompatSeekBar seekBar) {
+                    pauseMusic(seekBar);
+                }
+            });
+
             return adapter;
         }
     }
 
     @Override
     public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
-        List<Voice> voices = mType == MusicClip.MusicType.BGM ?
+        List<Voice> voices = mType == MusicClip.MusicType.BGM
+                             ?
                              FileManager.getInstance().getAudioBgmFiles()
-                            :FileManager.getInstance().getAudioEffectFiles();
+                             : FileManager.getInstance().getAudioEffectFiles();
         getRecyclerManager().onCacheLoaded(voices);
         return null;
     }
 
-    @Override public void onMusicAddClick(Voice voice) {
+    private void addMusic(Voice voice) {
         MusicClip clip = mPlayerWrapper.generateMusicClip(voice, mType);
         Intent intent = new Intent();
         intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,clip);
@@ -107,13 +136,14 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         getActivity().finish();
     }
 
-    @Override
-    public void onControllerVisibilityChange(LinearLayout layoutController) {
+    private void updateController(LinearLayout layoutController) {
         mPlayerWrapper.updateController(layoutController);
+
     }
 
-    @Override public void onMusicPlayClick(String path, MusicClipView musicClipView) {
+    private void playMusic(String path, MusicClipView musicClipView) {
         if (mPlayerWrapper.isAlreadyPrepared(new File(path))) {
+            //当前item
             mPlayerWrapper.start();
         } else {
             if (mPlayerWrapper.isPlaying()) {
@@ -125,9 +155,30 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         }
     }
 
-    @Override public void onMusicPauseClick(String path, MusicClipView musicClipView) {
+    private void playMusic(String path, AppCompatSeekBar seekBar) {
+        if (mPlayerWrapper.isAlreadyPrepared(new File(path))) {
+            //当前item
+            mPlayerWrapper.start();
+        } else {
+            if (mPlayerWrapper.isPlaying()) {
+                mPlayerWrapper.reset();
+            }
+            mPlayerWrapper.updateSeekBar(seekBar);
+            mPlayerWrapper.updateDataSource(new File(path));
+            mPlayerWrapper.startAsync();
+        }
+    }
+
+    private void pauseMusic(MusicClipView musicClipView) {
         if (mPlayerWrapper.isPlaying()) {
-            mPlayerWrapper.updateMusicClipView(musicClipView);
+            //mPlayerWrapper.updateMusicClipView(musicClipView);
+            mPlayerWrapper.pause();
+        }
+    }
+
+    private void pauseMusic(AppCompatSeekBar seekBar){
+        if (mPlayerWrapper.isPlaying()) {
+            //mPlayerWrapper.updateSeekBar(seekBar);
             mPlayerWrapper.pause();
         }
     }

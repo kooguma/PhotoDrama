@@ -47,6 +47,8 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         ListItemBgmDownloadBinding binding =
             ((DataBindingViewHolder<ListItemBgmDownloadBinding>) holder).binding;
 
+        String path = FileManager.getInstance().getAudioBgmPath(getContext(), voice);
+
         binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition()));
 
         binding.setVoice(voice);
@@ -56,7 +58,6 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.txtEnd.setText(voice.duration);
 
         binding.layoutBrief.setOnClickListener(v -> {
-            String path = FileManager.getInstance().getAudioBgmPath(getContext(), voice);
             if (mPlayingItem == null) {
                 //当前无播放item
                 Log.e("tag", "0");
@@ -95,6 +96,20 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
             if (v.isSelected()) {
                 if (mIMusicAdapter != null) {
                     mIMusicAdapter.onMusicAddClick(voice);
+                }
+            }
+        });
+
+        binding.btnPausePlayBtn.setOnClickListener(v -> {
+            if(v.isSelected()){
+                if(mIMusicAdapter != null){
+                    mIMusicAdapter.onMusicPlayClick(path,mPlayingItem.viewClip);
+                    v.setSelected(false);
+                }
+            }else {
+                if(mIMusicAdapter != null){
+                    mIMusicAdapter.onMusicPauseClick(path,mPlayingItem.viewClip);
+                    v.setSelected(true);
                 }
             }
         });

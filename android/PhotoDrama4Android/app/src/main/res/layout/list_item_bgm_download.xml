@@ -31,14 +31,14 @@
             android:id="@+id/layout_brief"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:foreground="?selectableItemBackground"
+            android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:padding="@dimen/medium_padding">
 

@@ -31,14 +31,13 @@
             android:id="@+id/layout_brief"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:foreground="?selectableItemBackground"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:padding="@dimen/medium_padding">
 
@@ -102,11 +101,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/btn_pause_play_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
+                            android:background="?selectableItemBackground"
                             android:padding="@dimen/xsmall_padding"
                             android:src="@drawable/selector_play_pause_btn"/>
                     </FrameLayout>
@@ -155,7 +155,7 @@
                         </LinearLayout>
 
                         <android.support.v7.widget.AppCompatSeekBar
-                            android:id="@+id/seek_bar_volume"
+                            android:id="@+id/seek_bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:max="100"

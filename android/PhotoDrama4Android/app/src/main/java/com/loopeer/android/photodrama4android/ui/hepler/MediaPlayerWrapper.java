@@ -4,18 +4,13 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.method.NumberKeyListener;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.facebook.common.util.UriUtil;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
-import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -25,9 +20,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
-import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
 
 public class MediaPlayerWrapper {
 
@@ -42,6 +34,7 @@ public class MediaPlayerWrapper {
     private Uri mUri;
 
     private MusicClipView mMusicClipView;
+    private AppCompatSeekBar mSeekBar;
 
     private ImageButton mButtonPlay;
     private TextView mTextStart;
@@ -116,8 +109,6 @@ public class MediaPlayerWrapper {
         mContext = context;
         mHashMap = new HashMap<>();
         setupMediaPlayer();
-        mPlayerTask = new MusicPlayerTask();
-        mTimer = new Timer();
     }
 
     private void setupMediaPlayer() {
@@ -127,7 +118,7 @@ public class MediaPlayerWrapper {
             Log.e(TAG, "onPrepared");
             mStartPos = 0f;
             mEndPos = 1.0f;
-            mTimer.schedule(mPlayerTask, 0, 10);
+            scheduleTask();
             mp.start();
         });
         mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
@@ -135,6 +126,12 @@ public class MediaPlayerWrapper {
             return false;
         });
         mDuration = mMediaPlayer.getDuration();
+    }
+
+    private void scheduleTask() {
+        mPlayerTask = new MusicPlayerTask();
+        mTimer = new Timer();
+        mTimer.schedule(mPlayerTask, 0, 10);
     }
 
     public void updateDataSource(File file) {
@@ -149,6 +146,10 @@ public class MediaPlayerWrapper {
 
     public void updateMusicClipView(MusicClipView view) {
         mMusicClipView = view;
+    }
+
+    public void updateSeekBar(AppCompatSeekBar seekBar) {
+        mSeekBar = seekBar;
     }
 
     public void updateController(TextView start, TextView cur, TextView end) {
@@ -178,7 +179,9 @@ public class MediaPlayerWrapper {
 
     public void startAsync() {
         mMediaPlayer.prepareAsync();
-        mMusicClipView.setIndicatorMoveListener(mIndicatorMoveListener);
+        if (mMusicClipView != null) {
+            mMusicClipView.setIndicatorMoveListener(mIndicatorMoveListener);
+        }
     }
 
     public void start() {
@@ -188,9 +191,16 @@ public class MediaPlayerWrapper {
             mEndPos = state.endPos;
             mTextStart.setText(MusicInfoUtils.getFormatDuration(state.startPos));
             mTextCur.setText(MusicInfoUtils.getFormatDuration(state.curPos));
+            Log.e("tag", "cur text = " + MusicInfoUtils.getFormatDuration(state.curPos));
             mTextEnd.setText(MusicInfoUtils.getFormatDuration(state.endPos));
-            mMusicClipView.setDotProgress(state.curPos * 100 / mMediaPlayer.getDuration());
+            if (mMusicClipView != null) {
+                mMusicClipView.setDotProgress(state.curPos * 100 / mMediaPlayer.getDuration());
+            }
+            if (mSeekBar != null) {
+                // TODO: 2017/5/20
+            }
             mMediaPlayer.seekTo(state.curPos);
+            mMediaPlayer.start();
         } else {
             mMediaPlayer.start();
         }
@@ -198,12 +208,17 @@ public class MediaPlayerWrapper {
 
     public MusicClip generateMusicClip(Voice voice, MusicClip.MusicType type) {
         MusicClip clip = new MusicClip();
-        clip.path = type == MusicClip.MusicType.BGM ?
-                    FileManager.getInstance().getAudioBgmPath(mContext, voice) :
-                    FileManager.getInstance().getAudioEffectPath(mContext, voice);
-        clip.musicStartOffset = (int) (mStartPos * mMediaPlayer.getDuration());
-        clip.musicSelectedLength = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
-        clip.showTime = clip.musicSelectedLength;
+        if (type == MusicClip.MusicType.BGM) {
+            clip.path = FileManager.getInstance().getAudioBgmPath(mContext, voice);
+            clip.musicStartOffset = (int) (mStartPos * mMediaPlayer.getDuration());
+            clip.musicSelectedLength = (int) ((mEndPos - mStartPos) * mMediaPlayer.getDuration());
+            clip.showTime = clip.musicSelectedLength;
+        } else {
+            clip.path = FileManager.getInstance().getAudioEffectPath(mContext, voice);
+            clip.musicStartOffset = 0;
+            clip.musicSelectedLength = mMediaPlayer.getDuration();
+            clip.showTime = clip.musicSelectedLength;
+        }
         clip.musicType = type;
         Log.e(TAG, "clip = " + clip.toString());
         return clip;
@@ -220,11 +235,12 @@ public class MediaPlayerWrapper {
         final int endPos = (int) (mEndPos * duration);
         PlayState state = new PlayState(startPos, mMediaPlayer.getCurrentPosition(), endPos);
         mHashMap.put(mUri, state);
-
         mMediaPlayer.pause();
     }
 
     public void destroy() {
+        mHashMap.clear();
+        mHashMap = null;
         mTimer.cancel();
         mPlayerTask.cancel();
         mMediaPlayer.stop();
@@ -263,13 +279,19 @@ public class MediaPlayerWrapper {
                         final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
                         mMediaPlayer.seekTo(mesc);
                     } else {
-                        mMusicClipView.setDotProgress(progress * 100);
+                        if (mMusicClipView != null) {
+                            mMusicClipView.setDotProgress(progress * 100);
+                        }
+                        if (mSeekBar != null) {
+                            mSeekBar.setProgress((int) (progress * 100));
+                        }
                     }
                     mTextCur.post(() -> mTextCur.setText(
                         MusicInfoUtils.getFormatDuration(mMediaPlayer.getCurrentPosition())));
                 } else {
                     mTextCur.post(() -> mTextCur.setText(
                         MusicInfoUtils.getFormatDuration(mDuration)));
+                    Log.e(TAG, "play end = " + MusicInfoUtils.getFormatDuration(mDuration));
                 }
             } catch (IllegalStateException e) {
                 return;
