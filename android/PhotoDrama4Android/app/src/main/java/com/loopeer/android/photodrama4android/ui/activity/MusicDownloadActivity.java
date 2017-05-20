@@ -7,19 +7,23 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import com.fastui.uipattern.IRecycler;
 import com.laputapp.http.BaseResponse;
+import com.laputapp.rx.RxBus;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.api.service.VoiceService;
+import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
 import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.adapter.MusicDownloadAdapter;
+import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.Toaster;
 import io.reactivex.Flowable;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -79,6 +83,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
             Toaster.showToast("下载失败：" + throwable.getMessage());
         }, () -> {
             Toaster.showToast("下载完成");
+            RxBus.getDefault().send(MusicDownLoadSuccessEvent.INSTANCE);
         });
     }
 
@@ -102,7 +107,19 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     @Override public void onItemClick(Voice voice) {
         mMediaPlayer.reset();
         try {
-            mMediaPlayer.setDataSource(this, Uri.parse(voice.voiceUrl));
+            String voicePath = mType == MusicClip.MusicType.BGM ?
+                               FileManager.getInstance().getAudioBgmPath(this, voice) :
+                               FileManager.getInstance().getAudioEffectPath(this, voice);
+            File voiceFile = new File(voicePath);
+
+            if (voiceFile.exists()) {
+                mMediaPlayer.setDataSource(this, Uri.fromFile(voiceFile));
+                Toaster.showToast("本地播放");
+            } else {
+                mMediaPlayer.setDataSource(this, Uri.parse(voice.voiceUrl));
+                Toaster.showToast("在线播放");
+            }
+
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();

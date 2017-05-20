@@ -239,6 +239,17 @@ public class FileManager {
         return null;
     }
 
+    public String getAudioPath(Context context,Voice voice){
+        if (voice == null) return null;
+        File[] file = RxDownload.getInstance(context)
+            .getRealFiles(voice.voiceUrl);
+        if (file != null) {
+            return file[0].getAbsolutePath();
+        }
+        return null;
+    }
+
+
     public String getAudioBgmPath(Context context, Voice voice) {
         return getAudioPath(context,getBgmPath(),voice);
     }

@@ -36,7 +36,6 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     private MusicClip.MusicType mType;
 
-
     public static MyDownloadMusicFragment newInstance(MusicClip.MusicType type) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Navigator.EXTRA_MUSIC_CLIP, type);
@@ -106,7 +105,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
                 }
 
                 @Override public void onMusicPlayClick(String path, AppCompatSeekBar seekBar) {
-                    playMusic(path,seekBar);
+                    playMusic(path, seekBar);
                 }
 
                 @Override public void onMusicPauseClick(String path, AppCompatSeekBar seekBar) {
@@ -120,18 +119,22 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     @Override
     public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
+        load();
+        return null;
+    }
+
+    private void load() {
         List<Voice> voices = mType == MusicClip.MusicType.BGM
                              ?
                              FileManager.getInstance().getAudioBgmFiles()
                              : FileManager.getInstance().getAudioEffectFiles();
         getRecyclerManager().onCacheLoaded(voices);
-        return null;
     }
 
     private void addMusic(Voice voice) {
         MusicClip clip = mPlayerWrapper.generateMusicClip(voice, mType);
         Intent intent = new Intent();
-        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP,clip);
+        intent.putExtra(Navigator.EXTRA_MUSIC_CLIP, clip);
         getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
@@ -176,7 +179,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         }
     }
 
-    private void pauseMusic(AppCompatSeekBar seekBar){
+    private void pauseMusic(AppCompatSeekBar seekBar) {
         if (mPlayerWrapper.isPlaying()) {
             //mPlayerWrapper.updateSeekBar(seekBar);
             mPlayerWrapper.pause();

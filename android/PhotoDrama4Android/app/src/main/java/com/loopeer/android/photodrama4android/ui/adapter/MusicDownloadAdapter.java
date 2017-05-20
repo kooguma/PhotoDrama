@@ -2,6 +2,8 @@ package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,6 +13,8 @@ import com.loopeer.android.photodrama4android.databinding.ListItemMusicDownloadB
 import com.loopeer.android.photodrama4android.databinding.ListItemMusicRecommendBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
+import com.loopeer.android.photodrama4android.utils.FileManager;
+import java.io.File;
 
 public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
 
@@ -30,12 +34,21 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
             ((DataBindingViewHolder<ListItemMusicDownloadBinding>) holder).binding;
         binding.setVoice(voice);
 
+        String path = FileManager.getInstance().getAudioPath(getContext(), voice);
+
         binding.btnDownload.setOnClickListener(l -> {
             if (mListener != null) {
                 mListener.onMusicDownloadClick(voice, binding.txtPercent);
                 binding.viewSwitcher.setDisplayedChild(1);
             }
         });
+
+        if (TextUtils.isEmpty(path)) {
+            binding.viewSwitcher.setVisibility(View.VISIBLE);
+        } else {
+            binding.viewSwitcher.setVisibility(View.GONE);
+        }
+
         binding.getRoot().setOnClickListener(l -> {
             if (mListener != null) {
                 mListener.onItemClick(voice);
