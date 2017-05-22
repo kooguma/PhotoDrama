@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.dynamic.refresher.RefreshHelper;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
 import com.laputapp.http.CacheResponse;

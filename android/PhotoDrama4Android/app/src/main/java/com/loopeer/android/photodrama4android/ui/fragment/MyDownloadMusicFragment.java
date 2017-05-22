@@ -9,13 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import com.dynamic.refresher.IRefreshHelper;
+import com.dynamic.refresher.RefreshHelper;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
+import com.laputapp.rx.RxBus;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
+import com.laputapp.widget.springheader.RefreshHeader;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
@@ -26,8 +31,12 @@ import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import io.reactivex.Flowable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 import java.io.File;
 import java.util.List;
+import org.reactivestreams.Subscriber;
 
 public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Voice> {
@@ -48,6 +57,17 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         mType = (MusicClip.MusicType) getArguments().getSerializable(Navigator.EXTRA_MUSIC_CLIP);
         mPlayerWrapper = new MediaPlayerWrapper(getContext());
         super.onCreate(savedInstanceState);
+        getRecyclerManager().setRefreshMode(RefreshHelper.RefreshMode.NONE);
+        registerMusicDownLoadSuccessEvent();
+    }
+
+    private void registerMusicDownLoadSuccessEvent(){
+        registerSubscription(
+            RxBus.getDefault().toFlowable()
+                .filter(o -> o instanceof MusicDownLoadSuccessEvent)
+                .doOnNext(o -> getRecyclerManager().onRefresh())
+                .subscribe()
+        );
     }
 
     @Nullable @Override

@@ -239,7 +239,7 @@ public class FileManager {
         return null;
     }
 
-    public String getAudioPath(Context context,Voice voice){
+    public String getAudioPath(Context context, Voice voice) {
         if (voice == null) return null;
         File[] file = RxDownload.getInstance(context)
             .getRealFiles(voice.voiceUrl);
@@ -249,13 +249,22 @@ public class FileManager {
         return null;
     }
 
-
-    public String getAudioBgmPath(Context context, Voice voice) {
-        return getAudioPath(context,getBgmPath(),voice);
+    public void deleteAudioBmgFile(Context context, Voice voice) {
+        File bgmFile = new File(getAudioBgmPath(context,voice));
+        deleteFile(bgmFile);
     }
 
-    public String getAudioEffectPath(Context context,Voice voice){
-        return getAudioPath(context,getEffectPath(),voice);
+    public void deleteAudioEffectFile(Context context, Voice voice) {
+        File effectFile = new File(getAudioEffectPath(context,voice));
+        deleteFile(effectFile);
+    }
+
+    public String getAudioBgmPath(Context context, Voice voice) {
+        return getAudioPath(context, getBgmPath(), voice);
+    }
+
+    public String getAudioEffectPath(Context context, Voice voice) {
+        return getAudioPath(context, getEffectPath(), voice);
     }
 
     public static void deleteFile(File file) {

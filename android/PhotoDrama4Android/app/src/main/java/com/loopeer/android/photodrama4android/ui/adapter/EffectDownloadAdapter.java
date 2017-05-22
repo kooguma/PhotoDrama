@@ -45,7 +45,7 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         ListItemEffectDownloadBinding binding =
             ((DataBindingViewHolder<ListItemEffectDownloadBinding>) holder).binding;
 
-        binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition()));
+        binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition(),voice));
 
         String path = FileManager.getInstance().getAudioEffectPath(getContext(), voice);
 
@@ -99,10 +99,10 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         return new BGMDownloadAdapter.MusicItemViewHolder(v);
     }
 
-    private void doDelete(int adapterPosition) {
+    private void doDelete(int adapterPosition,Voice voice) {
         getDatas().remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
-        //TODO
+        FileManager.getInstance().deleteAudioEffectFile(getContext(),voice);
     }
 
     public static class MusicItemViewHolder extends DataBindingViewHolder implements Extension {

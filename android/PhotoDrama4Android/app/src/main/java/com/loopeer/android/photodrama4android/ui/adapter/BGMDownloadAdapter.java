@@ -49,7 +49,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
         String path = FileManager.getInstance().getAudioBgmPath(getContext(), voice);
 
-        binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition()));
+        binding.btnDelete.setOnClickListener(v -> doDelete(holder.getAdapterPosition(),voice));
 
         binding.setVoice(voice);
 
@@ -88,10 +88,10 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.executePendingBindings();
     }
 
-    private void doDelete(int adapterPosition) {
+    private void doDelete(int adapterPosition,Voice voice) {
         getDatas().remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
-        //TODO
+        FileManager.getInstance().deleteAudioBmgFile(getContext(), voice);
     }
 
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {
