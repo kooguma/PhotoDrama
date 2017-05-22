@@ -15,12 +15,13 @@ import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
-import com.loopeer.android.photodrama4android.utils.MusicInfoUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getFormatDuration;
 
 public class MediaPlayerWrapper {
 
@@ -47,14 +48,22 @@ public class MediaPlayerWrapper {
     private HashMap<Uri, PlayState> mHashMap;
 
     private class PlayState {
-        int startPos;
-        int curPos;
-        int endPos;
+        float startPos;
+        float curPos;
+        float endPos;
 
-        public PlayState(int startPos, int curPos, int endPos) {
+        public PlayState(float startPos, float curPos, float endPos) {
             this.startPos = startPos;
             this.curPos = curPos;
             this.endPos = endPos;
+        }
+
+        @Override public String toString() {
+            return "PlayState{" +
+                "startPos=" + startPos +
+                ", curPos=" + curPos +
+                ", endPos=" + endPos +
+                '}';
         }
     }
 
@@ -65,11 +74,11 @@ public class MediaPlayerWrapper {
             mMediaPlayer.pause();
             if (mTextStart != null) {
                 final int time = (int) (position1 * mMediaPlayer.getDuration());
-                mTextStart.setText(MusicInfoUtils.getFormatDuration(time));
+                mTextStart.setText(getFormatDuration(time));
                 if (mTextCur != null) {
                     int delta = (int) (Math.abs(position1 - position2) *
                         mMediaPlayer.getDuration());
-                    mTextCur.setText(MusicInfoUtils.getFormatDuration(delta));
+                    mTextCur.setText(getFormatDuration(delta));
                 }
             }
         }
@@ -78,11 +87,11 @@ public class MediaPlayerWrapper {
             mMediaPlayer.pause();
             if (mTextEnd != null) {
                 final int time = (int) (position1 * mMediaPlayer.getDuration());
-                mTextEnd.setText(MusicInfoUtils.getFormatDuration(time));
+                mTextEnd.setText(getFormatDuration(time));
                 if (mTextCur != null) {
                     int delta = (int) (Math.abs(position1 - position2) *
                         mMediaPlayer.getDuration());
-                    mTextCur.setText(MusicInfoUtils.getFormatDuration(delta));
+                    mTextCur.setText(getFormatDuration(delta));
                 }
             }
         }
@@ -136,8 +145,10 @@ public class MediaPlayerWrapper {
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnPreparedListener(mp -> {
             Log.e(TAG, "onPrepared");
-            mStartPos = 0f;
-            mEndPos = 1.0f;
+            if (!restoreState()) {
+                mStartPos = 0f;
+                mEndPos = 1.0f;
+            }
             scheduleTask();
             mp.start();
         });
@@ -208,24 +219,30 @@ public class MediaPlayerWrapper {
     }
 
     public void start() {
+        if (!restoreState()) {
+            mMediaPlayer.start();
+        }
+    }
+
+    private boolean restoreState() {
         PlayState state = mHashMap.get(mUri);
         if (state != null) {
+            final int duration = mMediaPlayer.getDuration();
             mStartPos = state.startPos;
             mEndPos = state.endPos;
-            mTextStart.setText(MusicInfoUtils.getFormatDuration(state.startPos));
-            mTextCur.setText(MusicInfoUtils.getFormatDuration(state.curPos));
-            Log.e("tag", "cur text = " + MusicInfoUtils.getFormatDuration(state.curPos));
-            mTextEnd.setText(MusicInfoUtils.getFormatDuration(state.endPos));
+            mTextStart.setText(getFormatDuration((int) (mStartPos * duration)));
+            mTextEnd.setText(getFormatDuration((int) (mEndPos * duration)));
             if (mMusicClipView != null) {
-                mMusicClipView.setDotProgress(state.curPos * 100 / mMediaPlayer.getDuration());
+                mMusicClipView.setDotProgress(state.curPos * 100);
             }
             if (mSeekBar != null) {
                 // TODO: 2017/5/20
             }
-            mMediaPlayer.seekTo(state.curPos);
+            mMediaPlayer.seekTo((int) (state.curPos * mMediaPlayer.getDuration()));
             mMediaPlayer.start();
+            return true;
         } else {
-            mMediaPlayer.start();
+            return false;
         }
     }
 
@@ -253,12 +270,11 @@ public class MediaPlayerWrapper {
 
     public void pause() {
         //save state
-        final int duration = mMediaPlayer.getDuration();
-        final int startPos = (int) (mStartPos * duration);
-        final int endPos = (int) (mEndPos * duration);
-        PlayState state = new PlayState(startPos, mMediaPlayer.getCurrentPosition(), endPos);
+        final float curPos = (float) mMediaPlayer.getCurrentPosition() / mMediaPlayer.getDuration();
+        PlayState state = new PlayState(mStartPos, curPos, mEndPos);
         mHashMap.put(mUri, state);
         mMediaPlayer.pause();
+        Log.e(TAG, "state saved ! " + state.toString());
     }
 
     public void destroy() {
@@ -319,10 +335,10 @@ public class MediaPlayerWrapper {
                     // TODO: 2017/5/20  curPosition 取不到 duration
                     if (duration - curPosition <= 900) {
                         mTextCur.post(() -> mTextCur.setText(
-                            MusicInfoUtils.getFormatDuration(duration)));
+                            getFormatDuration(duration)));
                     } else {
                         mTextCur.post(() -> mTextCur.setText(
-                            MusicInfoUtils.getFormatDuration(curPosition)));
+                            getFormatDuration(curPosition)));
                     }
                 }
             } catch (IllegalStateException e) {
