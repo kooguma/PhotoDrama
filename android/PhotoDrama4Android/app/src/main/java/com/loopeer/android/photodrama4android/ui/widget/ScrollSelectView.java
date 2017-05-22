@@ -155,7 +155,6 @@ public class ScrollSelectView extends ViewGroup {
             int heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) mImageShowHeight, MeasureSpec.EXACTLY);
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
         }
-        mMiddlePos = getWidth() / 2;
     }
 
     @Override
@@ -164,6 +163,7 @@ public class ScrollSelectView extends ViewGroup {
     }
 
     private void layoutChild() {
+        mMiddlePos = getWidth() / 2;
         int childTop = (int) (getPaddingTop() + mImageMargin);
         int childLeft = mMiddlePos;
         for (int i = 0; i < getChildCount(); i++) {
