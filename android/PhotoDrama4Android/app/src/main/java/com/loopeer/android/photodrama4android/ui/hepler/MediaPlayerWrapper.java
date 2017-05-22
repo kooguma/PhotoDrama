@@ -72,6 +72,7 @@ public class MediaPlayerWrapper {
 
         @Override public void onLeftIndicatorMoving(float position1, float position2) {
             mMediaPlayer.pause();
+            mButtonPlay.setSelected(true);
             if (mTextStart != null) {
                 final int time = (int) (position1 * mMediaPlayer.getDuration());
                 mTextStart.setText(getFormatDuration(time));
@@ -85,6 +86,7 @@ public class MediaPlayerWrapper {
 
         @Override public void onRightIndicatorMoving(float position1, float position2) {
             mMediaPlayer.pause();
+            mButtonPlay.setSelected(true);
             if (mTextEnd != null) {
                 final int time = (int) (position1 * mMediaPlayer.getDuration());
                 mTextEnd.setText(getFormatDuration(time));
@@ -98,6 +100,7 @@ public class MediaPlayerWrapper {
 
         @Override public void onLeftIndicatorMoved(float position) {
             mMediaPlayer.start();
+            mButtonPlay.setSelected(false);
             mStartPos = position;
             final int mesc = (int) (position * mMediaPlayer.getDuration());
             mMediaPlayer.seekTo(mesc);
@@ -105,6 +108,7 @@ public class MediaPlayerWrapper {
 
         @Override public void onRightIndicatorMoved(float position) {
             mMediaPlayer.start();
+            mButtonPlay.setSelected(true);
             mEndPos = position;
             final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
             mMediaPlayer.seekTo(mesc);
@@ -144,7 +148,6 @@ public class MediaPlayerWrapper {
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnPreparedListener(mp -> {
-            Log.e(TAG, "onPrepared");
             if (!restoreState()) {
                 mStartPos = 0f;
                 mEndPos = 1.0f;
@@ -336,6 +339,8 @@ public class MediaPlayerWrapper {
                     if (duration - curPosition <= 900) {
                         mTextCur.post(() -> mTextCur.setText(
                             getFormatDuration(duration)));
+                        //end loop
+                        mMediaPlayer.seekTo((int) (mStartPos * mMediaPlayer.getDuration()));
                     } else {
                         mTextCur.post(() -> mTextCur.setText(
                             getFormatDuration(curPosition)));
