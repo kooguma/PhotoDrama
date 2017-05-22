@@ -129,12 +129,14 @@ public class MusicClipView extends View {
         mIndicatorRightPaint.setColor(Color.WHITE);
         mIndicatorRightPaint.setStrokeWidth(2);
 
+        final int radius = mIndicatorDrawable.getIntrinsicWidth()/2;
+
         mIndicatorLeft = new Indicator();
-        mIndicatorLeft.setRadius(25).setPaint(mIndicatorLeftPaint);
+        mIndicatorLeft.setRadius(radius).setPaint(mIndicatorLeftPaint);
         mLeftTrianglePath = new Path();
 
         mIndicatorRight = new Indicator();
-        mIndicatorRight.setRadius(25).setPaint(mIndicatorRightPaint);
+        mIndicatorRight.setRadius(radius).setPaint(mIndicatorRightPaint);
         mRightTrianglePath = new Path();
 
         mDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -206,7 +208,7 @@ public class MusicClipView extends View {
                                 position2 =
                                     (float) (mIndicatorLeft.cx - mIndicatorLeft.radius) /
                                         mProgressWidth;
-                                mIndicatorMoveListener.onRightIndicatorMoving(position1,position2);
+                                mIndicatorMoveListener.onRightIndicatorMoving(position1, position2);
                             }
                         }
                         shouldInvalidate = true;
@@ -412,7 +414,9 @@ public class MusicClipView extends View {
         }
 
         public RectF getRectF() {
-            return new RectF(cx - radius * 2, cy - 4 * radius, cx + radius * 2, cy + radius * 2);
+            final int w = (int) (1.3f * mIndicatorDrawable.getIntrinsicWidth() / 2);
+            final int h = (int) (1.3f * mIndicatorDrawable.getIntrinsicHeight() / 2);
+            return new RectF(cx - w, cy - h, cx + w, cy + h);
         }
 
         public Indicator setRadius(int radius) {

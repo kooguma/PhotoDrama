@@ -108,7 +108,7 @@ public class MediaPlayerWrapper {
 
         @Override public void onRightIndicatorMoved(float position) {
             mMediaPlayer.start();
-            mButtonPlay.setSelected(true);
+            mButtonPlay.setSelected(false);
             mEndPos = position;
             final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
             mMediaPlayer.seekTo(mesc);

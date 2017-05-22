@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 public class MusicInfoUtils {
 
-    private static SimpleDateFormat formatter = new SimpleDateFormat("mm:ss.SS");
+    private static SimpleDateFormat formatter = new SimpleDateFormat("mm:ss.S");
     private static MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
 
     public static String getFormatDuration(String duration) {
