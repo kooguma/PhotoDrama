@@ -97,6 +97,8 @@ public class MediaPlayerWrapper {
         @Override public void onRightIndicatorMoved(float position) {
             mMediaPlayer.start();
             mEndPos = position;
+            final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
+            mMediaPlayer.seekTo(mesc);
         }
     };
 
@@ -315,14 +317,14 @@ public class MediaPlayerWrapper {
                     }
 
                     // TODO: 2017/5/20  curPosition 取不到 duration
-                    if(duration - curPosition <= 900 ){
+                    if (duration - curPosition <= 900) {
                         mTextCur.post(() -> mTextCur.setText(
                             MusicInfoUtils.getFormatDuration(duration)));
-                    }else {
+                    } else {
                         mTextCur.post(() -> mTextCur.setText(
                             MusicInfoUtils.getFormatDuration(curPosition)));
                     }
-                } 
+                }
             } catch (IllegalStateException e) {
                 return;
             }
