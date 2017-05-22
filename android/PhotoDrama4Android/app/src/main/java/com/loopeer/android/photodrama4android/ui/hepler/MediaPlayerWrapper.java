@@ -127,10 +127,12 @@ public class MediaPlayerWrapper {
 
         @Override public void onStartTrackingTouch(SeekBar seekBar) {
             isTrackManual = true;
+            mButtonPlay.setSelected(true);
         }
 
         @Override public void onStopTrackingTouch(SeekBar seekBar) {
             mMediaPlayer.start();
+            mButtonPlay.setSelected(false);
             isTrackManual = false;
             mStartPos = (float) seekBar.getProgress() / 100;
             final int mesc = (int) (mStartPos * mMediaPlayer.getDuration());
@@ -339,8 +341,12 @@ public class MediaPlayerWrapper {
                     if (duration - curPosition <= 900) {
                         mTextCur.post(() -> mTextCur.setText(
                             getFormatDuration(duration)));
-                        //end loop
-                        mMediaPlayer.seekTo((int) (mStartPos * mMediaPlayer.getDuration()));
+                        if (mSeekBar != null) {
+                            //end loop
+                            mMediaPlayer.seekTo(0);
+                        } else {
+                            mMediaPlayer.seekTo((int) (mStartPos * mMediaPlayer.getDuration()));
+                        }
                     } else {
                         mTextCur.post(() -> mTextCur.setText(
                             getFormatDuration(curPosition)));
