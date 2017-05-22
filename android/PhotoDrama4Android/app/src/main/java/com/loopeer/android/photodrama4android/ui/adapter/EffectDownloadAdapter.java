@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemEffectDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
@@ -55,38 +56,7 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.setVoice(voice);
 
         binding.layoutBrief.setOnClickListener(v -> {
-            if (mPlayingItem == null) {
-                //当前无播放item
-                Log.e("tag", "0");
-                //更新
-                mPlayingItem = binding;
-                play(binding, path);
-            } else {
-                if (mPlayingItem == binding) {
-                    //相同播放item
-                    Log.e("tag", "1");
-                    if (binding.layoutController.getVisibility() == View.GONE) {
-                        //未播放，开始播放
-                        Log.e("tag", "1.1");
-                        play(binding, path);
-                        //更新
-                        mPlayingItem = binding;
-                    } else {
-                        Log.e("tag", "1.2");
-                        //已经播放，暂停播放
-                        pause(binding, path);
-                    }
-                } else {
-                    //不同播放item
-                    //暂停播放的
-                    Log.e("tag", "2");
-                    pause(mPlayingItem, path);
-                    //播放选中的
-                    play(binding, path);
-                    //更新
-                    mPlayingItem = binding;
-                }
-            }
+            onItemExpand(binding, path);
         });
 
         binding.btnExpand.setOnClickListener(v -> {
@@ -106,15 +76,17 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         });
 
         binding.btnPausePlayBtn.setOnClickListener(v -> {
-            if(v.isSelected()){
-                if(mIMusicAdapter != null){
-                    mIMusicAdapter.onMusicPlayClick(path,mPlayingItem.seekBar);
+            if (v.isSelected()) {
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicPlayClick(path, mPlayingItem.seekBar);
                     v.setSelected(false);
                 }
-            }else {
-                if(mIMusicAdapter != null){
-                    mIMusicAdapter.onMusicPauseClick(path,mPlayingItem.seekBar);
+            } else {
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicPauseClick(path, mPlayingItem.seekBar);
                     v.setSelected(true);
+                } else {
+                    onItemExpand(binding, path);
                 }
             }
         });
@@ -133,7 +105,6 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         //TODO
     }
 
-
     public static class MusicItemViewHolder extends DataBindingViewHolder implements Extension {
 
         public MusicItemViewHolder(View itemView) {
@@ -147,6 +118,36 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         @Override
         public float getActionWidth() {
             return itemView.findViewById(R.id.btn_delete).getWidth();
+        }
+    }
+
+    private void onItemExpand(ListItemEffectDownloadBinding binding, String path) {
+        if (mPlayingItem == null) {
+            //当前无播放item
+            //更新
+            mPlayingItem = binding;
+            play(binding, path);
+        } else {
+            if (mPlayingItem == binding) {
+                //相同播放item
+                if (binding.layoutController.getVisibility() == View.GONE) {
+                    //未播放，开始播放
+                    play(binding, path);
+                    //更新
+                    mPlayingItem = binding;
+                } else {
+                    //已经播放，暂停播放
+                    pause(binding, path);
+                }
+            } else {
+                //不同播放item
+                //暂停播放的
+                pause(mPlayingItem, path);
+                //播放选中的
+                play(binding, path);
+                //更新
+                mPlayingItem = binding;
+            }
         }
     }
 
