@@ -58,38 +58,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.txtEnd.setText(voice.duration);
 
         binding.layoutBrief.setOnClickListener(v -> {
-            if (mPlayingItem == null) {
-                //当前无播放item
-                Log.e("tag", "0");
-                //更新
-                mPlayingItem = binding;
-                play(binding, path);
-            } else {
-                if (mPlayingItem == binding) {
-                    //相同播放item
-                    Log.e("tag", "1");
-                    if (binding.layoutController.getVisibility() == View.GONE) {
-                        //未播放，开始播放
-                        Log.e("tag", "1.1");
-                        play(binding, path);
-                        //更新
-                        mPlayingItem = binding;
-                    } else {
-                        Log.e("tag", "1.2");
-                        //已经播放，暂停播放
-                        pause(binding, path);
-                    }
-                } else {
-                    //不同播放item
-                    //暂停播放的
-                    Log.e("tag", "2");
-                    pause(mPlayingItem, path);
-                    //播放选中的
-                    play(binding, path);
-                    //更新
-                    mPlayingItem = binding;
-                }
-            }
+            onItemExpand(binding, path);
         });
 
         binding.btnExpand.setOnClickListener(v -> {
@@ -97,18 +66,20 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
                 if (mIMusicAdapter != null) {
                     mIMusicAdapter.onMusicAddClick(voice);
                 }
+            } else {
+                onItemExpand(binding, path);
             }
         });
 
         binding.btnPausePlayBtn.setOnClickListener(v -> {
-            if(v.isSelected()){
-                if(mIMusicAdapter != null){
-                    mIMusicAdapter.onMusicPlayClick(path,mPlayingItem.viewClip);
+            if (v.isSelected()) {
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicPlayClick(path, mPlayingItem.viewClip);
                     v.setSelected(false);
                 }
-            }else {
-                if(mIMusicAdapter != null){
-                    mIMusicAdapter.onMusicPauseClick(path,mPlayingItem.viewClip);
+            } else {
+                if (mIMusicAdapter != null) {
+                    mIMusicAdapter.onMusicPauseClick(path, mPlayingItem.viewClip);
                     v.setSelected(true);
                 }
             }
@@ -144,7 +115,37 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         }
     }
 
-    public void pause(ListItemBgmDownloadBinding binding, String path) {
+    private void onItemExpand(ListItemBgmDownloadBinding binding, String path) {
+        if (mPlayingItem == null) {
+            //当前无播放item
+            //更新
+            mPlayingItem = binding;
+            play(binding, path);
+        } else {
+            if (mPlayingItem == binding) {
+                //相同播放item
+                if (binding.layoutController.getVisibility() == View.GONE) {
+                    //未播放，开始播放
+                    play(binding, path);
+                    //更新
+                    mPlayingItem = binding;
+                } else {
+                    //已经播放，暂停播放
+                    pause(binding, path);
+                }
+            } else {
+                //不同播放item
+                //暂停播放的
+                pause(mPlayingItem, path);
+                //播放选中的
+                play(binding, path);
+                //更新
+                mPlayingItem = binding;
+            }
+        }
+    }
+
+    private void pause(ListItemBgmDownloadBinding binding, String path) {
         binding.viewSwitcher.setDisplayedChild(0);
         binding.layoutController.setVisibility(View.GONE);
         binding.btnExpand.setSelected(false);
@@ -154,7 +155,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         }
     }
 
-    public void play(ListItemBgmDownloadBinding binding, String path) {
+    private void play(ListItemBgmDownloadBinding binding, String path) {
         binding.layoutController.setVisibility(View.VISIBLE);
         binding.viewSwitcher.setDisplayedChild(1);
         binding.btnPausePlayBtn.setSelected(false);
