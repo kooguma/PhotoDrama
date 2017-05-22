@@ -74,6 +74,21 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
             mDrama.audioGroup.musicClips.remove(mSelectedClip);
             mVideoPlayerManager.getIMusic().updateDrama(mDrama);
             updateScrollSelectViewClips();
+            mSelectedClip = null;
+            updateRecordBtnEnable();
+            updateBtnView();
+        }
+    }
+
+    private void updateRecordBtnEnable() {
+        if (mSelectedClip == null) {
+            MusicClip musicClip = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
+                    , MusicClip.MusicType.SOUND_EFFECT);
+            if (!checkClipValidate(musicClip)) {
+                mBinding.btnAdd.setEnabled(false);
+            } else {
+                mBinding.btnAdd.setEnabled(true);
+            }
         }
     }
 
@@ -197,11 +212,6 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
     }
 
     private void checkClipValidateAndChange(MusicClip musicClip) {
-        if (musicClip.getEndTime() > mVideoPlayerManager.getMaxTime()) {
-            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime;
-            musicClip.musicSelectedLength = musicClip.showTime;
-            return;
-        }
         for (MusicClip clip : mDrama.audioGroup.getSoundEffectClips()) {
             if (musicClip != clip) {
                 if (musicClip.startTime < clip.startTime
@@ -211,6 +221,11 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
                     return;
                 }
             }
+        }
+        if (musicClip.getEndTime() > mVideoPlayerManager.getMaxTime()) {
+            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime;
+            musicClip.musicSelectedLength = musicClip.showTime;
+            return;
         }
     }
 
@@ -295,6 +310,7 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
 
     private void hideVolume() {
         if (!mToolShow) return;
+        mBinding.switcherBtn.setDisplayedChild(0);
         mToolShow = false;
         ObjectAnimator.ofFloat(mBinding.viewMusicVolume.viewVolumeContainer, View.TRANSLATION_Y, 0,
                 mBinding.viewMusicVolume.viewVolumeContainer.getHeight()).start();
@@ -302,6 +318,7 @@ public class SoundEffectActivity extends PhotoDramaBaseActivity
 
     private void showVolume() {
         if (mToolShow) return;
+        mBinding.switcherBtn.setDisplayedChild(1);
         mBinding.viewMusicVolume.viewVolumeContainer.setVisibility(View.VISIBLE);
         mToolShow = true;
         ObjectAnimator.ofFloat(mBinding.viewMusicVolume.viewVolumeContainer, View.TRANSLATION_Y,
