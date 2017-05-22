@@ -264,6 +264,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     }
 
     public void onPlayRectClick(View view) {
+        mMusicClipRecording = null;
         if (mVideoPlayerManager.isStop()) {
             mVideoPlayerManager.startVideo();
             mBinding.scrollSelectView.setStop(false);
