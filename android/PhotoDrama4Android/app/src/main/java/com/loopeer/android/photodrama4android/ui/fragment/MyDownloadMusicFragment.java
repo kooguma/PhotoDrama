@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import com.dynamic.UIAttr;
+import com.dynamic.ViewBindHelper;
 import com.dynamic.refresher.IRefreshHelper;
 import com.dynamic.refresher.RefreshHelper;
 import com.fastui.uipattern.IPageRecycler;
@@ -23,6 +25,7 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
+import com.loopeer.android.photodrama4android.ui.activity.AddMusicClipActivity;
 import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.EffectDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
@@ -57,11 +60,11 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         mType = (MusicClip.MusicType) getArguments().getSerializable(Navigator.EXTRA_MUSIC_CLIP);
         mPlayerWrapper = new MediaPlayerWrapper(getContext());
         super.onCreate(savedInstanceState);
-        getRecyclerManager().setRefreshMode(RefreshHelper.RefreshMode.NONE);
         registerMusicDownLoadSuccessEvent();
+        getRecyclerManager().setRefreshMode(RefreshHelper.RefreshMode.NONE);
     }
 
-    private void registerMusicDownLoadSuccessEvent(){
+    private void registerMusicDownLoadSuccessEvent() {
         registerSubscription(
             RxBus.getDefault().toFlowable()
                 .filter(o -> o instanceof MusicDownLoadSuccessEvent)
@@ -81,6 +84,20 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
             .addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL_LIST, 0,
                 DeviceScreenUtils.dp2px(0.5f, getContext())));
+        getRecyclerManager().getLoadHelper().addViewBinder(
+            UIAttr.LoaderAttr.LOOPEER_EMPTY, new ViewBindHelper() {
+                @Override
+                public View createView(LayoutInflater layoutInflater, ViewGroup viewParent) {
+                    return layoutInflater.inflate(R.layout.view_empty_my_download, viewParent, false);
+                }
+
+                @Override
+                public void viewCreate(View view) {
+                    view.setOnClickListener(l -> {
+                        ((AddMusicClipActivity)getActivity()).switchToRecommend();
+                    });
+                }
+            });
         ItemTouchHelperCallback callback = new ItemTouchHelperCallback();
         ItemTouchHelperExtension itemTouchHelperExtension = new ItemTouchHelperExtension(callback);
         itemTouchHelperExtension.attachToRecyclerView(getRecyclerManager().getRecyclerView());

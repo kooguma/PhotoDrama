@@ -45,6 +45,13 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
 
     }
 
+    public void switchToRecommend() {
+        CustomTabLayout.Tab tab = mTabLayout.getTabAt(1);
+        if (tab != null) {
+            tab.select();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

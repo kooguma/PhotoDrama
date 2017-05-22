@@ -1,14 +1,10 @@
 package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
