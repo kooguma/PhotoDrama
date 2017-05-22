@@ -20,6 +20,7 @@
     <color name="btn_unable_color">#333333</color>
     <color name="shadow_color">#70b5b5b5</color>
     <color name="scroll_indicator_inline_color">#CDCDCD</color>
+    <color name="border_color">#EAEAEA</color>
 
     <color name="subtitle_bg_text_input_color">#EDEDED</color>
     <color name="subtitle_text_input_color">#686868</color>
