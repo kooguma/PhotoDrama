@@ -68,8 +68,7 @@
                     android:layout_weight="1"
                     android:text="@{voice.name}"
                     android:textColor="@color/text_color_primary"
-                    android:textSize="@dimen/text_size_larger"
-                    android:textStyle="bold"/>
+                    android:textSize="@dimen/text_size_larger"/>
 
                 <ImageButton
                     android:id="@+id/btn_expand"
