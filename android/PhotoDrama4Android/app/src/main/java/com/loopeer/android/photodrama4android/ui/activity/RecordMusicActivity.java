@@ -45,6 +45,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     private VideoPlayerManager mVideoPlayerManager;
     private AudioRecorder mAudioRecorder;
     private MusicClip mMusicClipRecording;
+    private boolean mIsRecording;
     private MusicClip mSelectedClip;
     private boolean mToolShow = false;
 
@@ -112,13 +113,12 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     }
 
     private void stopRecord(boolean validate) {
+        mIsRecording = false;
         mBinding.textAdd.setText(R.string.record_add);
         mAudioRecorder.stopRecording();
         mVideoPlayerManager.pauseVideo();
         if (mMusicClipRecording == null) return;
-
         mMusicClipRecording.setCreateIng(false);
-        mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
         mMusicClipRecording.musicSelectedLength = mMusicClipRecording.showTime;
         if (mMusicClipRecording.showTime < MIN_RECORD_AUDIO_LENGTH
                 || !validate) {
@@ -139,6 +139,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     }
 
     private void startRecord() {
+        mIsRecording = true;
         mBinding.textAdd.setText(R.string.record_add_finish);
         mMusicClipRecording = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
                 , MusicClip.MusicType.RECORD_AUDIO);
@@ -232,15 +233,14 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     @Override
     public void onProgressChange(int progress, int maxValue) {
         mBinding.textStart.setText(formatTimeMilli(progress));
-        if (mMusicClipRecording != null) {
+        if (mMusicClipRecording != null && mIsRecording) {
             mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
-            if (!checkClipValidate(mMusicClipRecording)) {
-                stopRecord(false);
+            if (checkClipValidateAndChange(mMusicClipRecording)) {
+                stopRecord(true);
             }
         }
 
         updateRecordBtnEnable();
-//        updateBtnView();
     }
 
     private void updateRecordBtnEnable() {
@@ -330,6 +330,25 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             }
         }
         return true;
+    }
+
+    private boolean checkClipValidateAndChange(MusicClip musicClip) {
+        for (MusicClip clip : mDrama.audioGroup.getRecordMusicClips()) {
+            if (musicClip != clip) {
+                if (musicClip.startTime < clip.startTime
+                        && musicClip.getEndTime() >= clip.startTime) {
+                    musicClip.showTime = clip.startTime - musicClip.startTime;
+                    musicClip.musicSelectedLength = musicClip.showTime;
+                    return true;
+                }
+            }
+        }
+        if (musicClip.getEndTime() > mVideoPlayerManager.getMaxTime()) {
+            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime;
+            musicClip.musicSelectedLength = musicClip.showTime;
+            return true;
+        }
+        return false;
     }
 
     @Override
