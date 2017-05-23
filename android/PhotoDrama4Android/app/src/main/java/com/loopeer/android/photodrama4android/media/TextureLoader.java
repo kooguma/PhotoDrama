@@ -39,22 +39,29 @@ public class TextureLoader extends Thread {
     }
 
     public void run() {
-
-        EglCore eglCore = new EglCore(mEglCore.mEGLContext, EglCore.FLAG_TRY_GLES3);
-        EGLSurface eglSurface = eglCore.createOffscreenSurface(1, 1);
-        eglCore.makeCurrent(eglSurface);
+        boolean isContextValidate;
+        try {
+            EglCore eglCore = new EglCore(mEglCore.mEGLContext, EglCore.FLAG_TRY_GLES3);
+            EGLSurface eglSurface = eglCore.createOffscreenSurface(1, 1);
+            eglCore.makeCurrent(eglSurface);
+            isContextValidate = true;
+        } catch (RuntimeException e) {
+            isContextValidate = false;
+        }
         while (!mIsFinish) {
             synchronized (this) {
                 try {
-                    if (mHandlerWrappers.isEmpty())
+                    if (mHandlerWrappers.isEmpty() || !isContextValidate)
                         this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
 
-            handleImageTexture();
-            handleImageResTexture();
+            if (isContextValidate) {
+                handleImageTexture();
+                handleImageResTexture();
+            }
         }
     }
 
