@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.dynamic.UIAttr;
 import com.dynamic.ViewBindHelper;
-import com.dynamic.refresher.IRefreshHelper;
 import com.dynamic.refresher.RefreshHelper;
 import com.fastui.uipattern.IPageRecycler;
 import com.laputapp.http.BaseResponse;
@@ -19,7 +18,6 @@ import com.laputapp.rx.RxBus;
 import com.laputapp.ui.adapter.RxRecyclerAdapter;
 import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
-import com.laputapp.widget.springheader.RefreshHeader;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
@@ -34,12 +32,8 @@ import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import io.reactivex.Flowable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 import java.io.File;
 import java.util.List;
-import org.reactivestreams.Subscriber;
 
 public class MyDownloadMusicFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Voice> {

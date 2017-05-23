@@ -106,6 +106,11 @@ public class LocalImageUtils {
         int screenWidth = 1280;
         int screenHeight = 720;
 /*
+        int screenWidth = DisplayUtils.getScreenWidth(context);
+        int screenHeight = DisplayUtils.getScreenHeight(context);
+*/
+
+/*
         float f =  1f * context.getResources().getInteger(R.integer.gl_screen_y) / context.getResources().getInteger(R.integer.gl_screen_x);
         screenHeight = (int) (f * screenWidth);*/
 
