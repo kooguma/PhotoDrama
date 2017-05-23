@@ -78,6 +78,7 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
         mImageTransitionSegmentAdapter.updateData(ClipsCreator.createTransiImageWrappers(mDrama.videoGroup));
 
         mImageTransitionSegmentAdapter.selectedFirstTransition();
+        mBinding.recyclerViewTransition.post(() -> mTransitionEffectAdapter.notifyDataSetChanged());
     }
 
     private List<TransitionClip> createTransitionClips() {

@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginRight="@dimen/medium_padding">
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp">
 
         <FrameLayout
             android:layout_width="53dp"
