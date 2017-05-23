@@ -28,6 +28,9 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import retrofit2.http.Field;
 import zlc.season.rxdownload2.RxDownload;
@@ -221,6 +224,12 @@ public class FileManager {
                 return !name.equals(".cache");
             }
         });
+
+        Collections.sort(Arrays.asList(files), (f1, f2) -> {
+            //最近下载的排在最前面
+            return f1.lastModified() <= f2.lastModified() ? 1 : -1;
+        });
+
         List<Voice> voices = new ArrayList<>();
         for (File file : files) {
             Voice v = Voice.fromFile(file);
@@ -250,12 +259,12 @@ public class FileManager {
     }
 
     public void deleteAudioBmgFile(Context context, Voice voice) {
-        File bgmFile = new File(getAudioBgmPath(context,voice));
+        File bgmFile = new File(getAudioBgmPath(context, voice));
         deleteFile(bgmFile);
     }
 
     public void deleteAudioEffectFile(Context context, Voice voice) {
-        File effectFile = new File(getAudioEffectPath(context,voice));
+        File effectFile = new File(getAudioEffectPath(context, voice));
         deleteFile(effectFile);
     }
 
