@@ -28,13 +28,12 @@
             android:textSize="@dimen/text_size_large"/>
 
         <LinearLayout
-            android:id="@+id/layout_brief"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_brief"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -103,12 +102,11 @@
 
                         <ImageButton
                             android:id="@+id/btn_pause_play_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:layout_gravity="bottom"
-                            android:padding="@dimen/xsmall_padding"
-                            android:background="?selectableItemBackground"
-                            android:layout_marginBottom="5dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:layout_marginBottom="11dp"
                             android:src="@drawable/selector_play_pause_btn"/>
                     </FrameLayout>
 

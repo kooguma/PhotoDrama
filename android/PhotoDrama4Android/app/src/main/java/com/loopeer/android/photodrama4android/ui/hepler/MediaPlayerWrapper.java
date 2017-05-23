@@ -107,6 +107,7 @@ public class MediaPlayerWrapper {
         }
 
         @Override public void onRightIndicatorMoved(float position) {
+            Log.e(TAG,"onRightIndicatorMoved position = " + position);
             mMediaPlayer.start();
             mButtonPlay.setSelected(false);
             mEndPos = position;
