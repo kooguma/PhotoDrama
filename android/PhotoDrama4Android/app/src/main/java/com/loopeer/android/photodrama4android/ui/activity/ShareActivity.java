@@ -33,7 +33,7 @@ public class ShareActivity extends PhotoDramaBaseActivity {
 
     public void onBackToMain(View view) {
         Analyst.shareBackHomeClick();
-        Navigator.startDramaSelectActivity(this);
+        Navigator.startMainActivity(this);
     }
 
     public void onQQClick(View view) {
