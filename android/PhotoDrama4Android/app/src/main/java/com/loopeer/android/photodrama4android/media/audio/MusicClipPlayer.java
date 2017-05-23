@@ -61,6 +61,10 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
         }
     }
 
+    public void updateMusicClip(MusicClip clip) {
+        mMusicClip = clip;
+    }
+
     private boolean isPrepared() {
         return mPreparedState == PREPARED_STATE_ED;
     }

@@ -60,6 +60,8 @@ public class MusicProcessor implements MusicClipPlayer.MusicClipPlayerLister {
                 MusicClipPlayer clipPlayer = getMediaPlayerFromPool(context, clip);
                 mHasNotPrepareClipKeys.add(clip.getKey());
                 mClipPlayerHashMap.put(clip.getKey(), clipPlayer);
+            } else {
+                mClipPlayerHashMap.get(clip.getKey()).updateMusicClip(clip);
             }
         }
 
