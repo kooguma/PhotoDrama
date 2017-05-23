@@ -210,10 +210,11 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
             switch (requestCode) {
                 case Navigator.REQUEST_CODE_DRAMA_MAKE_EDIT:
                     mVideoPlayerManager.updateDrama(mDrama);
+                    if (mVideoPlayerManager.getMaxTime() < mVideoPlayerManager.getUsedTime())
+                        mVideoPlayerManager.seekToVideo(0);
                     break;
                 default:
             }
-            mVideoPlayerManager.seekToVideo(0);
         }
     }
 

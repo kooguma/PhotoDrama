@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageSelectBinding;
+import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.ui.adapter.ImageSelectedAdapter;
@@ -54,6 +55,8 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_image_select);
+
+        BitmapFactory.getInstance().clear();
         setupView();
     }
 

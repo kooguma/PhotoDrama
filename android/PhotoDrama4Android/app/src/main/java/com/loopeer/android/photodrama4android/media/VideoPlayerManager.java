@@ -70,11 +70,11 @@ public class VideoPlayerManager
         mMaxTime = drama.getShowTimeTotal();
         setSeekBarMaxValue(mMaxTime);
         mSeekWrapperHolders.setMax(mMaxTime);
-        mStartTime = 0;
         mFinishAtTime = mStartTime;
         mEndTime = mMaxTime;
-        mGLThread.updateTime(mStartTime, mEndTime);
+        mGLThread.updateTime(getUsedTime(), mEndTime);
         onProgressInit(mStartTime, mSeekbarMaxValue);
+        onProgressChange(getUsedTime());
     }
 
     private void init() {
