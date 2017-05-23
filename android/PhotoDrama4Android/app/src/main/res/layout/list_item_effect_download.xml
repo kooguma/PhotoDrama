@@ -28,12 +28,12 @@
             android:textSize="@dimen/text_size_large"/>
 
         <LinearLayout
-            android:id="@+id/layout_brief"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_brief"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -83,6 +83,7 @@
                 android:id="@+id/layout_controller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@color/window_background_gray"
                 android:orientation="vertical">
 
