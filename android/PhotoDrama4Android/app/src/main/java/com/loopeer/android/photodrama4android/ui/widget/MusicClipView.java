@@ -414,8 +414,8 @@ public class MusicClipView extends View {
         }
 
         public RectF getRectF() {
-            final int w = (int) (1.8f * mIndicatorDrawable.getIntrinsicWidth() / 2);
-            final int h = (int) (1.8f * mIndicatorDrawable.getIntrinsicHeight() / 2);
+            final int w = (int) (2.0f * mIndicatorDrawable.getIntrinsicWidth() / 2);
+            final int h = (int) (2.0f * mIndicatorDrawable.getIntrinsicHeight() / 2);
             return new RectF(cx - w, cy - h, cx + w, cy + h);
         }
 
