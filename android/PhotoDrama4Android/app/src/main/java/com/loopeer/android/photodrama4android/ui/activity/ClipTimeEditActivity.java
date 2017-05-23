@@ -4,8 +4,13 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ActivityClipTimeEditBinding;
@@ -16,6 +21,8 @@ import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ClipTimeEditAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.TimeSelectView;
+
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements ClipTimeEditAdapter.OnSelectedListener, TimeSelectView.TimeUpdateListener, VideoPlayerManager.ProgressChangeListener {
 
@@ -38,6 +45,17 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
         mBinding.timeProgressView.setTimeUpdateListener(this);
         updateRecyclerView();
+        checkNavigationBarChangeMargin();
+    }
+
+    private void checkNavigationBarChangeMargin() {
+        boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+
+        if (!hasMenuKey && !hasBackKey) {//have navi
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mBinding.textSelectedTransition.getLayoutParams();
+            params.topMargin = getResources().getDimensionPixelSize(R.dimen.large_padding);
+        }
     }
 
     @Override
