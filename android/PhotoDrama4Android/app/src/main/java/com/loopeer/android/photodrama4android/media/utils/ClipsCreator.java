@@ -10,15 +10,22 @@ import com.loopeer.android.photodrama4android.media.model.VideoGroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class ClipsCreator {
+
+    public static final float MIN_SCALE = 1.0f;
+    public static final float MAX_SCALE = 1.5f;
+
+    public static final float MIN_POS_TRANS = -0.05f;
+    public static final float MAX_POS_TRANS = 0.05f;
 
     public static ArrayList<ImageClip> createImageClips(List<String> urls) {
         ArrayList<ImageClip> imageClips = new ArrayList<>();
 
         for (int i = 0; i < urls.size(); i++) {
-            ScaleTranslateRatio large = new ScaleTranslateRatio(1.0f, 0f, 0f);
-            ScaleTranslateRatio deft = new ScaleTranslateRatio(1.3f, 0f, 0f);
+            ScaleTranslateRatio large = getTransition();
+            ScaleTranslateRatio deft = getTransition();
 
             ImageClip imageClip;
             if (imageClips.isEmpty()) {
@@ -37,6 +44,15 @@ public class ClipsCreator {
             imageClips.add(imageClip);
         }
         return imageClips;
+    }
+
+    public static ScaleTranslateRatio getTransition() {
+        Random random = new Random();
+        ScaleTranslateRatio transition = new ScaleTranslateRatio();
+        transition.scaleFactor = random.nextFloat() * (MAX_SCALE - MIN_SCALE) + MIN_SCALE;
+        transition.x = random.nextFloat() * (MAX_POS_TRANS - MIN_POS_TRANS) + MIN_POS_TRANS;
+        transition.y = random.nextFloat() * (MAX_POS_TRANS - MIN_POS_TRANS) + MIN_POS_TRANS;
+        return transition;
     }
 
     public static List<TransitionClip> createTransitionClips(List<ImageClip> imageClips) {
