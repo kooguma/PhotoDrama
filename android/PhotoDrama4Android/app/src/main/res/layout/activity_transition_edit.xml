@@ -11,12 +11,13 @@
 
         <include
             android:id="@+id/view_toolbar_dark_inset"
-            layout="@layout/view_toolbar_dark_inset" />
+            layout="@layout/view_toolbar_dark_inset"/>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:background="@android:color/black">
 
             <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
                 android:id="@+id/gl_surface_view"
@@ -38,9 +39,9 @@
             android:id="@+id/seek_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:background="@color/bg_edit"
             android:gravity="center_vertical"
-            android:background="@color/bg_edit">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/text_start"
@@ -73,16 +74,16 @@
             android:id="@+id/recycler_view_segment"
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:paddingRight="@dimen/small_padding"
+            android:clipToPadding="false"
             android:paddingLeft="@dimen/small_padding"
-            android:clipToPadding="false"/>
+            android:paddingRight="@dimen/small_padding"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_transition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"/>
 
     </LinearLayout>
 
