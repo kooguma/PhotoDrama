@@ -119,6 +119,7 @@ public class MusicClipPlayer implements MediaPlayer.OnPreparedListener {
                 }
             }
         }
+        mMediaPlayer.setVolume(mMusicClip.volume, mMusicClip.volume);
     }
 
     @Override
