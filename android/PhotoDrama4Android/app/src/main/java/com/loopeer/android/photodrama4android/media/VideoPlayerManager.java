@@ -194,8 +194,6 @@ public class VideoPlayerManager
     public void pauseVideo() {
         mGLThread.stopUp();
         mIMusic.pauseMusic();
-        mGLThread.stopUp();
-        mIMusic.pauseMusic();
         if (isRecording()) mGLRenderWorker.endRecording();
         onProgressStop();
     }
@@ -264,6 +262,7 @@ public class VideoPlayerManager
     }
 
     private void onProgressChange(int progress) {
+        if (mGLThread == null) return;
         for (ProgressChangeListener listener :
                 mChangeListeners) {
             listener.onProgressChange(progress, mSeekbarMaxValue);
