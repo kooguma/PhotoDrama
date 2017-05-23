@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
+import com.loopeer.android.photodrama4android.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -102,8 +103,11 @@ public class LocalImageUtils {
         int picHeight = opt.outHeight;
 
         //获取屏的宽度和高度
-        int screenWidth = DisplayUtils.getScreenWidth(context);
-        int screenHeight = DisplayUtils.getScreenHeight(context);
+        int screenWidth = 1280;
+        int screenHeight = 720;
+/*
+        float f =  1f * context.getResources().getInteger(R.integer.gl_screen_y) / context.getResources().getInteger(R.integer.gl_screen_x);
+        screenHeight = (int) (f * screenWidth);*/
 
         //根据屏的大小和图片大小计算出缩放比例
         if (picWidth > picHeight) {
