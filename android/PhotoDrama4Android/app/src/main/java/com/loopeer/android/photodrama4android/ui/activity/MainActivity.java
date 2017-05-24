@@ -38,6 +38,7 @@ public class MainActivity extends PhotoDramaBaseActivity {
     }
 
     public void onCreateClick(View view) {
+        Analyst.homeMyCreatClick();
         Navigator.startImageSelectActivity(this);
     }
 

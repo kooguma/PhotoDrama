@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityRecordMusicBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
@@ -181,6 +182,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            Analyst.myCreatDubbingSaveClick();
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
             setResult(RESULT_OK, intent);

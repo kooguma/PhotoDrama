@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityTransitionEditBinding;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
@@ -134,6 +135,7 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            Analyst.myCreatTransferSaveClick();
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
             setResult(RESULT_OK, intent);

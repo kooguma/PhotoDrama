@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityClipTimeEditBinding;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
@@ -131,6 +132,7 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
     }
 
     public void onBtnClick(View view) {
+        Analyst.myCreatTimeLongSaveClick();
         mClipTimeEditAdapter.getSelectedImageClip().showTime = mBinding.timeProgressView.getProgress();
         mClipTimeEditAdapter.notifyDataSetChanged();
         ClipsCreator.updateImageClipsByShowTime(mDrama.videoGroup);

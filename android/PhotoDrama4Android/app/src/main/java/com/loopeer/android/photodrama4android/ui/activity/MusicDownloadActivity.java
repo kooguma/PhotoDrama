@@ -13,6 +13,7 @@ import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.api.service.VoiceService;
 import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
@@ -76,6 +77,11 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override public void onMusicDownloadClick(Voice voice, TextView txtProgress) {
+        if (mType == MusicClip.MusicType.BGM) {
+            Analyst.addMusicSoundtrackDownloadClic(voice.id);
+        } else {
+            Analyst.addEffectSoundEffectDownloadClic(voice.id);
+        }
         mAudioFetchHelper.getAudio(mType, voice, status -> {
             txtProgress.setText(
                 getString(R.string.common_percent_format, status.getPercentNumber()));

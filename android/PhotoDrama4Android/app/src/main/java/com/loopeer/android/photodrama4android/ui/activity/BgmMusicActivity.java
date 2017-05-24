@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityBgmMusicBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
@@ -63,6 +64,7 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
     }
 
     public void onMusicClick(View view) {
+        Analyst.myCreatSoundtrackAddClick();
         MusicClip musicClip = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
                 , MusicClip.MusicType.SOUND_EFFECT);
         if (!checkClipValidate(musicClip)) {
@@ -97,6 +99,7 @@ public class BgmMusicActivity extends PhotoDramaBaseActivity
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            Analyst.myCreatSoundtrackSaveClick();
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
             setResult(RESULT_OK, intent);

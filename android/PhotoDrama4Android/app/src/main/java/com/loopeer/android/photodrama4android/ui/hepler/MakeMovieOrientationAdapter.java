@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaEditBinding;
 import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
@@ -122,6 +123,7 @@ public class MakeMovieOrientationAdapter extends OrientationAdapter<ActivityMake
             hideTool();
         } else {
             if (mVideoPlayerManager.isStop()) {
+                Analyst.myStarPlayClick();
                 mVideoPlayerManager.startVideo();
             } else {
                 mVideoPlayerManager.pauseVideo();

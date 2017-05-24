@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemEffectDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
@@ -56,28 +57,26 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.setVoice(voice);
 
         binding.layoutBrief.setOnClickListener(v -> {
+            Analyst.addEffectSoundEffectPlayClick(voice.id);
             onItemExpand(binding, path);
         });
 
         binding.btnExpand.setOnClickListener(v -> {
             if (v.isSelected()) {
                 if (mIMusicAdapter != null) {
+                    Analyst.addEffectSoundEffectAddClick(voice.id);
                     mIMusicAdapter.onMusicAddClick(voice);
                 }
-            }
-        });
-
-        binding.btnExpand.setOnClickListener(v -> {
-            if (v.isSelected()) {
-                if (mIMusicAdapter != null) {
-                    mIMusicAdapter.onMusicAddClick(voice);
-                }
+            } else {
+                Analyst.addEffectSoundEffectDetailClick(voice.id);
+                onItemExpand(binding, path);
             }
         });
 
         binding.btnPausePlayBtn.setOnClickListener(v -> {
             if (v.isSelected()) {
                 if (mIMusicAdapter != null) {
+                    Analyst.addEffectSoundEffectPlayClick(voice.id);
                     mIMusicAdapter.onMusicPlayClick(path, mPlayingItem.seekBar);
                     v.setSelected(false);
                 }
