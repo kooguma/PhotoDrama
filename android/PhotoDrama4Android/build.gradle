@@ -43,7 +43,7 @@ ext {
     laputappVersion = '1.4.5-beta53'
     leakcanaryVersion = '1.5'
     andebugVersion = '1.0.3'
-    developModuleVersion = '0.0.3'
+    developModuleVersion = '0.0.5-beta2'
     frescoVersion = '0.14.1'
     flexboxVersion = '0.2.5'
     imageGroupViewVersion = '1.0.27'

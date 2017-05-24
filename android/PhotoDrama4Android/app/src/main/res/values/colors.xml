@@ -36,6 +36,7 @@
     <color name="export_color_bg">#cc222222</color>
 
     <color name="inset_statusbar_color">@color/colorPrimary</color>
+    <color name="inset_statusbar_color_light">@android:color/white</color>
 
     <color name="color_c1c1c1">#c1c1c1</color>
 

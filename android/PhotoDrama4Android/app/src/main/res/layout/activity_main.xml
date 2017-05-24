@@ -9,12 +9,6 @@
     android:orientation="vertical"
     tools:context=".ui.activity.MainActivity">
 
-    <com.loopeer.compatinset.SingleInsetHolderView
-        android:id="@+id/status_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="@bool/fits_system_windows"
-        app:insetStatusBarColor="@color/inset_statusbar_color"/>
 
     <ImageButton
         android:layout_width="wrap_content"
