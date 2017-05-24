@@ -83,6 +83,7 @@
                 android:id="@+id/layout_controller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@color/window_background_gray"
                 android:orientation="vertical">
 
@@ -91,7 +92,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:visibility="gone"
                     android:paddingBottom="@dimen/medium_padding"
                     android:paddingLeft="@dimen/medium_padding"
                     android:paddingRight="@dimen/larger_padding">
