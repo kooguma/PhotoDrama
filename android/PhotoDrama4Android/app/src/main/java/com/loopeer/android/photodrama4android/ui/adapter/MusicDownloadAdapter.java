@@ -44,9 +44,17 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
         });
 
         if (TextUtils.isEmpty(path)) {
-            binding.viewSwitcher.setVisibility(View.VISIBLE);
+            //未下载
+            binding.viewSwitcher.setDisplayedChild(0);
+            binding.txtPercent.setText(null);
+            binding.txtPercent.setTextColor(
+                getContext().getResources().getColor(R.color.colorAccent));
         } else {
-            binding.viewSwitcher.setVisibility(View.GONE);
+            //已下载
+            binding.viewSwitcher.setDisplayedChild(1);
+            binding.txtPercent.setText(R.string.music_already_download);
+            binding.txtPercent.setTextColor(
+                getContext().getResources().getColor(R.color.text_color_tertiary));
         }
 
         binding.getRoot().setOnClickListener(l -> {

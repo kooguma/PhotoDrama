@@ -82,7 +82,8 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         }, throwable -> {
             Toaster.showToast("下载失败：" + throwable.getMessage());
         }, () -> {
-            Toaster.showToast("下载完成");
+            txtProgress.setText(R.string.music_already_download);
+            txtProgress.setTextColor(getResources().getColor(R.color.text_color_tertiary));
             RxBus.getDefault().send(MusicDownLoadSuccessEvent.INSTANCE);
         });
     }
@@ -114,13 +115,11 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
 
             if (voiceFile.exists()) {
                 mMediaPlayer.setDataSource(this, Uri.fromFile(voiceFile));
-                Toaster.showToast("本地播放");
+                mMediaPlayer.prepareAsync();
             } else {
-                mMediaPlayer.setDataSource(this, Uri.parse(voice.voiceUrl));
-                Toaster.showToast("在线播放");
+                // TODO: 2017/5/24   在线播放调研
+               // mMediaPlayer.setDataSource(this, Uri.parse(voice.voiceUrl));
             }
-
-            mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
