@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.View;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityTransitionEditBinding;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
@@ -107,10 +109,9 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
     public void onEffectSelected(TransitionClip transitionClip) {
         mImageTransitionSegmentAdapter.notifyTransition(transitionClip);
         updateDramaImageAndTransitionTime();
-        mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mSelectedTransitionClip = mImageTransitionSegmentAdapter.getSelectedTransition();
+        mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mVideoPlayerManager.refreshTransitionRender();
-
         mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime
                 , mSelectedTransitionClip.getEndTime());
         mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
@@ -134,6 +135,7 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            Analyst.myCreatTransferSaveClick();
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
             setResult(RESULT_OK, intent);

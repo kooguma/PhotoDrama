@@ -226,6 +226,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     }
 
     public void onEditClick(View view) {
+        Analyst.myStarDetailUseStoryClick(mTheme.id);
         Navigator.startDramaEditActivity(DramaDetailActivity.this, mTheme);
     }
 

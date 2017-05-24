@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityImageSelectBinding;
 import com.loopeer.android.photodrama4android.media.cache.BitmapFactory;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -82,6 +83,7 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
                 showToast(R.string.image_too_small);
                 return true;
             }
+            Analyst.myCreatStartClick();
             Navigator.startMakeMovieActivity(ImageSelectActivity.this,
                     Drama.createFromPath(urls));
             registerSubscription(

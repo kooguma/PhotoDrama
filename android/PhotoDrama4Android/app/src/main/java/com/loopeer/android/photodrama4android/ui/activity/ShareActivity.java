@@ -32,25 +32,42 @@ public class ShareActivity extends PhotoDramaBaseActivity {
     }
 
     public void onBackToMain(View view) {
-        Analyst.shareBackHomeClick();
+        if (mTheme == null) {
+            Analyst.myCreatHomeClick();
+        } else {
+            Analyst.shareBackHomeClick();
+        }
         Navigator.startMainActivity(this);
     }
 
     public void onQQClick(View view) {
-        Analyst.shareQQClick();
         shareSubmit();
+        if (mTheme == null) {
+            Analyst.myCreatShareQQClick();
+        } else {
+            Analyst.shareQQClick();
+        }
         ShareUtils.startShare(this, ShareUtils.SHARE_TYPE_QQ, mPath);
+
     }
 
     public void onWeichatClick(View view) {
         shareSubmit();
-        Analyst.shareWeChatClick();
+        if (mTheme == null) {
+            Analyst.myCreatShareWeixinClick();
+        } else {
+            Analyst.shareWeChatClick();
+        }
         ShareUtils.startShare(this, ShareUtils.SHARE_TYPE_WEICHAT, mPath);
     }
 
     public void onMoreClick(View view) {
         shareSubmit();
-        Analyst.shareMoreClick();
+        if (mTheme == null) {
+            Analyst.myCreatShareMoreClick();
+        } else {
+            Analyst.shareMoreClick();
+        }
         ShareUtils.startShare(this, null, mPath);
     }
 

@@ -67,7 +67,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drama_edit);
 
         mTheme = (Theme) getIntent().getSerializableExtra(Navigator.EXTRA_THEME);
-        Analyst.dramaUseClick(mTheme.id);
         setupView();
         loadDrama();
         mOrientationAdapter = new DramaEditOrientationAdapter(mBinding, this);

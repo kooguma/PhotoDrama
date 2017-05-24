@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemMusicRecommendBinding;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Category;
@@ -29,6 +30,11 @@ public class MusicRecommendAdapter extends BaseFooterAdapter<Category> {
         binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (category != null) {
+                    if (mType == MusicClip.MusicType.BGM) {
+                        Analyst.addMusicSoundtrackFeaturedClick(category.id);
+                    } else {
+                        Analyst.addEffectSoundEffectFeaturedClick(category.id);
+                    }
                     Navigator.startMusicDownloadActivity(getContext(),mType,category);
                 }
             }

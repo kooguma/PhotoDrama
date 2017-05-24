@@ -14,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivityMakeMovieBinding;
 import com.loopeer.android.photodrama4android.databinding.ViewMakeMovieEditItemBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
@@ -85,7 +86,10 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
             binding.imgIcon.setImageResource(item.icon);
             binding.textTitle.setText(item.text);
             binding.getRoot().setOnClickListener(v
-                    -> Navigator.startDramaEditItemActivity(MakeMovieActivity.this, mDrama, item.targetClass));
+                    -> {
+                Analyst.logEvent(item.analystEventKey);
+                Navigator.startDramaEditItemActivity(MakeMovieActivity.this, mDrama, item.targetClass);
+            });
         }
     }
 
@@ -115,6 +119,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         }
 
         if (item.getItemId() == R.id.menu_export) {
+            Analyst.myCreatDownloadClick();
             mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
@@ -172,6 +177,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     public void onPlayBtnClick(View view) {
+        Analyst.myStarPlayClick();
         mVideoPlayerManager.startVideo();
         mBinding.btnPlay.setVisibility(View.GONE);
     }
@@ -179,6 +185,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     public void onFullBtnClick(View view) {
         mScreenOrientationHelper.fullScreen();
     }
+
     public void onCreateZip(View view) {
         mVideoPlayerManager.pauseVideo();
         showProgressLoading("");

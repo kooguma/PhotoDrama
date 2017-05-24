@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
@@ -54,15 +55,18 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.txtEnd.setText(voice.duration);
 
         binding.layoutBrief.setOnClickListener(v -> {
+            Analyst.addMusicSoundtrackPlayClick(voice.id);
             onItemExpand(binding, path);
         });
 
         binding.btnExpand.setOnClickListener(v -> {
             if (v.isSelected()) {
                 if (mIMusicAdapter != null) {
+                    Analyst.addMusicSoundtrackAddClick(voice.id);
                     mIMusicAdapter.onMusicAddClick(voice);
                 }
             } else {
+                Analyst.addMusicSoundtrackDetailClick(voice.id);
                 onItemExpand(binding, path);
             }
         });
@@ -70,6 +74,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.btnPausePlayBtn.setOnClickListener(v -> {
             if (v.isSelected()) {
                 if (mIMusicAdapter != null) {
+                    Analyst.addMusicSoundtrackPlayClick(voice.id);
                     mIMusicAdapter.onMusicPlayClick(path, mPlayingItem.viewClip);
                     v.setSelected(false);
                 }

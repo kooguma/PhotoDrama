@@ -138,11 +138,8 @@ public class VideoPlayerManager
 
     private void finishToTime(int finishToTime) {
         endRecording();
-        mGLThread.stopUp();
-        mGLThread.setManual(true);
-        mGLThread.setManualUpSeekBar(finishToTime);
+        mGLThread.seekToTime(finishToTime);
         mSeekWrapperHolders.setProgress(finishToTime);
-        mGLThread.setManual(false);
         mIMusic.seekToMusic(finishToTime);
         mIMusic.pauseMusic();
         onProgressChange(finishToTime);

@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ActivitySubtitleEditBinding;
 import com.loopeer.android.photodrama4android.media.OnSeekProgressChangeListener;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
@@ -93,6 +94,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             finish();
         }
         if (item.getItemId() == R.id.menu_done) {
+            Analyst.myCreatSubtitleSaveClick();
             Intent intent = new Intent();
             intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
             setResult(RESULT_OK, intent);

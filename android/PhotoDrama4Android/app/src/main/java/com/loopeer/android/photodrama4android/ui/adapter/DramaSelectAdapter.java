@@ -27,7 +27,10 @@ public class DramaSelectAdapter<T extends Theme> extends BaseFooterAdapter<T> {
 
         binding.setTheme(theme);
         binding.container.setOnClickListener(v -> Navigator.startDramaDetailActivity(getContext(), theme));
-        binding.btnUseDrama.setOnClickListener(l -> Navigator.startDramaEditActivity(getContext(), theme));
+        binding.btnUseDrama.setOnClickListener(l -> {
+            Analyst.dramaUseClick(theme.id);
+            Navigator.startDramaEditActivity(getContext(), theme);
+        });
         binding.executePendingBindings();
     }
 
