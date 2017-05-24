@@ -99,13 +99,6 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         }
     }
 
-    public void setManualUpSeekBar(long usedTime) {
-        if (!mIsManual)
-            return;
-        this.mUsedTime = usedTime;
-        mMovieMakerTextureView.requestRender();
-    }
-
     @Override
     public void onPause() {
         mMovieMakerTextureView.onPause();

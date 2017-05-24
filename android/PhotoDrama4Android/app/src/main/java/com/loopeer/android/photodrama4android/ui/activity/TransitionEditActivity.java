@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -107,10 +108,9 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
     public void onEffectSelected(TransitionClip transitionClip) {
         mImageTransitionSegmentAdapter.notifyTransition(transitionClip);
         updateDramaImageAndTransitionTime();
-        mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mSelectedTransitionClip = mImageTransitionSegmentAdapter.getSelectedTransition();
+        mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mVideoPlayerManager.refreshTransitionRender();
-
         mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime
                 , mSelectedTransitionClip.getEndTime());
         mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
