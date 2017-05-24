@@ -66,6 +66,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="@{voice.name}"
                     android:textColor="@color/text_color_primary"
                     android:textSize="@dimen/text_size_larger"/>
