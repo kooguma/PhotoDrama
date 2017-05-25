@@ -1,11 +1,9 @@
 package com.loopeer.android.photodrama4android.api;
 
 import com.laputapp.Laputapp;
+import com.laputapp.http.sign.RequestReformerManager;
 import com.loopeer.android.photodrama4android.BuildConfig;
-import com.loopeer.android.photodrama4android.api.sign.RequestReformerManager;
-
 import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -23,10 +21,10 @@ public class ApiHeaderInterceptor implements Interceptor {
         RequestReformerManager reformerManager = new RequestReformerManager(originalRequest, BuildConfig.API_KEY);
         Request.Builder requestBuilder = reformerManager.createNewRequest().newBuilder()
                 .addHeader("build", sVersionCode)
-                .addHeader("version_name", sVersion)
+                .addHeader("version-name", sVersion)
                 .addHeader("platform", "android")
-                .addHeader("device_id", sDeviceId)
-                .addHeader("channel_id", sChannelId)
+                .addHeader("device-id", sDeviceId)
+                .addHeader("channel-id", sChannelId)
                 .addHeader("timestamp", String.valueOf(System.currentTimeMillis() / 1000))
                 .addHeader("sign", reformerManager.getSign());
 
