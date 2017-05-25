@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="@bool/fits_system_windows"
         app:insetStatusBarColor="@android:color/transparent"
+        app:insetStatusBarStyle="dark"
         app:insetStatusBarDarkColor="@color/inset_statusbar_color"/>
 
     <ImageButton

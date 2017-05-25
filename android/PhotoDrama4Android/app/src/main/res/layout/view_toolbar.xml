@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="@bool/fits_system_windows"
         app:insetStatusBarColor="@color/inset_statusbar_color_light"
-        app:insetStatusBarDarkColor="@color/inset_statusbar_color"/>
+        app:insetStatusBarDarkColor="@color/inset_statusbar_color"
+        app:insetStatusBarStyle="dark"/>
 
     <android.support.v7.widget.Toolbar
         style="@style/Toolbar"
