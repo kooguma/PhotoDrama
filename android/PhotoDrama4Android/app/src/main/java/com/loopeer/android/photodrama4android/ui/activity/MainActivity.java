@@ -1,8 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
 import com.loopeer.android.photodrama4android.Navigator;
@@ -21,15 +19,6 @@ public class MainActivity extends PhotoDramaBaseActivity {
         setSwipeBackEnable(false);
         setContentView(R.layout.activity_main);
         PermissionUtils.checkStoragePermission(this);
-
-      /*  new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    findViewById(R.id.btn_act).setSystemUiVisibility(*//*findViewById(R.id.btn_act).getSystemUiVisibility() | *//*View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                }
-            }
-        }, 100);*/
     }
 
     @Override

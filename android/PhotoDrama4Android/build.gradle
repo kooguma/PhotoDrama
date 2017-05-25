@@ -26,7 +26,7 @@ ext {
             buildToolsVersion      : '25.0.2',
             minSdkVersion          : 18,
             targetSdkVersion       : 24,
-            versionCode            : 18,
+            versionCode            : 20,
             versionName            : '1.0.0',
             apiUrlDebug            : 'http://drama.17chuang.cc/api/v1/',
             apiUrlRelease          : 'http://v.17chuang.cc//api/v1/',
@@ -43,7 +43,7 @@ ext {
     laputappVersion = '1.4.5-beta53'
     leakcanaryVersion = '1.5'
     andebugVersion = '1.0.3'
-    developModuleVersion = '0.0.5-beta2'
+    developModuleVersion = '0.0.5-beta5'
     frescoVersion = '0.14.1'
     flexboxVersion = '0.2.5'
     imageGroupViewVersion = '1.0.27'
