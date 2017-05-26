@@ -11,6 +11,7 @@ import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.databinding.ListItemMusicDownloadBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemMusicRecommendBinding;
+import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -20,13 +21,16 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     private IMusicDownloadAdapter mListener;
 
+    private MusicClip.MusicType mType;
+
     public interface IMusicDownloadAdapter extends OnItemClickListener<Voice> {
         void onMusicDownloadClick(Voice voice, TextView txtProgress);
     }
 
-    public MusicDownloadAdapter(Context context, IMusicDownloadAdapter listener) {
+    public MusicDownloadAdapter(Context context, IMusicDownloadAdapter listener, MusicClip.MusicType type) {
         super(context);
         mListener = listener;
+        mType = type;
     }
 
     @Override public void bindItem(Voice voice, int position, RecyclerView.ViewHolder holder) {
@@ -34,7 +38,7 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
             ((DataBindingViewHolder<ListItemMusicDownloadBinding>) holder).binding;
         binding.setVoice(voice);
 
-        String path = FileManager.getInstance().getAudioPath(getContext(), voice);
+        String path = FileManager.getInstance().getAudioPath(getContext(), mType, voice);
 
         binding.btnDownload.setOnClickListener(l -> {
             if (mListener != null) {

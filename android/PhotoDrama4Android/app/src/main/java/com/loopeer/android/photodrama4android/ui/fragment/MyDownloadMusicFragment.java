@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.laputapp.ui.decorator.DividerItemDecoration;
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.api.ResponseObservable;
+import com.loopeer.android.photodrama4android.api.service.VoiceService;
 import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
@@ -28,10 +31,13 @@ import com.loopeer.android.photodrama4android.ui.adapter.BGMDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.EffectDownloadAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
 import com.loopeer.android.photodrama4android.ui.hepler.MediaPlayerWrapper;
+import com.loopeer.android.photodrama4android.ui.widget.LocalSquareImageView;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import io.reactivex.Flowable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import java.io.File;
 import java.util.List;
 
@@ -60,9 +66,15 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     private void registerMusicDownLoadSuccessEvent() {
         registerSubscription(
-            RxBus.getDefault().toFlowable()
-                .filter(o -> o instanceof MusicDownLoadSuccessEvent)
+            RxBus.getDefault().toFlowable(MusicDownLoadSuccessEvent.class)
                 .doOnNext(o -> getRecyclerManager().onRefresh())
+                .doOnNext(o -> {
+                    registerSubscription(
+                        VoiceService.INSTANCE
+                            .download(o.voice.id)
+                            .subscribe()
+                    );
+                })
                 .subscribe()
         );
     }
@@ -82,13 +94,14 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
             UIAttr.LoaderAttr.LOOPEER_EMPTY, new ViewBindHelper() {
                 @Override
                 public View createView(LayoutInflater layoutInflater, ViewGroup viewParent) {
-                    return layoutInflater.inflate(R.layout.view_empty_my_download, viewParent, false);
+                    return layoutInflater.inflate(R.layout.view_empty_my_download, viewParent,
+                        false);
                 }
 
                 @Override
                 public void viewCreate(View view) {
                     view.setOnClickListener(l -> {
-                        ((AddMusicClipActivity)getActivity()).switchToRecommend();
+                        ((AddMusicClipActivity) getActivity()).switchToRecommend();
                     });
                 }
             });

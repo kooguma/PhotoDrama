@@ -248,14 +248,18 @@ public class FileManager {
         return null;
     }
 
-    public String getAudioPath(Context context, Voice voice) {
+    public String getAudioPath(Context context, MusicClip.MusicType type, Voice voice) {
         if (voice == null) return null;
-        File[] file = RxDownload.getInstance(context)
-            .getRealFiles(voice.voiceUrl);
-        if (file != null) {
-            return file[0].getAbsolutePath();
+        final String saveName = voice.name + "_" + voice.id;
+        final String savePath = type == MusicClip.MusicType.BGM ?
+                                FileManager.getInstance().getBgmPath() :
+                                FileManager.getInstance().getEffectPath();
+        File file = new File(savePath + saveName);
+        if(file.exists()){
+            return file.getAbsolutePath();
+        }else {
+            return null;
         }
-        return null;
     }
 
     public void deleteAudioBmgFile(Context context, Voice voice) {

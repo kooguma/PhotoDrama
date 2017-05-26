@@ -14,6 +14,7 @@ import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
+import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.VoiceService;
 import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
@@ -68,7 +69,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        return new MusicDownloadAdapter(this, this);
+        return new MusicDownloadAdapter(this, this,mType);
     }
 
     @Override
@@ -82,6 +83,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         } else {
             Analyst.addEffectSoundEffectDownloadClic(voice.id);
         }
+
         mAudioFetchHelper.getAudio(mType, voice, status -> {
             txtProgress.setText(
                 getString(R.string.common_percent_format, status.getPercentNumber()));
@@ -90,7 +92,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         }, () -> {
             txtProgress.setText(R.string.music_already_download);
             txtProgress.setTextColor(getResources().getColor(R.color.text_color_tertiary));
-            RxBus.getDefault().send(MusicDownLoadSuccessEvent.INSTANCE);
+            RxBus.getDefault().send(new MusicDownLoadSuccessEvent(voice));
         });
     }
 
@@ -124,7 +126,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
                 mMediaPlayer.prepareAsync();
             } else {
                 // TODO: 2017/5/24   在线播放调研
-               // mMediaPlayer.setDataSource(this, Uri.parse(voice.voiceUrl));
+                // mMediaPlayer.setDataSource(this, Uri.parse(voice.voiceUrl));
             }
         } catch (IOException e) {
             e.printStackTrace();

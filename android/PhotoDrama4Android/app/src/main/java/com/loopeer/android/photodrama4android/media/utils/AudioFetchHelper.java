@@ -29,7 +29,6 @@ public class AudioFetchHelper {
         final String savePath = type == MusicClip.MusicType.BGM ?
                                 FileManager.getInstance().getBgmPath() :
                                 FileManager.getInstance().getEffectPath();
-        Log.e("TAG", "saveName = " + saveName + " savePath = " + savePath);
         mDisposable = mRxDownload.download(voice.voiceUrl, saveName, savePath)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
