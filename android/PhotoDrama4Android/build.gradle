@@ -27,7 +27,7 @@ ext {
             minSdkVersion          : 18,
             targetSdkVersion       : 24,
             versionCode            : 21,
-            versionName            : '2.0.0',
+            versionName            : '1.2.0',
             apiUrlDebug            : 'http://drama.17chuang.cc/api/v1/',
             apiUrlRelease          : 'http://v.17chuang.cc//api/v1/',
             wechatAppId            : 'wxf18e5caaf4b28c2b',
