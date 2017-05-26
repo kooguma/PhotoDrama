@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:fitsSystemWindows="@bool/fits_system_windows">
 
-        <LinearLayout
+        <com.loopeer.compatinset.InsetLinearLayout
             android:id="@+id/layout_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="@bool/fits_system_windows"
             android:orientation="vertical">
 
             <include
                 android:id="@+id/view_toolbar_dark_inset"
-                layout="@layout/view_toolbar_dark_inset" />
+                layout="@layout/view_toolbar_dark_inset"/>
 
-            <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
+            <com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper
                 android:id="@+id/animator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fitsSystemWindows="@bool/fits_system_windows"
                 android:background="@android:color/black">
 
-                <FrameLayout
+                <com.loopeer.compatinset.InsetFramelayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fitsSystemWindows="@bool/fits_system_windows"
                     android:layout_gravity="center">
 
                     <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
@@ -40,10 +45,10 @@
                         android:id="@+id/view_cover"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/black"
                         android:visibility="gone"
                         app:screenRatioX="@integer/gl_screen_x"
-                        app:screenRatioY="@integer/gl_screen_y"
-                        android:background="@android:color/black"/>
+                        app:screenRatioY="@integer/gl_screen_y"/>
 
                     <ImageView
                         android:id="@+id/btn_play"
@@ -57,8 +62,8 @@
                         style="?actionButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onFullBtnClick"
                         android:layout_gravity="bottom|right"
+                        android:onClick="onFullBtnClick"
                         android:src="@drawable/ic_full"/>
 
                     <include
@@ -68,14 +73,14 @@
                     <include
                         android:id="@+id/view_full_top"
                         layout="@layout/view_full_screen_top"/>
-                </FrameLayout>
+                </com.loopeer.compatinset.InsetFramelayout>
 
                 <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:screenRatioX="@integer/gl_screen_x"
                     app:screenRatioY="@integer/gl_screen_y"/>
-            </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
+            </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -86,7 +91,7 @@
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
                 android:paddingTop="18dp"/>
-        </LinearLayout>
+        </com.loopeer.compatinset.InsetLinearLayout>
 
         <com.loopeer.bottomimagepicker.BottomImagePickerView
             android:id="@+id/pick_view"
@@ -98,5 +103,5 @@
             app:behavior_hideable="false"
             app:layout_behavior="@string/picker_bottom_sheet_behavior"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout>
 </layout>

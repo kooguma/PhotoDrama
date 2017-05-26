@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <com.loopeer.compatinset.InsetLinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
         <include
@@ -160,7 +161,7 @@
         <include
             android:id="@+id/view_music_volume"
             layout="@layout/view_music_volume"/>
-    </LinearLayout>
+    </com.loopeer.compatinset.InsetLinearLayout>
 
 </layout>
 

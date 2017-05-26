@@ -6,16 +6,19 @@
         <variable
             name="cacheSizeInM"
             type="double"/>
+
         <variable
             name="asd"
             type="int"/>
 
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.loopeer.compatinset.InsetLinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/window_background_gray"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
         <include layout="@layout/view_toolbar"/>
@@ -37,11 +40,11 @@
 
         <com.loopeer.formitemview.FormTextItem
             style="@style/PhotoDramaFormItem"
-            app:imageRightVisible="gone"
             android:onClick="onRankClick"
             app:contentGravity="right"
             app:contentTextColor="@color/text_color_tertiary"
-            app:descText="@string/setting_rank"/>
+            app:descText="@string/setting_rank"
+            app:imageRightVisible="gone"/>
 
         <View
             android:layout_width="match_parent"
@@ -51,12 +54,12 @@
         <com.loopeer.formitemview.FormTextItem
             android:id="@+id/item_cache"
             style="@style/PhotoDramaFormItem"
-            app:imageRightVisible="gone"
             android:onClick="onClearCacheClick"
             app:contentGravity="right"
-            app:contentTextColor="@color/text_color_tertiary"
             app:contentText="@{@string/settings_cache_size_format(cacheSizeInM)}"
-            app:descText="@string/setting_clear_cache"/>
+            app:contentTextColor="@color/text_color_tertiary"
+            app:descText="@string/setting_clear_cache"
+            app:imageRightVisible="gone"/>
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
@@ -67,5 +70,5 @@
             android:onClick="onAboutClick"
             app:descText="@string/setting_about_us"/>
 
-    </LinearLayout>
+    </com.loopeer.compatinset.InsetLinearLayout>
 </layout>

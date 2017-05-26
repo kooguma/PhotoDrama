@@ -8,22 +8,24 @@
             type="com.loopeer.android.photodrama4android.model.validator.FeedbackValidator"/>
     </data>
 
-    <RelativeLayout
+    <com.loopeer.compatinset.InsetRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.loopeer.compatinset.InsetLinearLayout
             android:id="@+id/toolbar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="@bool/fits_system_windows"
             android:orientation="vertical">
 
             <include
                 android:id="@+id/toolbar"
                 layout="@layout/view_toolbar"/>
-        </LinearLayout>
+        </com.loopeer.compatinset.InsetLinearLayout>
 
         <EditText
             android:layout_width="match_parent"
@@ -39,5 +41,5 @@
             android:paddingTop="@dimen/large_padding"
             android:text="@={validator.feedback}"/>
 
-    </RelativeLayout>
+    </com.loopeer.compatinset.InsetRelativeLayout>
 </layout>

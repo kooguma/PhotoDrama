@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.compatinset.InsetLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:blurkit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="@bool/fits_system_windows"
     android:orientation="vertical">
 
     <include layout="@layout/view_toolbar"/>
@@ -16,21 +17,21 @@
             android:id="@+id/drama_select_tab_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabBackground="@color/window_background_white"
-            app:tabMinWidth="72dp"
-            app:tabGravity="fill"
-            app:tabMode="scrollable"
             android:background="@color/color_white"
-            app:tabTextAppearance="@style/TabLayoutTextAppearance"
+            app:tabBackground="@color/window_background_white"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@android:color/black"
+            app:tabMinWidth="72dp"
+            app:tabMode="scrollable"
             app:tabSelectedTextColor="@android:color/black"
-            app:tabIndicatorColor="@android:color/black"/>
+            app:tabTextAppearance="@style/TabLayoutTextAppearance"/>
 
         <ImageView
             android:id="@+id/blurLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/shape_tab_slide"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:src="@drawable/shape_tab_slide"/>
 
     </RelativeLayout>
 
@@ -39,4 +40,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</LinearLayout>
+</com.loopeer.compatinset.InsetLinearLayout>

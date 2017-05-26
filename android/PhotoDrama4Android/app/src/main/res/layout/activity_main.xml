@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.loopeer.compatinset.InsetRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_login"
+    android:fitsSystemWindows="@bool/fits_system_windows"
     android:orientation="vertical"
     tools:context=".ui.activity.MainActivity">
 
-    <com.loopeer.compatinset.SingleInsetHolderView
+    <com.loopeer.compatinset.InsetHolderView
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="@bool/fits_system_windows"
         app:insetStatusBarColor="@android:color/transparent"
-        app:insetStatusBarStyle="dark"
-        app:insetStatusBarDarkColor="@color/inset_statusbar_color"/>
+        app:insetStatusBarDarkColor="@color/inset_statusbar_color"
+        app:insetStatusBarStyle="dark"/>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -42,4 +43,4 @@
         android:onClick="onCreateClick"
         android:text="@string/main_create"/>
 
-</RelativeLayout>
+</com.loopeer.compatinset.InsetRelativeLayout>

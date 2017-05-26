@@ -13,15 +13,17 @@
             type="com.loopeer.android.photodrama4android.model.Series"/>
     </data>
 
-    <ScrollView
+    <com.loopeer.compatinset.InsetScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/window_background_white"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
-        <FrameLayout
+        <com.loopeer.compatinset.InsetFramelayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="@bool/fits_system_windows">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -254,7 +256,7 @@
                     android:text="@{theme.description}"/>
             </LinearLayout>
 
-            <LinearLayout
+            <com.loopeer.compatinset.InsetLinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -263,16 +265,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:background="@drawable/bg_play_seek_top"
+                android:fitsSystemWindows="@bool/fits_system_windows"
                 android:orientation="vertical"
                 tools:showIn="@layout/activity_full_landscape_play">
 
                 <include
                     android:id="@+id/toolbar_wrapper"
                     layout="@layout/view_inset_toolbar_landscape_full"/>
-            </LinearLayout>
+            </com.loopeer.compatinset.InsetLinearLayout>
 
-        </FrameLayout>
+        </com.loopeer.compatinset.InsetFramelayout>
 
-    </ScrollView>
+    </com.loopeer.compatinset.InsetScrollView>
 
 </layout>

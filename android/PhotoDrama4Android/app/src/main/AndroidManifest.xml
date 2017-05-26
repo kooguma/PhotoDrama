@@ -27,14 +27,14 @@
             android:launchMode="singleTask"/>
         <activity
             android:name=".ui.activity.MakeMovieActivity"
-            android:theme="@style/AppTheme.Dark.NoActionBar"
+            android:theme="@style/AppTheme.NoActionBar.Dark"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/label_drama_make"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar.Dark">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.MainActivity"/>
@@ -43,7 +43,7 @@
             android:name=".ui.activity.ClipTimeEditActivity"
             android:screenOrientation="portrait"
             android:label="@string/label_clip_time_edit"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
         <activity
             android:name=".ui.activity.ImageSegmentEditActivity"
             android:label="@string/label_segment_edit"
@@ -54,13 +54,13 @@
             android:name=".ui.activity.TransitionEditActivity"
             android:label="@string/label_transition_edit"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
         <activity
             android:name=".ui.activity.SubtitleEditActivity"
             android:label="@string/label_subtitle"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
         <activity
             android:name=".ui.activity.TextInputActivity"
             android:launchMode="singleTop"
@@ -76,19 +76,19 @@
             android:label="@string/label_record_audio"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
         <activity
             android:name=".ui.activity.SoundEffectActivity"
             android:label="@string/label_sound_effect"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
         <activity
             android:name=".ui.activity.BgmMusicActivity"
             android:label="@string/label_bgm"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
 
         <activity
             android:name=".ui.activity.MusicSelectActivity"
@@ -155,11 +155,11 @@
         <activity
             android:name=".ui.activity.FullLandscapePlayActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.Dark.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark"/>
         <activity
             android:name=".ui.activity.DramaPlayActivity"
             android:screenOrientation="sensor"
-            android:theme="@style/AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen"/>
+            android:theme="@style/AppTheme.NoActionBar.Dark.TranslucentBg.BottomSlide.Fullscreen"/>
 
         <activity
             android:name=".ui.activity.LauncherActivity"

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.compatinset.InsetLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="@bool/fits_system_windows"
     android:orientation="vertical">
 
     <include layout="@layout/view_toolbar"/>
@@ -11,14 +13,14 @@
         android:id="@+id/music_clip_add_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/window_background_gray"
         app:tabBackground="@color/window_background_gray"
         app:tabGravity="fill"
-        app:tabMode="fixed"
-        android:background="@color/window_background_gray"
-        app:tabTextAppearance="@style/TabLayoutTextAppearance.Dark"
-        app:tabSelectedTextColor="@color/colorAccent"
         app:tabIndicatorColor="@color/colorAccent"
-        app:tabIndicatorWidth="100dp"/>
+        app:tabIndicatorWidth="100dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextAppearance="@style/TabLayoutTextAppearance.Dark"/>
 
     <com.loopeer.android.photodrama4android.ui.widget.NoScrollViewPager
         android:id="@+id/music_clip_add_view_pager"
@@ -26,4 +28,4 @@
         android:layout_height="match_parent"/>
 
 
-</LinearLayout>
+</com.loopeer.compatinset.InsetLinearLayout>

@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.loopeer.compatinset.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.compatinset.InsetRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/window_background_white"
+    android:fitsSystemWindows="@bool/fits_system_windows"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.loopeer.compatinset.InsetLinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/view_toolbar"/>
-    </LinearLayout>
+    </com.loopeer.compatinset.InsetLinearLayout>
 
     <ImageView
         android:id="@+id/img_export"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/container_toolbar"
+        android:layout_centerInParent="true"
         android:layout_marginTop="45dp"
-        android:src="@drawable/ic_export_success"
-        android:layout_centerInParent="true"/>
+        android:src="@drawable/ic_export_success"/>
 
     <TextView
-        style="@style/PhotoDramaText.Primary.larger"
         android:id="@+id/txt_export_success"
+        style="@style/PhotoDramaText.Primary.larger"
         android:layout_below="@id/img_export"
         android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/xxlarge_padding"
@@ -37,30 +40,30 @@
         android:id="@+id/layout_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
         android:layout_below="@id/txt_export_success"
+        android:layout_marginTop="52dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <View
             android:layout_width="0dp"
             android:layout_height="@dimen/divider"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/larger_padding"
             android:layout_marginLeft="@dimen/xxlarge_padding"
+            android:layout_marginRight="@dimen/larger_padding"
+            android:layout_weight="1"
             android:background="@color/divider"/>
 
         <TextView
             style="@style/PhotoDramaText.Primary.large"
-            android:text="@string/share_to"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:text="@string/share_to"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="@dimen/divider"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/xxlarger_padding"
             android:layout_marginLeft="@dimen/large_padding"
+            android:layout_marginRight="@dimen/xxlarger_padding"
+            android:layout_weight="1"
             android:background="@color/divider"/>
     </LinearLayout>
 
@@ -68,36 +71,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_share"
-        android:layout_marginTop="45dp"
         android:layout_marginLeft="@dimen/small_padding"
         android:layout_marginRight="@dimen/small_padding"
+        android:layout_marginTop="45dp"
         android:orientation="horizontal">
 
         <TextView
             style="@style/PhotoDramaShareIcon"
-            android:text="@string/share_qq"
+            android:drawableTop="@drawable/ic_qq"
             android:onClick="onQQClick"
-            android:drawableTop="@drawable/ic_qq"/>
+            android:text="@string/share_qq"/>
 
         <TextView
             style="@style/PhotoDramaShareIcon"
-            android:text="@string/share_wx"
+            android:drawableTop="@drawable/ic_wx"
             android:onClick="onWeichatClick"
-            android:drawableTop="@drawable/ic_wx"/>
+            android:text="@string/share_wx"/>
 
         <TextView
             style="@style/PhotoDramaShareIcon"
-            android:text="@string/share_more"
+            android:drawableTop="@drawable/ic_more"
             android:onClick="onMoreClick"
-            android:drawableTop="@drawable/ic_more"/>
+            android:text="@string/share_more"/>
     </LinearLayout>
 
     <Button
         style="@style/PhotoDramaText.Primary.larger"
-        android:text="@string/share_back"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="100dp"
-        android:onClick="onBackToMain"
         android:background="?selectableItemBackground"
-        android:layout_alignParentBottom="true"/>
+        android:onClick="onBackToMain"
+        android:text="@string/share_back"/>
 </com.loopeer.compatinset.InsetRelativeLayout>

@@ -3,25 +3,28 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <com.loopeer.compatinset.InsetLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
         <include
             android:id="@+id/view_toolbar_dark_inset"
-            layout="@layout/view_toolbar_dark_inset" />
+            layout="@layout/view_toolbar_dark_inset"/>
 
-        <com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper
+        <com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper
             android:id="@+id/texture_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black">
+            android:background="@android:color/black"
+            android:fitsSystemWindows="@bool/fits_system_windows">
 
-            <FrameLayout
+            <com.loopeer.compatinset.InsetFramelayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:fitsSystemWindows="@bool/fits_system_windows">
 
                 <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
                     android:id="@+id/gl_surface_view"
@@ -34,10 +37,10 @@
                     android:id="@+id/view_cover"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/black"
                     android:visibility="gone"
                     app:screenRatioX="@integer/gl_screen_x"
-                    app:screenRatioY="@integer/gl_screen_y"
-                    android:background="@android:color/black"/>
+                    app:screenRatioY="@integer/gl_screen_y"/>
 
                 <ImageButton
                     android:id="@+id/btn_full"
@@ -66,16 +69,16 @@
                     android:id="@+id/view_full_top"
                     layout="@layout/view_full_screen_top"/>
 
-            </FrameLayout>
-        </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
+            </com.loopeer.compatinset.InsetFramelayout>
+        </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
 
         <LinearLayout
             android:id="@+id/seek_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:background="@color/bg_edit"
             android:gravity="center_vertical"
-            android:background="@color/bg_edit">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/text_start"
@@ -112,8 +115,8 @@
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:background="@color/bg_edit">
+            android:background="@color/bg_edit"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/container_edit_item"
@@ -122,6 +125,6 @@
                 android:orientation="horizontal"/>
 
         </HorizontalScrollView>
-    </LinearLayout>
+    </com.loopeer.compatinset.InsetLinearLayout>
 
 </layout>

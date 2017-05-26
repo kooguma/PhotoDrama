@@ -2,7 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.loopeer.android.photodrama4android.ui.widget.ElasticDragDismissFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.loopeer.android.photodrama4android.ui.widget.ElasticDragDismissFrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drag_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black">
+        android:background="@android:color/black"
+        android:fitsSystemWindows="@bool/fits_system_windows">
 
-        <LinearLayout
+        <com.loopeer.compatinset.InsetLinearLayout
             android:id="@+id/layout_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="@bool/fits_system_windows"
             android:orientation="vertical">
 
             <include
@@ -23,9 +25,9 @@
                 android:id="@+id/image_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:actualImageScaleType="centerCrop"
                 app:placeholderImage="@drawable/ic_select_image_show_holder"
                 app:placeholderImageScaleType="centerCrop"
-                app:actualImageScaleType="centerCrop"
                 app:screenRatioX="@integer/gl_screen_x"
                 app:screenRatioY="@integer/gl_screen_y"/>
 
@@ -34,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"/>
-        </LinearLayout>
+        </com.loopeer.compatinset.InsetLinearLayout>
 
         <com.loopeer.bottomimagepicker.BottomImagePickerView
             android:id="@+id/pick_view"
@@ -46,5 +48,5 @@
             app:behavior_hideable="false"
             app:layout_behavior="@string/picker_bottom_sheet_behavior"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout>
 </layout>

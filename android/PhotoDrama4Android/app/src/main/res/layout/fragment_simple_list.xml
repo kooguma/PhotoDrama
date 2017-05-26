@@ -1,4 +1,5 @@
-<com.loopeer.compatinset.InsetLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.compatinset.InsetLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:loopeer="http://com.loopeer.android.librarys/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"

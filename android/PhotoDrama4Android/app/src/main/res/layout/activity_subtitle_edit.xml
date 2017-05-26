@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <com.loopeer.compatinset.InsetFramelayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="@bool/fits_system_windows">
 
-        <LinearLayout
+        <com.loopeer.compatinset.InsetLinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fitsSystemWindows="@bool/fits_system_windows"
             android:orientation="vertical">
 
             <include
@@ -122,7 +124,7 @@
                 android:text="@string/subtitle_add"
                 android:textColor="@color/text_color_tertiary"
                 android:textSize="@dimen/text_size_medium"/>
-        </LinearLayout>
+        </com.loopeer.compatinset.InsetLinearLayout>
 
         <RelativeLayout
             android:id="@+id/text_input_wrapper"
@@ -171,7 +173,7 @@
 
         </RelativeLayout>
 
-    </FrameLayout>
+    </com.loopeer.compatinset.InsetFramelayout>
 
 
 </layout>

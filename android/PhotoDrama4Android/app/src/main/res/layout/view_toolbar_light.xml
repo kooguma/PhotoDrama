@@ -3,7 +3,7 @@
        xmlns:tools="http://schemas.android.com/tools"
        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.loopeer.compatinset.SingleInsetHolderView
+    <com.loopeer.compatinset.InsetHolderView
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

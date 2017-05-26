@@ -21,7 +21,6 @@ public class TextureViewWrapper extends ViewAnimator {
         super(context, attrs);
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (!isLandscape) {

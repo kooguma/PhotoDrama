@@ -43,9 +43,16 @@
         <item name="android:windowBackground">@color/window_background_dark</item>
     </style>
 
-    <style name="AppTheme.Dark.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.NoActionBar.Dark">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="toolbarStyle">@style/Toolbar.Dark</item>
+        <item name="android:toolbarStyle"
+              tools:targetApi="lollipop">@style/Toolbar.Dark
+        </item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="homeAsUpIndicator">@drawable/ic_home_up_white</item>
+        <item name="android:windowBackground">@color/window_background_dark</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -67,8 +74,8 @@
     </style>
 
 
-    <style name="AppTheme.Dark.NoActionBar.TranslucentBg.BottomSlide.Fullscreen"
-        parent="AppTheme.Dark.NoActionBar.BottomSlide">
+    <style name="AppTheme.NoActionBar.Dark.TranslucentBg.BottomSlide.Fullscreen"
+        parent="AppTheme.NoActionBar.Dark.BottomSlide">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
@@ -78,7 +85,7 @@
         <item name="android:windowAnimationStyle">@style/Animation.Activity.BottomSlide</item>
     </style>
 
-    <style name="AppTheme.Dark.NoActionBar.BottomSlide">
+    <style name="AppTheme.NoActionBar.Dark.BottomSlide">
         <item name="android:windowAnimationStyle">@style/Animation.Activity.BottomSlide</item>
     </style>
 

@@ -7,11 +7,12 @@
         <import type="com.loopeer.android.photodrama4android.BuildConfig"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <com.loopeer.android.photodrama4android.ui.widget.InsetConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/window_background_white"
+        android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -46,17 +47,18 @@
             style="@style/PhotoDramaText.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginTop="30dp"
+            android:gravity="center"
             android:text="@string/app_name"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/simpleDraweeView"/>
 
-        <LinearLayout
+        <com.loopeer.compatinset.InsetLinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="@bool/fits_system_windows"
             android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -64,7 +66,7 @@
 
             <include layout="@layout/view_toolbar"/>
 
-        </LinearLayout>
+        </com.loopeer.compatinset.InsetLinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </com.loopeer.android.photodrama4android.ui.widget.InsetConstraintLayout>
 </layout>
