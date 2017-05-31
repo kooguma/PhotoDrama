@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
@@ -20,6 +21,7 @@ import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Clip;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
@@ -183,6 +185,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
                     content
                     , (int) mVideoPlayerManager.getGLThread().getUsedTime());
             mDrama.videoGroup.subtitleClips.add(mSelectedClip);
+            ImageClip currentClip = getCurrentSubtitleClip();
+            if (currentClip != null)
+                mSelectedClip.showTime = (int) (currentClip.getEndTime()
+                        - mVideoPlayerManager.getGLThread().getUsedTime());
         } else {
             mSelectedClip.content = content;
         }
@@ -190,6 +196,17 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         mBinding.scrollSelectView.updateClips(mDrama.videoGroup.subtitleClips);
         mVideoPlayerManager.refreshSubtitleRender();
         mVideoPlayerManager.requestRender();
+    }
+
+    private ImageClip getCurrentSubtitleClip() {
+        long time = mVideoPlayerManager.getGLThread().getUsedTime();
+        for (ImageClip clip :
+                mDrama.videoGroup.imageClips) {
+            if (time > clip.startTime && time < clip.getEndTime()) {
+                return clip;
+            }
+        }
+        return null;
     }
 
     public void onInputConfirm(View view) {
@@ -375,7 +392,8 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
                         , TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(t -> {
-                            if (mShowSoftInput) mBinding.textInputWrapper.setVisibility(View.VISIBLE);
+                            if (mShowSoftInput)
+                                mBinding.textInputWrapper.setVisibility(View.VISIBLE);
                         })
         );
     }

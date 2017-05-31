@@ -32,6 +32,7 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
+import static com.loopeer.bottomimagepicker.PickerBottomBehavior.STATE_EXPANDED;
 
 public class ImageSelectActivity extends PhotoDramaBaseActivity implements ImageSelectedAdapter.OnImageSelectedListener {
 
@@ -119,7 +120,6 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
                 });
 
         updateSegmentList();
-
         mBinding.pickView.post(() -> {
             int containerHeight = mBinding.container.getHeight();
             int recyclerBottom = mBinding.recyclerView.getBottom();
@@ -128,6 +128,10 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
         });
         mIcon = mBinding.pickView.getIconView();
 
+        mBinding.pickView.setOnClickListener(v -> behavior.setState(
+                behavior.getState() == STATE_EXPANDED ?
+                        PickerBottomBehavior.STATE_COLLAPSED :
+                        PickerBottomBehavior.STATE_EXPANDED));
         behavior.setBottomSheetCallback(new PickerBottomBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(

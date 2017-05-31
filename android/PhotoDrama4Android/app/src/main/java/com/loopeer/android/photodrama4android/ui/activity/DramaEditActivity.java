@@ -38,6 +38,8 @@ import com.loopeer.bottomimagepicker.BottomImagePickerView;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 
+import static com.loopeer.bottomimagepicker.PickerBottomBehavior.STATE_EXPANDED;
+
 public class DramaEditActivity extends PhotoDramaBaseActivity
         implements EditDramaSegmentAdapter.OnSelectedListener
         ,
@@ -167,6 +169,10 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
                 mIcon.setRotation(degrees);
             }
         });
+        mBinding.pickView.setOnClickListener(v -> behavior.setState(
+                behavior.getState() == STATE_EXPANDED ?
+                        PickerBottomBehavior.STATE_COLLAPSED :
+                        PickerBottomBehavior.STATE_EXPANDED));
         mBottomImagePickerView.setOnImagePickListener((ImageAdapter.OnImagePickListener) uri -> {
             if (mSelectedImageClip == null) return true;
             BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
