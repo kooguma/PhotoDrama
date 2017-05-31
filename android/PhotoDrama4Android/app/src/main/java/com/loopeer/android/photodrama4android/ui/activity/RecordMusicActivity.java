@@ -388,7 +388,6 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
                 mBinding.viewMusicVolume.viewVolumeContainer.getHeight(), 0).start();
         mBinding.viewMusicVolume.seekBarVolume.setProgress((int) (mSelectedClip.volume * 100));
         updateVolumeText();
-        mBinding.btnConfirm.setVisibility(mMusicClipRecording != null ? View.VISIBLE : View.GONE);
     }
 
     private void updateVolumeText() {

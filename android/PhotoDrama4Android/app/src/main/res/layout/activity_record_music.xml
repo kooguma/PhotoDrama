@@ -139,16 +139,6 @@
                     android:onClick="onDeleteClick"
                     android:src="@drawable/ic_music_delete"/>
 
-                <ImageView
-                    android:id="@+id/btn_confirm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="120dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClick="onRecordConfirm"
-                    android:src="@drawable/ic_record_confirm"/>
-
             </LinearLayout>
 
         </ViewAnimator>
