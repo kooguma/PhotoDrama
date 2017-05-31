@@ -205,6 +205,9 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
             if (time > clip.startTime && time < clip.getEndTime()) {
                 return clip;
             }
+            if (time > clip.startWithPreTransitionTime && time < clip.getEndTime()) {
+                return clip;
+            }
         }
         return null;
     }
