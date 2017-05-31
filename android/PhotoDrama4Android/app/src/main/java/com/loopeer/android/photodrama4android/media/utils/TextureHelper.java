@@ -8,18 +8,21 @@
  ***/
 package com.loopeer.android.photodrama4android.media.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.laputapp.utilities.DeviceScreenUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageUtils;
 import com.loopeer.android.photodrama4android.BuildConfig;
+import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.model.ImageInfo;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
@@ -42,13 +45,21 @@ import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLUtils.texImage2D;
 
 public class TextureHelper {
-    public static final float TEXTMARGINBOTTOM = 40;//TODO test value
-    public static final float TEXT_LINE_PADDING = 6;//TODO test value
-    public static final float TEXT_MARGIN_HORIZONTAL = 20 * 3;//TODO test value
-    public static final float LINE_MAX_TEXT_NUM = 26;//TODO test value
+    public static final float TEXT_MARGIN_BOTTOM = DeviceScreenUtils.dp2px(18, PhotoDramaApp.getAppContext());//TODO test value
+    public static final float TEXT_LINE_PADDING = DeviceScreenUtils.dp2px(6, PhotoDramaApp.getAppContext());//TODO test value
+    public static final float VERTICAL_MARGIN = DeviceScreenUtils.dp2px(6, PhotoDramaApp.getAppContext());//TODO test value
+    public static final float TEXT_MARGIN_HORIZONTAL = DeviceScreenUtils.dp2px(40, PhotoDramaApp.getAppContext());//TODO test value
+    public static final float TEXT_SIZE = dp2px(16, PhotoDramaApp.getAppContext());//TODO test value
 
     private static final String TAG = "TextureHelper";
     private static final boolean DEBUG = BuildConfig.DEBUG || true;
+
+
+
+    private static int dp2px(float spValue, Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return (int) (spValue * metrics.scaledDensity + 0.5f);
+    }
 
     public static int loadTexture(Context context, int resourceId) {
         final int[] textureObjectIds = new int[1];
@@ -134,7 +145,7 @@ public class TextureHelper {
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
         Paint textPaint = new Paint();
-        float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
+        float textSize = TEXT_SIZE;
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
@@ -165,7 +176,7 @@ public class TextureHelper {
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(0);
         Paint textPaint = new Paint();
-        float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
+        float textSize = TEXT_SIZE;
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
@@ -189,8 +200,8 @@ public class TextureHelper {
     public static void drawText(Context context, SubtitleInfo subtitleInfo, Canvas canvas, Paint textPaint, Bitmap deleteBitmap) {
         float textWidth = textPaint.measureText(subtitleInfo.content);
         float left = 0, right = 0, top = 0, bottom = 0;
-        float horizontalMargin = TEXT_MARGIN_HORIZONTAL * 2 / 5;
-        float verticalMargin = TEXTMARGINBOTTOM / 2;
+        float horizontalMargin = TEXT_MARGIN_HORIZONTAL * 3 / 8;
+        float verticalMargin = VERTICAL_MARGIN;
 
         if (textWidth + TEXT_MARGIN_HORIZONTAL * 2 > subtitleInfo.width) {
             float textSingleWidth = textPaint.measureText("我");
@@ -207,7 +218,7 @@ public class TextureHelper {
                 float drawTextWidth = textPaint.measureText(s);
                 Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
                 float height = fontMetrics.bottom - fontMetrics.ascent;
-                float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM - (line - i - 1) * height - (line - i - 1) * TEXT_LINE_PADDING;
+                float y = subtitleInfo.height - fontMetrics.descent - TEXT_MARGIN_BOTTOM - (line - i - 1) * height - (line - i - 1) * TEXT_LINE_PADDING;
                 float x = subtitleInfo.width / 2 - drawTextWidth / 2;
                 canvas.drawText(s, x, y, textPaint);
                 if (i == 0) {
@@ -226,7 +237,7 @@ public class TextureHelper {
             return;
         }
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-        float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM;
+        float y = subtitleInfo.height - fontMetrics.descent - TEXT_MARGIN_BOTTOM;
         float x = subtitleInfo.width / 2 - textWidth / 2;
         canvas.drawText(subtitleInfo.content, x, y, textPaint);
 

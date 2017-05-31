@@ -22,13 +22,11 @@ import com.loopeer.android.photodrama4android.media.model.SubtitleClip;
 import com.loopeer.android.photodrama4android.media.model.SubtitleInfo;
 import com.loopeer.android.photodrama4android.model.SubtitleEditRectInfo;
 import com.loopeer.android.photodrama4android.utils.ShapeUtils;
-
-import retrofit2.http.PATCH;
-
-import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.LINE_MAX_TEXT_NUM;
-import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXTMARGINBOTTOM;
+import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXT_MARGIN_BOTTOM;
 import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXT_LINE_PADDING;
 import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXT_MARGIN_HORIZONTAL;
+import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.TEXT_SIZE;
+import static com.loopeer.android.photodrama4android.media.utils.TextureHelper.VERTICAL_MARGIN;
 
 public class SubtitleEditRectView extends View {
     protected float mRatioX;
@@ -113,7 +111,7 @@ public class SubtitleEditRectView extends View {
         final Bitmap deleteBitmap = BitmapFactory.decodeResource(
                 context.getResources(), R.drawable.ic_subtitle_delete, options);
         Paint textPaint = new Paint();
-        float textSize = 1f * subtitleInfo.width / LINE_MAX_TEXT_NUM;
+        float textSize = TEXT_SIZE;
         textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         textPaint.setShadowLayer(2f, 2f, 2f, ContextCompat.getColor(context, android.R.color.black));
@@ -126,8 +124,8 @@ public class SubtitleEditRectView extends View {
     private void drawText(Context context, SubtitleInfo subtitleInfo, Canvas canvas, Paint textPaint, Bitmap deleteBitmap) {
         float textWidth = textPaint.measureText(subtitleInfo.content);
         float left = 0, right = 0, top = 0, bottom = 0;
-        float horizontalMargin = TEXT_MARGIN_HORIZONTAL * 2 / 5;
-        float verticalMargin = TEXTMARGINBOTTOM / 2;
+        float horizontalMargin = TEXT_MARGIN_HORIZONTAL * 3 / 8;
+        float verticalMargin = VERTICAL_MARGIN;
 
         if (textWidth + TEXT_MARGIN_HORIZONTAL * 2 > subtitleInfo.width) {
             float textSingleWidth = textPaint.measureText("我");
@@ -144,7 +142,7 @@ public class SubtitleEditRectView extends View {
                 float drawTextWidth = textPaint.measureText(s);
                 Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
                 float height = fontMetrics.bottom - fontMetrics.ascent;
-                float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM - (line - i - 1) * height - (line - i - 1) * TEXT_LINE_PADDING;
+                float y = subtitleInfo.height - fontMetrics.descent - TEXT_MARGIN_BOTTOM - (line - i - 1) * height - (line - i - 1) * TEXT_LINE_PADDING;
                 float x = subtitleInfo.width / 2 - drawTextWidth / 2;
                 if (i == 0) {
                     left = x - horizontalMargin;
@@ -164,7 +162,7 @@ public class SubtitleEditRectView extends View {
             return;
         }
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-        float y = subtitleInfo.height - fontMetrics.descent - TEXTMARGINBOTTOM;
+        float y = subtitleInfo.height - fontMetrics.descent - TEXT_MARGIN_BOTTOM;
         float x = subtitleInfo.width / 2 - textWidth / 2;
 
         left = x - horizontalMargin;

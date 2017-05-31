@@ -41,4 +41,6 @@
     <dimen name="btn_drama_select_width">80dp</dimen>
     <dimen name="btn_drama_select_height">32dp</dimen>
 
+    <dimen name="line_spacing_negative">-6dp</dimen>
+
 </resources>
