@@ -33,7 +33,7 @@ import java.util.List;
 import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTime;
 
 public class TransitionEditActivity extends PhotoDramaBaseActivity implements ImageTransitionSegmentAdapter.OnSelectedListener
-        , TransitionEffectAdapter.OnSelectedListener, VideoPlayerManager.ProgressChangeListener, OnSeekProgressChangeListener {
+        , TransitionEffectAdapter.OnSelectedListener, VideoPlayerManager.ProgressChangeListener {
 
     private ActivityTransitionEditBinding mBinding;
     private ImageTransitionSegmentAdapter mImageTransitionSegmentAdapter;
@@ -49,9 +49,7 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        SeekWrapper seekWrapper = new SeekWrapper(mBinding.seekBar);
-        seekWrapper.getSeekImpl().addOnSeekChangeListener(this);
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, seekWrapper);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
         mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
@@ -178,8 +176,6 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
 
     @Override
     public void onProgressInit(int progress, int maxValue) {
-        mBinding.textStart.setText(formatTime(progress));
-        mBinding.textTotal.setText(formatTime(maxValue + 1));
     }
 
     @Override
@@ -189,7 +185,6 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
 
     @Override
     public void onProgressChange(int progress, int maxValue) {
-        mBinding.textStart.setText(formatTime(progress));
     }
 
     @Override
@@ -204,20 +199,5 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
         } else {
             mVideoPlayerManager.pauseVideo();
         }
-    }
-
-    @Override
-    public void onProgressChanged(SeekWrapper.SeekImpl seek, int progress, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekWrapper.SeekImpl seek) {
-        mVideoPlayerManager.updateVideoTimeOnly(0, mDrama.getShowTimeTotal());
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekWrapper.SeekImpl seek) {
-
     }
 }

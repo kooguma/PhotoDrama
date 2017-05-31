@@ -37,7 +37,7 @@
     <string name="drama_index_format">%02d</string>
 
     <!-- transition edit -->
-    <string name="transition_selected_effect">选择转场</string>
+    <string name="transition_selected_effect">转场方式</string>
     <string name="transition_selected_segment">选择片段</string>
     <string name="transition_name_no">无</string>
     <string name="transition_name_slide">幻灯片</string>

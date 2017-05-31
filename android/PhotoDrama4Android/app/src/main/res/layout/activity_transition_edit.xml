@@ -36,40 +36,16 @@
                 android:visibility="gone"/>
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/seek_wrapper"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/bg_edit"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/large_padding"
-                android:layout_marginLeft="@dimen/medium_padding"
-                android:layout_marginTop="@dimen/large_padding"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/text_size_small"/>
-
-            <android.support.v7.widget.AppCompatSeekBar
-                android:id="@+id/seek_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:id="@+id/text_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/large_padding"
-                android:layout_marginRight="@dimen/medium_padding"
-                android:layout_marginTop="@dimen/large_padding"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/text_size_small"/>
-        </LinearLayout>
+            android:layout_marginBottom="@dimen/large_padding"
+            android:layout_marginLeft="@dimen/medium_padding"
+            android:layout_marginRight="@dimen/large_padding"
+            android:layout_marginTop="@dimen/large_padding"
+            android:text="@string/transition_selected_segment"
+            android:textColor="@color/text_color_white"
+            android:textSize="@dimen/text_size_xmedium"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_segment"
@@ -79,12 +55,22 @@
             android:paddingLeft="@dimen/small_padding"
             android:paddingRight="@dimen/small_padding"/>
 
+        <TextView
+            android:id="@+id/text_selected_transition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/large_padding"
+            android:layout_marginLeft="@dimen/medium_padding"
+            android:layout_marginTop="37dp"
+            android:text="@string/transition_selected_effect"
+            android:textColor="@color/text_color_white"
+            android:textSize="@dimen/text_size_xmedium"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_transition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"/>
+            android:layout_marginLeft="6dp"/>
 
     </com.loopeer.compatinset.InsetLinearLayout>
 
