@@ -16,6 +16,7 @@ import android.opengl.GLSurfaceView;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -29,6 +30,8 @@ public class MusicClipView extends View {
     private static final String TAG = "MusicClip";
 
     private static final int sDefaultMax = 100;
+
+    private static final int PROGRESS_HEIGHT = 2;
 
     private int mWidth;
     private int mHeight;
@@ -99,11 +102,11 @@ public class MusicClipView extends View {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.MusicClipView,
             defStyleAttr, 0);
         mProgressColor = a.getColor(R.styleable.MusicClipView_progressbarColor,
-            res.getColor(R.color.music_clip_progress_color));
+                ContextCompat.getColor(context, R.color.music_clip_progress_color));
         mProgressSelectedColor = a.getColor(R.styleable.MusicClipView_progressbarSelectedColor,
-            res.getColor(R.color.music_clip_progress_selected_color));
+                ContextCompat.getColor(context, R.color.music_clip_progress_selected_color));
         mDotColor = a.getColor(R.styleable.MusicClipView_dotColor,
-            res.getColor(R.color.music_clip_progress_dot_color));
+                ContextCompat.getColor(context, R.color.music_clip_progress_dot_color));
 
         mProgressMax = a.getInteger(R.styleable.MusicClipView_progressMax, sDefaultMax);
         mIsRoundCorner = a.getBoolean(R.styleable.MusicClipView_roundCorner, false);
@@ -116,7 +119,7 @@ public class MusicClipView extends View {
         mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mProgressPaint.setColor(mProgressColor);
         mProgressPaint.setStyle(Paint.Style.FILL);
-        mProgressPaint.setStrokeWidth(10);
+        mProgressPaint.setStrokeWidth(DeviceScreenUtils.dp2px(PROGRESS_HEIGHT, getContext()));
         if (mIsRoundCorner) {
             mProgressPaint.setStrokeCap(Paint.Cap.ROUND);
         }

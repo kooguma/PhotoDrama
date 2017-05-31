@@ -138,16 +138,6 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         }
         mVideoPlayerManager.seekToVideo(seekTime);
         mMusicClipRecording = null;
-
-     /*   registerSubscription(
-                Flowable.timer(200, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(t -> {
-                            updateScrollSelectViewClips();
-                            mBinding.scrollSelectView.setStop(true);
-                            mVideoPlayerManager.seekToVideo(mSelectedClip.getEndTime() + 1);
-                        })
-        );*/
     }
 
     private void startRecord() {
