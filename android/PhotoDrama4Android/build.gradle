@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.2'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     }
 }
@@ -26,8 +26,8 @@ ext {
             buildToolsVersion      : '25.0.2',
             minSdkVersion          : 18,
             targetSdkVersion       : 24,
-            versionCode            : 22,
-            versionName            : '1.2.0',
+            versionCode            : 23,
+            versionName            : '1.2.1',
             apiUrlDebug            : 'http://drama.17chuang.cc/api/v1/',
             apiUrlRelease          : 'http://v.17chuang.cc//api/v1/',
             wechatAppId            : 'wxf18e5caaf4b28c2b',
