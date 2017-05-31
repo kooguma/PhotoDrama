@@ -25,7 +25,8 @@ import com.loopeer.android.photodrama4android.ui.widget.TimeSelectView;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements ClipTimeEditAdapter.OnSelectedListener, TimeSelectView.TimeUpdateListener, VideoPlayerManager.ProgressChangeListener {
+public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements ClipTimeEditAdapter.OnSelectedListener
+        , TimeSelectView.TimeUpdateListener, VideoPlayerManager.ProgressChangeListener {
 
     private ActivityClipTimeEditBinding mBinding;
     private ClipTimeEditAdapter mClipTimeEditAdapter;
@@ -123,26 +124,15 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
         mVideoPlayerManager.updateVideoTime(imageClip.startTime
                 , imageClip.getEndTime());
         mVideoPlayerManager.seekToVideo(imageClip.startTime);
-        updateBtnEnable();
     }
 
     @Override
     public void onTimeUpdate(int time) {
-        updateBtnEnable();
-    }
-
-    public void onBtnClick(View view) {
-        Analyst.myCreatTimeLongSaveClick();
         mClipTimeEditAdapter.getSelectedImageClip().showTime = mBinding.timeProgressView.getProgress();
         mClipTimeEditAdapter.notifyDataSetChanged();
         ClipsCreator.updateImageClipsByShowTime(mDrama.videoGroup);
         mVideoPlayerManager.updateVideoTime(mClipTimeEditAdapter.getSelectedImageClip().startTime
                 , mClipTimeEditAdapter.getSelectedImageClip().getEndTime());
-        updateBtnEnable();
-    }
-
-    private void updateBtnEnable() {
-        mBinding.btnConfirm.setEnabled(mClipTimeEditAdapter.getSelectedImageClip().showTime != mBinding.timeProgressView.getProgress());
     }
 
     @Override
@@ -181,6 +171,7 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
     }
 
     private void doBeforeFinish() {
+        Analyst.myCreatTimeLongSaveClick();
         Intent intent = new Intent();
         intent.putExtra(Navigator.EXTRA_DRAMA, mVideoPlayerManager.getDrama());
         setResult(RESULT_OK, intent);
