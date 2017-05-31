@@ -66,37 +66,11 @@
             android:textColor="@color/text_color_white"
             android:textSize="@dimen/text_size_xmedium"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/small_padding"
-            android:layout_marginRight="@dimen/small_padding"
-            android:gravity="bottom"
-            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="1s"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/text_size_large"/>
-
-            <com.loopeer.android.photodrama4android.ui.widget.TimeSelectView
-                android:id="@+id/time_progress_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="12s"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/text_size_large"/>
-
-        </LinearLayout>
+        <com.loopeer.android.photodrama4android.ui.widget.TimeSelectView
+            android:id="@+id/time_progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <Space
             android:layout_width="wrap_content"

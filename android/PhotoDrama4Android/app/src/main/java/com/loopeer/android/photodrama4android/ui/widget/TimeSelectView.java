@@ -25,9 +25,13 @@ public class TimeSelectView extends View {
     private static final int TEXT_MARGIN = 12;
     private static final int RECT_HEIGHT = 22;
     private static final int RECT_RADIUS = 2;
-    private static final int TRIANGLE_HEIGHT = 8;
+    private static final int TRIANGLE_HEIGHT = 5;
     private static final int TEXT_SIZE = 15;
+    private static final int TEXT_START_END_SIZE = 16;
     private static final int TEXT_PADDING_HORIZONTAL = 11;
+    private static final int HORIZONTAL_TEXT_MARGIN = 12;
+    private static final String TEXT_START = "1s";
+    private static final String TEXT_END = "12s";
 
     public float mLastTouchY;
     public float mLastTouchX;
@@ -40,6 +44,12 @@ public class TimeSelectView extends View {
     private int mTriangleHeight;
     private int mLineTop;
     private int mRectRadius;
+
+    private float mHorizontalTextMargin;
+    private float mStartTextWidth;
+    private float mEndTextWidth;
+    private int mTextStartEndSize;
+    private Paint mTextStartEndPaint;
 
     private int mTextPadding;
     private int mTextSize;
@@ -85,8 +95,10 @@ public class TimeSelectView extends View {
         mLineHeight = DeviceScreenUtils.dp2px(LINE_HEIGHT, getContext());
         mTextMargin = DeviceScreenUtils.dp2px(TEXT_MARGIN, getContext());
         mRectHeight = DeviceScreenUtils.dp2px(RECT_HEIGHT, getContext());
+        mHorizontalTextMargin = DeviceScreenUtils.dp2px(HORIZONTAL_TEXT_MARGIN, getContext());
         mTriangleHeight = DeviceScreenUtils.dp2px(TRIANGLE_HEIGHT, getContext());
         mTextSize = DeviceScreenUtils.sp2px(TEXT_SIZE, (Activity) getContext());
+        mTextStartEndSize = DeviceScreenUtils.sp2px(TEXT_START_END_SIZE, (Activity) getContext());
         mTextPadding = DeviceScreenUtils.dp2px(TEXT_PADDING_HORIZONTAL, getContext());
         mRectRadius = DeviceScreenUtils.dp2px(RECT_RADIUS, getContext());
 
@@ -106,6 +118,23 @@ public class TimeSelectView extends View {
         mTextPaint.setColor(mTextColor);
         mTextPaint.setTextSize(mTextSize);
         mTextPaint.setAntiAlias(true);
+
+        mTextStartEndPaint = new Paint();
+        mTextStartEndPaint.setStyle(Paint.Style.FILL);
+        mTextStartEndPaint.setColor(mTextColor);
+        mTextStartEndPaint.setTextSize(mTextStartEndSize);
+        mTextStartEndPaint.setAntiAlias(true);
+
+        mStartTextWidth = mTextStartEndPaint.measureText(TEXT_START);
+        mEndTextWidth = mTextStartEndPaint.measureText(TEXT_END);
+    }
+
+    private float getStartTextOffset() {
+        return mHorizontalTextMargin + mStartTextWidth;
+    }
+
+    private float getEndTextOffset() {
+        return mHorizontalTextMargin + mEndTextWidth;
     }
 
     @Override
@@ -181,10 +210,11 @@ public class TimeSelectView extends View {
         super.onDraw(canvas);
 
         mLinePaint.setColor(mProgressColor);
-        canvas.drawRect(mCircleRadius, mLineTop, getProgressViewWidth(), mLineTop + mLineHeight, mLinePaint);
+        canvas.drawRect(getStartTextOffset() + mCircleRadius, mLineTop, getProgressViewWidth(), mLineTop + mLineHeight, mLinePaint);
 
         mLinePaint.setColor(mProgressBgColor);
-        canvas.drawRect(getProgressViewWidth(), mLineTop, getWidth() - mCircleRadius, mLineTop + mLineHeight, mLinePaint);
+        canvas.drawRect(getProgressViewWidth(), mLineTop
+                , getWidth() - getEndTextOffset() - mCircleRadius, mLineTop + mLineHeight, mLinePaint);
 
         mPaint.setColor(mThumbColor);
         canvas.drawCircle(getProgressViewWidth(), mLineTop + mLineHeight / 2, mCircleRadius, mPaint);
@@ -198,8 +228,8 @@ public class TimeSelectView extends View {
                 , clampX + drawTextWidth / 2 + mTextPadding, mRectHeight, mRectRadius, mRectRadius), mPaint);
         Path path = new Path();
         path.moveTo(getProgressViewWidth(), mRectHeight + mTriangleHeight);
-        path.lineTo(getProgressViewWidth() - 1f * mTriangleHeight * 3 / 4, mRectHeight);
-        path.lineTo(getProgressViewWidth() + 1f * mTriangleHeight * 3 / 4, mRectHeight);
+        path.lineTo(getProgressViewWidth() - 1f * mTriangleHeight, mRectHeight);
+        path.lineTo(getProgressViewWidth() + 1f * mTriangleHeight, mRectHeight);
         path.lineTo(getProgressViewWidth(), mRectHeight + mTriangleHeight);
         path.close();
         canvas.drawPath(path, mPaint);
@@ -208,16 +238,27 @@ public class TimeSelectView extends View {
         int baseline = (mRectHeight - fontMetrics.bottom - fontMetrics.top) / 2;
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(content, clampX, baseline, mTextPaint);
+
+
+        Paint.FontMetricsInt fontMetricsStartText = mTextStartEndPaint.getFontMetricsInt();
+        int baselineStartEnd = mLineTop + mLineHeight / 2
+                - (fontMetricsStartText.bottom + fontMetricsStartText.top) / 2;
+        canvas.drawText(TEXT_START, mHorizontalTextMargin
+                , baselineStartEnd, mTextStartEndPaint);
+        canvas.drawText(TEXT_END, getWidth() - mHorizontalTextMargin - mEndTextWidth
+                , baselineStartEnd, mTextStartEndPaint);
     }
 
     private float clampProgressWidth(float x, float width) {
-        if (x - width / 2 - mTextPadding < 0) return width / 2 + mTextPadding;
-        if (x + width / 2 + mTextPadding> getWidth()) return getWidth() - width / 2 - mTextPadding;
         return x;
     }
 
     private float getProgressViewWidth() {
-        return 1f * (getWidth() - 2 * mCircleRadius) * (mProgress - mMinValue) / (mMaxValue - mMinValue) + mCircleRadius;
+        return 1f * (getSeekBarWidth() - 2 * mCircleRadius) * (mProgress - mMinValue) / (mMaxValue - mMinValue) + mCircleRadius + getStartTextOffset();
+    }
+
+    private float getSeekBarWidth() {
+        return getWidth() - getStartTextOffset() - getEndTextOffset();
     }
 
     public void updateProgress(int progress) {
@@ -231,7 +272,7 @@ public class TimeSelectView extends View {
 
     private void scrollAndMoveIndicator(float dx, float dy) {
         if (mIsOnTouch) {
-            mProgress += (dx / (getWidth() - 2 * mCircleRadius) * (mMaxValue - mMinValue));
+            mProgress += (dx / (getSeekBarWidth() - 2 * mCircleRadius) * (mMaxValue - mMinValue));
             clampTrans();
             if (mTimeUpdateListener != null) mTimeUpdateListener.onTimeUpdate(mProgress);
             invalidate();
