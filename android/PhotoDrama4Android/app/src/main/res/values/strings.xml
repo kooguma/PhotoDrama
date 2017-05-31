@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">由我主演</string>
     <string name="label_segment_edit">Segment Edit</string>
-    <string name="label_transition_edit">转场</string>
-    <string name="label_subtitle">字幕</string>
-    <string name="label_record_audio">配音</string>
-    <string name="label_sound_effect">音效</string>
-    <string name="label_bgm">配乐</string>
+    <string name="label_transition_edit">转场编辑</string>
+    <string name="label_subtitle">字幕编辑</string>
+    <string name="label_record_audio">配音编辑</string>
+    <string name="label_sound_effect">音效编辑</string>
+    <string name="label_bgm">配乐编辑</string>
     <string name="label_music_select">选择配乐</string>
     <string name="label_drama_select">选择故事</string>
     <string name="label_drama_detail">故事详情</string>
@@ -97,7 +97,7 @@
     <string name="drama_make_zip_success">导出成功</string>
     <string name="drama_unzip_success">解压成功</string>
     <string name="drama_series_format">%1$02d/%2$02d</string>
-    <string name="drama_export_message">正在导出，请耐心等待 ~</string>
+    <string name="drama_export_message">正在导出</string>
     <string name="drama_make_subtitle">字幕</string>
     <string name="drama_make_record">配音</string>
     <string name="drama_make_clip_time">时长</string>

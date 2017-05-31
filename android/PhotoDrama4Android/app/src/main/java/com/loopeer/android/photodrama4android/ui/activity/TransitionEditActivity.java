@@ -112,11 +112,11 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
         mSelectedTransitionClip = mImageTransitionSegmentAdapter.getSelectedTransition();
         mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mVideoPlayerManager.refreshTransitionRender();
-        mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime
-                , mSelectedTransitionClip.getEndTime());
-        mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime);
+        mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime - 500
+                , mSelectedTransitionClip.getEndTime() + 500);
+        mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime - 500);
         if (mSelectedTransitionClip.showTime > 0)
-            mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime);
+            mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime - 500);
     }
 
     private void updateDramaImageAndTransitionTime() {

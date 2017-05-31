@@ -33,9 +33,9 @@ public class DramaMakeItem {
         sDramaMakeItems = new ArrayList<>();
         sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_subtitle, R.string.drama_make_subtitle, SubtitleEditActivity.class, Event.Key.MyCreatSubtitleClick));
         sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_record, R.string.drama_make_record, RecordMusicActivity.class, Event.Key.MyCreatDubbingClick));
-        sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_clip_time, R.string.drama_make_clip_time, ClipTimeEditActivity.class, Event.Key.MyCreatTimeLongClick));
-        sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_transition, R.string.drama_make_transition, TransitionEditActivity.class, Event.Key.MyCreatTransferClick));
         sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_music, R.string.drama_make_music, BgmMusicActivity.class, Event.Key.MyCreatSoundtrackClick));
         sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_sound, R.string.drama_make_sound, SoundEffectActivity.class, Event.Key.MyCreatSoundEffectClick));
+        sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_clip_time, R.string.drama_make_clip_time, ClipTimeEditActivity.class, Event.Key.MyCreatTimeLongClick));
+        sDramaMakeItems.add(new DramaMakeItem(R.drawable.ic_transition, R.string.drama_make_transition, TransitionEditActivity.class, Event.Key.MyCreatTransferClick));
     }
 }

@@ -34,6 +34,7 @@
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
+            android:label="@string/label_image_selected"
             android:theme="@style/AppTheme.NoActionBar.Dark">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

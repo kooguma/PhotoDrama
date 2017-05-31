@@ -93,6 +93,7 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
             }
         }
         updateData(mImageClips);
+        mSelectedImageClip = getDatas().get(getDatas().size() - 1);
         selectedItem(mSelectedImageClip);
     }
 

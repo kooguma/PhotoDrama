@@ -35,16 +35,9 @@ public class SettingActivity extends PhotoDramaBaseActivity {
 
     public void onClearCacheClick(View view) {
         Analyst.settingCacheClick();
-        new AlertDialog.Builder(this)
-            .setMessage(getString(R.string.setting_is_clear_cache))
-            .setPositiveButton(R.string.common_sure,
-                (dialog, which) -> {
-                    CacheUtils.clearCache(SettingActivity.this);
-                    Toaster.showToast(R.string.settings_clear_cache_success);
-                    updateView();
-                })
-            .setNegativeButton(R.string.common_cancel, null)
-            .show();
+        CacheUtils.clearCache(SettingActivity.this);
+        Toaster.showToast(R.string.settings_clear_cache_success);
+        updateView();
     }
 
     public void onFeedBackClick(View view) {
