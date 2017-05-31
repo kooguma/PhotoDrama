@@ -13,6 +13,7 @@ import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemEffectDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
+import com.loopeer.android.photodrama4android.ui.fragment.MyDownloadMusicFragment;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.Extension;
@@ -26,6 +27,7 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
     private ListItemEffectDownloadBinding mPlayingItem;
 
     private IMusicAdapter mIMusicAdapter;
+    private MyDownloadMusicFragment.IMusicDeleteListener mIMusicDeleteListener;
 
     public EffectDownloadAdapter(Context context) {
         super(context);
@@ -33,6 +35,10 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     public void setIMusicAdapter(IMusicAdapter iMusicAdapter) {
         this.mIMusicAdapter = iMusicAdapter;
+    }
+
+    public void setIMusicDeleteListener(MyDownloadMusicFragment.IMusicDeleteListener IMusicDeleteListener) {
+        mIMusicDeleteListener = IMusicDeleteListener;
     }
 
     public interface IMusicAdapter {
@@ -99,9 +105,8 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
     }
 
     private void doDelete(int adapterPosition,Voice voice) {
-        getDatas().remove(adapterPosition);
-        notifyItemRemoved(adapterPosition);
         FileManager.getInstance().deleteAudioEffectFile(getContext(),voice);
+        mIMusicDeleteListener.onMusicDelete(voice);
     }
 
     public static class MusicItemViewHolder extends DataBindingViewHolder implements Extension {

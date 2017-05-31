@@ -10,6 +10,7 @@ import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
+import com.loopeer.android.photodrama4android.ui.fragment.MyDownloadMusicFragment;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -23,6 +24,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
     private ListItemBgmDownloadBinding mPlayingItem;
 
     private IMusicAdapter mIMusicAdapter;
+    private MyDownloadMusicFragment.IMusicDeleteListener mIMusicDeleteListener;
 
     public void setIMusicAdapter(IMusicAdapter iMusicAdapter) {
         this.mIMusicAdapter = iMusicAdapter;
@@ -90,9 +92,8 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
     }
 
     private void doDelete(int adapterPosition,Voice voice) {
-        getDatas().remove(adapterPosition);
-        notifyItemRemoved(adapterPosition);
-        FileManager.getInstance().deleteAudioBmgFile(getContext(), voice);
+        FileManager.getInstance().deleteAudioBmgFile(getContext(),voice);
+        mIMusicDeleteListener.onMusicDelete(voice);
     }
 
     @Override public RecyclerView.ViewHolder createItemHolder(ViewGroup parent, int viewType) {
@@ -167,4 +168,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         }
     }
 
+    public void setIMusicDeleteListener(MyDownloadMusicFragment.IMusicDeleteListener IMusicDeleteListener) {
+        mIMusicDeleteListener = IMusicDeleteListener;
+    }
 }

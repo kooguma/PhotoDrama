@@ -147,6 +147,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
                     pauseMusic(musicClipView);
                 }
             });
+            adapter.setIMusicDeleteListener(voice -> getRecyclerManager().onRefresh());
             return adapter;
         } else {
             EffectDownloadAdapter adapter = new EffectDownloadAdapter(getContext());
@@ -172,7 +173,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
                     pauseMusic(seekBar);
                 }
             });
-
+            adapter.setIMusicDeleteListener(voice -> getRecyclerManager().onRefresh());
             return adapter;
         }
     }
@@ -258,4 +259,7 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         mPlayerWrapper.destroy();
     }
 
+    public interface IMusicDeleteListener {
+        void onMusicDelete(Voice voice);
+    }
 }
