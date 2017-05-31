@@ -61,6 +61,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama,
                 new SeekWrapper(mBinding.scrollSelectView));
         mVideoPlayerManager.addProgressChangeListener(this);
+        mVideoPlayerManager.setFinishTime(mDrama.getShowTimeTotal());
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
         mVideoPlayerManager.seekToVideo(0);
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick(v));
@@ -111,16 +112,17 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mMusicClipRecording = null;
         if (mSelectedClip != null)
             mVideoPlayerManager.seekToVideo(mSelectedClip.getEndTime() + 1);
+        updateBtnView();
     }
 
     private void stopRecord(boolean validate) {
         mIsRecording = false;
         mBinding.textAdd.setText(R.string.record_add);
+
         mAudioRecorder.stopRecording();
         mVideoPlayerManager.pauseVideo();
         if (mMusicClipRecording == null) return;
         mMusicClipRecording.setCreateIng(false);
-        mMusicClipRecording.musicSelectedLength = mMusicClipRecording.showTime;
         if (mMusicClipRecording.showTime < MIN_RECORD_AUDIO_LENGTH
                 || !validate) {
             mDrama.audioGroup.musicClips.remove(mMusicClipRecording);
@@ -128,15 +130,24 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         }
 
         mVideoPlayerManager.getIMusic().updateDrama(mDrama);
-        registerSubscription(
+        updateScrollSelectViewClips();
+        mBinding.scrollSelectView.setStop(true);
+        int seekTime = mMusicClipRecording.getEndTime() + 1;
+        if (mMusicClipRecording.getEndTime() >= mDrama.getShowTimeTotal()) {
+            seekTime = mVideoPlayerManager.getMaxTime();
+        }
+        mVideoPlayerManager.seekToVideo(seekTime);
+        mMusicClipRecording = null;
+
+     /*   registerSubscription(
                 Flowable.timer(200, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(t -> {
                             updateScrollSelectViewClips();
                             mBinding.scrollSelectView.setStop(true);
-                            mVideoPlayerManager.seekToVideo(mMusicClipRecording.getEndTime());
+                            mVideoPlayerManager.seekToVideo(mSelectedClip.getEndTime() + 1);
                         })
-        );
+        );*/
     }
 
     private void startRecord() {
@@ -237,6 +248,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mBinding.textStart.setText(formatTimeMilli(progress));
         if (mMusicClipRecording != null && mIsRecording) {
             mMusicClipRecording.showTime = (int) (mVideoPlayerManager.getGLThread().getUsedTime() - mMusicClipRecording.startTime);
+            mMusicClipRecording.musicSelectedLength = mMusicClipRecording.showTime;
             if (checkClipValidateAndChange(mMusicClipRecording)) {
                 stopRecord(true);
             }
@@ -346,7 +358,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
             }
         }
         if (musicClip.getEndTime() > mVideoPlayerManager.getMaxTime()) {
-            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime;
+            musicClip.showTime = mVideoPlayerManager.getMaxTime() - musicClip.startTime + 1;
             musicClip.musicSelectedLength = musicClip.showTime;
             return true;
         }

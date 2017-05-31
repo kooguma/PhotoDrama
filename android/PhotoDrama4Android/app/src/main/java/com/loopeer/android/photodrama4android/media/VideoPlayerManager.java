@@ -221,6 +221,10 @@ public class VideoPlayerManager
         mFinishAtTime = finishAtTime;
     }
 
+    public void setFinishTime(int finishAtTime) {
+        mFinishAtTime = finishAtTime;
+    }
+
     public void updateVideoTime(int startTime, int endTime) {
         mGLThread.stopUp();
         mGLThread.setManual(true);
