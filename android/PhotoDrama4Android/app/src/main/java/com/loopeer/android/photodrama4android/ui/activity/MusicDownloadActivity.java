@@ -4,7 +4,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 import com.fastui.uipattern.IRecycler;
 import com.laputapp.http.BaseResponse;
 import com.laputapp.rx.RxBus;
@@ -69,7 +71,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        return new MusicDownloadAdapter(this, this,mType);
+        return new MusicDownloadAdapter(this, this, mType);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         return VoiceService.INSTANCE.voices(mCategory.id);
     }
 
-    @Override public void onMusicDownloadClick(Voice voice, TextView txtProgress) {
+    @Override public void onMusicDownloadClick(Voice voice, ViewSwitcher viewSwitcher) {
         if (mType == MusicClip.MusicType.BGM) {
             Analyst.addMusicSoundtrackDownloadClic(voice.id);
         } else {
@@ -85,13 +87,16 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         }
 
         mAudioFetchHelper.getAudio(mType, voice, status -> {
-            txtProgress.setText(
-                getString(R.string.common_percent_format, status.getPercentNumber()));
+            TextView txtProgress = (TextView) viewSwitcher.findViewById(R.id.txt_percent);
+            txtProgress.setText(getString(R.string.common_percent_format, status.getPercentNumber()));
         }, throwable -> {
+            ImageButton button = (ImageButton) viewSwitcher.findViewById(R.id.btn_download);
+            button.setImageResource(R.drawable.ic_music_clip_download);
             Toaster.showToast("下载失败：" + throwable.getMessage());
         }, () -> {
-            txtProgress.setText(R.string.music_already_download);
-            txtProgress.setTextColor(getResources().getColor(R.color.text_color_tertiary));
+            viewSwitcher.setDisplayedChild(0);
+            ImageButton button = (ImageButton) viewSwitcher.findViewById(R.id.btn_download);
+            button.setImageResource(R.drawable.ic_download_success);
             RxBus.getDefault().send(new MusicDownLoadSuccessEvent(voice));
         });
     }

@@ -49,7 +49,7 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
 
         mDrama = (Drama) getIntent().getSerializableExtra(Navigator.EXTRA_DRAMA);
 
-        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama, null);
+        mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, mDrama);
         mVideoPlayerManager.addProgressChangeListener(this);
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);

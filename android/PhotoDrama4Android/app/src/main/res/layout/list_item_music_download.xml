@@ -18,6 +18,7 @@
         android:orientation="horizontal">
 
         <ViewSwitcher
+            android:id="@+id/view_switcher_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -34,7 +35,6 @@
                 android:layout_width="34dp"
                 android:layout_height="18dp"/>
 
-
         </ViewSwitcher>
 
         <TextView
@@ -42,18 +42,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="14dp"
-            android:textSize="@dimen/text_size_larger"
+            android:textSize="@dimen/text_size_large"
             android:textColor="@color/text_color_primary"
             android:text="@{voice.name}"/>
 
         <ViewSwitcher
             android:id="@+id/view_switcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_gravity="center">
 
             <ImageButton
                 android:id="@+id/btn_download"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackgroundBorderless"

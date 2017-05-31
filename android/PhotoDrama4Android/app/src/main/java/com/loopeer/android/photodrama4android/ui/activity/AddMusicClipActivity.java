@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CustomTabLayout;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 
+import android.view.ViewGroup;
+import android.widget.TextView;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
@@ -42,6 +45,38 @@ public class AddMusicClipActivity extends PhotoDramaBaseActivity {
 
         mViewPager.setAdapter(new AddMusicClipPagerAdapter(getSupportFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
+
+        CustomTabLayout.TabView tabView =
+            (CustomTabLayout.TabView) ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(0);
+
+        if (tabView != null) {
+                tabView.getTextView().setTypeface(null, Typeface.BOLD);
+        }
+
+        mTabLayout.addOnTabSelectedListener(new CustomTabLayout.OnTabSelectedListener() {
+            @Override public void onTabSelected(CustomTabLayout.Tab tab) {
+                CustomTabLayout.TabView tabView =
+                    (CustomTabLayout.TabView) ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(
+                        tab.getPosition());
+                if (tabView != null) {
+                    tabView.getTextView().setTypeface(null, Typeface.BOLD);
+                }
+
+            }
+
+            @Override public void onTabUnselected(CustomTabLayout.Tab tab) {
+                CustomTabLayout.TabView tabView =
+                    (CustomTabLayout.TabView) ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(
+                        tab.getPosition());
+                if (tabView != null) {
+                    tabView.getTextView().setTypeface(null, Typeface.NORMAL);
+                }
+            }
+
+            @Override public void onTabReselected(CustomTabLayout.Tab tab) {
+
+            }
+        });
 
     }
 
