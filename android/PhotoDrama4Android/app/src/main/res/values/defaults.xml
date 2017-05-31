@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="music_clip_progress_color">@color/colorAccent</color>
-    <color name="music_clip_progress_selected_color">@color/text_color_hint</color>
+    <color name="music_clip_progress_selected_color">#DBDBDB</color>
     <color name="music_clip_progress_dot_color">#ffffff</color>
 
     <color name="export_loading_foreground_progress_color">@color/colorAccent</color>

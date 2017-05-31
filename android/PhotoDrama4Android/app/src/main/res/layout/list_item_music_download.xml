@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/medium_padding"
-        android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

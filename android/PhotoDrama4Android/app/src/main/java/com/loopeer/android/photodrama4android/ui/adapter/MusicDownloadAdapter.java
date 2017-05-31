@@ -1,6 +1,7 @@
 package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,14 +52,14 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
             //未下载
             binding.viewSwitcher.setDisplayedChild(0);
             binding.txtPercent.setText(null);
+            binding.btnDownload.setImageResource(R.drawable.ic_music_clip_download);
             binding.txtPercent.setTextColor(
-                getContext().getResources().getColor(R.color.colorAccent));
+                    ContextCompat.getColor(getContext(), R.color.colorAccent));
         } else {
             //已下载
-            binding.viewSwitcher.setDisplayedChild(1);
-            binding.txtPercent.setText(R.string.music_already_download);
-            binding.txtPercent.setTextColor(
-                getContext().getResources().getColor(R.color.text_color_tertiary));
+            binding.viewSwitcher.setDisplayedChild(0);
+            binding.txtPercent.setText(null);
+            binding.btnDownload.setImageResource(R.drawable.ic_download_success);
         }
 
         binding.getRoot().setOnClickListener(l -> {
