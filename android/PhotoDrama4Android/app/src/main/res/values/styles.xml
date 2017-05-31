@@ -46,12 +46,14 @@
     <style name="TextAppearance.PhotoDrama.Menu"
            parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
         <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:actionMenuTextColor">@color/color_menu_text</item>
         <item name="android:textColor">@color/color_menu_text</item>
     </style>
 
     <style name="TextAppearance.PhotoDrama.Menu.Dark"
            parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
         <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:actionMenuTextColor">@color/text_color_white</item>
         <item name="android:textColor">@color/text_color_white</item>
     </style>
 

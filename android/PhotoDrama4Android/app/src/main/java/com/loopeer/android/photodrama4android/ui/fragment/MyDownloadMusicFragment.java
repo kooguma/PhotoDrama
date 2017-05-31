@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.dynamic.UIAttr;
 import com.dynamic.ViewBindHelper;
 import com.dynamic.refresher.RefreshHelper;
@@ -35,14 +36,16 @@ import com.loopeer.android.photodrama4android.ui.widget.LocalSquareImageView;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
+
 import io.reactivex.Flowable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+
 import java.io.File;
 import java.util.List;
 
 public class MyDownloadMusicFragment extends MovieMakerBaseFragment
-    implements IPageRecycler<Voice> {
+        implements IPageRecycler<Voice> {
 
     private MediaPlayerWrapper mPlayerWrapper;
 
@@ -56,82 +59,91 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         return fragment;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         mType = (MusicClip.MusicType) getArguments().getSerializable(Navigator.EXTRA_MUSIC_CLIP);
         mPlayerWrapper = new MediaPlayerWrapper(getContext());
         super.onCreate(savedInstanceState);
         registerMusicDownLoadSuccessEvent();
         getRecyclerManager().setRefreshMode(RefreshHelper.RefreshMode.NONE);
+
     }
 
     private void registerMusicDownLoadSuccessEvent() {
         registerSubscription(
-            RxBus.getDefault().toFlowable(MusicDownLoadSuccessEvent.class)
-                .doOnNext(o -> getRecyclerManager().onRefresh())
-                .doOnNext(o -> {
-                    registerSubscription(
-                        VoiceService.INSTANCE
-                            .download(o.voice.id)
-                            .subscribe()
-                    );
-                })
-                .subscribe()
+                RxBus.getDefault().toFlowable(MusicDownLoadSuccessEvent.class)
+                        .doOnNext(o -> getRecyclerManager().onRefresh())
+                        .doOnNext(o -> {
+                            registerSubscription(
+                                    VoiceService.INSTANCE
+                                            .download(o.voice.id)
+                                            .subscribe()
+                            );
+                        })
+                        .subscribe()
         );
     }
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_simple_list, container, false);
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getRecyclerManager().getRecyclerView()
-            .addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL_LIST, 0,
-                DeviceScreenUtils.dp2px(0.5f, getContext())));
+                .addItemDecoration(new DividerItemDecoration(getContext(),
+                        DividerItemDecoration.VERTICAL_LIST, 0,
+                        DeviceScreenUtils.dp2px(0.5f, getContext())));
         getRecyclerManager().getLoadHelper().addViewBinder(
-            UIAttr.LoaderAttr.LOOPEER_EMPTY, new ViewBindHelper() {
-                @Override
-                public View createView(LayoutInflater layoutInflater, ViewGroup viewParent) {
-                    return layoutInflater.inflate(R.layout.view_empty_my_download, viewParent,
-                        false);
-                }
+                UIAttr.LoaderAttr.LOOPEER_EMPTY, new ViewBindHelper() {
+                    @Override
+                    public View createView(LayoutInflater layoutInflater, ViewGroup viewParent) {
+                        return layoutInflater.inflate(R.layout.view_empty_my_download, viewParent,
+                                false);
+                    }
 
-                @Override
-                public void viewCreate(View view) {
-                    view.setOnClickListener(l -> {
-                        ((AddMusicClipActivity) getActivity()).switchToRecommend();
-                    });
-                }
-            });
+                    @Override
+                    public void viewCreate(View view) {
+                        view.findViewById(R.id.btn_download).setOnClickListener(l
+                                -> ((AddMusicClipActivity) getActivity()).switchToRecommend());
+                    }
+                });
         ItemTouchHelperCallback callback = new ItemTouchHelperCallback();
         ItemTouchHelperExtension itemTouchHelperExtension = new ItemTouchHelperExtension(callback);
         itemTouchHelperExtension.attachToRecyclerView(getRecyclerManager().getRecyclerView());
         //        mAdapter.setItemTouchHelperExtension(mItemTouchHelper);
     }
 
-    @Override public int getExtraItemCount() {
+    @Override
+    public int getExtraItemCount() {
         return 0;
     }
 
-    @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
+    @Override
+    public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
         if (mType == MusicClip.MusicType.BGM) {
             BGMDownloadAdapter adapter = new BGMDownloadAdapter(getContext());
             adapter.setIMusicAdapter(new BGMDownloadAdapter.IMusicAdapter() {
-                @Override public void onMusicAddClick(Voice voice) {
+                @Override
+                public void onMusicAddClick(Voice voice) {
                     addMusic(voice);
                 }
 
-                @Override public void onControllerVisibilityChange(LinearLayout layoutController) {
+                @Override
+                public void onControllerVisibilityChange(LinearLayout layoutController) {
                     updateController(layoutController);
                 }
 
-                @Override public void onMusicPlayClick(String path, MusicClipView musicClipView) {
+                @Override
+                public void onMusicPlayClick(String path, MusicClipView musicClipView) {
                     playMusic(path, musicClipView);
                 }
 
-                @Override public void onMusicPauseClick(String path, MusicClipView musicClipView) {
+                @Override
+                public void onMusicPauseClick(String path, MusicClipView musicClipView) {
                     pauseMusic(musicClipView);
                 }
             });
@@ -140,19 +152,23 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
             EffectDownloadAdapter adapter = new EffectDownloadAdapter(getContext());
 
             adapter.setIMusicAdapter(new EffectDownloadAdapter.IMusicAdapter() {
-                @Override public void onMusicAddClick(Voice voice) {
+                @Override
+                public void onMusicAddClick(Voice voice) {
                     addMusic(voice);
                 }
 
-                @Override public void onControllerVisibilityChange(LinearLayout layoutController) {
+                @Override
+                public void onControllerVisibilityChange(LinearLayout layoutController) {
                     updateController(layoutController);
                 }
 
-                @Override public void onMusicPlayClick(String path, AppCompatSeekBar seekBar) {
+                @Override
+                public void onMusicPlayClick(String path, AppCompatSeekBar seekBar) {
                     playMusic(path, seekBar);
                 }
 
-                @Override public void onMusicPauseClick(String path, AppCompatSeekBar seekBar) {
+                @Override
+                public void onMusicPauseClick(String path, AppCompatSeekBar seekBar) {
                     pauseMusic(seekBar);
                 }
             });
@@ -169,9 +185,9 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
 
     private void load() {
         List<Voice> voices = mType == MusicClip.MusicType.BGM
-                             ?
-                             FileManager.getInstance().getAudioBgmFiles()
-                             : FileManager.getInstance().getAudioEffectFiles();
+                ?
+                FileManager.getInstance().getAudioBgmFiles()
+                : FileManager.getInstance().getAudioEffectFiles();
         getRecyclerManager().onCacheLoaded(voices);
     }
 
@@ -230,12 +246,14 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         }
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         mPlayerWrapper.pause();
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         mPlayerWrapper.destroy();
     }
