@@ -19,6 +19,8 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.Extension;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
+import java.util.List;
+
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
 
 public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
@@ -52,6 +54,12 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         void onControllerVisibilityChange(LinearLayout layoutController);
         void onMusicPlayClick(String path, AppCompatSeekBar seekBar);
         void onMusicPauseClick(String path, AppCompatSeekBar seekBar);
+    }
+
+    @Override
+    public void updateData(List<Voice> data) {
+        mItemTouchHelperExtension.closeOpened();
+        super.updateData(data);
     }
 
     @Override public void bindItem(Voice voice, int pos, RecyclerView.ViewHolder holder) {
