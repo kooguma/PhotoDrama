@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.utils.LocalImageUtils;
@@ -39,11 +40,7 @@ public class BitmapFactory {
 
     public static BitmapFactory getInstance() {
         if (sDefaultInstance == null) {
-            try {
-                throw new Exception("Instance have not getInstance");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            init(PhotoDramaApp.getAppContext());
         }
         return sDefaultInstance;
     }
