@@ -17,6 +17,7 @@ import com.loopeer.android.photodrama4android.ui.fragment.MyDownloadMusicFragmen
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.Extension;
+import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
 
@@ -28,6 +29,7 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     private IMusicAdapter mIMusicAdapter;
     private MyDownloadMusicFragment.IMusicDeleteListener mIMusicDeleteListener;
+    private ItemTouchHelperExtension mItemTouchHelperExtension;
 
     public EffectDownloadAdapter(Context context) {
         super(context);
@@ -39,6 +41,10 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     public void setIMusicDeleteListener(MyDownloadMusicFragment.IMusicDeleteListener IMusicDeleteListener) {
         mIMusicDeleteListener = IMusicDeleteListener;
+    }
+
+    public void setItemTouchHelperExtension(ItemTouchHelperExtension itemTouchHelperExtension) {
+        mItemTouchHelperExtension = itemTouchHelperExtension;
     }
 
     public interface IMusicAdapter {
@@ -109,23 +115,8 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
         mIMusicDeleteListener.onMusicDelete(voice);
     }
 
-    public static class MusicItemViewHolder extends DataBindingViewHolder implements Extension {
-
-        public MusicItemViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        public View getContentView() {
-            return itemView.findViewById(R.id.layout_brief);
-        }
-
-        @Override
-        public float getActionWidth() {
-            return itemView.findViewById(R.id.btn_delete).getWidth();
-        }
-    }
-
     private void onItemExpand(ListItemEffectDownloadBinding binding, String path) {
+        mItemTouchHelperExtension.closeOpened();
         if (mPlayingItem == null) {
             //当前无播放item
             //更新

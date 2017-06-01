@@ -11,10 +11,12 @@ import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemBgmDownloadBinding;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.fragment.MyDownloadMusicFragment;
+import com.loopeer.android.photodrama4android.ui.hepler.ItemTouchHelperCallback;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import com.loopeer.android.photodrama4android.ui.widget.MusicClipView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.Extension;
+import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 import static com.loopeer.android.photodrama4android.utils.MusicInfoUtils.getDefaultStartTime;
 
@@ -25,9 +27,14 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
 
     private IMusicAdapter mIMusicAdapter;
     private MyDownloadMusicFragment.IMusicDeleteListener mIMusicDeleteListener;
+    private ItemTouchHelperExtension mItemTouchHelperExtension;
 
     public void setIMusicAdapter(IMusicAdapter iMusicAdapter) {
         this.mIMusicAdapter = iMusicAdapter;
+    }
+
+    public void setItemTouchHelperExtension(ItemTouchHelperExtension itemTouchHelperExtension) {
+        mItemTouchHelperExtension = itemTouchHelperExtension;
     }
 
     public interface IMusicAdapter {
@@ -108,7 +115,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
         }
 
         public View getContentView() {
-            return itemView.findViewById(R.id.layout_brief);
+            return itemView.findViewById(R.id.layout_content);
         }
 
         @Override
@@ -118,6 +125,7 @@ public class BGMDownloadAdapter extends BaseFooterAdapter<Voice> {
     }
 
     private void onItemExpand(ListItemBgmDownloadBinding binding, String path) {
+        mItemTouchHelperExtension.closeOpened();
         if (mPlayingItem == null) {
             //当前无播放item
             //更新

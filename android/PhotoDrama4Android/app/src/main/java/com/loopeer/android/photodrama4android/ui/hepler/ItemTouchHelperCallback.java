@@ -15,14 +15,13 @@ public class ItemTouchHelperCallback extends ItemTouchHelperExtension.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        LinearLayout controller = (LinearLayout) viewHolder.itemView.findViewById(
-            R.id.layout_controller);
-        if (controller.getVisibility() == View.VISIBLE) {
-            //展开不做侧滑删除
-            return makeMovementFlags(0, ItemTouchHelper.ACTION_STATE_IDLE);
-        } else {
-            return makeMovementFlags(0, ItemTouchHelper.START);
+        BGMDownloadAdapter.MusicItemViewHolder holder
+                = (BGMDownloadAdapter.MusicItemViewHolder) viewHolder;
+        if (holder.itemView.findViewById(R.id.layout_controller).getVisibility() == View.VISIBLE) {
+            return makeMovementFlags(0, 0);
         }
+        return makeMovementFlags(0, ItemTouchHelper.START);
+
     }
 
     @Override
@@ -41,12 +40,16 @@ public class ItemTouchHelperCallback extends ItemTouchHelperExtension.Callback {
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder
+            , float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        BGMDownloadAdapter.MusicItemViewHolder holder
+                = (BGMDownloadAdapter.MusicItemViewHolder) viewHolder;
+        if (holder.itemView.findViewById(R.id.layout_controller).getVisibility() == View.VISIBLE) {
+            return;
+        }
         if (dY != 0 && dX == 0) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
-        BGMDownloadAdapter.MusicItemViewHolder holder
-            = (BGMDownloadAdapter.MusicItemViewHolder) viewHolder;
         if (viewHolder instanceof BGMDownloadAdapter.MusicItemViewHolder) {
             holder.getContentView().setTranslationX(dX);
         }
