@@ -202,10 +202,10 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
         long time = mVideoPlayerManager.getGLThread().getUsedTime();
         for (ImageClip clip :
                 mDrama.videoGroup.imageClips) {
-            if (time > clip.startTime && time < clip.getEndTime()) {
+            if (time >= clip.startTime && time <= clip.getEndTime()) {
                 return clip;
             }
-            if (time > clip.startWithPreTransitionTime && time < clip.getEndTime()) {
+            if (time >= clip.startWithPreTransitionTime && time <= clip.getEndTime()) {
                 return clip;
             }
         }

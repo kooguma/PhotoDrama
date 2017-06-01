@@ -19,16 +19,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="28dp"
-        android:text="@string/music_empty"/>
+        android:text="@string/music_empty"
+        android:textSize="@dimen/text_size_xmedium"/>
 
     <Button
         android:id="@+id/btn_download"
         style="@style/PhotoDramaButton.Blue.Normal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="@dimen/larger_padding"
+        android:height="40dp"
         android:text="@string/music_empty_download"/>
 </LinearLayout>
