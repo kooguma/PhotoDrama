@@ -33,6 +33,12 @@ public class TransitionEffectAdapter extends BaseFooterAdapter<TransitionClip> {
 
     public void selectedItem(TransitionClip transitionClip) {
         int index = getDatas().indexOf(transitionClip);
+        for (int i = 0; i < getDatas().size(); i++) {
+            if (transitionClip.transitionType == getDatas().get(i).transitionType) {
+                index = i;
+                break;
+            }
+        }
         if (index >= 0) {
             mSelectedTransitionClip = getDatas().get(index);
             mOnSelectedListener.onEffectSelected(mSelectedTransitionClip);

@@ -49,7 +49,7 @@ public class TextureHelper {
     public static final float TEXT_LINE_PADDING = DeviceScreenUtils.dp2px(6, PhotoDramaApp.getAppContext());//TODO test value
     public static final float VERTICAL_MARGIN = DeviceScreenUtils.dp2px(6, PhotoDramaApp.getAppContext());//TODO test value
     public static final float TEXT_MARGIN_HORIZONTAL = DeviceScreenUtils.dp2px(40, PhotoDramaApp.getAppContext());//TODO test value
-    public static final float TEXT_SIZE = dp2px(16, PhotoDramaApp.getAppContext());//TODO test value
+    public static final float TEXT_SIZE = dp2px(14, PhotoDramaApp.getAppContext());//TODO test value
 
     private static final String TAG = "TextureHelper";
     private static final boolean DEBUG = BuildConfig.DEBUG || true;

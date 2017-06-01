@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
 import com.loopeer.android.photodrama4android.media.VideoPlayerManager;
 import com.loopeer.android.photodrama4android.media.model.Drama;
+import com.loopeer.android.photodrama4android.media.model.ImageClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionClip;
 import com.loopeer.android.photodrama4android.media.model.TransitionImageWrapper;
 import com.loopeer.android.photodrama4android.media.model.TransitionType;
@@ -110,11 +112,21 @@ public class TransitionEditActivity extends PhotoDramaBaseActivity implements Im
         mSelectedTransitionClip = mImageTransitionSegmentAdapter.getSelectedTransition();
         mVideoPlayerManager.updateDrama(mVideoPlayerManager.getDrama());
         mVideoPlayerManager.refreshTransitionRender();
-        mVideoPlayerManager.updateVideoTime(mSelectedTransitionClip.startTime - 500
-                , mSelectedTransitionClip.getEndTime() + 500);
-        mVideoPlayerManager.seekToVideo(mSelectedTransitionClip.startTime - 500);
+        Pair<Integer, Integer> startEndTime = getTransitionStartEndTime(mSelectedTransitionClip);
+        mVideoPlayerManager.updateVideoTime(startEndTime.first
+                , startEndTime.second);
+        mVideoPlayerManager.seekToVideo(startEndTime.first);
         if (mSelectedTransitionClip.showTime > 0)
-            mVideoPlayerManager.startVideoWithFinishTime(mSelectedTransitionClip.startTime - 500);
+            mVideoPlayerManager.startVideoWithFinishTime(startEndTime.second);
+    }
+
+    private Pair<Integer, Integer> getTransitionStartEndTime(TransitionClip selectedTransitionClip) {
+        ImageClip preImageClip;
+        ImageClip nextImageClip;
+        int transitionIndex = mDrama.videoGroup.transitionClips.indexOf(selectedTransitionClip);
+        preImageClip = mDrama.videoGroup.imageClips.get(transitionIndex);
+        nextImageClip = mDrama.videoGroup.imageClips.get(transitionIndex + 1);
+        return new Pair<>(preImageClip.startTime, nextImageClip.getEndTime());
     }
 
     private void updateDramaImageAndTransitionTime() {

@@ -67,6 +67,7 @@
                     android:layout_alignBaseline="@id/btn_use_drama"
                     android:layout_below="@id/txt_desc"
                     android:layout_marginLeft="@dimen/medium_padding"
+                    android:textSize="@dimen/text_size_xmedium"
                     android:drawableLeft="@drawable/ic_people"
                     android:drawablePadding="@dimen/small_padding"
                     android:text="@{@string/drama_people_format(theme.usedCount)}"/>

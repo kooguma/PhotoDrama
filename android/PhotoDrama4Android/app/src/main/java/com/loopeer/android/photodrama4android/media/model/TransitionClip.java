@@ -24,12 +24,6 @@ public class TransitionClip extends Clip{
         this.transitionType = transitionType;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj.getClass() != this.getClass()) return false;
-        return transitionType.getValue() == (((TransitionClip)obj).transitionType.getValue());
-    }
-
     public XmlTransition toXml() {
         XmlTransition xmlTransition = new XmlTransition();
         xmlTransition.id = transitionType.getValue();

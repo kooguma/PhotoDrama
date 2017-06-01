@@ -62,7 +62,7 @@
 
     <!--about us-->
     <string name="label_image">图标</string>
-    <string name="about_version_format">V%s</string>
+    <string name="about_version_format">v%s</string>
 
     <!--feedback-->
     <string name="feedback_hint">提出您的意见或建议，我们会努力做得更好哦 ~</string>
