@@ -273,16 +273,10 @@ public class MusicClipView extends View {
     }
 
     @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int height = mIndicatorDrawable.getIntrinsicHeight();
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
-
-    // private int measureWidth(int widthMeasureSpec) {
-    //
-    // }
-    //
-    // private int measureHeight(int heightMeasureSpec) {
-    //
-    // }
 
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

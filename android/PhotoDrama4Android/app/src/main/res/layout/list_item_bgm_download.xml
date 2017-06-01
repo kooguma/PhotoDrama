@@ -86,7 +86,7 @@
                 android:id="@+id/layout_controller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="@color/window_background_gray"
                 android:orientation="vertical">
 
@@ -95,7 +95,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingBottom="@dimen/medium_padding"
                     android:paddingLeft="@dimen/medium_padding"
                     android:paddingRight="@dimen/larger_padding">
 
@@ -107,23 +106,25 @@
                             android:id="@+id/btn_pause_play_btn"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_gravity="bottom"
+                            android:layout_gravity="center"
                             android:background="?selectableItemBackgroundBorderless"
-                            android:layout_marginBottom="8dp"
                             android:src="@drawable/selector_play_pause_btn"/>
                     </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/large_padding"
+                        android:paddingBottom="@dimen/large_padding"
                         android:layout_marginLeft="12dp"
+                        android:layout_gravity="center_vertical"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="@dimen/xsmall_padding">
+                            android:paddingLeft="@dimen/xxsmall_padding"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/txt_start"
@@ -158,8 +159,9 @@
 
                         <com.loopeer.android.photodrama4android.ui.widget.MusicClipView
                             android:id="@+id/view_clip"
+                            android:layout_marginTop="@dimen/line_space"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"/>
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
