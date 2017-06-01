@@ -120,8 +120,8 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         mItemTouchHelperExtension.attachToRecyclerView(getRecyclerManager().getRecyclerView());
         if (mBGMDownloadAdapter != null)
             mBGMDownloadAdapter.setItemTouchHelperExtension(mItemTouchHelperExtension);
-        if (mBGMDownloadAdapter != null)
-            mBGMDownloadAdapter.setItemTouchHelperExtension(mItemTouchHelperExtension);
+        if (mEffectDownloadAdapter != null)
+            mEffectDownloadAdapter.setItemTouchHelperExtension(mItemTouchHelperExtension);
     }
 
     @Override
