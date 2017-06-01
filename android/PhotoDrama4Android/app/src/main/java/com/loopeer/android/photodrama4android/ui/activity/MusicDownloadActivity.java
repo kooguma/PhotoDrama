@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper;
 import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.ui.adapter.MusicDownloadAdapter;
+import com.loopeer.android.photodrama4android.ui.adapter.OnItemClickListener;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.Toaster;
 import io.reactivex.Flowable;
@@ -32,14 +34,12 @@ import java.io.IOException;
 import java.util.List;
 
 public class MusicDownloadActivity extends PhotoDramaBaseActivity
-    implements IRecycler<Voice>, MusicDownloadAdapter.IMusicDownloadAdapter,
-    MediaPlayer.OnPreparedListener {
+    implements IRecycler<Voice>,
+    MediaPlayer.OnPreparedListener, OnItemClickListener<Voice> {
 
     private MediaPlayer mMediaPlayer;
-    private AudioFetchHelper mAudioFetchHelper;
-
     private Category mCategory;
-
+    private MusicDownloadAdapter mMusicDownloadAdapter;
     private MusicClip.MusicType mType;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
         mCategory = (Category) getIntent().getSerializableExtra(Navigator.EXTRA_CATEGORY);
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
-        mAudioFetchHelper = new AudioFetchHelper(this);
     }
 
     @Override protected void onPostCreate(Bundle savedInstanceState) {
@@ -71,34 +70,14 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
     }
 
     @Override public RxRecyclerAdapter<Voice> createRecyclerViewAdapter() {
-        return new MusicDownloadAdapter(this, this, mType);
+        mMusicDownloadAdapter = new MusicDownloadAdapter(this, mType);;
+        mMusicDownloadAdapter.setListener(this);
+        return mMusicDownloadAdapter;
     }
 
     @Override
     public Flowable<? extends BaseResponse<List<Voice>>> requestData(String offset, String page, String pageSize) {
         return VoiceService.INSTANCE.voices(mCategory.id);
-    }
-
-    @Override public void onMusicDownloadClick(Voice voice, ViewSwitcher viewSwitcher) {
-        if (mType == MusicClip.MusicType.BGM) {
-            Analyst.addMusicSoundtrackDownloadClic(voice.id);
-        } else {
-            Analyst.addEffectSoundEffectDownloadClic(voice.id);
-        }
-
-        mAudioFetchHelper.getAudio(mType, voice, status -> {
-            TextView txtProgress = (TextView) viewSwitcher.findViewById(R.id.txt_percent);
-            txtProgress.setText(getString(R.string.common_percent_format, status.getPercentNumber()));
-        }, throwable -> {
-            ImageButton button = (ImageButton) viewSwitcher.findViewById(R.id.btn_download);
-            button.setImageResource(R.drawable.ic_music_clip_download);
-            Toaster.showToast("下载失败：" + throwable.getMessage());
-        }, () -> {
-            viewSwitcher.setDisplayedChild(0);
-            ImageButton button = (ImageButton) viewSwitcher.findViewById(R.id.btn_download);
-            button.setImageResource(R.drawable.ic_download_success);
-            RxBus.getDefault().send(new MusicDownLoadSuccessEvent(voice));
-        });
     }
 
     @Override protected void onResume() {
@@ -113,7 +92,7 @@ public class MusicDownloadActivity extends PhotoDramaBaseActivity
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        mAudioFetchHelper.unSubscribe();
+        mMusicDownloadAdapter.onDestroy();
         mMediaPlayer.stop();
         mMediaPlayer.release();
     }

@@ -35,6 +35,7 @@ import java.util.List;
 import retrofit2.http.Field;
 import zlc.season.rxdownload2.RxDownload;
 
+import static com.loopeer.android.photodrama4android.media.utils.AudioFetchHelper.DOWNLOAD_ING_NAME_SUFFIX;
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.EXTERNAL_STORAGE_PERMISSIONS;
 import static com.loopeer.android.photodrama4android.utils.PermissionUtils.REQUEST_EXTERNAL_STORAGE_PERMISSION;
 
@@ -232,8 +233,10 @@ public class FileManager {
 
         List<Voice> voices = new ArrayList<>();
         for (File file : files) {
-            Voice v = Voice.fromFile(file);
-            voices.add(v);
+            if (!file.getAbsolutePath().endsWith(DOWNLOAD_ING_NAME_SUFFIX)) {
+                Voice v = Voice.fromFile(file);
+                voices.add(v);
+            }
         }
         return voices;
     }
@@ -361,6 +364,18 @@ public class FileManager {
     private static boolean checkFile(String filePath) {
         File file = new File(filePath);
         return file.exists();
+    }
+
+
+    public static void renameImageFile(String preFileName, String newFileName) {
+        File oldFile = new File(preFileName);
+        File newfile=new File(newFileName);
+        if(!oldFile.exists()){
+            return;
+        }
+        if(!newfile.exists()){
+            oldFile.renameTo(newfile);
+        }
     }
 }
 

@@ -38,6 +38,7 @@ import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
@@ -69,20 +70,22 @@ public class MyDownloadMusicFragment extends MovieMakerBaseFragment
         super.onCreate(savedInstanceState);
         registerMusicDownLoadSuccessEvent();
         getRecyclerManager().setRefreshMode(RefreshHelper.RefreshMode.NONE);
-
     }
 
     private void registerMusicDownLoadSuccessEvent() {
         registerSubscription(
                 RxBus.getDefault().toFlowable(MusicDownLoadSuccessEvent.class)
+                        .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(o -> getRecyclerManager().onRefresh())
-                        .doOnNext(o -> {
-                            registerSubscription(
-                                    VoiceService.INSTANCE
-                                            .download(o.voice.id)
-                                            .subscribe()
-                            );
-                        })
+                        .doOnNext(o -> registerDownloadSuccess(o))
+                        .subscribe()
+        );
+    }
+
+    private void registerDownloadSuccess(MusicDownLoadSuccessEvent o) {
+        registerSubscription(
+                VoiceService.INSTANCE
+                        .download(o.voice.id)
                         .subscribe()
         );
     }

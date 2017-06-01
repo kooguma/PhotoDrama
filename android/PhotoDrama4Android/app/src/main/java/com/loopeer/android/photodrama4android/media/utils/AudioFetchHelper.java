@@ -2,6 +2,11 @@ package com.loopeer.android.photodrama4android.media.utils;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.laputapp.rx.RxBus;
+import com.loopeer.android.photodrama4android.event.MusicDownFailEvent;
+import com.loopeer.android.photodrama4android.event.MusicDownLoadSuccessEvent;
+import com.loopeer.android.photodrama4android.event.MusicDownProgressEvent;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Voice;
 import com.loopeer.android.photodrama4android.utils.FileManager;
@@ -16,28 +21,27 @@ import zlc.season.rxdownload2.RxDownload;
 import zlc.season.rxdownload2.entity.DownloadStatus;
 
 public class AudioFetchHelper {
-
-    private RxDownload mRxDownload;
-    private Disposable mDisposable;
-
-    public AudioFetchHelper(Context context) {
-        mRxDownload = RxDownload.getInstance(context);
+    private static RxDownload sRxDownload;
+    public static final String DOWNLOAD_ING_NAME_SUFFIX = "_ING";
+    public static void init(Context context) {
+        sRxDownload = RxDownload.getInstance(context);
     }
 
-    public void getAudio(MusicClip.MusicType type, Voice voice, Consumer<DownloadStatus> consumer, Consumer<Throwable> throwable, Action action) {
-        final String saveName = voice.name + "_" + voice.id;
+    public static void getAudio(MusicClip.MusicType type, Voice voice) {
+        final String saveName = voice.name + "_" + voice.id + DOWNLOAD_ING_NAME_SUFFIX;
+        final String successSaveName = voice.name + "_" + voice.id;
         final String savePath = type == MusicClip.MusicType.BGM ?
-                                FileManager.getInstance().getBgmPath() :
-                                FileManager.getInstance().getEffectPath();
-        mDisposable = mRxDownload.download(voice.voiceUrl, saveName, savePath)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(consumer, throwable, action);
-    }
+                FileManager.getInstance().getBgmPath() :
+                FileManager.getInstance().getEffectPath();
 
-    public void unSubscribe() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-        }
+        sRxDownload.download(voice.voiceUrl, saveName, savePath)
+                .subscribeOn(Schedulers.io())
+                .subscribe(downloadStatus -> RxBus.getDefault().send(new MusicDownProgressEvent(voice
+                        , downloadStatus.getPercentNumber()))
+                        , throwable -> RxBus.getDefault().send(new MusicDownFailEvent(voice, "下载失败：" + throwable.getMessage()))
+                        , () -> {
+                            FileManager.renameImageFile(savePath + saveName, savePath + successSaveName);
+                            RxBus.getDefault().send(new MusicDownLoadSuccessEvent(voice));
+                        });
     }
 }
