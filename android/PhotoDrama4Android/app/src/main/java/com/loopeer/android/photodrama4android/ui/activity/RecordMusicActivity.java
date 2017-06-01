@@ -116,7 +116,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
     }
 
     public void stopActual(long usedTime) {
-        mMusicClipRecording.showTime = (int) (usedTime - mMusicClipRecording.startTime);
+        mMusicClipRecording.showTime = (int) (usedTime - mMusicClipRecording.startTime + 1);
         mIsRecording = false;
         mBinding.textAdd.setText(R.string.record_add);
         mAudioRecorder.stopRecording();
@@ -131,16 +131,17 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         mVideoPlayerManager.getIMusic().updateDrama(mDrama);
         updateScrollSelectViewClips();
         mBinding.scrollSelectView.setStop(true);
-        int seekTime = mMusicClipRecording.getEndTime() + 1;
+        int seekTime = mMusicClipRecording.getEndTime() + 2;
         if (mMusicClipRecording.getEndTime() >= mDrama.getShowTimeTotal()) {
             seekTime = mVideoPlayerManager.getMaxTime();
         }
         mVideoPlayerManager.seekToVideo(seekTime);
         mMusicClipRecording = null;
-
+        updateBtnView();
     }
 
     private void startRecord() {
+        if (mIsRecording) return;
         mIsRecording = true;
         mBinding.textAdd.setText(R.string.record_add_finish);
         mMusicClipRecording = new MusicClip((int) mVideoPlayerManager.getGLThread().getUsedTime()
@@ -362,7 +363,7 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         } else {
             mSelectedClip = null;
         }
-        updateBtnView();
+//        updateBtnView();
     }
 
     private void updateBtnView() {
@@ -434,6 +435,8 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
 
     @Override
     public void actualFinishAt(long usedTime) {
-        stopActual(usedTime);
+        if (mIsRecording) {
+            stopActual(usedTime);
+        }
     }
 }

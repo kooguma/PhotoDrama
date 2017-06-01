@@ -366,6 +366,10 @@ public class ScrollSelectView extends ViewGroup {
         setStop(false);
     }
 
+    public void setManual(boolean manual) {
+        isManual = manual;
+    }
+
     public void setStop(boolean stop) {
         isStop = stop;
     }
