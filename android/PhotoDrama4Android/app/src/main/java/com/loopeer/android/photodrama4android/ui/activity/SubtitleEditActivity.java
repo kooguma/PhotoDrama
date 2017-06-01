@@ -310,7 +310,7 @@ public class SubtitleEditActivity extends PhotoDramaBaseActivity implements Scro
     @Override
     public void onProgressInit(int progress, int maxValue) {
         mBinding.textStart.setText(formatTimeMilli(progress));
-        mBinding.textTotal.setText(formatTimeMilli(maxValue + 1));
+        mBinding.textTotal.setText(formatTimeMilli(maxValue));
     }
 
     @Override

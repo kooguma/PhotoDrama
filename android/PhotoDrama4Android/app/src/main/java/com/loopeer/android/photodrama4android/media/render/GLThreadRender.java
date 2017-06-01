@@ -52,9 +52,9 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void stopUp() {
-        synchronized (mLock) {
+//        synchronized (mLock) {
             mIsStop = true;
-        }
+//        }
     }
 
     public boolean isStop() {
@@ -72,12 +72,17 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
             while (!mIsFinish) {
                 try {
                     if (mUsedTime >= mSumTime) {
+                        mUsedTime = mSumTime;
                         if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
                             mMovieMakerTextureView.post(() -> mSeekChangeListener.actionFinish());
+                            mMovieMakerTextureView.post((() -> mSeekChangeListener.actualFinishAt(mUsedTime)));
                         }
                         mLock.wait();
                     }
                     if (mIsStop) {
+                        if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
+                            mMovieMakerTextureView.post((() -> mSeekChangeListener.actualFinishAt(mUsedTime)));
+                        }
                         mLock.wait();
                     }
                     long startTime = System.currentTimeMillis();
@@ -89,6 +94,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                         mUsedTime = mUsedTime + (mIsRecording ? 1000 / RECORDFPS : System.currentTimeMillis() - startTime);
                     else
                         mIsBackGround = false;
+                    mUsedTime = mUsedTime >= mSumTime ? mSumTime : mUsedTime;
                     if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
                         mMovieMakerTextureView.post((() -> mSeekChangeListener.seekChange(mUsedTime)));
                     }

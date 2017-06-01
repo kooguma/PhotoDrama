@@ -33,6 +33,7 @@ public class VideoPlayerManager
     private GLThreadRender mGLThread;
     private List<ProgressChangeListener> mChangeListeners;
     private RecordingListener mRecordingListener;
+    private ActualStopListener mActualStopListener;
     private GLRenderWorker mGLRenderWorker;
     private int mSeekbarMaxValue;
     private IMusic mIMusic;
@@ -129,6 +130,12 @@ public class VideoPlayerManager
         onProgressChange((int) usedTime);
         if (!isRecording()) mIMusic.onProgressChange((int) usedTime);
         recordChange((int) usedTime);
+    }
+
+    @Override
+    public void actualFinishAt(long usedTime) {
+        if (mActualStopListener != null)
+            mActualStopListener.actualFinishAt(usedTime);
     }
 
     @Override
@@ -405,6 +412,10 @@ public class VideoPlayerManager
         return mGLRenderWorker.getTextureLoader();
     }
 
+    public void setActualStopListener(ActualStopListener actualStopListener) {
+        mActualStopListener = actualStopListener;
+    }
+
     public interface ProgressChangeListener {
         void onProgressInit(int progress, int maxValue);
 
@@ -425,5 +436,9 @@ public class VideoPlayerManager
 
     public interface BitmapReadyListener {
         void bitmapReady(String path);
+    }
+
+    public interface ActualStopListener {
+        void actualFinishAt(long usedTime);
     }
 }
