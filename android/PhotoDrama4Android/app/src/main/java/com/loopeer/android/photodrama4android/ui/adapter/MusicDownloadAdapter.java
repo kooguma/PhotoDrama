@@ -64,8 +64,9 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
         binding.btnDownload.setOnClickListener(l -> {
             if (mListener != null) {
                 if (!TextUtils.isEmpty(path)) {
-                    mListener.onItemClick(voice);
-                    showMusicBar(binding);
+                    //TODO This version should not support play music
+                        /*mListener.onItemClick(voice);
+                        showMusicBar(binding);*/
                 } else {
                     if (mType == MusicClip.MusicType.BGM) {
                         Analyst.addMusicSoundtrackDownloadClic(voice.id);
@@ -94,13 +95,14 @@ public class MusicDownloadAdapter extends BaseFooterAdapter<Voice> {
 
         binding.getRoot().setOnClickListener(l -> {
             if (mListener != null) {
-                mListener.onItemClick(voice);
+                //TODO This version should not support play music
+                /*mListener.onItemClick(voice);
                 if (mCurBinding != null) {
                     mCurBinding.viewSwitcherDisplay.setDisplayedChild(0);
                 }
                 if (!TextUtils.isEmpty(path)) {
                     showMusicBar(binding);
-                }
+                }*/
             }
         });
 
