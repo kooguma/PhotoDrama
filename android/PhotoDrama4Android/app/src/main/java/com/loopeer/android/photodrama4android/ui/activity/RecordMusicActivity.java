@@ -108,13 +108,6 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         }
     }
 
-    public void onRecordConfirm(View view) {
-        mMusicClipRecording = null;
-        if (mSelectedClip != null)
-            mVideoPlayerManager.seekToVideo(mSelectedClip.getEndTime() + 1);
-        updateBtnView();
-    }
-
     private void stopRecord(boolean validate) {
         mIsRecording = false;
         mBinding.textAdd.setText(R.string.record_add);
@@ -136,7 +129,11 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         if (mMusicClipRecording.getEndTime() >= mDrama.getShowTimeTotal()) {
             seekTime = mVideoPlayerManager.getMaxTime();
         }
-        mVideoPlayerManager.seekToVideo(seekTime);
+        int finalSeekTime = seekTime;
+        mVideoPlayerManager.seekToVideo(finalSeekTime);
+        Flowable.timer(200, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(l -> mVideoPlayerManager.seekToVideo(finalSeekTime));
         mMusicClipRecording = null;
     }
 

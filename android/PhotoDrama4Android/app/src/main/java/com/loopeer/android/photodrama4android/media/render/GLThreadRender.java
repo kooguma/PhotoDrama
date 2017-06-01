@@ -187,6 +187,11 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     @Override
     public void onDrawFrame(WindowSurface windowSurface) {
         if (!mIsManual) {
+            if (isStop()) {
+                synchronized (mLock) {
+                    mLock.notify();
+                }
+            }
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
             synchronized (mLock) {
                 mLock.notify();

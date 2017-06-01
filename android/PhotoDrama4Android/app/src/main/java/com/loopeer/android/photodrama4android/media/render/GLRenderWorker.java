@@ -95,23 +95,25 @@ public class GLRenderWorker implements IRendererWorker {
 
     @Override
     public void drawFrame(Context context, WindowSurface windowSurface, long usedTime) {
-
+        glClear(GL_COLOR_BUFFER_BIT);
+        setIdentityM(projectionMatrix, 0);
         if (!mIsRecording) {
-            glClear(GL_COLOR_BUFFER_BIT);
-            setIdentityM(projectionMatrix, 0);
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
             windowSurface.swapBuffers();
         } else {
-            mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFramebuffer);
-            GlUtil.checkGlError("glBindFramebuffer");
-            glClear(GL_COLOR_BUFFER_BIT);
-            setIdentityM(projectionMatrix, 0);
+            if (mMuxerWrapper != null) {
+                mMuxerWrapper.setPresentationTimeUs(usedTime * 1000);
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFramebuffer);
+                GlUtil.checkGlError("glBindFramebuffer");
+            }
             mImageClipProcessor.drawFrame(usedTime, projectionMatrix);
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-            GlUtil.checkGlError("glBindFramebuffer");
-            mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
+            if (mMuxerWrapper != null) {
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                GlUtil.checkGlError("glBindFramebuffer");
+                mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
+            }
             windowSurface.swapBuffers();
+            if (mMuxerWrapper == null) return;
             mMuxerWrapper.frameVideoAvailableSoon();
             mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
