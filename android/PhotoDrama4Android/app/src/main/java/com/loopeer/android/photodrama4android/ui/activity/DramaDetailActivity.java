@@ -106,7 +106,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                 mDrama = drama;
             }, throwable -> {
                 throwable.printStackTrace();
-                mLoader.showMessage(throwable.getMessage());
+                mLoader.showMessage(getString(R.string.drama_load_fail));
             }, () -> mLoader.showContent());
     }
 
