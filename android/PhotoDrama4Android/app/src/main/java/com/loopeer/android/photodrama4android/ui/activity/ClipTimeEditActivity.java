@@ -24,8 +24,6 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ClipTimeEditAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.TimeSelectView;
 
-import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
-
 public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements ClipTimeEditAdapter.OnSelectedListener
         , TimeSelectView.TimeUpdateListener, VideoPlayerManager.ProgressChangeListener {
 

@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
+    <com.loopeer.bottomimagepicker.RecyclerNotNestScrollView
         android:id="@+id/recycler_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         android:scrollbars="none"/>
 
