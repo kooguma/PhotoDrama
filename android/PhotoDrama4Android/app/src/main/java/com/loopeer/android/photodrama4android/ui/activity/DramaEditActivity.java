@@ -175,18 +175,25 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
                         PickerBottomBehavior.STATE_EXPANDED));
         mBottomImagePickerView.setOnImagePickListener((ImageAdapter.OnImagePickListener) uri -> {
             if (mSelectedImageClip == null) return true;
-            BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
-            mSelectedImageClip.path = uri.getPath();
+            String newPath = uri.getPath();
             String path = mSelectedImageClip.path;
+            int index = mEditDramaSegmentAdapter.getDatas().indexOf(mSelectedImageClip);
+            mEditDramaSegmentAdapter.selectedNext();
+            if (path.equals(newPath)) {
+                return true;
+            }
             HandlerWrapper handler = new HandlerWrapper(
                     Looper.getMainLooper(),
                     HandlerWrapper.TYPE_LOAD_IMAGE
-                    , mSelectedImageClip.path
-                    , t -> VideoPlayManagerContainer.getDefault()
-                    .bitmapLoadReady(DramaEditActivity.this,
-                            path));
+                    , newPath
+                    , t -> {
+                checkToRemoveBitmap(path);
+                mEditDramaSegmentAdapter.getDatas().get(index).path = newPath;
+                VideoPlayManagerContainer.getDefault()
+                        .bitmapLoadReady(DramaEditActivity.this,
+                                newPath);
+            });
             mVideoPlayerManager.getTextureLoader().loadImageTexture(handler);
-            mEditDramaSegmentAdapter.selectedNext();
             return true;
         });
         mBottomImagePickerView.getViewPager()
@@ -220,6 +227,19 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
                         behavior.setPeekHeight(minSheetHeight);
                     }
                 });
+    }
+
+    private void checkToRemoveBitmap(String path) {
+        int i = 0;
+        for (ImageClip clip :
+                mDrama.videoGroup.imageClips) {
+            if (clip.path.equals(path)) {
+                i++;
+            }
+        }
+        if (i == 1) {
+            BitmapFactory.getInstance().removeBitmapToCache(path);
+        }
     }
 
     private void updateSegmentList() {

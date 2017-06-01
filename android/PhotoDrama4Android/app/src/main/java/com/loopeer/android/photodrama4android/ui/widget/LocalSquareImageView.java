@@ -73,7 +73,6 @@ public class LocalSquareImageView extends SimpleDraweeView implements View.OnCli
     public void setLocalUrl(final String localUrl) {
         if (!TextUtils.isEmpty(mInternetUrl)) mInternetUrl = null;
         mLocalUrl = localUrl;
-
         invalidate();
     }
 
