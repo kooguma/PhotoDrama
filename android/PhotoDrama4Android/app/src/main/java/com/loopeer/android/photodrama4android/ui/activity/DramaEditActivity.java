@@ -177,13 +177,14 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
             if (mSelectedImageClip == null) return true;
             BitmapFactory.getInstance().removeBitmapToCache(mSelectedImageClip.path);
             mSelectedImageClip.path = uri.getPath();
+            String path = mSelectedImageClip.path;
             HandlerWrapper handler = new HandlerWrapper(
                     Looper.getMainLooper(),
                     HandlerWrapper.TYPE_LOAD_IMAGE
                     , mSelectedImageClip.path
                     , t -> VideoPlayManagerContainer.getDefault()
-                    .bitmapLoadReady(DramaEditActivity.this
-                            , mSelectedImageClip.path));
+                    .bitmapLoadReady(DramaEditActivity.this,
+                            path));
             mVideoPlayerManager.getTextureLoader().loadImageTexture(handler);
             mEditDramaSegmentAdapter.selectedNext();
             return true;
