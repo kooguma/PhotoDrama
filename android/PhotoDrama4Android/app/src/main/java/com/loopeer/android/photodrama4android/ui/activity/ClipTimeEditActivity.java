@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -79,9 +80,19 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        }
+        if (item.getItemId() == R.id.menu_done) {
+            doBeforeFinish();
+            this.finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -162,12 +173,6 @@ public class ClipTimeEditActivity extends PhotoDramaBaseActivity implements Clip
         } else {
             mVideoPlayerManager.pauseVideo();
         }
-    }
-
-    @Override
-    public void finish() {
-        doBeforeFinish();
-        super.finish();
     }
 
     private void doBeforeFinish() {
