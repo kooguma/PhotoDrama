@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -37,8 +37,8 @@
                 android:id="@+id/layout_brief"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:background="@android:color/white"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/medium_padding">
 
@@ -67,8 +67,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
-                    android:maxLines="1"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@{voice.name}"
                     android:textColor="@color/text_color_primary"
                     android:textSize="@dimen/text_size_large"/>
@@ -86,29 +86,26 @@
                 android:id="@+id/layout_controller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:background="@color/window_background_gray"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingBottom="@dimen/medium_padding"
-                    android:paddingLeft="@dimen/medium_padding"
-                    android:paddingRight="@dimen/larger_padding">
+                    android:paddingLeft="@dimen/medium_padding">
 
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
 
-
                         <ImageButton
                             android:id="@+id/btn_pause_play_btn"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_gravity="bottom"
+                            android:layout_gravity="center"
                             android:background="?selectableItemBackgroundBorderless"
                             android:src="@drawable/selector_play_pause_btn"/>
 
@@ -117,14 +114,17 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="@dimen/small_padding"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="@dimen/xsmall_padding">
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="16dp"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/txt_start"
@@ -161,7 +161,9 @@
                             android:id="@+id/seek_bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="6dp"
                             android:max="100"
+                            android:paddingLeft="0dp"
                             android:progressBackgroundTint="@color/music_clip_progress_selected_color"
                             android:thumb="@drawable/ic_thumb_volume"/>
                     </LinearLayout>

@@ -86,7 +86,7 @@
                 android:id="@+id/layout_controller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@color/window_background_gray"
                 android:orientation="vertical">
 
@@ -114,8 +114,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/large_padding"
-                        android:paddingBottom="@dimen/large_padding"
+                        android:paddingTop="@dimen/small_padding"
+                        android:paddingBottom="@dimen/small_padding"
                         android:layout_marginLeft="12dp"
                         android:layout_gravity="center_vertical"
                         android:orientation="vertical">
@@ -123,7 +123,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/xxsmall_padding"
                             android:orientation="horizontal">
 
                             <TextView
