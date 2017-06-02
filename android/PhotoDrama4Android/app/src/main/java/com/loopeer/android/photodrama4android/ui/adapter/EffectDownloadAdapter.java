@@ -124,7 +124,10 @@ public class EffectDownloadAdapter extends BaseFooterAdapter<Voice> {
     }
 
     private void onItemExpand(ListItemEffectDownloadBinding binding, String path) {
-        mItemTouchHelperExtension.closeOpened();
+        if (binding.layoutContent.getTranslationX() != 0) {
+            mItemTouchHelperExtension.closeOpened();
+            return;
+        }
         if (mPlayingItem == null) {
             //当前无播放item
             //更新
