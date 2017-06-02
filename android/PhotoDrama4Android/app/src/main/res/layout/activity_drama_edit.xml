@@ -1,107 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        android:fitsSystemWindows="@bool/fits_system_windows">
+    <merge
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <com.loopeer.compatinset.InsetLinearLayout
-            android:id="@+id/layout_display"
+        <com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="@bool/fits_system_windows"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:fitsSystemWindows="@bool/fits_system_windows">
 
-            <include
-                android:id="@+id/view_toolbar_dark_inset"
-                layout="@layout/view_toolbar_dark_inset"/>
-
-            <com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper
-                android:id="@+id/animator"
+            <com.loopeer.compatinset.InsetLinearLayout
+                android:id="@+id/layout_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="@bool/fits_system_windows"
-                android:background="@android:color/black">
+                android:orientation="vertical">
 
-                <com.loopeer.compatinset.InsetFramelayout
+                <include
+                    android:id="@+id/view_toolbar_dark_inset"
+                    layout="@layout/view_toolbar_dark_inset"/>
+
+                <com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper
+                    android:id="@+id/animator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fitsSystemWindows="@bool/fits_system_windows"
-                    android:layout_gravity="center">
+                    android:background="@android:color/black"
+                    android:fitsSystemWindows="@bool/fits_system_windows">
 
-                    <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
-                        android:id="@+id/gl_surface_view"
+                    <com.loopeer.compatinset.InsetFramelayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:screenRatioX="@integer/gl_screen_x"
-                        app:screenRatioY="@integer/gl_screen_y"/>
-
-                    <com.loopeer.android.photodrama4android.ui.widget.VideoRecordCover
-                        android:id="@+id/view_cover"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/black"
-                        android:visibility="gone"
-                        app:screenRatioX="@integer/gl_screen_x"
-                        app:screenRatioY="@integer/gl_screen_y"/>
-
-                    <ImageView
-                        android:id="@+id/btn_play"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_play_green_large"/>
+                        android:fitsSystemWindows="@bool/fits_system_windows">
 
-                    <ImageView
-                        android:id="@+id/btn_full"
-                        style="?actionButtonStyle"
-                        android:layout_width="wrap_content"
+                        <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
+                            android:id="@+id/gl_surface_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:screenRatioX="@integer/gl_screen_x"
+                            app:screenRatioY="@integer/gl_screen_y"/>
+
+                        <com.loopeer.android.photodrama4android.ui.widget.VideoRecordCover
+                            android:id="@+id/view_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/black"
+                            android:visibility="gone"
+                            app:screenRatioX="@integer/gl_screen_x"
+                            app:screenRatioY="@integer/gl_screen_y"/>
+
+                        <ImageView
+                            android:id="@+id/btn_play"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_play_green_large"/>
+
+                        <ImageView
+                            android:id="@+id/btn_full"
+                            style="?actionButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:onClick="onFullBtnClick"
+                            android:src="@drawable/ic_full"/>
+
+                        <include
+                            android:id="@+id/view_full_bottom"
+                            layout="@layout/view_full_screen_bottom"/>
+
+                        <include
+                            android:id="@+id/view_full_top"
+                            layout="@layout/view_full_screen_top"/>
+                    </com.loopeer.compatinset.InsetFramelayout>
+
+                    <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|right"
-                        android:onClick="onFullBtnClick"
-                        android:src="@drawable/ic_full"/>
+                        app:screenRatioX="@integer/gl_screen_x"
+                        app:screenRatioY="@integer/gl_screen_y"/>
+                </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
 
-                    <include
-                        android:id="@+id/view_full_bottom"
-                        layout="@layout/view_full_screen_bottom"/>
-
-                    <include
-                        android:id="@+id/view_full_top"
-                        layout="@layout/view_full_screen_top"/>
-                </com.loopeer.compatinset.InsetFramelayout>
-
-                <com.loopeer.android.photodrama4android.ui.widget.TextProgressBar
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:screenRatioX="@integer/gl_screen_x"
-                    app:screenRatioY="@integer/gl_screen_y"/>
-            </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
+                    android:layout_height="86dp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="18dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:paddingTop="18dp"/>
+            </com.loopeer.compatinset.InsetLinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <com.loopeer.bottomimagepicker.BottomImagePickerView
+                android:id="@+id/pick_view"
                 android:layout_width="match_parent"
-                android:layout_height="86dp"
-                android:clipToPadding="false"
-                android:paddingBottom="18dp"
-                android:paddingLeft="18dp"
-                android:paddingRight="18dp"
-                android:paddingTop="18dp"/>
-        </com.loopeer.compatinset.InsetLinearLayout>
+                android:layout_height="400dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/window_background_dark"
+                android:orientation="vertical"
+                app:behavior_hideable="false"
+                app:layout_behavior="@string/picker_bottom_sheet_behavior"/>
 
-        <com.loopeer.bottomimagepicker.BottomImagePickerView
-            android:id="@+id/pick_view"
+        </com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout>
+
+        <FrameLayout
+            android:id="@+id/view_record_dialog_mask"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/window_background_dark"
-            android:orientation="vertical"
-            app:behavior_hideable="false"
-            app:layout_behavior="@string/picker_bottom_sheet_behavior"/>
-
-    </com.loopeer.android.photodrama4android.ui.widget.InsetCoordinatorLayout>
+            android:layout_height="match_parent"
+            android:background="@color/export_color_bg"
+            android:visibility="gone"/>
+    </merge>
 </layout>

@@ -251,6 +251,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     public void showExportProgress(String message) {
+        mBinding.viewRecordDialogMask.setVisibility(View.VISIBLE);
         if (mExportProgressLoading == null) {
             mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
@@ -267,6 +268,7 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     public void dismissExportProgressLoading() {
         if (mExportProgressLoading != null && !isFinishing()) {
             mExportProgressLoading.dismiss();
+            mBinding.viewRecordDialogMask.setVisibility(View.GONE);
         }
     }
 

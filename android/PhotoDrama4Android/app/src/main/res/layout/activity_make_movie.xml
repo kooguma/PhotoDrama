@@ -3,128 +3,138 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <com.loopeer.compatinset.InsetLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="@bool/fits_system_windows"
-        android:orientation="vertical">
+    <merge>
 
-        <include
-            android:id="@+id/view_toolbar_dark_inset"
-            layout="@layout/view_toolbar_dark_inset"/>
-
-        <com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper
-            android:id="@+id/texture_wrapper"
+        <com.loopeer.compatinset.InsetLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:fitsSystemWindows="@bool/fits_system_windows">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="@bool/fits_system_windows"
+            android:orientation="vertical">
 
-            <com.loopeer.compatinset.InsetFramelayout
+            <include
+                android:id="@+id/view_toolbar_dark_inset"
+                layout="@layout/view_toolbar_dark_inset"/>
+
+            <com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper
+                android:id="@+id/texture_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:background="@android:color/black"
                 android:fitsSystemWindows="@bool/fits_system_windows">
 
-                <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
-                    android:id="@+id/gl_surface_view"
+                <com.loopeer.compatinset.InsetFramelayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:screenRatioX="@integer/gl_screen_x"
-                    app:screenRatioY="@integer/gl_screen_y"/>
-
-                <com.loopeer.android.photodrama4android.ui.widget.VideoRecordCover
-                    android:id="@+id/view_cover"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/black"
-                    android:visibility="gone"
-                    app:screenRatioX="@integer/gl_screen_x"
-                    app:screenRatioY="@integer/gl_screen_y"/>
-
-                <ImageButton
-                    android:id="@+id/btn_full"
-                    style="?actionButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|bottom"
-                    android:onClick="onFullBtnClick"
-                    android:src="@drawable/ic_full"
-                    android:visibility="visible"/>
-
-                <ImageView
-                    android:id="@+id/btn_play"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:onClick="onPlayBtnClick"
-                    android:src="@drawable/ic_play_green_large"
-                    android:visibility="gone"/>
+                    android:fitsSystemWindows="@bool/fits_system_windows">
 
-                <include
-                    android:id="@+id/view_full_bottom"
-                    layout="@layout/view_full_screen_bottom"/>
+                    <com.loopeer.android.photodrama4android.media.MovieMakerTextureView
+                        android:id="@+id/gl_surface_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:screenRatioX="@integer/gl_screen_x"
+                        app:screenRatioY="@integer/gl_screen_y"/>
 
-                <include
-                    android:id="@+id/view_full_top"
-                    layout="@layout/view_full_screen_top"/>
+                    <com.loopeer.android.photodrama4android.ui.widget.VideoRecordCover
+                        android:id="@+id/view_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/black"
+                        android:visibility="gone"
+                        app:screenRatioX="@integer/gl_screen_x"
+                        app:screenRatioY="@integer/gl_screen_y"/>
 
-            </com.loopeer.compatinset.InsetFramelayout>
-        </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
+                    <ImageButton
+                        android:id="@+id/btn_full"
+                        style="?actionButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|bottom"
+                        android:onClick="onFullBtnClick"
+                        android:src="@drawable/ic_full"
+                        android:visibility="visible"/>
 
-        <LinearLayout
-            android:id="@+id/seek_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_edit"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/btn_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:onClick="onPlayBtnClick"
+                        android:src="@drawable/ic_play_green_large"
+                        android:visibility="gone"/>
 
-            <TextView
-                android:id="@+id/text_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/large_padding"
-                android:layout_marginLeft="@dimen/medium_padding"
-                android:layout_marginTop="@dimen/large_padding"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/text_size_small"/>
+                    <include
+                        android:id="@+id/view_full_bottom"
+                        layout="@layout/view_full_screen_bottom"/>
 
-            <android.support.v7.widget.AppCompatSeekBar
-                android:id="@+id/seek_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                    <include
+                        android:id="@+id/view_full_top"
+                        layout="@layout/view_full_screen_top"/>
 
-            <TextView
-                android:id="@+id/text_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/large_padding"
-                android:layout_marginRight="@dimen/medium_padding"
-                android:layout_marginTop="@dimen/large_padding"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/text_size_small"/>
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_edit"
-            android:scrollbars="none">
+                </com.loopeer.compatinset.InsetFramelayout>
+            </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
 
             <LinearLayout
-                android:id="@+id/container_edit_item"
-                android:layout_width="wrap_content"
+                android:id="@+id/seek_wrapper"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+                android:background="@color/bg_edit"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        </HorizontalScrollView>
-    </com.loopeer.compatinset.InsetLinearLayout>
+                <TextView
+                    android:id="@+id/text_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/large_padding"
+                    android:layout_marginLeft="@dimen/medium_padding"
+                    android:layout_marginTop="@dimen/large_padding"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="@dimen/text_size_small"/>
+
+                <android.support.v7.widget.AppCompatSeekBar
+                    android:id="@+id/seek_bar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/text_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/large_padding"
+                    android:layout_marginRight="@dimen/medium_padding"
+                    android:layout_marginTop="@dimen/large_padding"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="@dimen/text_size_small"/>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_edit"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/container_edit_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"/>
+
+            </HorizontalScrollView>
+        </com.loopeer.compatinset.InsetLinearLayout>
+
+        <FrameLayout
+            android:id="@+id/view_record_dialog_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/export_color_bg"
+            android:visibility="gone"/>
+    </merge>
 
 </layout>

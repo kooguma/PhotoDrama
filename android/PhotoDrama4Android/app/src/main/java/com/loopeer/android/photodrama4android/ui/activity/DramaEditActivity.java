@@ -313,6 +313,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     }
 
     public void showExportProgress(String message) {
+        mBinding.viewRecordDialogMask.setVisibility(View.VISIBLE);
         if (mExportProgressLoading == null) {
             mExportProgressLoading = new ExportLoadingDialog(this,
                     R.style.ExportProgressLoadingTheme);
@@ -330,6 +331,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     public void dismissExportProgressLoading() {
         if (mExportProgressLoading != null && !isFinishing()) {
             mExportProgressLoading.dismiss();
+            mBinding.viewRecordDialogMask.setVisibility(View.GONE);
         }
     }
 
