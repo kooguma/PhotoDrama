@@ -87,11 +87,6 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
             Analyst.myCreatStartClick();
             Navigator.startMakeMovieActivity(ImageSelectActivity.this,
                     Drama.createFromPath(urls));
-            registerSubscription(
-                    Flowable.timer(400, TimeUnit.MILLISECONDS)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(t -> this.finish())
-            );
             return true;
         }
         return super.onOptionsItemSelected(item);

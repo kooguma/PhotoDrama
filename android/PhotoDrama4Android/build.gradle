@@ -26,7 +26,7 @@ ext {
             buildToolsVersion      : '25.0.2',
             minSdkVersion          : 18,
             targetSdkVersion       : 24,
-            versionCode            : 24,
+            versionCode            : 25,
             versionName            : '1.2.1',
             apiUrlDebug            : 'http://drama.17chuang.cc/api/v1/',
             apiUrlRelease          : 'http://v.17chuang.cc//api/v1/',
