@@ -29,6 +29,8 @@ import com.loopeer.android.photodrama4android.media.utils.ClipsCreator;
 import com.loopeer.android.photodrama4android.ui.adapter.ScrollSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.widget.ScrollSelectView;
 import com.loopeer.android.photodrama4android.utils.FileManager;
+import com.loopeer.android.photodrama4android.utils.Toaster;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +39,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.loopeer.android.photodrama4android.media.model.MusicClip.MIN_RECORD_AUDIO_LENGTH;
 import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTimeMilli;
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class RecordMusicActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener
         , ScrollSelectView.ClipIndicatorPosChangeListener, ScrollSelectView.ClipSelectedListener, ScrollSelectView.TouchStateListener, VideoPlayerManager.ActualStopListener {
@@ -155,6 +158,8 @@ public class RecordMusicActivity extends PhotoDramaBaseActivity implements Video
         updateScrollSelectViewClips();
         if (mAudioRecorder.startRecording(mMusicClipRecording)) {
             mVideoPlayerManager.startVideoOnly();
+        } else {
+            showToast(R.string.common_record_permission_fail);
         }
     }
 

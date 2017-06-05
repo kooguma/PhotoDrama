@@ -65,6 +65,8 @@
     <string name="common_net_error">网络错误</string>
     <string name="common_percent_format">%d%%</string>
     <string name="common_percent_initial">0%</string>
+    <string name="common_storage_permission_fail">请在应用权限里面打开读写存储权限</string>
+    <string name="common_record_permission_fail">请在应用权限里面打开录音权限</string>
 
     <!--about us-->
     <string name="label_image">图标</string>

@@ -2,23 +2,13 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
-import com.laputapp.http.BaseResponse;
 import com.loopeer.android.photodrama4android.Navigator;
-import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
-import com.loopeer.android.photodrama4android.api.service.SystemService;
-import com.loopeer.android.photodrama4android.model.Advert;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
-import com.loopeer.android.photodrama4android.utils.PreUtils;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import zlc.season.rxdownload2.RxDownload;
-import zlc.season.rxdownload2.entity.DownloadStatus;
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class MainActivity extends PhotoDramaBaseActivity {
 
@@ -45,12 +35,20 @@ public class MainActivity extends PhotoDramaBaseActivity {
 
     public void onActClick(View view) {
         Analyst.homeDramaClick();
-        Navigator.startDramaSelectActivity(this);
+        if (FileManager.hasExternalStoragePermission(this)) {
+            Navigator.startDramaSelectActivity(this);
+        } else {
+            showToast(R.string.common_storage_permission_fail);
+        }
     }
 
     public void onCreateClick(View view) {
         Analyst.homeMyCreatClick();
-        Navigator.startImageSelectActivity(this);
+        if (FileManager.hasExternalStoragePermission(this)) {
+            Navigator.startImageSelectActivity(this);
+        } else {
+            showToast(R.string.common_storage_permission_fail);
+        }
     }
 
     public void onSettingClick(View view) {

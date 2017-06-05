@@ -2,11 +2,9 @@ package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.laputapp.model.BaseModel;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.Navigator;
@@ -16,10 +14,11 @@ import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectAdB
 import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectBinding;
 import com.loopeer.android.photodrama4android.model.Advert;
 import com.loopeer.android.photodrama4android.model.Series;
-import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import java.util.ArrayList;
 import java.util.List;
+import com.loopeer.android.photodrama4android.utils.FileManager;
+import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<BaseModel> {
 
@@ -85,6 +84,23 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
             binding.setAdvert(advert);
             binding.executePendingBindings();
         }
+        binding.setTheme(theme);
+        binding.container.setOnClickListener(v -> {
+            if (FileManager.hasExternalStoragePermission(getContext())) {
+                Navigator.startDramaDetailActivity(getContext(), theme);
+            } else {
+                showToast(R.string.common_storage_permission_fail);
+            }
+        });
+        binding.btnUseDrama.setOnClickListener(l -> {
+            if (FileManager.hasExternalStoragePermission(getContext())) {
+                Analyst.dramaUseClick(theme.id);
+                Navigator.startDramaEditActivity(getContext(), theme);
+            } else {
+                showToast(R.string.common_storage_permission_fail);
+            }
+        });
+        binding.executePendingBindings();
     }
 
     @Override
