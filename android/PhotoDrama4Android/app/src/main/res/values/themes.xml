@@ -120,7 +120,6 @@
 
     <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar.Fullscreen">
         <item name="android:windowAnimationStyle">@style/Animation.Activity.Alpha</item>
-        <item name="android:windowBackground">@drawable/ic_launcher2</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
 </resources>

@@ -40,4 +40,6 @@
 
     <color name="color_c1c1c1">#c1c1c1</color>
 
+    <color name="shape_background_jump">#4c000000</color>
+
 </resources>

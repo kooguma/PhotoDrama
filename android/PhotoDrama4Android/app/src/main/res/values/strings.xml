@@ -20,16 +20,21 @@
     <string name="label_add_music_bgm">添加音乐</string>
     <string name="label_add_music_effect">添加音效</string>
 
+    <!--launch-->
+    <string name="launch_logo">launch_logo</string>
+    <string name="launch_jump">跳过</string>
+
     <!--main-->
     <string name="main_act">我要主演</string>
     <string name="main_create">我要创作</string>
 
     <!-- image selected -->
-    <string name="image_too_small">不能少于2张图片</string>
+    <string name="image_too_small">请至少选择两个片段</string>
 
     <!--drama select-->
     <string name="drama_select">选择故事</string>
     <string name="drama_use">使用故事</string>
+    <string name="drama_detail">故事详情</string>
     <string name="drama_people_format">%s人使用</string>
     <string name="drama_author_format">作者：%s</string>
     <string name="drama_episode">剧集</string>
@@ -131,4 +136,6 @@
 
     <string name="make_drama_next">暂未开放哦，敬请期待~</string>
     <string name="drama_load_fail">加载失败</string>
+
+
 </resources>
