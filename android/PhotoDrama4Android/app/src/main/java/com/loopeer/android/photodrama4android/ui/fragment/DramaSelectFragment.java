@@ -23,7 +23,7 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     implements IPageRecycler<Theme> {
 
     private static final String KEY_CATEGORY_ID = "CATEGORY_ID";
-    private static final String KEY_ADVERTS = "adverts";
+    private static final String KEY_ADVERTS = "ADVERTS";
 
     private DramaSelectAdapter mSelectAdapter;
     private String mCategoryId;

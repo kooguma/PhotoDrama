@@ -33,6 +33,7 @@
 
     <!--drama select-->
     <string name="drama_select">选择故事</string>
+    <string name="drama_select_advert">广告</string>
     <string name="drama_use">使用故事</string>
     <string name="drama_detail">故事详情</string>
     <string name="drama_people_format">%s人</string>
