@@ -44,6 +44,10 @@ public class FileManager {
     private static FileManager instance;
     private static String photoDramaPath = Environment.getExternalStorageDirectory() +
         "/photodrama";
+
+    public final static String advertDirPath = PhotoDramaApp.getAppContext().getCacheDir() + "/advert";
+    public final static String advertName = "launchAd";
+
     private File audioDir;
     private File recordDir;
     private File bgmDir;
@@ -258,9 +262,9 @@ public class FileManager {
                                 FileManager.getInstance().getBgmPath() :
                                 FileManager.getInstance().getEffectPath();
         File file = new File(savePath + saveName);
-        if(file.exists()){
+        if (file.exists()) {
             return file.getAbsolutePath();
-        }else {
+        } else {
             return null;
         }
     }
@@ -366,14 +370,13 @@ public class FileManager {
         return file.exists();
     }
 
-
     public static void renameImageFile(String preFileName, String newFileName) {
         File oldFile = new File(preFileName);
-        File newfile=new File(newFileName);
-        if(!oldFile.exists()){
+        File newfile = new File(newFileName);
+        if (!oldFile.exists()) {
             return;
         }
-        if(!newfile.exists()){
+        if (!newfile.exists()) {
             oldFile.renameTo(newfile);
         }
     }

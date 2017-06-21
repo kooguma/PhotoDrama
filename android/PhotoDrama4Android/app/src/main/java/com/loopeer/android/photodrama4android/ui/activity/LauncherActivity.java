@@ -1,12 +1,20 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.laputapp.http.BaseResponse;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.api.ResponseObservable;
+import com.loopeer.android.photodrama4android.api.service.SystemService;
+import com.loopeer.android.photodrama4android.model.Advert;
+import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PreUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -14,11 +22,14 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.schedulers.Timed;
 import io.reactivex.subjects.PublishSubject;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
+import zlc.season.rxdownload2.RxDownload;
 
 public class LauncherActivity extends PhotoDramaBaseActivity {
 
@@ -36,9 +47,17 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                     if (aBoolean) {
                         Navigator.startGuideActivity(this);
                     } else {
+                        String adUrl = PreUtils.getAdvertUrl(this);
+                        if (!TextUtils.isEmpty(adUrl)) {
+                            SimpleDraweeView imgAd = (SimpleDraweeView) findViewById(R.id.img_ad);
+                            File file = getLocalAdFile(adUrl);
+                            imgAd.setImageURI(Uri.fromFile(file));
+                        }
+                        updateLaunchAd();
                         mDisposable.add(Flowable.interval(1, TimeUnit.SECONDS)
                             .take(sCount + 1)
                             .filter(aLong -> aLong >= sCount)
+                            .observeOn(AndroidSchedulers.mainThread())
                             .doOnNext(aLong -> Navigator.startMainActivity(LauncherActivity.this))
                             .doOnNext(aLong -> finish())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -48,6 +67,34 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                 })
                 .subscribe());
 
+    }
+
+    private void updateLaunchAd() {
+        registerSubscription(
+            SystemService.INSTANCE.launchAd()
+                .subscribe(response -> {
+                    if (response.isSuccessed()) {
+                        final String imageUrl = response.mData.image;
+                        RxDownload.getInstance(this)
+                            .download(imageUrl)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(status -> {
+                            }, throwable -> {
+                            }, () -> {
+                                PreUtils.setAdvertUrl(this, imageUrl);
+                            });
+                    }
+                })
+        );
+    }
+
+    private File getLocalAdFile(String adUrl) {
+        File[] files = RxDownload.getInstance(this).getRealFiles(adUrl);
+        if (files != null && files[0].exists()) {
+            return files[0];
+        } else {
+            return null;
+        }
     }
 
     private boolean isFirstLaunch() {

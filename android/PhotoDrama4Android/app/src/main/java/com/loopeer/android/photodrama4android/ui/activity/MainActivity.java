@@ -2,12 +2,23 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
+import com.laputapp.http.BaseResponse;
 import com.loopeer.android.photodrama4android.Navigator;
+import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
+import com.loopeer.android.photodrama4android.api.service.SystemService;
+import com.loopeer.android.photodrama4android.model.Advert;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PermissionUtils;
+import com.loopeer.android.photodrama4android.utils.PreUtils;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import zlc.season.rxdownload2.RxDownload;
+import zlc.season.rxdownload2.entity.DownloadStatus;
 
 public class MainActivity extends PhotoDramaBaseActivity {
 
@@ -20,6 +31,7 @@ public class MainActivity extends PhotoDramaBaseActivity {
         setContentView(R.layout.activity_main);
         PermissionUtils.checkStoragePermission(this);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

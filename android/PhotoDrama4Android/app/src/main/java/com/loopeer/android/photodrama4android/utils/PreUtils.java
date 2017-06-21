@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class PreUtils {
 
@@ -24,9 +25,9 @@ public class PreUtils {
         sp.edit().putString(PREF_ADVERT_URL, url).apply();
     }
 
-    public static String getAdvertUrl(Context context, String url) {
+    public static String getAdvertUrl(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(PREF_ADVERT_URL,url);
+        return sp.getString(PREF_ADVERT_URL,"");
     }
 
 }

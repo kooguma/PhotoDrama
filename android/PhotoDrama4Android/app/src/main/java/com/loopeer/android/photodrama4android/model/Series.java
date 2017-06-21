@@ -14,6 +14,9 @@ public class Series extends BaseModel {
     public List<Theme> themes; // 模板集合
     @SerializedName("themes_count")
     public int themesCount; // 模板数量
+    @SerializedName("cover_image")
+    public String coverImage; //封面图
+    public String description; //描述
 
 
     public String formatSeriesIndex(Context context,Theme theme){
