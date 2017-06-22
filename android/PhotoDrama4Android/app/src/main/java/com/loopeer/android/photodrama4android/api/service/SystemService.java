@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.api.service;
 
 import com.laputapp.http.BaseResponse;
 import com.loopeer.android.photodrama4android.api.ApiService;
+import com.loopeer.android.photodrama4android.model.Version;
 
 import com.loopeer.android.photodrama4android.model.Advert;
 import io.reactivex.Flowable;
@@ -25,4 +26,8 @@ public interface SystemService {
 
     @GET("system/listAd")
     Flowable<BaseResponse<List<Advert>>> listAd();
+
+    @GET("system/version")
+    Flowable<BaseResponse<Version>> version();
+
 }

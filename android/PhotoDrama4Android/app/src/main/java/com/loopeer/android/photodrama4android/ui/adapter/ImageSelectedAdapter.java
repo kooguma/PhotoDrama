@@ -83,17 +83,21 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
     public void addUri(Uri uri) {
         String path = uri.getPath();
         ImageClip imageClip = new ImageClip(path, 0);
+        int index;
         if (mSelectedImageClip != null) {
             mSelectedImageClip.path = path;
+            index = getDatas().indexOf(mSelectedImageClip) + 1;
+            if (index >= getDatas().size()) index -= 1;
         } else {
             if (mImageClips.size() >= 9) {
                 mImageClips.get(mImageClips.size() - 1).path = imageClip.path;
             } else {
                 mImageClips.add(imageClip);
             }
+            index = mImageClips.size() >= 9 ? mImageClips.size() - 1 : mImageClips.size();
         }
         updateData(mImageClips);
-        mSelectedImageClip = getDatas().get(getDatas().size() - 1);
+        mSelectedImageClip = getDatas().get(index);
         selectedItem(mSelectedImageClip);
     }
 

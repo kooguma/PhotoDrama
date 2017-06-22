@@ -22,10 +22,10 @@ task clean(type: Delete) {
 
 ext {
     configs = [
-            compileSdkVersion      : 24,
+            compileSdkVersion      : 25,
             buildToolsVersion      : '25.0.2',
             minSdkVersion          : 18,
-            targetSdkVersion       : 24,
+            targetSdkVersion       : 25,
             versionCode            : 25,
             versionName            : '1.2.1',
             apiUrlDebug            : 'http://drama.17chuang.cc/api/v1/',
@@ -43,7 +43,7 @@ ext {
     laputappVersion = '1.4.5-beta54'
     leakcanaryVersion = '1.5'
     andebugVersion = '1.0.3'
-    developModuleVersion = '0.0.5-beta7'
+    developModuleVersion = '0.0.5-beta12'
     frescoVersion = '0.14.1'
     flexboxVersion = '0.2.5'
     imageGroupViewVersion = '1.0.27'
@@ -69,6 +69,7 @@ ext {
             cardview                : "com.android.support:cardview-v7:$supportLibraryVersion",
             fresco                  : "com.facebook.fresco:fresco:$frescoVersion",
             frescoOkhttp            : "com.facebook.fresco:imagepipeline-okhttp:$frescoVersion",
+            appupdate               : "com.loopeer.library:appupdate:$developModuleVersion",
             ztZip                   : "org.zeroturnaround:zt-zip:$ztZipVersion"
     ]
 }
