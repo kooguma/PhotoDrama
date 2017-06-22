@@ -61,13 +61,13 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <ImageView
+                            <com.loopeer.android.photodrama4android.ui.widget.LottieSelectView
                                 android:id="@+id/btn_pause_play_btn"
-                                style="?actionButtonStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:onClick="onPausePlayBtnClick"
-                                android:src="@drawable/selector_play_white_large"/>
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                app:lottie_fileName="play-pause.json"
+                                app:lottie_loop="false"
+                                app:lottie_autoPlay="false" />
 
                             <TextView
                                 android:id="@+id/text_time_start"
