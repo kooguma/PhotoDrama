@@ -3,9 +3,6 @@ package com.loopeer.android.photodrama4android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import android.os.Bundle;
-
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Category;
@@ -17,9 +14,9 @@ import com.loopeer.android.photodrama4android.ui.activity.BgmMusicActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaDetailActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.DramaPlayActivity;
+import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FeedbackActivity;
 import com.loopeer.android.photodrama4android.ui.activity.FullLandscapePlayActivity;
-import com.loopeer.android.photodrama4android.ui.activity.DramaSelectActivity;
 import com.loopeer.android.photodrama4android.ui.activity.GuideActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSegmentEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.ImageSelectActivity;

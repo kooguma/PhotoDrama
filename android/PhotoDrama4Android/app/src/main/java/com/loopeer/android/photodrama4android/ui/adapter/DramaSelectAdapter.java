@@ -95,6 +95,7 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
                 = ((DataBindingViewHolder<ListItemDramaSelectAdBinding>) holder).binding;
             binding.container.setOnClickListener(l -> {
                 if (advert.relType == Advert.REL_TYPE_URL) {
+                    Analyst.myStartListADClick(advert.id);
                     Navigator.startWebActivity(getContext(), advert.relValue);
                 } else if (advert.relType == Advert.REL_TYPE_SERIES) {
                     Navigator.startDramaDetailActivity(getContext(), advert.relValue);

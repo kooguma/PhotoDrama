@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.analytics;
 
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,14 @@ public class Analyst {
         if (sAnalytics == null) {
             sAnalytics = analytics;
         }
+    }
+
+    public static void startPageADClick(String advertId){
+        sAnalytics.logEvent(Key.StartPageADClick,idParam(Event.Param.ADVERT_ID,advertId));
+    }
+
+    public static void myStartListADClick(String advertId){
+        sAnalytics.logEvent(Key.MyStartListADClick,idParam(Event.Param.ADVERT_ID,advertId));
     }
 
     public static void homeDramaClick() {

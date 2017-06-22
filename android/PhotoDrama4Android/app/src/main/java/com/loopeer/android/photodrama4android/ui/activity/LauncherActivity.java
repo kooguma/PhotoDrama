@@ -11,12 +11,14 @@ import com.laputapp.http.BaseResponse;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.SystemService;
 import com.loopeer.android.photodrama4android.model.Advert;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 import com.loopeer.android.photodrama4android.utils.PreUtils;
 
+import com.loopeer.android.photodrama4android.utils.gson.GsonHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,19 +49,23 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                     if (aBoolean) {
                         Navigator.startGuideActivity(this);
                     } else {
-                        final String adUrl = PreUtils.getAdvertUrl(this);
-                        final String link = PreUtils.getAdvertLink(this);
-                        if (!TextUtils.isEmpty(adUrl)) {
-                            SimpleDraweeView imgAd = (SimpleDraweeView) findViewById(R.id.img_ad);
-                            File file = getLocalAdFile(adUrl);
-                            imgAd.setImageURI(Uri.fromFile(file));
-                            if (!TextUtils.isEmpty(link)) {
-                                imgAd.setOnClickListener(l -> {
-                                    mDisposable.clear();
-                                    Navigator.startMainActivity(LauncherActivity.this);
-                                    Navigator.startWebActivity(this, link);
-                                    finish();
-                                });
+                        final Advert advert = GsonHelper.getDefault()
+                            .fromJson(PreUtils.getAdvert(this), Advert.class);
+                        if (advert != null) {
+                            if (!TextUtils.isEmpty(advert.image)) {
+                                SimpleDraweeView imgAd = (SimpleDraweeView) findViewById(
+                                    R.id.img_ad);
+                                File file = getLocalAdFile(advert.image);
+                                imgAd.setImageURI(Uri.fromFile(file));
+                                if (!TextUtils.isEmpty(advert.relValue)) {
+                                    imgAd.setOnClickListener(l -> {
+                                        Analyst.startPageADClick(advert.id);
+                                        mDisposable.clear();
+                                        Navigator.startMainActivity(LauncherActivity.this);
+                                        Navigator.startWebActivity(this, advert.relValue);
+                                        finish();
+                                    });
+                                }
                             }
                         }
                         updateLaunchAd();
@@ -91,8 +97,7 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                             .subscribe(status -> {
                             }, throwable -> {
                             }, () -> {
-                                PreUtils.setAdvertUrl(this, imageUrl);
-                                PreUtils.setAdvertLink(this, link);
+                                PreUtils.setAdvert(this, response.mData);
                             });
                     }
                 })

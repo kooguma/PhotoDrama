@@ -2,6 +2,10 @@ package com.loopeer.android.photodrama4android.analytics;
 
 public class Event {
     public interface Key {
+        //广告
+        String StartPageADClick = "StartPage_AD_Click";//点击启动页广告的次数
+        String MyStartListADClick = "MyStart_List_AD_Click";//点击我要主演首页广告的次数
+
         //首页
         String HomeDramaClick = "Home_Drama_Click";//我要主演按钮的点击次数
         String HomeSettingClick = "Home_Setting_Click";//设置图标的点击次数
@@ -62,7 +66,6 @@ public class Event {
         String MyCreatShareMoreClick = "MyCreat_ShareMore_Click";
         String MyCreatHomeClick = "MyCreat_Home_Click";
 
-
     }
 
     interface Param {
@@ -72,5 +75,6 @@ public class Event {
         String SOUND_EFFECT_ID = "sound_effect_id";
         String SOUND_EFFECT_CATEGORY_ID = "sound_effect_category_id";
         String CATEGORY_ID = "category_id";
+        String ADVERT_ID = "advert_id";
     }
 }

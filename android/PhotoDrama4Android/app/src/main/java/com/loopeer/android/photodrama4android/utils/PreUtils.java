@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import com.google.gson.Gson;
+import com.loopeer.android.photodrama4android.model.Advert;
+import com.loopeer.android.photodrama4android.utils.gson.GsonHelper;
 
 public class PreUtils {
 
     public static final String PREF_VERSION = "pref_version";
-    public static final String PREF_ADVERT_URL = "pref_advert_url";
-    public static final String PREF_ADVERT_LINK = "pref_advert_link";
+    public static final String PREF_ADVERT = "pref_advert";
 
     public static String getVersion(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -21,23 +23,15 @@ public class PreUtils {
         sp.edit().putString(PREF_VERSION, splashUrl).apply();
     }
 
-    public static void setAdvertUrl(Context context, String url) {
+    public static void setAdvert(Context context, Advert advert) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_ADVERT_URL, url).apply();
+        String json = GsonHelper.getDefault().toJson(advert);
+        sp.edit().putString(PREF_ADVERT, json).apply();
     }
 
-    public static String getAdvertUrl(Context context) {
+    public static String getAdvert(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(PREF_ADVERT_URL, "");
+        return sp.getString(PREF_ADVERT, "");
     }
 
-    public static void setAdvertLink(Context context, String link) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_ADVERT_LINK, link).apply();
-    }
-
-    public static String getAdvertLink(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(PREF_ADVERT_LINK,"");
-    }
 }
