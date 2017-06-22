@@ -33,7 +33,7 @@ public class PreUtils {
 
     public static void setAdvertLink(Context context, String link) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_ADVERT_URL, link).apply();
+        sp.edit().putString(PREF_ADVERT_LINK, link).apply();
     }
 
     public static String getAdvertLink(Context context) {

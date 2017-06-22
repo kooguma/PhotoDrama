@@ -86,7 +86,7 @@ public class DramaSelectActivity extends PhotoDramaBaseActivity {
                             final List<Advert> ads = new ArrayList<>();
                             categoryId = categories.get(j).id;
                             for (Advert advert : adverts) {
-                                if (advert.id.equals(categoryId)) {
+                                if (advert.categoryId.equals(categoryId)) {
                                     ads.add(advert);
                                 }
                             }

@@ -17,6 +17,8 @@ import retrofit2.http.Query;
 public interface ThemeService {
     ThemeService INSTANCE = ApiService.getRetrofit().create(ThemeService.class);
 
+    //v1.2.2
+    @Deprecated
     @GET("themes/list")
     Flowable<CacheResponse<List<Theme>>> list(
             @Query("category_id") String categoryId,

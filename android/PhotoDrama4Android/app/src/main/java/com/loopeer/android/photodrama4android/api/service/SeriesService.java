@@ -14,4 +14,11 @@ public interface SeriesService {
 
     @GET("series/detail")
     Flowable<BaseResponse<Series>> detail(@Query("series_id") String seriesId);
+
+    @GET("series/list")
+    Flowable<BaseResponse<List<Series>>> list(
+        @Query("category_id") String categoryId,
+        @Query("page") String page,
+        @Query("page_size") String pageSize
+    );
 }

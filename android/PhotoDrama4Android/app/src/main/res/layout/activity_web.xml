@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.loopeer.compatinset.InsetLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="@bool/fits_system_windows"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_inset_toolbar"/>
+
+        <com.laputapp.widget.ProgressWebView
+            android:id="@+id/web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.loopeer.compatinset.InsetLinearLayout>
+
+</layout>

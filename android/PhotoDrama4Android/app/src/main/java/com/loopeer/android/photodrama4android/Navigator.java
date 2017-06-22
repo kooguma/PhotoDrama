@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Category;
+import com.loopeer.android.photodrama4android.model.Series;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.activity.AboutActivity;
 import com.loopeer.android.photodrama4android.ui.activity.AddMusicClipActivity;
@@ -33,6 +34,9 @@ import com.loopeer.android.photodrama4android.ui.activity.SubtitleEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TestMusicSelectedActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TextInputActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity;
+import com.loopeer.android.photodrama4android.ui.activity.WebActivity;
+
+import static android.content.Intent.EXTRA_TITLE;
 
 public class Navigator {
 
@@ -54,9 +58,11 @@ public class Navigator {
     public static final int REQUEST_FULL_SCREEN = 10010;
     public static final int REQUEST_CODE_DRAMA_MAKE_EDIT = 10011;
     public static final String EXTRA_THEME = "extra_theme";
+    public static final String EXTRA_SERIES = "extra_series";
     public static final String EXTRA_USEDTIME = "extra_usedtime";
     public static final String EXTRA_IS_TO_START = "extra_is_to_start";
     public static final String EXTRA_CATEGORY = "extra_category";
+    public static final String EXTRA_URL = "extra_url";
 
     public static void startImageSelectActivity(Context context) {
         Intent intent = new Intent(context, ImageSelectActivity.class);
@@ -179,6 +185,12 @@ public class Navigator {
         context.startActivity(intent);
     }
 
+    public static void startDramaDetailActivity(Context context, Series series) {
+        Intent intent = new Intent(context, DramaDetailActivity.class);
+        intent.putExtra(EXTRA_SERIES, series);
+        context.startActivity(intent);
+    }
+
     public static void startDramaEditActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaEditActivity.class);
         intent.putExtra(EXTRA_THEME, theme);
@@ -227,6 +239,19 @@ public class Navigator {
         ((Activity) context).startActivityForResult(intent, type == MusicClip.MusicType.BGM ?
                 REQUEST_CODE_DRAMA_SOUND_BGM_SELECT :
                 REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
+    }
+
+    public static void startWebActivity(Context context, String url) {
+        Intent i = new Intent(context, WebActivity.class);
+        i.putExtra(EXTRA_URL, url);
+        context.startActivity(i);
+    }
+
+    public static void startWebActivity(Context context, String url, String title) {
+        Intent i = new Intent(context, WebActivity.class);
+        i.putExtra(EXTRA_URL, url);
+        i.putExtra(EXTRA_TITLE, title);
+        context.startActivity(i);
     }
 
 }

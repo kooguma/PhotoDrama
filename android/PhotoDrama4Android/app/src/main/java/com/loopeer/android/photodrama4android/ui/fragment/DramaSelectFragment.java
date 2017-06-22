@@ -10,8 +10,10 @@ import com.laputapp.http.BaseResponse;
 import com.laputapp.ui.adapter.BaseFooterAdapter;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
+import com.loopeer.android.photodrama4android.api.service.SeriesService;
 import com.loopeer.android.photodrama4android.api.service.ThemeService;
 import com.loopeer.android.photodrama4android.model.Advert;
+import com.loopeer.android.photodrama4android.model.Series;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.adapter.DramaSelectAdapter;
 import com.loopeer.android.photodrama4android.ui.adapter.OnItemClickListener;
@@ -20,7 +22,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 public class DramaSelectFragment extends MovieMakerBaseFragment
-    implements IPageRecycler<Theme> {
+    implements IPageRecycler<Series> {
 
     private static final String KEY_CATEGORY_ID = "CATEGORY_ID";
     private static final String KEY_ADVERTS = "ADVERTS";
@@ -39,11 +41,11 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     }
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mCategoryId = getArguments().getString(KEY_CATEGORY_ID);
         mAdverts = getArguments().getParcelableArrayList(KEY_ADVERTS);
         mSelectAdapter = new DramaSelectAdapter(getContext());
         mSelectAdapter.setAdverts(mAdverts);
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable @Override
@@ -55,7 +57,7 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
         return 0;
     }
 
-    @Override public BaseFooterAdapter<Theme> createRecyclerViewAdapter() {
+    @Override public BaseFooterAdapter<Series> createRecyclerViewAdapter() {
         if (mSelectAdapter == null) {
             mSelectAdapter = new DramaSelectAdapter(getContext());
         }
@@ -63,7 +65,7 @@ public class DramaSelectFragment extends MovieMakerBaseFragment
     }
 
     @Override
-    public Flowable<? extends BaseResponse<List<Theme>>> requestData(String offset, String page, String pageSize) {
-        return ThemeService.INSTANCE.list(mCategoryId, page, pageSize);
+    public Flowable<? extends BaseResponse<List<Series>>> requestData(String offset, String page, String pageSize) {
+        return SeriesService.INSTANCE.list(mCategoryId, page, pageSize);
     }
 }

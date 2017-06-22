@@ -49,13 +49,14 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                     } else {
                         final String adUrl = PreUtils.getAdvertUrl(this);
                         final String link = PreUtils.getAdvertLink(this);
+                        Log.e("TAG", "adUrl = " + adUrl);
                         if (!TextUtils.isEmpty(adUrl)) {
                             SimpleDraweeView imgAd = (SimpleDraweeView) findViewById(R.id.img_ad);
                             File file = getLocalAdFile(adUrl);
                             imgAd.setImageURI(Uri.fromFile(file));
                             if (!TextUtils.isEmpty(link)) {
                                 imgAd.setOnClickListener(l -> {
-                                    // TODO: 2017/6/21 simple web activity
+                                   Navigator.startWebActivity(this,link);
                                 });
                             }
                         }
@@ -87,7 +88,9 @@ public class LauncherActivity extends PhotoDramaBaseActivity {
                             .subscribeOn(Schedulers.io())
                             .subscribe(status -> {
                             }, throwable -> {
+                                Log.e("TAG", "error : " + throwable.toString());
                             }, () -> {
+                                Log.e("TAG", "imageUrl : " + imageUrl);
                                 PreUtils.setAdvertUrl(this, imageUrl);
                                 PreUtils.setAdvertLink(this, link);
                             });

@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectAdBinding;
 import com.loopeer.android.photodrama4android.databinding.ListItemDramaSelectBinding;
 import com.loopeer.android.photodrama4android.model.Advert;
+import com.loopeer.android.photodrama4android.model.Series;
 import com.loopeer.android.photodrama4android.model.Theme;
 import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolder;
 import java.util.ArrayList;
@@ -30,13 +32,15 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
     }
 
     @Override public void setData(List<BaseModel> data) {
-        for (int i = 0, j = 0; i < data.size(); i++) {
+        int j = 0;
+        for (int i = 0; i < data.size(); i++) {
             if (i % 10 == ADVERT_INDEX) {
                 data.add(i, mAdverts.get(j));
                 j++;
             }
-            data.addAll(mAdverts.subList(j, mAdverts.size()));
         }
+        List<Advert> sub = mAdverts.subList(j, mAdverts.size());
+        data.addAll(sub);
         super.setData(data);
     }
 
@@ -47,7 +51,7 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
 
     @Override public int getItemViewType(int position) {
         BaseModel model = getDatas().get(position);
-        if (model instanceof Theme) {
+        if (model instanceof Series) {
             return R.layout.list_item_drama_select;
         } else if (model instanceof Advert) {
             return R.layout.list_item_drama_select_ad;
@@ -58,17 +62,18 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
 
     @Override
     public void bindItem(BaseModel model, int var2, RecyclerView.ViewHolder holder) {
-
-        if (model instanceof Theme) {
-            Theme theme = (Theme) model;
+        if (model instanceof Series) {
+            Series series = (Series) model;
             ListItemDramaSelectBinding binding
                 = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
-            binding.setTheme(theme);
+            binding.setSeries(series);
             binding.container.setOnClickListener(
-                v -> Navigator.startDramaDetailActivity(getContext(), theme));
+                v -> Navigator.startDramaDetailActivity(getContext(), series)
+            );
             binding.btnUseDrama.setOnClickListener(l -> {
-                Analyst.dramaDetailClick(theme.id);
-                Navigator.startDramaDetailActivity(getContext(), theme);
+                Analyst.dramaDetailClick(series.id);
+                Navigator.startDramaDetailActivity(getContext(), series);
+
             });
             binding.executePendingBindings();
         }
