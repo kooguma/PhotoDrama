@@ -59,6 +59,7 @@ public class Navigator {
     public static final int REQUEST_CODE_DRAMA_MAKE_EDIT = 10011;
     public static final String EXTRA_THEME = "extra_theme";
     public static final String EXTRA_SERIES = "extra_series";
+    public static final String EXTRA_SERIES_ID = "extra_series_id";
     public static final String EXTRA_USEDTIME = "extra_usedtime";
     public static final String EXTRA_IS_TO_START = "extra_is_to_start";
     public static final String EXTRA_CATEGORY = "extra_category";
@@ -191,6 +192,12 @@ public class Navigator {
         context.startActivity(intent);
     }
 
+    public static void startDramaDetailActivity(Context context, String seriesId) {
+        Intent intent = new Intent(context, DramaDetailActivity.class);
+        intent.putExtra(EXTRA_SERIES_ID, seriesId);
+        context.startActivity(intent);
+    }
+
     public static void startDramaEditActivity(Context context, Theme theme) {
         Intent intent = new Intent(context, DramaEditActivity.class);
         intent.putExtra(EXTRA_THEME, theme);
@@ -237,8 +244,8 @@ public class Navigator {
         Intent intent = new Intent(context, AddMusicClipActivity.class);
         intent.putExtra(Navigator.EXTRA_MUSIC_CLIP, type);
         ((Activity) context).startActivityForResult(intent, type == MusicClip.MusicType.BGM ?
-                REQUEST_CODE_DRAMA_SOUND_BGM_SELECT :
-                REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
+                                                            REQUEST_CODE_DRAMA_SOUND_BGM_SELECT :
+                                                            REQUEST_CODE_DRAMA_SOUND_EFFECT_SELECT);
     }
 
     public static void startWebActivity(Context context, String url) {

@@ -18,6 +18,7 @@ import com.loopeer.android.photodrama4android.ui.viewholder.DataBindingViewHolde
 import java.util.ArrayList;
 import java.util.List;
 import com.loopeer.android.photodrama4android.utils.FileManager;
+
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<BaseModel> {
@@ -92,6 +93,13 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
             Advert advert = (Advert) model;
             ListItemDramaSelectAdBinding binding
                 = ((DataBindingViewHolder<ListItemDramaSelectAdBinding>) holder).binding;
+            binding.container.setOnClickListener(l -> {
+                if (advert.relType == Advert.REL_TYPE_URL) {
+                    Navigator.startWebActivity(getContext(), advert.relValue);
+                } else if (advert.relType == Advert.REL_TYPE_SERIES) {
+                    Navigator.startDramaDetailActivity(getContext(), advert.relValue);
+                }
+            });
             binding.setAdvert(advert);
             binding.executePendingBindings();
         }
