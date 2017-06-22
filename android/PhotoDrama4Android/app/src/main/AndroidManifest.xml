@@ -147,7 +147,8 @@
         <activity
             android:name=".ui.activity.ShareActivity"
             android:label="@string/label_share"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Dark.BottomSlide"/>
         <activity
             android:name=".ui.activity.DramaEditActivity"
             android:label="@string/label_drama_edit"

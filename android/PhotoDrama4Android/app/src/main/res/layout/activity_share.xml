@@ -95,12 +95,13 @@
             android:text="@string/share_more"/>
     </LinearLayout>
 
-    <Button
+    <ImageButton
         style="@style/PhotoDramaText.Primary.larger"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="100dp"
-        android:background="?selectableItemBackground"
+        android:src="@drawable/ic_share_close"
+        android:background="@android:color/transparent"
         android:onClick="onBackToMain"
-        android:text="@string/share_back"/>
+        android:contentDescription="@string/share_back"/>
 </com.loopeer.compatinset.InsetRelativeLayout>
