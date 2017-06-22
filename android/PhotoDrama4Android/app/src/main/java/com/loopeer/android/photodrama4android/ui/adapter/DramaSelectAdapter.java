@@ -67,11 +67,22 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
                 = ((DataBindingViewHolder<ListItemDramaSelectBinding>) holder).binding;
             binding.setSeries(series);
             binding.container.setOnClickListener(
-                v -> Navigator.startDramaDetailActivity(getContext(), series)
+                v -> {
+                    if (FileManager.hasExternalStoragePermission(getContext())) {
+                        Navigator.startDramaDetailActivity(getContext(), series);
+                    } else {
+                        showToast(R.string.common_storage_permission_fail);
+                    }
+                }
             );
             binding.btnUseDrama.setOnClickListener(l -> {
                 Analyst.dramaDetailClick(series.id);
-                Navigator.startDramaDetailActivity(getContext(), series);
+                if (FileManager.hasExternalStoragePermission(getContext())) {
+                    Analyst.dramaUseClick(series.id);
+                    Navigator.startDramaDetailActivity(getContext(), series);
+                } else {
+                    showToast(R.string.common_storage_permission_fail);
+                }
 
             });
             binding.executePendingBindings();
@@ -84,23 +95,6 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
             binding.setAdvert(advert);
             binding.executePendingBindings();
         }
-        binding.setTheme(theme);
-        binding.container.setOnClickListener(v -> {
-            if (FileManager.hasExternalStoragePermission(getContext())) {
-                Navigator.startDramaDetailActivity(getContext(), theme);
-            } else {
-                showToast(R.string.common_storage_permission_fail);
-            }
-        });
-        binding.btnUseDrama.setOnClickListener(l -> {
-            if (FileManager.hasExternalStoragePermission(getContext())) {
-                Analyst.dramaUseClick(theme.id);
-                Navigator.startDramaEditActivity(getContext(), theme);
-            } else {
-                showToast(R.string.common_storage_permission_fail);
-            }
-        });
-        binding.executePendingBindings();
     }
 
     @Override

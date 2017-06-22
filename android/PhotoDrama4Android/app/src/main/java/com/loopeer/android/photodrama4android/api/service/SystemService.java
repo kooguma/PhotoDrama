@@ -6,7 +6,6 @@ import com.loopeer.android.photodrama4android.model.Version;
 
 import com.loopeer.android.photodrama4android.model.Advert;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import java.util.List;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

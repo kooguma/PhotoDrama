@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -29,16 +30,18 @@ import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.OrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ScreenOrientationHelper;
 import com.loopeer.android.photodrama4android.ui.hepler.ThemeLoader;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
+
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaDetailActivity extends PhotoDramaBaseActivity
-    implements VideoPlayerManager.ProgressChangeListener {
+        implements VideoPlayerManager.ProgressChangeListener {
     private ActivityDramaDetailBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
     private DramaFetchHelper mDramaFetchHelper;
@@ -61,25 +64,25 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         parseIntent();
         updateSeries(mSeries, true);
         registerSubscription(
-            mLoadSubject.debounce(300, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(o -> loadDrama(o))
-                .subscribe()
+                mLoadSubject.debounce(300, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(o -> loadDrama(o))
+                        .subscribe()
         );
         registerSubscription(
-            mHideToolSubject.debounce(getResources().getInteger(R.integer.movie_show_time),
-                TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(o -> hideAllBar())
-                .subscribe()
+                mHideToolSubject.debounce(getResources().getInteger(R.integer.movie_show_time),
+                        TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(o -> hideAllBar())
+                        .subscribe()
         );
 
         getChangingConfigurations();
 
         OrientationAdapter orientationAdapter = new DramaDetailOrientationAdapter(mBinding, this);
         mScreenOrientationHelper = new ScreenOrientationHelper(this
-            , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            , orientationAdapter);
+                , getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                , orientationAdapter);
     }
 
     private void parseIntent() {
@@ -98,39 +101,52 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         if (mDramaFetchHelper == null) mDramaFetchHelper = new DramaFetchHelper(this);
         mDramaFetchHelper.checkSubscribe();
         mDramaFetchHelper.getDrama(theme,
-            drama -> {
-                mVideoPlayerManager.updateDrama(drama);
-                mVideoPlayerManager.seekToVideo(mUsedTime);
-                mVideoPlayerManager.startVideo();
-                mDrama = drama;
-            }, throwable -> {
-                throwable.printStackTrace();
-                mLoader.showMessage(getString(R.string.drama_load_fail));
-            }, () -> mLoader.showContent());
+                drama -> {
+                    updateTitle(theme);
+                    mVideoPlayerManager.updateDrama(drama);
+                    mVideoPlayerManager.seekToVideo(mUsedTime);
+                    mVideoPlayerManager.startVideo();
+                    mDrama = drama;
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    mLoader.showMessage(getString(R.string.drama_load_fail));
+                }, () -> mLoader.showContent());
+    }
+
+    private void updateTitle(Theme theme) {
+        String title;
+        if (mSeries.themesCount == 1) {
+            title = mSeries.name;
+        } else {
+            title = mSeries.name
+                    + " - "
+                    + String.format("%02d", Integer.valueOf(theme.episodeNumber));
+        }
+        getSupportActionBar().setTitle(title);
     }
 
     private void updateSeries(Series sers, boolean isFirstLoad) {
         if (sers == null) return;
         registerSubscription(
-            ResponseObservable.unwrap(SeriesService.INSTANCE.detail(sers.id))
-                .subscribe(series -> {
-                    mBinding.setSeries(series);
-                    mBinding.setTheme(mTheme = series.firstTheme());
-                    loadDramaSend(mTheme);
-                    if (isFirstLoad && series.themesCount > 1) {
-                        mBinding.containerEpisode.setVisibility(View.VISIBLE);
-                        for (int i = 0; i < series.themes.size(); i++) {
-                            mBinding.layoutEpisode.addView(
-                                generaEpisodeButton(series.themes.get(i)));
-                        }
-                        updateSelectedThemeBtn();
-                    } else {
-                        mBinding.containerEpisode.setVisibility(View.GONE);
-                    }
-                }, throwable -> {
-                    throwable.printStackTrace();
-                    showToast(throwable.toString());
-                }, () -> dismissProgressLoading())
+                ResponseObservable.unwrap(SeriesService.INSTANCE.detail(sers.id))
+                        .subscribe(series -> {
+                            mBinding.setSeries(series);
+                            mBinding.setTheme(mTheme = series.firstTheme());
+                            loadDramaSend(mTheme);
+                            if (isFirstLoad && series.themesCount > 1) {
+                                mBinding.containerEpisode.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < series.themes.size(); i++) {
+                                    mBinding.layoutEpisode.addView(
+                                            generaEpisodeButton(series.themes.get(i)));
+                                }
+                                updateSelectedThemeBtn();
+                            } else {
+                                mBinding.containerEpisode.setVisibility(View.GONE);
+                            }
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            showToast(throwable.toString());
+                        }, () -> dismissProgressLoading())
         );
     }
 
@@ -139,18 +155,18 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         View child = mBinding.layoutEpisode.getChildAt(index);
         setSelected(child);
         mBinding.scrollViewEpisode.post(
-            () -> {
-                if (child != null) {
-                    mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
-                }
-            });
+                () -> {
+                    if (child != null) {
+                        mBinding.scrollViewEpisode.scrollTo(child.getLeft(), 0);
+                    }
+                });
     }
 
     private void setupView() {
         mLoader = new ThemeLoader(mBinding.animator);
         AppCompatSeekBar seekBar = (AppCompatSeekBar) findViewById(R.id.seek_bar);
         mVideoPlayerManager = new VideoPlayerManager(mBinding.glSurfaceView, new Drama(),
-            new SeekWrapper(seekBar));
+                new SeekWrapper(seekBar));
         mBinding.glSurfaceView.setOnClickListener(v -> onPlayRectClick());
         mVideoPlayerManager.setStopTouchToRestart(true);
         VideoPlayManagerContainer.getDefault().putVideoManager(this, mVideoPlayerManager);
@@ -159,10 +175,10 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
 
     private Button generaEpisodeButton(final Theme theme) {
         Button button = (Button) LayoutInflater.from(this)
-            .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
+                .inflate(R.layout.view_episode_button, mBinding.layoutEpisode, false);
 
         button.setText(
-            getString(R.string.drama_index_format, Integer.valueOf(theme.episodeNumber)));
+                getString(R.string.drama_index_format, Integer.valueOf(theme.episodeNumber)));
 
         button.setOnClickListener(v -> {
             if (!v.isSelected()) {
@@ -211,15 +227,15 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         if (mVideoPlayerManager.getGLThread().isStop() || !mToolShow) return;
         mToolShow = false;
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y, 0,
-            mBinding.layoutToolBottom.getHeight()).start();
+                mBinding.layoutToolBottom.getHeight()).start();
         ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y, 0,
-            -mBinding.layoutToolTop.getHeight()).start();
+                -mBinding.layoutToolTop.getHeight()).start();
     }
 
     private void showToolbar() {
         if (mBinding.layoutToolTop.getTranslationY() < 0) {
             ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y,
-                -mBinding.layoutToolTop.getHeight(), 0).start();
+                    -mBinding.layoutToolTop.getHeight(), 0).start();
         }
     }
 
@@ -227,9 +243,9 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         if (mToolShow) return;
         mToolShow = true;
         ObjectAnimator.ofFloat(mBinding.layoutToolBottom, View.TRANSLATION_Y,
-            mBinding.layoutToolBottom.getHeight(), 0).start();
+                mBinding.layoutToolBottom.getHeight(), 0).start();
         ObjectAnimator.ofFloat(mBinding.layoutToolTop, View.TRANSLATION_Y,
-            -mBinding.layoutToolTop.getHeight(), 0).start();
+                -mBinding.layoutToolTop.getHeight(), 0).start();
     }
 
     public void onEditClick(View view) {
@@ -314,7 +330,8 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         mScreenOrientationHelper.fullScreen();
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == Navigator.REQUEST_FULL_SCREEN) {
             boolean restart = data.getBooleanExtra(Navigator.EXTRA_IS_TO_START, false);
@@ -337,9 +354,6 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        if (mSeries != null) {
-            getSupportActionBar().setTitle(mSeries.name);
-        }
     }
 
     @Override
@@ -359,7 +373,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mScreenOrientationHelper.updateOrientation(
-            newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
+                newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
 }
