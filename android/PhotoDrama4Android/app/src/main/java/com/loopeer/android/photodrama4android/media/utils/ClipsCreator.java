@@ -15,7 +15,7 @@ import java.util.Random;
 public class ClipsCreator {
 
     public static final float MIN_SCALE = 1.0f;
-    public static final float MAX_SCALE = 1.5f;
+    public static final float MAX_SCALE = 1.3f;
 
     public static final float MIN_POS_TRANS = -0.05f;
     public static final float MAX_POS_TRANS = 0.05f;
