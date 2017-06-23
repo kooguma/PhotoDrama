@@ -130,7 +130,7 @@ public class DramaFetchHelper {
     private List<Flowable<Drama>> createDramaFlowables(Drama drama) {
         List<Flowable<Drama>> flows = new ArrayList<>();
         flows.add(createImagePreLoadFlowable(drama));
-        flows.addAll(createMusicDecodeFlowables(drama));
+        //flows.addAll(createMusicDecodeFlowables(drama));
         return flows;
     }
 
