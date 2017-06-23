@@ -77,7 +77,7 @@
                         android:layout_marginTop="@dimen/medium_padding"
                         android:layout_toLeftOf="@id/btn_use_drama"
                         android:textColor="@color/text_color_717171"
-                        android:text="@{series.description}"/>
+                        android:text="@{series.subtitle}"/>
 
                 </RelativeLayout>
 

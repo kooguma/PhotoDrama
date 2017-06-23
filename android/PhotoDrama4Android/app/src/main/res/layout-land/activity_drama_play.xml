@@ -53,12 +53,14 @@
                             android:paddingTop="15dp"
                             android:layout_gravity="bottom">
 
-                            <ImageView
+                            <com.loopeer.android.photodrama4android.ui.widget.LottieSelectView
                                 android:id="@+id/btn_pause_play_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/btn_pause_play"
+                                android:layout_height="@dimen/btn_pause_play"
                                 android:onClick="onPausePlayBtnClick"
-                                android:src="@drawable/selector_play_white_large"/>
+                                app:lottie_fileName="play-pause.json"
+                                app:lottie_loop="false"
+                                app:lottie_autoPlay="false" />
 
                             <TextView
                                 android:id="@+id/text_time_start"
@@ -74,7 +76,6 @@
                                 android:id="@+id/seek_bar"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-
                                 android:layout_weight="1"/>
 
                             <TextView

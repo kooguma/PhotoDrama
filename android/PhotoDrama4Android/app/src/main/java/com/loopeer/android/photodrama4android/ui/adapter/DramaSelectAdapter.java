@@ -2,6 +2,7 @@ package com.loopeer.android.photodrama4android.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
 public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<BaseModel> {
 
-    private static final int ADVERT_INDEX = 3;
+    private static final int ADVERT_INDEX = 2;
 
     private List<Advert> mAdverts = new ArrayList<>();
 
@@ -32,15 +33,11 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
     }
 
     @Override public void setData(List<BaseModel> data) {
-        int j = 0;
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0, j = 0; i < data.size(); i++) {
             if (i % 10 == ADVERT_INDEX) {
-                data.add(i, mAdverts.get(j));
-                j++;
+                data.add(i + 1, mAdverts.get(j));
             }
         }
-        List<Advert> sub = mAdverts.subList(j, mAdverts.size());
-        data.addAll(sub);
         super.setData(data);
     }
 

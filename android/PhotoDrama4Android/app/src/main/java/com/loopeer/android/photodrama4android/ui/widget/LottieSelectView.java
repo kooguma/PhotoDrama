@@ -21,12 +21,13 @@ public class LottieSelectView extends LottieAnimationView {
     @Override public void setSelected(boolean selected) {
         super.setSelected(selected);
         if (selected) {
-            setProgress(1);
-            setSpeed(-1.5f);
+            setProgress(0.2f);
+            setSpeed(2f);
             playAnimation();
+
         } else {
-            setProgress(0);
-            setSpeed(1.5f);
+            setProgress(0.7f);
+            setSpeed(-2f);
             playAnimation();
         }
     }

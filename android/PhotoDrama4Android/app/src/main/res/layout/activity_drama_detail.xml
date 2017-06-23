@@ -63,8 +63,8 @@
 
                             <com.loopeer.android.photodrama4android.ui.widget.LottieSelectView
                                 android:id="@+id/btn_pause_play_btn"
-                                android:layout_width="52dp"
-                                android:layout_height="52dp"
+                                android:layout_width="@dimen/btn_pause_play"
+                                android:layout_height="@dimen/btn_pause_play"
                                 app:lottie_fileName="play-pause.json"
                                 app:lottie_loop="false"
                                 app:lottie_autoPlay="false" />

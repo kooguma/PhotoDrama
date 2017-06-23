@@ -43,4 +43,6 @@
 
     <dimen name="line_spacing_negative">-6dp</dimen>
 
+    <dimen name="btn_pause_play">64dp</dimen>
+
 </resources>
