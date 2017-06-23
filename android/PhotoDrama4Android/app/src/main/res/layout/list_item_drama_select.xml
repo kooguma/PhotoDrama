@@ -53,7 +53,6 @@
                         android:layout_marginLeft="@dimen/medium_padding"
                         android:layout_marginRight="@dimen/medium_padding"
                         android:layout_marginTop="20dp"
-                        android:textStyle="bold"
                         android:text="@{series.name}"/>
 
                     <Button
