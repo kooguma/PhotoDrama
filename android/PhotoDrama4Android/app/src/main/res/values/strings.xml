@@ -19,6 +19,7 @@
     <string name="label_clip_time_edit">时长编辑</string>
     <string name="label_add_music_bgm">添加音乐</string>
     <string name="label_add_music_effect">添加音效</string>
+    <string name="label_detail">详情</string>
 
     <!--launch-->
     <string name="launch_logo">launch_logo</string>

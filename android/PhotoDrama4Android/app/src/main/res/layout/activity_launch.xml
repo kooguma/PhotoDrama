@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            fresco:placeholderImage="@color/window_background_gray"
             fresco:actualImageScaleType="centerCrop"/>
 
         <ImageView

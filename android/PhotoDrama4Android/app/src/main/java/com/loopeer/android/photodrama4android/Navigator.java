@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.StringRes;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
 import com.loopeer.android.photodrama4android.model.Category;
@@ -248,6 +249,13 @@ public class Navigator {
     public static void startWebActivity(Context context, String url) {
         Intent i = new Intent(context, WebActivity.class);
         i.putExtra(EXTRA_URL, url);
+        context.startActivity(i);
+    }
+
+    public static void startWebActivity(Context context, String url, @StringRes int stringRes) {
+        Intent i = new Intent(context, WebActivity.class);
+        i.putExtra(EXTRA_URL, url);
+        i.putExtra(Intent.EXTRA_TITLE,context.getString(stringRes));
         context.startActivity(i);
     }
 

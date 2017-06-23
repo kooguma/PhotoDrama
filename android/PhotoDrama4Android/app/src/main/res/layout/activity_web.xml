@@ -8,7 +8,7 @@
         android:fitsSystemWindows="@bool/fits_system_windows"
         android:orientation="vertical">
 
-        <include layout="@layout/view_inset_toolbar"/>
+        <include layout="@layout/view_toolbar"/>
 
         <com.laputapp.widget.ProgressWebView
             android:id="@+id/web_view"

@@ -3,6 +3,7 @@ package com.loopeer.android.photodrama4android.ui.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import com.fastui.uipattern.IWeb;
@@ -22,7 +23,6 @@ public class WebActivity extends PhotoDramaBaseActivity implements IWeb {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_web);
         mWebView = mBinding.webView;
-
         mUrl = getIntent().getStringExtra(Navigator.EXTRA_URL);
     }
 
