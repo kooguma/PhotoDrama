@@ -33,9 +33,11 @@ public class DramaSelectAdapter<T extends BaseModel> extends BaseFooterAdapter<B
     }
 
     @Override public void setData(List<BaseModel> data) {
-        for (int i = 0, j = 0; i < data.size(); i++) {
-            if (i % 10 == ADVERT_INDEX) {
-                data.add(i + 1, mAdverts.get(j));
+        if (mAdverts.size() != 0) {
+            for (int i = 0, j = 0; i < data.size(); i++) {
+                if (i % 10 == ADVERT_INDEX) {
+                    data.add(i + 1, mAdverts.get(j));
+                }
             }
         }
         super.setData(data);
