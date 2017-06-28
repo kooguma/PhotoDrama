@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.loopeer.android.photodrama4android.Navigator"/>
+
+        <variable
+            name="advert"
+            type="com.loopeer.android.photodrama4android.model.Advert"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="@{()->Navigator.startActivityFromDramaDetailAdverts(context,advert)}"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            fresco:viewAspectRatio="1.73"
+            fresco:roundedCornerRadius="@dimen/drama_detail_advert_corner"
+            fresco:placeholderImage="@drawable/ic_image_default"
+            app:imageUri="@{advert.image}"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:textColor="@color/text_color_primary"
+            android:textSize="@dimen/text_size_large"
+            android:maxLines="1"
+            android:includeFontPadding="false"
+            android:ellipsize="end"
+            android:text="@{advert.title}"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/text_color_tertiary"
+            android:textSize="@dimen/text_size_small"
+            android:maxLines="1"
+            android:includeFontPadding="false"
+            android:ellipsize="end"
+            android:text="@{advert.subtitle}"/>
+    </LinearLayout>
+
+</layout>

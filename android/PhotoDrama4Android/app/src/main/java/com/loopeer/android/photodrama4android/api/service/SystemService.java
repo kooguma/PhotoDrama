@@ -26,6 +26,9 @@ public interface SystemService {
     @GET("system/listAd")
     Flowable<BaseResponse<List<Advert>>> listAd();
 
+    @GET("system/recommendAd")
+    Flowable<BaseResponse<List<Advert>>> recommendAd();
+
     @GET("system/version")
     Flowable<BaseResponse<Version>> version();
 

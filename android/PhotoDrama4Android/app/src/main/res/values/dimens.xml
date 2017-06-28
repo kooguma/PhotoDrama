@@ -45,4 +45,6 @@
 
     <dimen name="btn_pause_play">64dp</dimen>
 
+    <dimen name="drama_detail_advert_corner">2dp</dimen>
+
 </resources>

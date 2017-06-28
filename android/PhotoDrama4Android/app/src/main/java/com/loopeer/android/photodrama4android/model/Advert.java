@@ -60,6 +60,7 @@ public class Advert extends BaseModel implements Parcelable {
     public @interface RelTye {}
 
     public String title; //标题
+    public String subtitle; //副标题
     public String image; //图片
     @SerializedName("rel_type")
     public int relType; //关联类型 0-无 1-url 2-剧集

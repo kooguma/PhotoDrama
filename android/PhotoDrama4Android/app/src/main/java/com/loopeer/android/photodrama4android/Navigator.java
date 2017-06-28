@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.StringRes;
 import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.model.MusicClip;
+import com.loopeer.android.photodrama4android.model.Advert;
 import com.loopeer.android.photodrama4android.model.Category;
 import com.loopeer.android.photodrama4android.model.Series;
 import com.loopeer.android.photodrama4android.model.Theme;
@@ -34,6 +35,7 @@ import com.loopeer.android.photodrama4android.ui.activity.TextInputActivity;
 import com.loopeer.android.photodrama4android.ui.activity.TransitionEditActivity;
 import com.loopeer.android.photodrama4android.ui.activity.WebActivity;
 
+import static android.content.Intent.CATEGORY_ALTERNATIVE;
 import static android.content.Intent.EXTRA_TITLE;
 
 public class Navigator {
@@ -255,7 +257,7 @@ public class Navigator {
     public static void startWebActivity(Context context, String url, @StringRes int stringRes) {
         Intent i = new Intent(context, WebActivity.class);
         i.putExtra(EXTRA_URL, url);
-        i.putExtra(Intent.EXTRA_TITLE,context.getString(stringRes));
+        i.putExtra(Intent.EXTRA_TITLE, context.getString(stringRes));
         context.startActivity(i);
     }
 
@@ -264,6 +266,16 @@ public class Navigator {
         i.putExtra(EXTRA_URL, url);
         i.putExtra(EXTRA_TITLE, title);
         context.startActivity(i);
+    }
+
+    public static void startActivityFromDramaDetailAdverts(Context context, Advert advert) {
+        if (advert.relType == Advert.REL_TYPE_URL) {
+            Navigator.startWebActivity(context,advert.relValue,R.string.label_detail);
+        } else if (advert.relType == Advert.REL_TYPE_SERIES) {
+            Navigator.startDramaDetailActivity(context,advert.relValue);
+        } else {
+            //do nothing
+        }
     }
 
 }

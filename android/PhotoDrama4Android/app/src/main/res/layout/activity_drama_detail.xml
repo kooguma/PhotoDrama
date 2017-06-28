@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.text.TextUtils"/>
+
+        <import type="android.view.View"/>
+
+        <import type="java.util.List"/>
+
+        <import type="com.loopeer.android.photodrama4android.model.Advert"/>
+
+        <variable name="adverts"  type="List&lt;Advert&gt;"/>
 
         <variable
             name="theme"
@@ -50,8 +61,7 @@
                             app:screenRatioX="@integer/gl_screen_x"
                             app:screenRatioY="@integer/gl_screen_y"/>
 
-                        <LinearLayout
-                            xmlns:android="http://schemas.android.com/apk/res/android"
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                             xmlns:tools="http://schemas.android.com/tools"
                             android:id="@+id/layout_tool_bottom"
                             android:layout_width="match_parent"
@@ -67,7 +77,7 @@
                                 android:layout_height="@dimen/btn_pause_play"
                                 app:lottie_fileName="play-pause.json"
                                 app:lottie_loop="false"
-                                app:lottie_autoPlay="false" />
+                                app:lottie_autoPlay="false"/>
 
                             <TextView
                                 android:id="@+id/text_time_start"
@@ -92,8 +102,8 @@
                                 tools:text="13:00"/>
 
                             <ImageView
-                                android:id="@+id/btn_full"
                                 style="?actionButtonStyle"
+                                android:id="@+id/btn_full"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|right"
@@ -127,10 +137,6 @@
 
                 </com.loopeer.android.photodrama4android.ui.widget.TextureViewWrapper>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/small_padding"
-                    android:background="@color/window_background_gray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -138,15 +144,15 @@
                     android:paddingBottom="20dp">
 
                     <TextView
-                        android:id="@+id/txt_drama_name"
                         style="@style/PhotoDramaText.Primary.larger"
+                        android:id="@+id/txt_drama_name"
                         android:layout_marginLeft="@dimen/medium_padding"
                         android:layout_marginTop="@dimen/large_padding"
                         android:text="@{series.name}"/>
 
                     <Button
-                        android:id="@+id/btn_use_drama"
                         style="@style/PhotoDramaButton.Black.DramaSelect"
+                        android:id="@+id/btn_use_drama"
                         android:layout_alignParentRight="true"
                         android:layout_below="@id/txt_drama_name"
                         android:layout_marginRight="@dimen/medium_padding"
@@ -155,8 +161,8 @@
                         android:text="@string/drama_use"/>
 
                     <TextView
-                        android:id="@+id/txt_people"
                         style="@style/PhotoDramaText.Tertiary.Small"
+                        android:id="@+id/txt_people"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@id/btn_use_drama"
@@ -168,8 +174,8 @@
                         android:text="@{@string/drama_people_format(series.usedCount)}"/>
 
                     <TextView
-                        android:id="@+id/txt_index"
                         style="@style/PhotoDramaText.Tertiary.Small"
+                        android:id="@+id/txt_index"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@id/btn_use_drama"
@@ -202,8 +208,8 @@
                         android:paddingTop="14dp">
 
                         <TextView
-                            android:id="@+id/txt_episode"
                             style="@style/PhotoDramaText.Primary.larger"
+                            android:id="@+id/txt_episode"
                             android:text="@string/drama_episode"/>
 
                         <TextView
@@ -242,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:paddingLeft="@dimen/medium_padding"
                     android:paddingTop="14dp"
+                    android:visibility="@{TextUtils.isEmpty(theme.description) ? View.GONE : View.VISIBLE}"
                     android:text="@string/drama_brief"/>
 
                 <TextView
@@ -249,15 +256,52 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:lineSpacingExtra="@dimen/xsmall_padding"
-                    android:paddingBottom="40dp"
                     android:paddingLeft="@dimen/large_padding"
                     android:paddingRight="@dimen/large_padding"
                     android:paddingTop="@dimen/medium_padding"
+                    android:visibility="@{TextUtils.isEmpty(theme.description) ? View.GONE : View.VISIBLE}"
+                    android:paddingBottom="@dimen/medium_padding"
                     android:text="@{theme.description}"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/small_padding"
+                    android:background="@color/window_background_gray"/>
+
+                <TextView
+                    style="@style/PhotoDramaText.Primary"
+                    android:layout_width="match_parent"
+                    android:paddingLeft="@dimen/medium_padding"
+                    android:paddingTop="14dp"
+                    android:text="@string/drama_recommend"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_adverts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/larger_padding"
+                    android:layout_marginBottom="@dimen/small_padding"
+                    android:paddingLeft="@dimen/medium_padding"
+                    android:paddingRight="@dimen/medium_padding"
+                    android:orientation="horizontal">
+
+                    <include
+                        layout="@layout/view_drama_detail_advert"
+                        bind:advert="@{adverts[0]}"/>
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="9dp"
+                        android:layout_height="match_parent"/>
+
+                    <include
+                        layout="@layout/view_drama_detail_advert"
+                        bind:advert="@{adverts[1]}"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
-            <com.loopeer.compatinset.InsetLinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <com.loopeer.compatinset.InsetLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/layout_tool_top"

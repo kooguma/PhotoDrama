@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.loopeer.android.photodrama4android.BR;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
 import com.loopeer.android.photodrama4android.api.ResponseObservable;
 import com.loopeer.android.photodrama4android.api.service.SeriesService;
+import com.loopeer.android.photodrama4android.api.service.SystemService;
 import com.loopeer.android.photodrama4android.databinding.ActivityDramaDetailBinding;
 import com.loopeer.android.photodrama4android.media.SeekWrapper;
 import com.loopeer.android.photodrama4android.media.VideoPlayManagerContainer;
@@ -26,6 +28,7 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Series;
 import com.loopeer.android.photodrama4android.model.Theme;
+import com.loopeer.android.photodrama4android.ui.fragment.MovieMakerBaseFragment;
 import com.loopeer.android.photodrama4android.ui.hepler.DramaDetailOrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.OrientationAdapter;
@@ -65,6 +68,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         setupView();
         parseIntent();
         updateSeries(mSeries == null ? mSeriesId : mSeries.id, true);
+        updateAdverts();
         registerSubscription(
             mLoadSubject.debounce(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -126,6 +130,23 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
                 + String.format("%02d", Integer.valueOf(theme.episodeNumber));
         }
         getSupportActionBar().setTitle(title);
+    }
+
+    private void updateAdverts() {
+        registerSubscription(
+            ResponseObservable.unwrap(SystemService.INSTANCE.recommendAd())
+                .subscribe(adverts -> {
+                        if(adverts.size() == 2) {
+                            mBinding.setAdverts(adverts);
+                        }else {
+                            mBinding.layoutAdverts.setVisibility(View.GONE);
+                        }
+                    }, throwable -> {
+                        mBinding.layoutAdverts.setVisibility(View.GONE);
+                    },
+                    () -> {
+                    })
+        );
     }
 
     private void updateSeries(String sersId, boolean isFirstLoad) {

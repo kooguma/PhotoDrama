@@ -41,6 +41,7 @@
     <string name="drama_author_format">作者：%s</string>
     <string name="drama_episode">剧集</string>
     <string name="drama_brief">简介</string>
+    <string name="drama_recommend">推荐</string>
     <string name="drama_index_format">%02d</string>
 
     <!-- transition edit -->
