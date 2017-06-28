@@ -33,6 +33,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     private boolean mIsRecording = false;
     private Object mLock = new Object();
     private boolean mTextureViewReadyOk = false;
+    private int mRequestRenderCount = 0;
 
     public GLThreadRender(Context context, TextureView textureView, IRendererWorker iRendererWorker) {
         super("GLThreadRender");
@@ -52,9 +53,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     }
 
     public void stopUp() {
-//        synchronized (mLock) {
-            mIsStop = true;
-//        }
+        mIsStop = true;
     }
 
     public boolean isStop() {
@@ -83,10 +82,11 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                         if (mSeekChangeListener != null && mMovieMakerTextureView != null) {
                             mMovieMakerTextureView.post((() -> mSeekChangeListener.actualFinishAt(mUsedTime)));
                         }
+                        checkCountToRequest();
                         mLock.wait();
                     }
                     long startTime = System.currentTimeMillis();
-                    if (mMovieMakerTextureView != null) mMovieMakerTextureView.requestRender();
+                    if (mMovieMakerTextureView != null && !mIsStop) mMovieMakerTextureView.requestRender();
                     mLock.wait();
                     if (!mIsRecording)
                         Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
@@ -102,6 +102,13 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void checkCountToRequest() {
+        if (mRequestRenderCount > 0 && mMovieMakerTextureView != null && mIsManual) {
+            mMovieMakerTextureView.requestRender();
+            mRequestRenderCount --;
         }
     }
 
@@ -149,12 +156,12 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         stopUp();
         setManual(true);
         this.mUsedTime = usedTime;
-        mMovieMakerTextureView.requestRender();
+        mRequestRenderCount++;
     }
 
     public void requestRender() {
         setManual(true);
-        mMovieMakerTextureView.requestRender();
+        mRequestRenderCount++;
     }
 
     public void setManual(boolean isManual) {
@@ -193,9 +200,10 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     @Override
     public void onDrawFrame(WindowSurface windowSurface) {
         if (!mIsManual) {
-            if (isStop()) {
-                synchronized (mLock) {
+            synchronized (mLock) {
+                if (isStop()) {
                     mLock.notify();
+                    return;
                 }
             }
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
@@ -204,8 +212,8 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
             }
         } else {
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
+            checkCountToRequest();
         }
-
     }
 
     @Override
