@@ -34,6 +34,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     private Object mLock = new Object();
     private boolean mTextureViewReadyOk = false;
     private int mRequestRenderCount = 0;
+    private boolean isDrawIng = false;
 
     public GLThreadRender(Context context, TextureView textureView, IRendererWorker iRendererWorker) {
         super("GLThreadRender");
@@ -86,7 +87,8 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                         mLock.wait();
                     }
                     long startTime = System.currentTimeMillis();
-                    if (mMovieMakerTextureView != null && !mIsStop) mMovieMakerTextureView.requestRender();
+                    if (mMovieMakerTextureView != null && !mIsStop)
+                        mMovieMakerTextureView.requestRender();
                     mLock.wait();
                     if (!mIsRecording)
                         Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
@@ -108,7 +110,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
     private void checkCountToRequest() {
         if (mRequestRenderCount > 0 && mMovieMakerTextureView != null && mIsManual) {
             mMovieMakerTextureView.requestRender();
-            mRequestRenderCount --;
+            mRequestRenderCount--;
         }
     }
 
@@ -157,11 +159,13 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
         setManual(true);
         this.mUsedTime = usedTime;
         mRequestRenderCount++;
+        if (isDrawIng == false && isStop()) checkCountToRequest();
     }
 
     public void requestRender() {
         setManual(true);
         mRequestRenderCount++;
+        if (isDrawIng == false && isStop()) checkCountToRequest();
     }
 
     public void setManual(boolean isManual) {
@@ -199,6 +203,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
 
     @Override
     public void onDrawFrame(WindowSurface windowSurface) {
+        isDrawIng = true;
         if (!mIsManual) {
             synchronized (mLock) {
                 if (isStop()) {
@@ -214,6 +219,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
             mIRendererWorker.drawFrame(mContext, windowSurface, mUsedTime);
             checkCountToRequest();
         }
+        isDrawIng = false;
     }
 
     @Override

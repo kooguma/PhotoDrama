@@ -10,10 +10,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
@@ -50,8 +46,6 @@ public class ImageClipDrawer extends ClipDrawer{
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
     private static final int STRIDE = (POSITION_COMPONENT_COUNT
             + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
-
-    private static final int BLUR_RADIUS = 20;
 
     private Context mContext;
 
