@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
@@ -128,6 +129,7 @@ public class ImageClipDrawer extends ClipDrawer{
     }
 
     private void getTexture(long usedTime) {
+        Log.e(TAG, "getTexture: " + usedTime);
         Matrix matrix = new Matrix();
         matrix.postScale(mViewScaleFactor, mViewScaleFactor);
         matrix.postTranslate(-1f * mViewScaleFactor * mBitmap.getWidth() / 2, -1f * mViewScaleFactor * mBitmap.getHeight() / 2);
@@ -180,7 +182,10 @@ public class ImageClipDrawer extends ClipDrawer{
     public void drawFrame(long usedTime, float[] pMatrix) {
         if (mImageInfo == null) return;
         if (usedTime < mImageClip.startWithPreTransitionTime || (mImageClip.endWithNextTransitionTime > 0 && usedTime > mImageClip.endWithNextTransitionTime)) return;
-        if (mBitmap == null || mBitmap.isRecycled()) {
+        if (mBitmap == null
+                || mBitmap.isRecycled()
+                || mBlurBitmap == null
+                || mBlurBitmap.isRecycled()) {
             preLoadTexture(mMovieMakerTextureView, mTextureLoader);
             return;
         }
