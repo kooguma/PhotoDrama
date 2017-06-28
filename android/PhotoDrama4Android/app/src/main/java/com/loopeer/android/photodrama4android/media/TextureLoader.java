@@ -77,13 +77,14 @@ public class TextureLoader extends Thread {
         HandlerWrapper<String, ImageInfo> handlerWrapper = mHandlerWrappers.get(0);
         if (handlerWrapper != null && handlerWrapper.getType() == HandlerWrapper.TYPE_LOAD_IMAGE) {
             ImageInfo imageInfo = null;
-            if (BitmapFactory.getInstance().getBitmapFromMemCache(handlerWrapper.getData()) != null) {
+            if (BitmapFactory.getInstance().getBitmapFromMemCacheNotCreate(handlerWrapper.getData()) != null) {
                 returnImageInfo(handlerWrapper, imageInfo);
                 mHandlerWrappers.remove(handlerWrapper);
                 return;
             }
             final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, handlerWrapper.getData());
             BitmapFactory.getInstance().addBitmapToCache(handlerWrapper.getData(), bitmap);
+            BitmapFactory.getInstance().getBlurBitmapFromCache(handlerWrapper.getData(), bitmap);
             returnImageInfo(handlerWrapper, imageInfo);
             mHandlerWrappers.remove(handlerWrapper);
         }

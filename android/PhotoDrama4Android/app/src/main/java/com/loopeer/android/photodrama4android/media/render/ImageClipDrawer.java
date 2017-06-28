@@ -4,10 +4,16 @@ package com.loopeer.android.photodrama4android.media.render;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.os.Looper;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.view.TextureView;
 
 import com.loopeer.android.photodrama4android.media.HandlerWrapper;
@@ -45,9 +51,12 @@ public class ImageClipDrawer extends ClipDrawer{
     private static final int STRIDE = (POSITION_COMPONENT_COUNT
             + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
 
+    private static final int BLUR_RADIUS = 20;
+
     private Context mContext;
 
     private Bitmap mBitmap;
+    private Bitmap mBlurBitmap;
     public ImageInfo mImageInfo;
     public ImageClip mImageClip;
 
@@ -61,6 +70,7 @@ public class ImageClipDrawer extends ClipDrawer{
     private int mVerticalBlockNum = 1;
 
     private float mViewScaleFactor;
+    private float mBlurViewScaleFactor;
     private TextureLoader mTextureLoader;
 
     public ImageClipDrawer(TextureView view, ImageClip imageClip) {
@@ -93,12 +103,15 @@ public class ImageClipDrawer extends ClipDrawer{
 
     public void checkBitmapReady() {
         mBitmap = BitmapFactory.getInstance().getBitmapFromMemCache(mImageClip.path);
-        if (mBitmap == null) return;
+        mBlurBitmap = BitmapFactory.getInstance().getBlurBitmapFromCache(mImageClip.path, mBitmap);
+        if (mBitmap == null || mBlurBitmap == null) return;
         mImageInfo = new ImageInfo(-1, mBitmap.getWidth(), mBitmap.getHeight());
         if (1f * mBitmap.getWidth() / mBitmap.getHeight() > 1f * mViewWidth / mViewHeight) {
             mViewScaleFactor = 1f * mViewWidth / mBitmap.getWidth();
+            mBlurViewScaleFactor = 1f * mViewHeight / mBitmap.getHeight();
         } else {
             mViewScaleFactor = 1f * mViewHeight / mBitmap.getHeight();
+            mBlurViewScaleFactor = 1f * mViewWidth / mBitmap.getWidth();
         }
     }
 
@@ -130,7 +143,16 @@ public class ImageClipDrawer extends ClipDrawer{
         matrix.postTranslate(mImageClip.getTransX(usedTime) * mViewWidth, mImageClip.getTransY(usedTime) * mViewHeight);
 
         Bitmap localBitmap = Bitmap.createBitmap(mViewWidth, mViewHeight, Bitmap.Config.ARGB_8888);
+
         Canvas localCanvas = new Canvas(localBitmap);
+        ColorMatrix imageMatrix = new ColorMatrix();
+        imageMatrix.setScale(0.45f, 0.45f, 0.45f, 1);
+        Paint blurImagePaint = new Paint();
+        blurImagePaint.setColorFilter(new ColorMatrixColorFilter(imageMatrix));
+        Matrix blurMatrix = new Matrix();
+        blurMatrix.postScale(mBlurViewScaleFactor, mBlurViewScaleFactor);
+        localCanvas.drawBitmap(mBlurBitmap, blurMatrix, blurImagePaint);
+
         Paint localPaint = new Paint();
         localPaint.setFilterBitmap(true);
         localCanvas.drawBitmap(mBitmap, matrix, localPaint);

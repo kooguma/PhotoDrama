@@ -86,7 +86,7 @@ public class GLThreadRender extends Thread implements IPlayerLife, TextureRender
                         mLock.wait();
                     }
                     long startTime = System.currentTimeMillis();
-                    mMovieMakerTextureView.requestRender();
+                    if (mMovieMakerTextureView != null) mMovieMakerTextureView.requestRender();
                     mLock.wait();
                     if (!mIsRecording)
                         Thread.sleep(Math.max(0, 1000 / RECORDFPS - (System.currentTimeMillis() - startTime)));//睡眠
