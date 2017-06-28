@@ -151,6 +151,8 @@ public class ImageClipDrawer extends ClipDrawer{
         blurImagePaint.setColorFilter(new ColorMatrixColorFilter(imageMatrix));
         Matrix blurMatrix = new Matrix();
         blurMatrix.postScale(mBlurViewScaleFactor, mBlurViewScaleFactor);
+        blurMatrix.postTranslate(-1f * (mBlurViewScaleFactor * mBitmap.getWidth() / 2 - mViewWidth / 2)
+                , -1f * (mBlurViewScaleFactor * mBitmap.getHeight() / 2 - mViewHeight / 2));
         localCanvas.drawBitmap(mBlurBitmap, blurMatrix, blurImagePaint);
 
         Paint localPaint = new Paint();
