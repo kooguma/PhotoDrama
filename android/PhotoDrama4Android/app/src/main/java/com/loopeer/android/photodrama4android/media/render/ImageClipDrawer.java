@@ -129,7 +129,6 @@ public class ImageClipDrawer extends ClipDrawer{
     }
 
     private void getTexture(long usedTime) {
-        Log.e(TAG, "getTexture: " + usedTime);
         Matrix matrix = new Matrix();
         matrix.postScale(mViewScaleFactor, mViewScaleFactor);
         matrix.postTranslate(-1f * mViewScaleFactor * mBitmap.getWidth() / 2, -1f * mViewScaleFactor * mBitmap.getHeight() / 2);
@@ -149,11 +148,14 @@ public class ImageClipDrawer extends ClipDrawer{
         blurMatrix.postScale(mBlurViewScaleFactor, mBlurViewScaleFactor);
         blurMatrix.postTranslate(-1f * (mBlurViewScaleFactor * mBitmap.getWidth() / 2 - mViewWidth / 2)
                 , -1f * (mBlurViewScaleFactor * mBitmap.getHeight() / 2 - mViewHeight / 2));
+        if (mBlurBitmap.isRecycled()) return;
         localCanvas.drawBitmap(mBlurBitmap, blurMatrix, blurImagePaint);
 
         Paint localPaint = new Paint();
         localPaint.setFilterBitmap(true);
+        if (mBitmap.isRecycled()) return;
         localCanvas.drawBitmap(mBitmap, matrix, localPaint);
+
         if (mCanvasTextureId[0] != -1) {
             GLES20.glDeleteTextures(1, mCanvasTextureId, 0);
         }

@@ -8,6 +8,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
 
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BitmapFactory {
+    private static final String TAG = "BitmapFactory";
 
     private static volatile BitmapFactory sDefaultInstance;
         private LinkedHashMap<String, Bitmap> mMemoryCache;
