@@ -43,7 +43,7 @@
 
     <dimen name="line_spacing_negative">-6dp</dimen>
 
-    <dimen name="btn_pause_play">64dp</dimen>
+    <dimen name="btn_pause_play">50dp</dimen>
 
     <dimen name="drama_detail_advert_corner">2dp</dimen>
 
