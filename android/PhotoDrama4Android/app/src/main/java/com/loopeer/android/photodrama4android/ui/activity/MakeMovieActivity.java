@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -39,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.loopeer.android.photodrama4android.media.utils.DateUtils.formatTime;
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 
-public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener {
+public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPlayerManager.ProgressChangeListener, VideoPlayerManager.RecordingListener, DialogInterface.OnCancelListener {
 
     private ActivityMakeMovieBinding mBinding;
     private VideoPlayerManager mVideoPlayerManager;
@@ -244,10 +245,11 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
     }
 
     @Override
-    public void recordFinished(String path) {
+    public void recordFinished(String path, boolean success) {
         mBinding.viewCover.setVisibility(View.GONE);
         dismissExportProgressLoading();
-        Navigator.startShareActivity(this, path);
+        if (success)
+            Navigator.startShareActivity(this, path);
     }
 
     public void showExportProgress(String message) {
@@ -255,7 +257,8 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         if (mExportProgressLoading == null) {
             mExportProgressLoading = new ExportLoadingDialog(this, R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
-            mExportProgressLoading.setCancelable(false);
+            mExportProgressLoading.setCancelable(true);
+            mExportProgressLoading.setOnCancelListener(this);
         }
         if (!TextUtils.isEmpty(message)) {
             mExportProgressLoading.setMessage(message);
@@ -278,4 +281,8 @@ public class MakeMovieActivity extends PhotoDramaBaseActivity implements VideoPl
         mScreenOrientationHelper.updateOrientation(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (mVideoPlayerManager.isRecording()) mVideoPlayerManager.stopVideo();
+    }
 }

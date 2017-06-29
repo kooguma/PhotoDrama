@@ -115,13 +115,13 @@ public class GLRenderWorker implements IRendererWorker {
             windowSurface.swapBuffers();
             if (mMuxerWrapper == null) return;
             mMuxerWrapper.frameVideoAvailableSoon();
-            mInputWindowSurface.makeCurrent();
+            if (mInputWindowSurface != null) mInputWindowSurface.makeCurrent();
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             GLES20.glViewport(mVideoRect.left, mVideoRect.top,
                     mVideoRect.width(), mVideoRect.height());
             mFullScreen.drawFrame(mOffscreenTexture, mIdentityMatrix);
-            mInputWindowSurface.swapBuffers();
+            if (mInputWindowSurface != null) mInputWindowSurface.swapBuffers();
             GLES20.glViewport(0, 0, windowSurface.getWidth(), windowSurface.getHeight());
             windowSurface.makeCurrent();
         }

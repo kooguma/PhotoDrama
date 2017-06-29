@@ -144,7 +144,7 @@ public class VideoPlayerManager
     }
 
     private void finishToTime(int finishToTime) {
-        endRecording();
+        endRecording(true);
         mGLThread.seekToTime(finishToTime);
         mSeekWrapperHolders.setProgress(finishToTime);
         mIMusic.seekToMusic(finishToTime);
@@ -153,14 +153,14 @@ public class VideoPlayerManager
         onProgressStop();
     }
 
-    private void endRecording() {
+    private void endRecording(boolean recordSuccess) {
         if (mIsRecording) {
             mGLThread.setRecording(false);
             mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
             updateDrama(mGLRenderWorker.getDrama());
             String path = mGLRenderWorker.endRecording();
             scanIntoMediaStore(mContext, path, mMaxTime);
-            recordFinished(path);
+            recordFinished(path, recordSuccess);
             mIsRecording = false;
         }
     }
@@ -198,14 +198,14 @@ public class VideoPlayerManager
     public void pauseVideo() {
         mGLThread.stopUp();
         mIMusic.pauseMusic();
-        if (isRecording()) mGLRenderWorker.endRecording();
+        if (isRecording()) endRecording(false);
         onProgressStop();
     }
 
     public void stopVideo() {
         mGLThread.stopUp();
         mIMusic.stopMusic();
-        if (isRecording()) mGLRenderWorker.endRecording();
+        if (isRecording()) endRecording(false);
         onProgressStop();
     }
 
@@ -386,9 +386,9 @@ public class VideoPlayerManager
         }
     }
 
-    public void recordFinished(String path) {
+    public void recordFinished(String path, boolean recordSuccess) {
         if (mRecordingListener != null && mIsRecording) {
-            mRecordingListener.recordFinished(path);
+            mRecordingListener.recordFinished(path, recordSuccess);
         }
     }
 
@@ -431,7 +431,7 @@ public class VideoPlayerManager
 
         void recordChange(int progress);
 
-        void recordFinished(String path);
+        void recordFinished(String path, boolean success);
     }
 
     public interface BitmapReadyListener {

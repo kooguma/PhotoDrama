@@ -1,5 +1,6 @@
 package com.loopeer.android.photodrama4android.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -45,7 +47,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
         ,
         VideoPlayerManager.BitmapReadyListener,
         VideoPlayerManager.ProgressChangeListener,
-        VideoPlayerManager.RecordingListener {
+        VideoPlayerManager.RecordingListener, DialogInterface.OnCancelListener {
 
     private ActivityDramaEditBinding mBinding;
     private ImageView mIcon;
@@ -62,7 +64,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     private ScreenOrientationHelper mScreenOrientationHelper;
     private DramaEditOrientationAdapter mOrientationAdapter;
-    private int mRecordingBackCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +140,6 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
         if (item.getItemId() == R.id.menu_export) {
             Analyst.downloadClick();
-            mRecordingBackCount = 1;
             mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
@@ -320,7 +320,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
             mExportProgressLoading = new ExportLoadingDialog(this,
                     R.style.ExportProgressLoadingTheme);
             mExportProgressLoading.setCanceledOnTouchOutside(false);
-            mExportProgressLoading.setCancelable(false);
+            mExportProgressLoading.setCancelable(true);
+            mExportProgressLoading.setOnCancelListener(this);
         }
         if (!TextUtils.isEmpty(message)) {
             mExportProgressLoading.setMessage(message);
@@ -352,15 +353,15 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     }
 
     @Override
-    public void recordFinished(String path) {
+    public void recordFinished(String path, boolean success) {
         mBinding.viewCover.setVisibility(View.GONE);
         dismissExportProgressLoading();
-        Navigator.startShareActivity(this, path, mTheme);
+        if (success)
+            Navigator.startShareActivity(this, path, mTheme);
     }
 
     @Override
     public void onBackPressed() {
-        if (mRecordingBackCount > 0) return;
         mScreenOrientationHelper.backPressed();
     }
 
@@ -386,5 +387,10 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mScreenOrientationHelper.updateOrientation(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (mVideoPlayerManager.isRecording()) mVideoPlayerManager.stopVideo();
     }
 }

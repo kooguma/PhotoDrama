@@ -112,7 +112,7 @@ public class MediaMuxerWrapper {
 	}
 
 	public void frameVideoAvailableSoon() {
-		mVideoEncoder.frameAvailableSoon();
+		if (mVideoEncoder != null) mVideoEncoder.frameAvailableSoon();
 	}
 
 	public void setPresentationTimeUs(long l) {
