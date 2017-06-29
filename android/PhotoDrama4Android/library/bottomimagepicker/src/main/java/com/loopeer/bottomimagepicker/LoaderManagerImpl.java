@@ -86,7 +86,24 @@ public class LoaderManagerImpl implements LoaderManager.LoaderCallbacks<Cursor> 
 
         @Override protected void onPostExecute(List<ImageFolder> list) {
             super.onPostExecute(list);
-            mBottomImagePickerView.setData(list);
+            mBottomImagePickerView.setData(createFoldersWithAllImageFolder(list));
+        }
+
+        private List createFoldersWithAllImageFolder(List<ImageFolder> folders) {
+            if (folders.size() > 0) {
+                ImageFolder folder = new ImageFolder();
+                folder.name = mBottomImagePickerView.getContext().getResources().getString(R.string.album_all);
+                folder.dir = null;
+                folder.firstImagePath = folders.get(0).firstImagePath;
+                int imageCount = 0;
+                for (ImageFolder imageFolder : folders) {
+                    imageCount += imageFolder.count;
+                    folder.images.addAll(imageFolder.images);
+                }
+                folder.count = imageCount;
+                folders.add(0, folder);
+            }
+            return folders;
         }
     }
 }

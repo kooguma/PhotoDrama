@@ -62,6 +62,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     private ScreenOrientationHelper mScreenOrientationHelper;
     private DramaEditOrientationAdapter mOrientationAdapter;
+    private int mRecordingBackCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +139,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
         if (item.getItemId() == R.id.menu_export) {
             Analyst.downloadClick();
+            mRecordingBackCount = 1;
             mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
@@ -358,7 +360,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
 
     @Override
     public void onBackPressed() {
-        if (mVideoPlayerManager.isRecording()) return;
+        if (mRecordingBackCount > 0) return;
         mScreenOrientationHelper.backPressed();
     }
 

@@ -46,7 +46,7 @@ ext {
     developModuleVersion = '0.0.5-beta12'
     frescoVersion = '0.14.1'
     flexboxVersion = '0.2.5'
-    imageGroupViewVersion = '1.0.27'
+    imageGroupViewVersion = '1.0.34'
     ztZipVersion = '1.11'
     itemtouchhelperextensionVersion = '1.0.5'
 
