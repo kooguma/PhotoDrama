@@ -143,7 +143,7 @@
                     android:id="@+id/txt_drama_name"
                     android:layout_marginLeft="@dimen/medium_padding"
                     android:layout_marginTop="@dimen/large_padding"
-                    android:text="@{series.name}"/>
+                    android:text="@{theme.name}"/>
 
                 <Button
                     style="@style/PhotoDramaButton.Black.DramaSelect"
@@ -166,7 +166,7 @@
                     android:layout_marginTop="@dimen/xxlarge_padding"
                     android:drawableLeft="@drawable/ic_people_grey"
                     android:drawablePadding="@dimen/small_padding"
-                    android:text="@{@string/drama_people_format(series.usedCount)}"/>
+                    android:text="@{@string/drama_people_format(theme.usedCount)}"/>
 
                 <TextView
                     style="@style/PhotoDramaText.Tertiary.Small"
@@ -178,7 +178,6 @@
                     android:layout_toRightOf="@id/txt_people"
                     android:text="@{@string/drama_author_format(series.author)}"/>
             </RelativeLayout>
-
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -269,7 +268,7 @@
                         android:paddingTop="@dimen/medium_padding"
                         android:visibility="@{TextUtils.isEmpty(theme.description) ? View.GONE : View.VISIBLE}"
                         android:paddingBottom="@dimen/medium_padding"
-                        android:text="@{theme.description}"/>
+                        android:text="@{series.description}"/>
 
                     <View
                         android:layout_width="match_parent"

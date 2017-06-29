@@ -136,9 +136,9 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
         registerSubscription(
             ResponseObservable.unwrap(SystemService.INSTANCE.recommendAd())
                 .subscribe(adverts -> {
-                        if(adverts.size() == 2) {
+                        if (adverts.size() == 2) {
                             mBinding.setAdverts(adverts);
-                        }else {
+                        } else {
                             mBinding.layoutAdverts.setVisibility(View.GONE);
                         }
                     }, throwable -> {
@@ -208,6 +208,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
             if (!v.isSelected()) {
                 mUsedTime = 0;
                 mVideoPlayerManager.stopVideo();
+                mBinding.setTheme(theme);
                 loadDramaSend(theme);
                 mTheme = theme;
                 updateSelectedThemeBtn();
