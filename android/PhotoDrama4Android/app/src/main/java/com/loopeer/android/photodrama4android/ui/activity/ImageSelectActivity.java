@@ -174,4 +174,8 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
         updateDisplayImage(imageClip == null ? null : imageClip.path);
         mBinding.pickView.updateSelectedImage(imageClip == null ? null : imageClip.path);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    }
 }

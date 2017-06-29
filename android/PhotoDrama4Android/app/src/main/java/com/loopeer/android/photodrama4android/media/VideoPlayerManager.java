@@ -17,6 +17,7 @@ import com.loopeer.android.photodrama4android.media.render.GLRenderWorker;
 import com.loopeer.android.photodrama4android.media.render.GLThreadRender;
 import com.loopeer.android.photodrama4android.utils.FileManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,7 +160,11 @@ public class VideoPlayerManager
             mGLRenderWorker.getDrama().videoGroup.endLogoClip = null;
             updateDrama(mGLRenderWorker.getDrama());
             String path = mGLRenderWorker.endRecording();
-            scanIntoMediaStore(mContext, path, mMaxTime);
+            if (!recordSuccess) {
+                FileManager.deleteFile(new File(path));
+            } else {
+                scanIntoMediaStore(mContext, path, mMaxTime);
+            }
             recordFinished(path, recordSuccess);
             mIsRecording = false;
         }
