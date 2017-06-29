@@ -5,7 +5,7 @@ import com.loopeer.android.photodrama4android.media.mediaio.XmlMusicClip;
 import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 
 public class MusicClip extends Clip {
-    public static final int MIN_RECORD_AUDIO_LENGTH = 500;
+    public static final int MIN_RECORD_AUDIO_LENGTH = 100;
     public static final int MIN_SOUND_EFFECT_LENGTH = 500;
     public static final int MIN_BGM_LENGTH = 500;
     public String path;

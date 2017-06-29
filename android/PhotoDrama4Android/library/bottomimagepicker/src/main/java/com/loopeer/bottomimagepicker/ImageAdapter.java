@@ -82,7 +82,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
             final Uri uri = Uri.fromFile(new File(image.url));
 
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setResizeOptions(new ResizeOptions(mImageSize, mImageSize))
+                .setResizeOptions(new ResizeOptions(mImageSize / 3, mImageSize / 3))
                 .setLocalThumbnailPreviewsEnabled(true)
                 .build();
 

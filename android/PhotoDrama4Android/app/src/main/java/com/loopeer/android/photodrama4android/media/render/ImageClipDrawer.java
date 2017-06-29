@@ -38,6 +38,7 @@ import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLUtils.texImage2D;
 import static android.opengl.Matrix.setIdentityM;
 import static com.loopeer.android.photodrama4android.media.Constants.BYTES_PER_FLOAT;
+import static com.loopeer.android.photodrama4android.media.model.ImageClip.BRIGHTNESS_VALUE;
 
 public class ImageClipDrawer extends ClipDrawer{
     private static final String TAG = "ImageClipDrawer";
@@ -141,7 +142,7 @@ public class ImageClipDrawer extends ClipDrawer{
 
         Canvas localCanvas = new Canvas(localBitmap);
         ColorMatrix imageMatrix = new ColorMatrix();
-        imageMatrix.setScale(0.45f, 0.45f, 0.45f, 1);
+        imageMatrix.setScale(BRIGHTNESS_VALUE, BRIGHTNESS_VALUE, BRIGHTNESS_VALUE, 1);
         Paint blurImagePaint = new Paint();
         blurImagePaint.setColorFilter(new ColorMatrixColorFilter(imageMatrix));
         Matrix blurMatrix = new Matrix();

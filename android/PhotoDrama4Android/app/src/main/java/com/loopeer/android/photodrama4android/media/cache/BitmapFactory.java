@@ -8,7 +8,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.util.Log;
 
 import com.loopeer.android.photodrama4android.PhotoDramaApp;
 import com.loopeer.android.photodrama4android.media.model.Drama;
@@ -20,13 +19,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.loopeer.android.photodrama4android.media.model.ImageClip.BLUR_RADIUS;
+
 public class BitmapFactory {
     private static final String TAG = "BitmapFactory";
 
     private static volatile BitmapFactory sDefaultInstance;
         private LinkedHashMap<String, Bitmap> mMemoryCache;
     private LinkedHashMap<String, Bitmap> mMemoryCacheBlurImage;
-    private static final int BLUR_RADIUS = 20;
 
     private Context mContext;
 
@@ -77,21 +77,48 @@ public class BitmapFactory {
         new BitmapWorkerTask().execute(args);
     }
 
+    public void loadImage(ImageLoadListener listener, String args) {
+        new BitmapWorkerTask(listener).execute(args);
+    }
+
     class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+
+        private ImageLoadListener mImageLoadListener;
+
+        public BitmapWorkerTask() {
+        }
+
+        public BitmapWorkerTask(ImageLoadListener listener) {
+            mImageLoadListener = listener;
+        }
 
         @Override
         protected Bitmap doInBackground(String... params) {
             for (String path :
                     params) {
-                Bitmap bitmapPre = LocalImageUtils.imageZoomByScreen(mContext, path);
-                if (bitmapPre == null || bitmapPre.isRecycled()) {
-                    final Bitmap bitmap = LocalImageUtils.imageZoomByScreen(mContext, path);
-                    addBitmapToCache(path, bitmap);
+                Bitmap result = getBitmapFromMemCache(path);
+                if (result == null || result.isRecycled()) {
+                    result = LocalImageUtils.imageZoomByScreen(mContext, path);
+                    addBitmapToCache(path, result);
+                }
+                Bitmap bitmap = getBlurBitmapFromCache(path, result);
+                if (bitmap == null || bitmap.isRecycled()) {
                     getBlurBitmapFromCache(path, bitmap);
                 }
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (mImageLoadListener != null) mImageLoadListener.loadSuccess();
+        }
+
+    }
+
+    public interface ImageLoadListener{
+        void loadSuccess();
     }
 
     public void addBitmapToCache(String key, Bitmap bitmap) {

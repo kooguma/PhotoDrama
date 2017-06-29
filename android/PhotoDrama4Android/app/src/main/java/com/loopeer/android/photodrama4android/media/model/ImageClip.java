@@ -7,6 +7,9 @@ import com.loopeer.android.photodrama4android.media.utils.ZipUtils;
 import static com.loopeer.android.photodrama4android.media.Constants.DEFAULT_IMAGE_CLIP_SHOW_TIME;
 
 public class ImageClip extends Clip{
+    public static final float BRIGHTNESS_VALUE = 0.9f;
+    public static final int BLUR_RADIUS = 20;
+
     public String path;
     public int startWithPreTransitionTime = 0;
     public int endWithNextTransitionTime = 0;

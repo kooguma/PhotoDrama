@@ -80,7 +80,7 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
         return R.layout.list_item_image_selected;
     }
 
-    public void addUri(Uri uri) {
+    public int addUri(Uri uri) {
         String path = uri.getPath();
         ImageClip imageClip = new ImageClip(path, 0);
         int index;
@@ -99,6 +99,7 @@ public class ImageSelectedAdapter extends BaseFooterAdapter<ImageClip> {
         updateData(mImageClips);
         mSelectedImageClip = getDatas().get(index);
         selectedItem(mSelectedImageClip);
+        return index;
     }
 
     public void init() {

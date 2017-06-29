@@ -44,13 +44,14 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
             = new ImageAdapter.OnImagePickListener() {
         @Override
         public boolean onImagePick(Uri uri) {
-            mImageSelectedAdapter.addUri(uri);
+            int index = mImageSelectedAdapter.addUri(uri);
+            mBinding.recyclerView.getLayoutManager().scrollToPosition(index);
             return true;
         }
     };
 
     private void updateDisplayImage(String path) {
-        mBinding.imageDisplay.setImageURI(path == null ? null : Uri.fromFile(new File(path)));
+        mBinding.imageDisplay.setLocalUrl(path);
     }
 
     @Override
