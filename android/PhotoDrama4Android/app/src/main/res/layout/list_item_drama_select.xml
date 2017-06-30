@@ -13,9 +13,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/large_padding"
-        android:layout_marginRight="@dimen/large_padding"
-        android:layout_marginTop="@dimen/large_padding"
+        android:layout_marginLeft="@dimen/medium_padding"
+        android:layout_marginRight="@dimen/medium_padding"
+        android:layout_marginTop="@dimen/medium_padding"
         android:orientation="vertical"
         app:cardElevation="4dp">
 
@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:imageUri="@{series.coverImage}"
-                    app:viewAspectRatio="1.52"/>
+                    app:viewAspectRatio="1.94"/>
 
                 <RelativeLayout
                     android:id="@+id/layout_bottom"
@@ -52,16 +52,17 @@
                         android:textSize="17sp"
                         android:layout_marginLeft="@dimen/medium_padding"
                         android:layout_marginRight="@dimen/medium_padding"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/medium_padding"
                         android:text="@{series.name}"/>
 
                     <Button
                         style="@style/PhotoDramaButton.Black.DramaSelect"
                         android:id="@+id/btn_use_drama"
                         android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
+                        android:layout_alignBottom="@+id/txt_desc"
+                        android:background="#333030"
                         android:layout_marginRight="@dimen/medium_padding"
-                        android:layout_marginTop="@dimen/large_padding"
+                        android:layout_marginTop="@dimen/medium_padding"
                         android:text="@string/drama_detail"/>
 
                     <TextView
@@ -70,6 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/txt_name"
                         android:layout_marginLeft="@dimen/medium_padding"
+                        android:layout_marginRight="@dimen/medium_padding"
                         android:textSize="15sp"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -85,12 +87,14 @@
             <TextView
                 android:id="@+id/txt_people"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:paddingLeft="@dimen/small_padding"
-                android:paddingRight="@dimen/small_padding"
+                android:paddingTop="@dimen/xxsmall_padding"
+                android:paddingBottom="@dimen/xxsmall_padding"
+                android:paddingLeft="@dimen/xsmall_padding"
+                android:paddingRight="@dimen/xsmall_padding"
                 android:gravity="center"
-                android:textSize="@dimen/text_size_xmedium"
+                android:textSize="@dimen/text_size_lmall"
                 android:drawableLeft="@drawable/ic_people_white"
                 android:textColor="@color/text_color_white"
                 android:drawablePadding="@dimen/xsmall_padding"
