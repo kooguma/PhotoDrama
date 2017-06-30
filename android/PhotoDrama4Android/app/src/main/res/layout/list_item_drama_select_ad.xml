@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -35,7 +35,9 @@
                     android:id="@+id/image_drama"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#eaeaea"
                     app:imageUri="@{advert.image}"
+                    app:placeholderImage="@drawable/ic_drama_placeholder"
                     app:viewAspectRatio="1.94"/>
 
                 <FrameLayout
@@ -45,13 +47,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_color_primary"
-                        android:textSize="17sp"
-                        android:layout_marginLeft="@dimen/medium_padding"
-                        android:paddingTop="@dimen/medium_padding"
-                        android:paddingBottom="@dimen/medium_padding"
                         android:layout_gravity="center_vertical"
-                        android:text="@{advert.title}"/>
+                        android:layout_marginLeft="@dimen/medium_padding"
+                        android:paddingBottom="@dimen/medium_padding"
+                        android:paddingTop="@dimen/medium_padding"
+                        android:text="@{advert.title}"
+                        android:textColor="@color/text_color_primary"
+                        android:textSize="17sp"/>
                 </FrameLayout>
 
             </LinearLayout>
@@ -61,13 +63,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_gravity="right"
+                android:background="@drawable/shape_people"
+                android:gravity="center"
                 android:paddingLeft="@dimen/xsmall_padding"
                 android:paddingRight="@dimen/xsmall_padding"
-                android:gravity="center"
-                android:textSize="@dimen/text_size_lmall"
+                android:text="@string/drama_select_advert"
                 android:textColor="@color/text_color_white"
-                android:background="@drawable/shape_people"
-                android:text="@string/drama_select_advert"/>
+                android:textSize="@dimen/text_size_lmall"/>
         </FrameLayout>
     </android.support.v7.widget.CardView>
 </layout>

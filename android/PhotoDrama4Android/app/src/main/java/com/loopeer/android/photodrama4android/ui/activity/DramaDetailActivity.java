@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.loopeer.android.photodrama4android.BR;
 import com.loopeer.android.photodrama4android.Navigator;
 import com.loopeer.android.photodrama4android.R;
 import com.loopeer.android.photodrama4android.analytics.Analyst;
@@ -28,7 +26,6 @@ import com.loopeer.android.photodrama4android.media.model.Drama;
 import com.loopeer.android.photodrama4android.media.utils.DramaFetchHelper;
 import com.loopeer.android.photodrama4android.model.Series;
 import com.loopeer.android.photodrama4android.model.Theme;
-import com.loopeer.android.photodrama4android.ui.fragment.MovieMakerBaseFragment;
 import com.loopeer.android.photodrama4android.ui.hepler.DramaDetailOrientationAdapter;
 import com.loopeer.android.photodrama4android.ui.hepler.ILoader;
 import com.loopeer.android.photodrama4android.ui.hepler.OrientationAdapter;

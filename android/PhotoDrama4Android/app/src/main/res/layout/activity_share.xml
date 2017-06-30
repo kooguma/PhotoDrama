@@ -21,11 +21,12 @@
 
     <ImageView
         android:id="@+id/img_export"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="71dp"
+        android:layout_height="71dp"
         android:layout_below="@+id/container_toolbar"
         android:layout_centerInParent="true"
         android:layout_marginTop="45dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_export_success"/>
 
     <TextView
@@ -95,13 +96,17 @@
             android:text="@string/share_more"/>
     </LinearLayout>
 
-    <ImageButton
+    <ImageView
         style="@style/PhotoDramaText.Primary.larger"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="100dp"
-        android:src="@drawable/ic_share_close"
         android:background="@android:color/transparent"
+        android:clickable="true"
+        android:contentDescription="@string/share_back"
         android:onClick="onBackToMain"
-        android:contentDescription="@string/share_back"/>
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_share_close"/>
 </com.loopeer.compatinset.InsetRelativeLayout>

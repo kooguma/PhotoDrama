@@ -108,7 +108,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_transparent);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
         setCenterTitle(R.string.label_drama_edit);
     }
 

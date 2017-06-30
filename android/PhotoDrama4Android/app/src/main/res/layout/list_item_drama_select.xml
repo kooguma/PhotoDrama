@@ -9,7 +9,8 @@
 
     </data>
 
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,31 +36,33 @@
                     android:id="@+id/image_drama"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#eaeaea"
                     app:imageUri="@{series.coverImage}"
+                    app:placeholderImage="@drawable/ic_drama_placeholder"
                     app:viewAspectRatio="1.94"/>
 
                 <RelativeLayout
                     android:id="@+id/layout_bottom"
                     android:layout_width="match_parent"
-                    android:paddingBottom="@dimen/medium_padding"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/medium_padding">
 
                     <TextView
-                        style="@style/PhotoDramaText.Primary"
                         android:id="@+id/txt_name"
+                        style="@style/PhotoDramaText.Primary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
                         android:layout_marginLeft="@dimen/medium_padding"
                         android:layout_marginRight="@dimen/medium_padding"
                         android:layout_marginTop="@dimen/medium_padding"
-                        android:text="@{series.name}"/>
+                        android:text="@{series.name}"
+                        android:textSize="17sp"/>
 
                     <Button
-                        style="@style/PhotoDramaButton.Black.DramaSelect"
                         android:id="@+id/btn_use_drama"
-                        android:layout_alignParentRight="true"
+                        style="@style/PhotoDramaButton.Black.DramaSelect"
                         android:layout_alignBottom="@+id/txt_desc"
+                        android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/medium_padding"
                         android:layout_marginTop="@dimen/medium_padding"
                         android:text="@string/drama_detail"/>
@@ -71,13 +74,13 @@
                         android:layout_below="@id/txt_name"
                         android:layout_marginLeft="@dimen/medium_padding"
                         android:layout_marginRight="@dimen/medium_padding"
-                        android:textSize="15sp"
-                        android:maxLines="1"
-                        android:ellipsize="end"
                         android:layout_marginTop="@dimen/medium_padding"
                         android:layout_toLeftOf="@id/btn_use_drama"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{series.subtitle}"
                         android:textColor="@color/text_color_717171"
-                        android:text="@{series.subtitle}"/>
+                        android:textSize="15sp"/>
 
                 </RelativeLayout>
 
@@ -88,15 +91,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_gravity="right"
+                android:background="@drawable/shape_people"
+                android:drawableLeft="@drawable/ic_people_white"
+                android:drawablePadding="@dimen/xsmall_padding"
+                android:gravity="center"
                 android:paddingLeft="@dimen/xsmall_padding"
                 android:paddingRight="@dimen/xsmall_padding"
-                android:gravity="center"
-                android:textSize="@dimen/text_size_lmall"
-                android:drawableLeft="@drawable/ic_people_white"
+                android:text="@{@string/drama_people_format(series.usedCount)}"
                 android:textColor="@color/text_color_white"
-                android:drawablePadding="@dimen/xsmall_padding"
-                android:background="@drawable/shape_people"
-                android:text="@{@string/drama_people_format(series.usedCount)}"/>
+                android:textSize="@dimen/text_size_lmall"/>
         </FrameLayout>
     </android.support.v7.widget.CardView>
 </layout>

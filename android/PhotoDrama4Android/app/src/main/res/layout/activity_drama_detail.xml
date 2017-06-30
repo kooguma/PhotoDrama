@@ -362,10 +362,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_home_up_white"/>
+                    android:src="@drawable/ic_home_up_white_shadow"/>
             </FrameLayout>
         </LinearLayout>
-
     </com.loopeer.compatinset.InsetFramelayout>
 
 </layout>

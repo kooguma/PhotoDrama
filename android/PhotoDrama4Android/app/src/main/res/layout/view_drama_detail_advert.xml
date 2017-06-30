@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.loopeer.android.photodrama4android.Navigator"/>
 
         <variable
@@ -22,32 +23,32 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            fresco:viewAspectRatio="1.73"
+            app:imageUri="@{advert.image}"
+            fresco:placeholderImage="@drawable/ic_drama_placeholder"
             fresco:roundedCornerRadius="@dimen/drama_detail_advert_corner"
-            fresco:placeholderImage="@drawable/ic_image_default"
-            app:imageUri="@{advert.image}"/>
+            fresco:viewAspectRatio="1.73"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:textColor="@color/text_color_secondary"
-            android:textSize="@dimen/text_size_large"
-            android:maxLines="1"
-            android:includeFontPadding="false"
             android:ellipsize="end"
-            android:text="@{advert.title}"/>
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{advert.title}"
+            android:textColor="@color/text_color_secondary"
+            android:textSize="@dimen/text_size_large"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="#868686"
-            android:textSize="@dimen/text_size_small"
-            android:maxLines="1"
-            android:includeFontPadding="false"
             android:ellipsize="end"
-            android:text="@{advert.subtitle}"/>
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{advert.subtitle}"
+            android:textColor="#868686"
+            android:textSize="@dimen/text_size_small"/>
     </LinearLayout>
 
 </layout>
