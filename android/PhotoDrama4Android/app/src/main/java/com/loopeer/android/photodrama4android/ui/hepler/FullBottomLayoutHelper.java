@@ -10,8 +10,8 @@ public class FullBottomLayoutHelper {
 
     public static void updateBottomLayoutPadding(Context context, View view) {
         int padding = context.getResources().getDimensionPixelSize(R.dimen.xsmall_padding);
-        int paddingRight = context.getResources().getDimensionPixelSize(R.dimen.xxlarge_padding);
-        int paddingLeft = context.getResources().getDimensionPixelSize(R.dimen.large_padding);
+        int paddingRight = context.getResources().getDimensionPixelSize(R.dimen.large_padding);
+        int paddingLeft = 0;
         view.setPadding(
                 paddingLeft, padding, paddingRight, padding);
     }
