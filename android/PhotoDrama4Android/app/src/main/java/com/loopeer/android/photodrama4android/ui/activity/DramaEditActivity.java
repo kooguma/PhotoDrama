@@ -108,7 +108,7 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_transparent);
         setCenterTitle(R.string.label_drama_edit);
     }
 
@@ -143,6 +143,10 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
             mVideoPlayerManager.startRecording();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackClick(View view) {
+        onBackPressed();
     }
 
     private void setupView() {

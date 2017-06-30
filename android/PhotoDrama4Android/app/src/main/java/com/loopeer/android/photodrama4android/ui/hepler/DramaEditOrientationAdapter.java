@@ -49,6 +49,7 @@ public class DramaEditOrientationAdapter extends OrientationAdapter<ActivityDram
         mBinding.viewToolbarDarkInset.toolbar.setVisibility(View.VISIBLE);
         mBinding.viewFullBottom.getRoot().setVisibility(View.GONE);
         mBinding.viewFullTop.getRoot().setVisibility(View.GONE);
+        mBinding.viewFullTopBack.getRoot().setVisibility(View.GONE);
         mBinding.btnFull.setVisibility(View.VISIBLE);
         mActivity.setSupportActionBar(mBinding.viewToolbarDarkInset.toolbar);
         mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -64,13 +65,14 @@ public class DramaEditOrientationAdapter extends OrientationAdapter<ActivityDram
         mBinding.viewToolbarDarkInset.insetView.setVisibility(View.GONE);
         mBinding.viewToolbarDarkInset.toolbar.setVisibility(View.GONE);
         mBinding.viewFullTop.getRoot().setVisibility(View.VISIBLE);
+        mBinding.viewFullTopBack.getRoot().setVisibility(View.VISIBLE);
         mBinding.viewFullBottom.getRoot().setVisibility(View.VISIBLE);
         updateBottomLayoutPadding(mActivity, mBinding.viewFullBottom.layoutToolBottom);
         mBinding.btnFull.setVisibility(View.GONE);
         mActivity.setSupportActionBar(mBinding.viewFullTop.toolbarFull);
         mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
+        mActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_transparent);
         mVideoPlayerManager.setStopTouchToRestart(true);
         mIsLandscape = true;
         mActivity.invalidateOptionsMenu();

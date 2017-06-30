@@ -377,7 +377,7 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_white);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_up_transparent);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
@@ -387,6 +387,10 @@ public class DramaDetailActivity extends PhotoDramaBaseActivity
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackClick(View view) {
+        onBackPressed();
     }
 
     @Override

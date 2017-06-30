@@ -71,6 +71,10 @@
                         android:id="@+id/view_full_top"
                         layout="@layout/view_full_screen_top"/>
 
+                    <include
+                        android:id="@+id/view_full_top_back"
+                        layout="@layout/view_full_screen_top_back"/>
+
                 </com.loopeer.compatinset.InsetFramelayout>
             </com.loopeer.android.photodrama4android.ui.widget.InsetTextureViewWrapper>
 
