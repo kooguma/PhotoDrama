@@ -30,7 +30,7 @@
     <color name="image_select_foreground_stroke_color">#61d898</color>
 
     <color name="window_background_dark_transparent75">#BF222222</color>
-    <color name="play_transparent_start_color">#11000000</color>
+    <color name="play_transparent_start_color">#e9202020</color>
 
     <color name="subtitle_text_rect_color">#9d61d898</color>
     <color name="subtitle_text_rect_color_selected">#c661d898</color>
