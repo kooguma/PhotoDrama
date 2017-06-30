@@ -117,7 +117,7 @@
     <style name="PhotoDramaButton.Black.DramaSelect">
         <item name="android:layout_width">@dimen/btn_drama_select_width</item>
         <item name="android:layout_height">@dimen/btn_drama_select_height</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="PhotoDramaText">

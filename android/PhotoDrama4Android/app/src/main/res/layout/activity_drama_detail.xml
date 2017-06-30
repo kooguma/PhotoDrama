@@ -137,7 +137,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20dp">
+                android:paddingBottom="@dimen/large_padding">
 
                 <TextView
                     android:id="@+id/txt_drama_name"

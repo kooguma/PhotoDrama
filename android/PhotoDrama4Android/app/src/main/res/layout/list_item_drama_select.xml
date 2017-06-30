@@ -60,7 +60,6 @@
                         android:id="@+id/btn_use_drama"
                         android:layout_alignParentRight="true"
                         android:layout_alignBottom="@+id/txt_desc"
-                        android:background="#333030"
                         android:layout_marginRight="@dimen/medium_padding"
                         android:layout_marginTop="@dimen/medium_padding"
                         android:text="@string/drama_detail"/>
@@ -87,10 +86,8 @@
             <TextView
                 android:id="@+id/txt_people"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_gravity="right"
-                android:paddingTop="@dimen/xxsmall_padding"
-                android:paddingBottom="@dimen/xxsmall_padding"
                 android:paddingLeft="@dimen/xsmall_padding"
                 android:paddingRight="@dimen/xsmall_padding"
                 android:gravity="center"
