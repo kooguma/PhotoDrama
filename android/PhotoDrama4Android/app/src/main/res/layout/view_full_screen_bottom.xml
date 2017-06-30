@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onPausePlayBtnClick"
-            android:src="@drawable/selector_play_white_large"/>
+            android:src="@drawable/selector_play_white_no_circle"/>
 
         <TextView
             android:id="@+id/text_time_start"
