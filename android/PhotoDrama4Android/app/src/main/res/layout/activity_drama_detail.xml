@@ -137,13 +137,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/large_padding">
+                android:paddingBottom="@dimen/medium_padding">
 
                 <TextView
                     android:id="@+id/txt_drama_name"
                     style="@style/PhotoDramaText.Primary.larger"
                     android:layout_marginLeft="@dimen/medium_padding"
-                    android:layout_marginTop="@dimen/large_padding"
+                    android:layout_marginTop="@dimen/medium_padding"
                     android:text="@{theme.name}"/>
 
                 <Button
@@ -152,7 +152,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/txt_drama_name"
                     android:layout_marginRight="@dimen/medium_padding"
-                    android:layout_marginTop="@dimen/medium_padding"
+                    android:layout_marginTop="@dimen/xxsmall_padding"
                     android:onClick="onEditClick"
                     android:text="@string/drama_use"/>
 
@@ -164,7 +164,7 @@
                     android:layout_alignBaseline="@id/btn_use_drama"
                     android:layout_below="@id/txt_drama_name"
                     android:layout_marginLeft="@dimen/medium_padding"
-                    android:layout_marginTop="@dimen/xxlarge_padding"
+                    android:layout_marginTop="@dimen/xlarge_padding"
                     android:drawableLeft="@drawable/ic_people_grey"
                     android:drawablePadding="@dimen/small_padding"
                     android:text="@{@string/drama_people_format(theme.usedCount)}"/>
@@ -210,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="22dp"
+                            android:paddingBottom="14dp"
                             android:paddingLeft="@dimen/medium_padding"
                             android:paddingRight="@dimen/medium_padding"
                             android:paddingTop="14dp">
@@ -218,6 +218,7 @@
                             <TextView
                                 android:id="@+id/txt_episode"
                                 style="@style/PhotoDramaText.Primary.larger"
+                                android:textSize="17sp"
                                 android:text="@string/drama_episode"/>
 
                             <TextView
@@ -232,7 +233,7 @@
                             android:id="@+id/scroll_view_episode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="22dp"
+                            android:paddingBottom="14dp"
                             android:paddingLeft="6dp"
                             android:paddingRight="6dp"
                             android:scrollbars="none">
@@ -257,13 +258,14 @@
                         android:paddingLeft="@dimen/medium_padding"
                         android:paddingTop="14dp"
                         android:text="@string/drama_brief"
+                        android:textSize="17sp"
                         android:visibility="@{TextUtils.isEmpty(theme.description) ? View.GONE : View.VISIBLE}"/>
 
                     <TextView
                         style="@style/PhotoDramaText.Tertiary.Normal"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:lineSpacingExtra="@dimen/xsmall_padding"
+                        android:lineSpacingExtra="@dimen/line_space"
                         android:paddingBottom="@dimen/medium_padding"
                         android:paddingLeft="@dimen/large_padding"
                         android:paddingRight="@dimen/large_padding"
@@ -282,6 +284,8 @@
                         android:layout_width="match_parent"
                         android:paddingLeft="@dimen/medium_padding"
                         android:paddingTop="14dp"
+                        android:paddingBottom="14dp"
+                        android:textSize="17sp"
                         android:text="@string/drama_recommend"/>
 
                     <LinearLayout
@@ -289,17 +293,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/small_padding"
-                        android:layout_marginTop="@dimen/larger_padding"
                         android:orientation="horizontal"
-                        android:paddingLeft="@dimen/medium_padding"
-                        android:paddingRight="@dimen/medium_padding">
+                        android:paddingLeft="@dimen/small_padding"
+                        android:paddingRight="@dimen/small_padding">
 
                         <include
                             layout="@layout/view_drama_detail_advert"
                             bind:advert="@{adverts[0]}"/>
 
                         <android.support.v4.widget.Space
-                            android:layout_width="9dp"
+                            android:layout_width="@dimen/small_padding"
                             android:layout_height="match_parent"/>
 
                         <include

@@ -61,8 +61,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_gravity="right"
-                android:paddingTop="@dimen/xxsmall_padding"
-                android:paddingBottom="@dimen/xxsmall_padding"
                 android:paddingLeft="@dimen/xsmall_padding"
                 android:paddingRight="@dimen/xsmall_padding"
                 android:gravity="center"

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
-    style="?android:attr/borderlessButtonStyle"
-    android:orientation="vertical"
-    android:background="@drawable/bg_button_episode"
-    android:textColor="@color/color_button_episode"
-    android:layout_marginLeft="6dp"
-    android:layout_marginRight="6dp"
-    android:textSize="14sp"
-    android:layout_width="80dp"
-    android:layout_height="35dp">
-
-</Button>
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/bg_button_episode"
+        android:orientation="vertical"
+        android:textColor="@color/color_button_episode"
+        android:textSize="14sp"/>
