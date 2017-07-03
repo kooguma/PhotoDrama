@@ -179,9 +179,8 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
                 behavior.getState() == STATE_EXPANDED ?
                         PickerBottomBehavior.STATE_COLLAPSED :
                         PickerBottomBehavior.STATE_EXPANDED));
-        mBottomImagePickerView.setOnImagePickListener((ImageAdapter.OnImagePickListener) uri -> {
+        mBottomImagePickerView.setOnImagePickListener((ImageAdapter.OnImagePickListener) newPath -> {
             if (mSelectedImageClip == null) return true;
-            String newPath = uri.getPath();
             String path = mSelectedImageClip.path;
             int index = mEditDramaSegmentAdapter.getDatas().indexOf(mSelectedImageClip);
             mEditDramaSegmentAdapter.selectedNext();
@@ -396,5 +395,10 @@ public class DramaEditActivity extends PhotoDramaBaseActivity
     @Override
     public void onCancel(DialogInterface dialog) {
         if (mVideoPlayerManager.isRecording()) mVideoPlayerManager.stopVideo();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
     }
 }

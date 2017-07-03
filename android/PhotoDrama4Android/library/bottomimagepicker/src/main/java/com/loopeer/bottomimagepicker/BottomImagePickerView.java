@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BottomImagePickerView extends LinearLayout {
+public class BottomImagePickerView extends LinearLayout implements PickerFragment.TabRefreshListener {
 
     private static final String STATE = "state";
     private static final String TAB_INDEX = "tab_index";
@@ -76,7 +76,7 @@ public class BottomImagePickerView extends LinearLayout {
         mTitles = new ArrayList<>();
         mLoaderManager = new LoaderManagerImpl(this);
         mFragmentAdapter = new PickerFragmentAdapter(getSupportFragmentManager());
-
+        mFragmentAdapter.setTabRefreshListener(this);
         mViewPager.setAdapter(mFragmentAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -100,6 +100,11 @@ public class BottomImagePickerView extends LinearLayout {
     }
 
     @Override protected void onRestoreInstanceState(Parcelable state) {
+        state = restoreView(state);
+        super.onRestoreInstanceState(state);
+    }
+
+    public Parcelable restoreView(Parcelable state) {
         if (state != null && state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             final int index = bundle.getInt(TAB_INDEX);
@@ -114,7 +119,16 @@ public class BottomImagePickerView extends LinearLayout {
             });
 
         }
-        super.onRestoreInstanceState(state);
+        return state;
+    }
+
+
+    @Override
+    public void onTabSelected(final int index) {
+        TabLayout.Tab tab = mTabLayout.getTabAt(index);
+        if (tab != null && mCurTabIndex != -1) {
+            tab.select();
+        }
     }
 
     @Override protected Parcelable onSaveInstanceState() {
@@ -191,10 +205,15 @@ public class BottomImagePickerView extends LinearLayout {
     private class PickerFragmentAdapter extends PickerFragmentStatePagerAdapter {
 
         private List<ImageFolder> mImageFolders;
+        private PickerFragment.TabRefreshListener mTabRefreshListener;
 
         public PickerFragmentAdapter(FragmentManager fm) {
             super(fm);
             mImageFolders = new ArrayList<>();
+        }
+
+        public void setTabRefreshListener(PickerFragment.TabRefreshListener tabRefreshListener) {
+            mTabRefreshListener = tabRefreshListener;
         }
 
         public void updateImageFolders(List<ImageFolder> imageFolders) {
@@ -204,7 +223,7 @@ public class BottomImagePickerView extends LinearLayout {
         }
 
         @Override public Fragment getItem(int position) {
-            return PickerFragment.newInstance(mImageFolders.get(position).images, mOnImagePickListener);
+            return PickerFragment.newInstance(position, mImageFolders.get(position), mOnImagePickListener, mTabRefreshListener);
         }
 
         @Override public int getCount() {

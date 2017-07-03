@@ -2,5 +2,6 @@
     <string name="app_name">BottomImagePicker</string>
 
     <string name="album_all">所有图片</string>
+    <string name="take_photo">相机</string>
 
 </resources>

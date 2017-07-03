@@ -2,9 +2,9 @@ package com.loopeer.android.photodrama4android.ui.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -24,12 +24,7 @@ import com.loopeer.android.photodrama4android.ui.adapter.ImageSelectedAdapter;
 import com.loopeer.bottomimagepicker.ImageAdapter;
 import com.loopeer.bottomimagepicker.PickerBottomBehavior;
 
-import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.loopeer.android.photodrama4android.utils.Toaster.showToast;
 import static com.loopeer.bottomimagepicker.PickerBottomBehavior.STATE_EXPANDED;
@@ -43,8 +38,8 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
     private ImageAdapter.OnImagePickListener mPickListener
             = new ImageAdapter.OnImagePickListener() {
         @Override
-        public boolean onImagePick(Uri uri) {
-            int index = mImageSelectedAdapter.addUri(uri);
+        public boolean onImagePick(String path) {
+            int index = mImageSelectedAdapter.addImage(path);
             mBinding.recyclerView.getLayoutManager().scrollToPosition(index);
             return true;
         }
@@ -162,11 +157,6 @@ public class ImageSelectActivity extends PhotoDramaBaseActivity implements Image
         mBinding.recyclerView.setAdapter(mImageSelectedAdapter);
         mBinding.recyclerView.setItemViewCacheSize(6);
         mImageSelectedAdapter.init();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
